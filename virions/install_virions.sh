@@ -1,11 +1,19 @@
 #!/bin/bash
 
-https://github.com/poggit/libasynql.git
+if [ ! -d "libasynql/" ]; then
+    https://github.com/poggit/libasynql.git
+fi
 
-https://github.com/Falkirks/spoondetector.git
+if [ ! -d "spoondetector/" ]; then
+    https://github.com/Falkirks/spoondetector.git
+fi
 
-wget https://github.com/poggit/poggit/raw/beta/assets/php/virion.php
-wget https://github.com/poggit/poggit/raw/beta/assets/php/virion_stub.php
+if [ ! -e "virion.php" ]; then
+    wget https://github.com/poggit/poggit/raw/beta/assets/php/virion.php
+fi
+if [ ! -e "virion_stub.php" ]; then
+    wget https://github.com/poggit/poggit/raw/beta/assets/php/virion_stub.php
+fi
 
 cp virion.php libasynql/libasynql
 cp virion_stub.php libasynql/libasynql

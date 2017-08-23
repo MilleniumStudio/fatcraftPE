@@ -1,19 +1,21 @@
 # /bin/bash
 
 # setup PHP7 PocketMineMP version
-./php-installer.sh
+if [ ! -d "bin/" ]; then
+    ./php-installer.sh
+fi
 
 # Build server core
 cd cores/
-./install.sh
+./install_cores.sh
 cd ../
 
 cd plugins/
-./install.sh
+./install_plugins.sh
 cd ../
 
 cd virions/
-./install.sh
+./install_virions.sh
 cd ../
 
 cd Dockerfiles/
