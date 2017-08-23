@@ -1,0 +1,166 @@
+---
+#Dear User: Please delete this line after you have finished setting up the config file.
+
+# MySQL database setup
+# You must use the same database and schema for all your plugins.
+# The user used for hormones should have access to LOCK, CREATE, SELECT, INSERT, UPDATE and DELETE all tables in the schema.
+mysql:
+  host: <<MYSQL_HOST>>
+  username: <<MYSQL_USER>>
+  password: "<<MYSQL_PASS>>"
+  schema: <<MYSQL_DATA>>
+  port: <<MYSQL_PORT>>
+  socket: ""
+
+# Localized information for this server
+localize:
+  # The type name of the server. Can be anything you want.
+  # If balancer is enabled, players may be transferred to other servers of the same organ (case-insensitive) if server full.
+  # Organ names should only consist of alphabets, numbers and hyphens [A-Za-z0-9-] to fit as command arguments, command names and permission names
+  # Note that "last" is an invalid organ name.
+  organ: lobby
+  # Set a unique name for this server, merely for displaying to users. Writing "auto" will be replaced by the server IP + port.
+  # If you don't wish to make the server IP so obvious, you may use other
+  name: auto
+  # replace this with a DNS address that points to this server. Otherwise this will be replaced by an automatically detected external IP.
+  # "address: auto" may not work if an IPv6 address is reported by online services.
+  address: "<<SERVER_IP>>"
+
+# The kidney cleans old hormones.
+# Since hormones are only used as a temporary medium of communication among servers in your network,
+# the kidney should be operated regularly to prevent the database from storing a large amount of unneeded data.
+# You may only want to disable the kidney for debug purposes.
+# You might only need to enable kidney in any one of the servers in your network, but it doesn't hurt to enable in all.
+# Enabling the kidney on all servers should not have notable negative impact on server performance.
+kidney:
+  enabled: true # whether to enable the kidney.
+  interval: 600 # frequency to delete old hormones, in seconds
+  expiry: 300 # number of seconds that hormones should stay in blood before being deleted
+
+# Commands named after the organs that users can use to transfer to the most empty server of that organ
+# They will have permission nodes
+organicTransfer:
+  # How organic-transfer commands should be registered. Possible values:
+  #     off: No organic-transfer commands should be registered.
+  #     direct: Organ name as command name, e.g. to transfer to servers in the "normal" organ, there is a /normal command
+  #     group: Organ name as parameter for /organic-transfer (/ot), e.g. to transfer to servers in the "normal" organ, use "/ot normal"
+  mode: direct
+
+balancer:
+  # Show network/organic player count instead of tissue-local player count in the client server list screen
+  # Options: tissue, organic, network
+  queryPlayerCount: network
+
+  # If fullTransfer is set to true, when player count exceeds that in balancer.playerSoftLimit, new players will be
+  # transferred to other tissues in this organ
+  fullTransfer: false
+  # Normal number of slots. Special players can bypass this limit but are still limited by max-players in server.properties
+  # If the soft limit is reached, normal players will be transferred to another server with the most empty slots.
+  playerSoftLimit: 0
+  # List of players (usernames, case-insensitive) who can bypass the soft limit.
+  fullExemptPlayers:
+  - a player name here
+  - more player names here
+
+  # If stopTransfer is set to true, when the server stops, online players will be transferred to other tissues in the
+  # organ instead of getting kicked.
+  stopTransfer: false
+
+  # Change this to an organ name, then all players joining this server will be redirected to a tissue in the specified
+  # organ.
+  # Set this to "last" to transfer to any of the tissues in the organ the player last joined
+  alwaysTransfer: lobby
+  # List of players (usernames, case-insensitive) who won't be transferred by alwaysTransfer
+  alwaysExemptPlayers:
+  - a player name here
+  - more player names here
+  # Enable alwaysKick to kick the player if alwaysTransfer is set to an organ name but all tissues in that organ are full.
+  alwaysKick: false
+  # The name of the organ to transfer the player to if alwaysTransfer is set as "last" and the player has never joined
+  # any organs with balancer.logLast enabled, or if all tissues in the last-joined organ are full.
+  # If this transfer still fails and alwaysKick is enabled, the player will be kicked.
+  # Leaving as false will let players stay on this tissue.
+  alwaysFallback: lobby
+  # If set to true, the next time a player joins a tissue with balancer.alwaysTransfer set to "last", it will transfer
+  # the player to tissues in this organ.
+  # If set to false, the player will still be transferred to the last tissue with balancer.logLast set to true.
+  logLast: false
+
+# Moderation settings
+moderation:
+  # The organ to transfer the player to if he is banned
+  # Put the organ name here to enable, or put false to disable
+  banTransfer: false
+
+# Ensures that no two logged-in players on the network will have the same name at the same moment
+singleSession:
+  # Action to do if there is collision. Possible values:
+  #     off: Disable singleSession
+  #     bump: Disallow login if a player of such name is already logged in in the network (in any organs, any tissues)
+  #     push: Kick any other players if the condition in singleSession.pushUpon is met
+  #     ip-push: push if both players have the same IP, bump if different IP
+
+  # IMPORTANT: Make sure you use the same setttings on all network servers.
+  mode: off
+
+  # The auth plugin integration to use
+  # This will be used to detect whether a player is online and logged in.
+  # Possible values: none, SimpleAuth, ServerAuth, HereAuth, PiggyAuth
+  # If "none" is chosen, player is considered "logged in" as long as the player is connected and remains online (even before being spawned)
+  authIntegration: none
+
+# Disallow clients to join this server unless transferred from another server in the network
+## To select an appropriate transferOnly.mode, it is important to understand the transferOnly notification mechanism.
+## Take the situation as "Server A wants to transfer Client to Server B".
+##
+###       +----->-----[Vein]------>------MySQL----->-----[Artery]----->----+
+###       ^                                                                v
+###    Server A                                                        Server B <----------+
+###       v                                                                ^             [Join]
+###       +--->--[TransferPacket]--->---Client----->-----[Login]----->-----+------->-------+
+##
+## Server A sends a signal through [Vein] to MySQL to notify that the client is being transferred to Server B,
+## and Server B downloads the signal through [Artery] from MySQL.
+## Server A sends a [TransferPacket] to Client, then the Client will [Login] in Server B.
+## After a long "Building terrain" screen, the Client will [Join] in Server B.
+##
+## "Vein" is like throwing a ball (the Hormones signal) into a pond.
+## "Artery" is like sinking a bucket into the pond, let the ball flow into it and then pulling out the bucket.
+## Server B automatically repeats the cycle of sinking the bucket and pulling it.
+##
+## If transferOnly.asyncDeclaration is set to false, the server may lag (usually for a very short time, and users won't
+## notice it; check "vein up time" with /hormones command) but ensures that the ball is in the pond before sending the
+## TransferPacket, reducing the chance that the "Client" (lower) pathway happens faster than the "MySQL" (upper) pathway
+## and hence the client getting kicked on Server B.
+## Otherwise, they happen together.
+## You may want to set it to true on servers that have a lot of transfers (e.g. "hub" servers).
+##
+## For transferOnly.mode:
+### off: no need to check for transfers
+### login: check if the ball is in the last few buckets
+### login.sync: same as "login", but if check fails, additionally sink a new bucket, pull it out, and check if the ball
+###             is there. may lag (usually for a very short time, and users won't notice it; check "artery net time"
+###             with /hormones command), but won't lag if the ball is in the automatically pulled buckets before the login.
+### diastole.single: "Diastole" refers to pulling back the bucket. This option will allow all clients to connect and
+###                  start downloading chunks, resource packs, etc., and transfer will be checked immediately when the
+###                  currently sunk bucket is pulled back.
+### diastole.double: Same as diastole.single, except that it is checked in both the first and second pulling-back of the
+###                  bucket.
+### join: same as "login", except that it checks when the player spawns, not when the player just connects.
+transferOnly:
+# Settings for Server A
+  asyncDeclaration: false
+
+# Settings for Server B
+  # available options: off, login, login.sync, diastole.single, diastole.double, join
+  mode: off
+  # Players logging in from these IP addresses will be exempted from this limit
+  exemptAddresses:
+  - 127.0.0.1
+  # Possible address names that players can join this server with /transfer
+  # localize.address is automatically added
+  aka:
+  # examples:
+#  - server.pmmp.io       # assuming the port from server.properties
+#  - server.pmmp.io:19135
+...
