@@ -4,7 +4,7 @@
 #./php-installer.sh
 
 # Build server core
-cd cores/BlueLight/
+cd cores/
 ./install.sh
 cd ../../
 
