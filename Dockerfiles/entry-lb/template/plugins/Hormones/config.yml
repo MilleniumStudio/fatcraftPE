@@ -20,8 +20,9 @@ localize:
   # Note that "last" is an invalid organ name.
   organ: entry
   # Set a unique name for this server, merely for displaying to users. Writing "auto" will be replaced by the server IP + port.
+  # Writing "server-name" will be replaced by the server name provided in server.properties.
   # If you don't wish to make the server IP so obvious, you may use other
-  name: entry
+  name: server-name
   # replace this with a DNS address that points to this server. Otherwise this will be replaced by an automatically detected external IP.
   # "address: auto" may not work if an IPv6 address is reported by online services.
   address: "<<SERVER_IP>>"
@@ -75,7 +76,7 @@ balancer:
   - a player name here
   - more player names here
   # Enable alwaysKick to kick the player if alwaysTransfer is set to an organ name but all tissues in that organ are full.
-  alwaysKick: false
+  alwaysKick: true
   # The name of the organ to transfer the player to if alwaysTransfer is set as "last" and the player has never joined
   # any organs with balancer.logLast enabled, or if all tissues in the last-joined organ are full.
   # If this transfer still fails and alwaysKick is enabled, the player will be kicked.

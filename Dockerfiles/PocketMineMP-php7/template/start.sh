@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DO_LOOP="no"
+DO_LOOP="true"
 while getopts "p:f:l" OPTION 2> /dev/null; do
 	case ${OPTION} in
 		p)

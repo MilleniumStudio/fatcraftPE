@@ -7,6 +7,14 @@ fi
 --make Hormones/Hormones/ \
 --out Hormones.phar
 
+if [ ! -d "devirion/" ]; then
+    git clone https://github.com/poggit/devirion.git
+fi
+
+../bin/php7/bin/php -dphar.readonly=0 ../cores/PocketMine-DevTools/src/DevTools/ConsoleScript.php \
+--make devirion/ \
+--out devirion.phar
+
 if [ ! -d "SimpleAuth/" ]; then
     git clone https://github.com/HoverEpic/SimpleAuth.git
 fi

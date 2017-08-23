@@ -10,6 +10,7 @@
 /plugins/*.phar
 /plugins/EconomyS/
 /plugins/Hormones/
+/plugins/devirion/
 /plugins/HungerGames-UPDATED/
 /plugins/Parkour/
 /plugins/SimpleAuth/

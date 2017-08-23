@@ -12,7 +12,6 @@ dataProviderSettings:
  user: "<<MYSQL_USER>>"
  password: "<<MYSQL_PASS>>"
  database: "<<MYSQL_DATA>>"
-dataProviderSettings: []
 
 #If enabled, existing logged-in accounts won't be kicked if a new player joins with the same name
 forceSingleSession: true

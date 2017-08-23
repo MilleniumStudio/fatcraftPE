@@ -9,6 +9,7 @@ Core :
 
 Plugins :
 - [Hormones](https://github.com/HoverEpic/Hormones)
+- [devirion](https://github.com/poggit/devirion)
 - [StatsPE](https://github.com/HoverEpic/StatsPE)
 - [SimpleAuth](https://github.com/HoverEpic/SimpleAuth)
 - [Parkour](https://github.com/HoverEpic/Parkour)
