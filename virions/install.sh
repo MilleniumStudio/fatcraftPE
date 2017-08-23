@@ -2,7 +2,7 @@
 
 https://github.com/poggit/libasynql.git
 
-https://github.com/Falkirks/spoondetector
+https://github.com/Falkirks/spoondetector.git
 
 wget https://github.com/poggit/poggit/raw/beta/assets/php/virion.php
 wget https://github.com/poggit/poggit/raw/beta/assets/php/virion_stub.php
