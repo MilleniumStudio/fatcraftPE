@@ -1,0 +1,4 @@
+name: AllSigns
+main: surva\allsigns\AllSigns
+version: 1.0.2
+api: 3.0.0-ALPHA7

@@ -1,0 +1,7 @@
+branches:
+- master
+
+projects:
+  AllSigns:
+    path: ""
+    icon: "icon.png"
