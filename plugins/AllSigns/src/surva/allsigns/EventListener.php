@@ -13,6 +13,7 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\level\Level;
 use pocketmine\tile\Sign;
+use pocketmine\command\ConsoleCommandSender;
 
 class EventListener implements Listener {
     /* @var AllSigns */
@@ -36,7 +37,6 @@ class EventListener implements Listener {
                 $text = $tile->getText();
 
 				$configFile = $this->getAllSigns()->getConfig();
-				var_dump($text[2]);
 
 				switch($text[0]) {
 
@@ -61,9 +61,15 @@ class EventListener implements Listener {
 						break;
 
 					case $configFile->get("addCheckpoint"):
-						var_dump($configFile->get("Obf")."checkpoint");
-
 						$tile->setText($configFile->get("Obf")."checkpoint", $configFile->get("checkpoint"),"", "");
+						break;
+
+					case $configFile->get("goToGame"):
+						$tile->setText($configFile->get("Obf").$text[1], $configFile->get("goToGameMessage1"), $configFile->get("goToGameMessage2"), $configFile->get("Obf").$text[2]);
+						break;
+
+					case $configFile->get("goToLobby"):
+						$tile->setText($configFile->get("Obf").$text[1], $configFile->get("goBackLobbyMessage1"), $configFile->get("goBackLobbyMessage2"), $configFile->get("Obf").$text[2]);
 						break;
 
                     case $configFile->get("worldtext"):
@@ -81,14 +87,23 @@ class EventListener implements Listener {
 						break;
 
 					case $configFile->get("tpNextLevelMessage1"):
-						$test = substr($text[2], 3);
-						$this->getAllSigns()->getServer()->dispatchCommand($player, $test);
-						var_dump($test);
+						$command = 'tp ' . $player->getName() . ' ' . substr($text[2], 6);
+						var_dump($command);
+						$this->getAllSigns()->getServer()->dispatchCommand(new ConsoleCommandSender(), $command);
 						break;
 
 					default:
-						if ($text[1] == $configFile->get("checkpoint"))
-							$this->getAllSigns()->getServer()->dispatchCommand($player, "spawnpoint");
+						var_dump($text[1]);
+						if ($text[1] == $configFile->get("checkpoint")){
+							$command = "spawnpoint " . $player->getName() . " " . $player->getPosition()->getX() . " " . $player->getPosition()->getY() . " " . $player->getPosition()->getZ();
+							$this->getAllSigns()->getServer()->dispatchCommand(new ConsoleCommandSender(), $command);
+						}
+
+						if ($text[1] == $configFile->get("goToGameMessage1") || $text[1] == $configFile->get("goBackLobbyMessage1")){
+							$command = substr($text[0], 3) . " " . $player->getName() . " " . substr($text[3], 3);
+							var_dump($command);
+							$this->getAllSigns()->getServer()->dispatchCommand(new ConsoleCommandSender(), $command);
+						}
 				}
             }
         }

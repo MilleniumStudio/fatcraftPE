@@ -16,8 +16,8 @@ command: "command"
 addCheckpoint: "addCheckpoint"
 Obf: "§k"
 tpNextLevel: "tpNextLevel"
-tpNextLevelMessage1: "§1Teleport"
-tpNextLevelMessage2: "§1to Next Level"
+goToGame : "goToGame"
+goToLobby : "goToLobby"
 
 
 # Messages
@@ -25,4 +25,36 @@ noworld: "§cWorld does not exist"
 error: "§cError"
 commandtext: "§aCommand"
 checkpoint: "§6Checkpoint"
+tpNextLevelMessage1: "§1Teleport"
+tpNextLevelMessage2: "§1to Next Level"
+goToGameMessage1: "§6Go to"
+goToGameMessage2: "§6the game !"
+goBackLobbyMessage1: "§4Go back"
+goBackLobbyMessage2: "§4to lobby"
+
+# EXAMPLE SIGNS :
+#
+# go to a game in a different world / go back to lobby (in a different world)
+#
+# line 1 : goToGame   /  goToLobby
+# line 2 : worlds tp
+# line 3 : *world name*
+# line 4 :
+
+# setup checkpoint (it will set the spawn point of the player)
+#
+# line 1 : addCheckpoint
+# line 2 :
+# line 3 :
+# line 4 :
+
+# go to next level IN THE SAME WORLD
+#
+# line 1 : tpNextLevel
+# line 2 : tp ~x~ ~y~ ~z~
+# line 3 :
+# line 4 :
+
+
+
 
