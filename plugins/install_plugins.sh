@@ -39,10 +39,6 @@ fi
 --make EconomyS/EconomyAPI/ \
 --out StatsPE.phar
 
-if [ ! -d "Worlds/" ]; then
-    git clone https://github.com/HoverEpic/Worlds.git
-fi
-
 ../bin/php7/bin/php -dphar.readonly=0 ../cores/PocketMine-DevTools/src/DevTools/ConsoleScript.php \
 --make Worlds/ \
 --out Worlds.phar
