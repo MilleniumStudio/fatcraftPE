@@ -18,7 +18,7 @@ Obf: "§k"
 tpNextLevel: "tpNextLevel"
 goToGame : "goToGame"
 goToLobby : "goToLobby"
-
+infoSign : "infoSign"
 
 # Messages
 noworld: "§cWorld does not exist"
@@ -31,15 +31,10 @@ goToGameMessage1: "§6Go to"
 goToGameMessage2: "§6the game !"
 goBackLobbyMessage1: "§4Go back"
 goBackLobbyMessage2: "§4to lobby"
+infoSignColor: "§5"
 
 # EXAMPLE SIGNS :
 #
-# go to a game in a different world / go back to lobby (in a different world)
-#
-# line 1 : goToGame   /  goToLobby
-# line 2 : worlds tp
-# line 3 : *world name*
-# line 4 :
 
 # setup checkpoint (it will set the spawn point of the player)
 #
@@ -53,6 +48,22 @@ goBackLobbyMessage2: "§4to lobby"
 # line 1 : tpNextLevel
 # line 2 : tp ~x~ ~y~ ~z~
 # line 3 :
+# line 4 :
+
+# info sign with small command (e.g. teleport)
+#
+# line 1 : infoSign            | infoSign
+# line 2 : type your info      | Your message
+# line 3 : type your info      | command1
+# line 4 : type your command   | command2
+# the command will executed like this by the console: /command1 playerName command2
+
+# REQUIRE WORLDS PLUGIN
+# go to a game in a different world / go back to lobby (in a different world)
+#
+# line 1 : goToGame   /  goToLobby
+# line 2 : worlds tp
+# line 3 : *world name*
 # line 4 :
 
 

@@ -92,6 +92,16 @@ class EventListener implements Listener {
 						$this->getAllSigns()->getServer()->dispatchCommand(new ConsoleCommandSender(), $command);
 						break;
 
+					case $configFile->get("infoSign"):
+						$tile->setText($configFile->get("Obf").$configFile->get("infoSign"), $configFile->get("infoSignColor").$text[1], $configFile->get("Obf").$text[2], $configFile->get("Obf").$text[3]);
+						break;
+					case $configFile->get("Obf").$configFile->get("infoSign"):
+						$command = substr($text[2], 3). ' ' . $player->getName() . ' ' . substr($text[3], 3);
+						$this->getAllSigns()->getServer()->dispatchCommand(new ConsoleCommandSender(), $command);
+						var_dump(substr($text[2], 3));
+						var_dump(substr($text[3], 3));
+						break;
+
 					default:
 						var_dump($text[1]);
 						if ($text[1] == $configFile->get("checkpoint")){
