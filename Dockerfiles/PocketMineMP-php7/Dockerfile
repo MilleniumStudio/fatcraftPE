@@ -4,7 +4,7 @@ EXPOSE 19132/tcp
 EXPOSE 19132/udp
 
 ENV SERVER_PORT 19132
-ENV SERVER_NAME auto
+ENV SERVER_NAME "pocketmine-base"
 
 # app vars
 ENV JAVA_APP_DIR /home/minecraft
