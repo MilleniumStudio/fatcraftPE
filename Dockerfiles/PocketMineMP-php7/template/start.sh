@@ -1,5 +1,7 @@
 #!/bin/bash
 
+POCKETMINE_ARGS="";
+
 DO_LOOP="true"
 while getopts "p:f:l" OPTION 2> /dev/null; do
 	case ${OPTION} in
@@ -43,13 +45,23 @@ if [ "$POCKETMINE_FILE" == "" ]; then
 		exit 1
 	fi
 fi
+
+
+if [ ! -z "$SERVER_PORT" ]; then
+    POCKETMINE_ARGS="$POCKETMINE_ARGS --server-port=$SERVER_PORT"
+fi
+
+if [ ! -z "$SERVER_NAME" ]; then
+    POCKETMINE_ARGS="$POCKETMINE_ARGS --server-name=$SERVER_NAME"
+fi
+
 LOOPS=0
 set +e
 while [ "$LOOPS" -eq 0 ] || [ "$DO_LOOP" == "yes" ]; do
 	if [ "$DO_LOOP" == "yes" ]; then
-		"$PHP_BINARY" $POCKETMINE_FILE $@
+		"$PHP_BINARY" $POCKETMINE_FILE $POCKETMINE_ARGS $@
 	else
-		exec "$PHP_BINARY" $POCKETMINE_FILE $@
+		exec "$PHP_BINARY" $POCKETMINE_FILE $POCKETMINE_ARGS $@
 	fi
 	((LOOPS++))
 done
