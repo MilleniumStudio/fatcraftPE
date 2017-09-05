@@ -65,11 +65,11 @@ class Loader extends PluginBase{
     public function onCommand(CommandSender $sender, Command $command, string $commandLabel, array $args): bool {
         if(!$sender instanceof Player){
             $sender->sendMessage(Msg::color("&aPlease run this command in-game."));
-            return;
+            return false;
         }
         if(empty($args[0])){
             $sender->sendMessage(Msg::color("&a- /hg help"));
-            return;
+            return false;
         }
         switch(strtolower($args[0])){
             case "help":
@@ -88,15 +88,16 @@ class Loader extends PluginBase{
                 $sender->sendMessage(Msg::color("&a- /hg leave"));
             break;
             case "add":
-                if(!$sender->hasPermission("hg.command.add")) return;
+                if(!$sender->hasPermission("hg.command.add"))
+					return false;
                 if(empty($args[1])){
                     $sender->sendMessage(Msg::color("&a- /hg add <game>"));
-                    return;
+                    return false;
                 }
                 $game = $args[1];
                 if($this->gameResourceExists($game) or $this->gameArenaExists($game)){
                     $sender->sendMessage(Msg::color("&cGame already exists!"));
-                    return;
+					return false;
                 }
                 $game1 = new HungerGames();
                 $sender->sendMessage(Msg::color("&aCreating game $game... Please wait..."));
@@ -105,80 +106,84 @@ class Loader extends PluginBase{
                 $sender->sendMessage(Msg::color("&aSuccessfully created game $game!"));
             break;
             case "del":
-                if(!$sender->hasPermission("hg.command.del")) return;
+                if(!$sender->hasPermission("hg.command.del"))
+					return false;
                 if(empty($args[1])){
                     $sender->sendMessage(Msg::color("&a- /hg del <game>"));
-                    return;
+					return false;
                 }
                 $game = $args[1];
                 if(!$this->gameResourceExists($game) or !$this->gameArenaExists($game)){
                     $sender->sendMessage(Msg::color("&cGame does not exist!"));
-                    return;
+					return false;
                 }
                 if(empty($args[2])){
                     $sender->sendMessage(Msg::color("&cAre you sure you want to delete $game? &4&lYOU CAN NOT GET IT BACK!!"));
                     $sender->sendMessage(Msg::color("&aIf you are sure please run: /hg del $game proceed"));
-                    return;
+					return false;
                 }
                 if(strtolower($args[2]) !== "proceed"){
                     $sender->sendMessage(Msg::color("&aDid you mean \"/hg del $game\"?"));
-                    return;
+					return false;
                 }
                 $game1 = $this->getGameResource($game);
                 $game1->delete(true);
                 $sender->sendMessage(Msg::color("&cGame $game has been deleted! You can not get it back!"));
             break;
             case "min":
-                if(!$sender->hasPermission("hg.command.min")) return;
+                if(!$sender->hasPermission("hg.command.min"))
+					return false;
                 if(empty($args[1]) or empty($args[2])){
                     $sender->sendMessage(Msg::color("&a- /hg min <game> <number>"));
-                    return;
+					return false;
                 }
                 $game = $args[1];
                 $number = $args[2];
                 if(!$this->gameResourceExists($game) or !$this->gameArenaExists($game)){
                     $sender->sendMessage(Msg::color("&cGame does not exist!"));
-                    return;
+					return false;
                 }
                 if(!is_numeric($number)){
                     $sender->sendMessage(Msg::color("&cInvalid int/number value."));
-                    return;
+					return false;
                 }
                 $game1 = $this->getGlobalManager()->getGameEditorByName($game);
                 $game1->setMinimumPlayers($number);
                 $sender->sendMessage(Msg::color("&cMinimum players of game $game have been set to $number."));
             break;
             case "max":
-                if(!$sender->hasPermission("hg.command.max")) return;
+                if(!$sender->hasPermission("hg.command.max"))
+					return false;
                 if(empty($args[1]) or empty($args[2])){
                     $sender->sendMessage(Msg::color("&a- /hg max <game> <number>"));
-                    return;
+					return false;
                 }
                 $game = $args[1];
                 $number = $args[2];
                 if(!$this->gameResourceExists($game) or !$this->gameArenaExists($game)){
                     $sender->sendMessage(Msg::color("&cGame does not exist!"));
-                    return;
+					return false;
                 }
                 if(!is_numeric($number)){
                     $sender->sendMessage(Msg::color("&cInvalid int/number value."));
-                    return;
+					return false;
                 }
                 $game1 = $this->getGlobalManager()->getGameEditorByName($game);
                 $game1->setMaximumPlayers($number);
                 $sender->sendMessage(Msg::color("&aMaximum players of game $game have been set to $number."));
             break;
             case "level":
-                if(!$sender->hasPermission("hg.command.level")) return;
+                if(!$sender->hasPermission("hg.command.level"))
+					return false;
                 if(empty($args[1]) or empty($args[2])){
                     $sender->sendMessage(Msg::color("&a- /hg level <game> <level name>"));
-                    return;
+					return false;
                 }
                 $game = $args[1];
                 $level = $args[2];
                 if(!$this->gameResourceExists($game) or !$this->gameArenaExists($game)){
                     $sender->sendMessage(Msg::color("&cGame does not exist!"));
-                    return;
+					return false;
                 }
                 $loaded = $this->getServer()->isLevelLoaded($this->getServer()->getLevelByName($level));
                 $check = $this->getServer()->loadLevel($level);
@@ -187,80 +192,84 @@ class Loader extends PluginBase{
                         $game1 = $this->getGlobalManager()->getGameEditorByName($game);
                         $game1->setGameLevel($level);
                         $sender->sendMessage(Msg::color("&aSet game level of $game to $level."));
-                        return;
+						return false;
                     }else{
                         $sender->sendMessage(Msg::color("&cCould not find any level with name $level."));
-                        return;
+						return false;
                     }
                 }
             break;
             case "ws":
-                if(!$sender->hasPermission("hg.command.ws")) return;
+                if(!$sender->hasPermission("hg.command.ws"))
+					return false;
                 if(empty($args[1]) or empty($args[2])){
                     $sender->sendMessage(Msg::color("&a- /hg ws <game> <seconds>"));
-                    return;
+					return false;
                 }
                 $game = $args[1];
                 $seconds = $args[2];
                 if(!$this->gameResourceExists($game) or !$this->gameArenaExists($game)){
                     $sender->sendMessage(Msg::color("&cGame does not exist!"));
-                    return;
+					return false;
                 }
                 if(!is_numeric($seconds)){
                     $sender->sendMessage(Msg::color("&cInvalid int/number value."));
-                    return;
+					return false;
                 }
                 $game1 = $this->getGlobalManager()->getGameEditorByName($game);
                 $game1->setWaitingSeconds($seconds);
                 $sender->sendMessage(Msg::color("&aSet waiting seconds of game $game to $seconds."));
             break;
             case "gs":
-                if(!$sender->hasPermission("hg.command.ws")) return;
+                if(!$sender->hasPermission("hg.command.ws"))
+					return false;
                 if(empty($args[1]) or empty($args[2])){
                     $sender->sendMessage(Msg::color("&a- /hg gs <game> <seconds>"));
-                    return;
+					return false;
                 }
                 $game = $args[1];
                 $seconds = $args[2];
                 if(!$this->gameResourceExists($game) or !$this->gameArenaExists($game)){
                     $sender->sendMessage(Msg::color("&cGame does not exist!"));
-                    return;
+					return false;
                 }
                 if(!is_numeric($seconds)){
                     $sender->sendMessage(Msg::color("&cInvalid int/number value."));
-                    return;
+					return false;
                 }
                 $game1 = $this->getGlobalManager()->getGameEditorByName($game);
                 $game1->setWaitingSeconds($seconds);
                 $sender->sendMessage(Msg::color("&aSet game seconds of game $game to $seconds."));
             break;
             case "addslot":
-                if(!$sender->hasPermission("hg.command.slot.add")) return;
+                if(!$sender->hasPermission("hg.command.slot.add"))
+					return false;
                 if(empty($args[1]) or empty($args[2])){
                     $sender->sendMessage(Msg::color("&a- /hg addslot <game> <name>"));
-                    return;
+					return false;
                 }
                 $game = $args[1];
                 $slot = $args[2];
                 if(!$this->gameResourceExists($game) or !$this->gameArenaExists($game)){
                     $sender->sendMessage(Msg::color("&cGame does not exist!"));
-                    return;
+					return false;
                 }
                 $game1 = $this->getGlobalManager()->getGameEditorByName($game);
                 $game1->addSlot($sender, $slot);
                 $sender->sendMessage(Msg::color("&aAdded slot $slot for game $game."));
             break;
             case "delslot":
-                if(!$sender->hasPermission("hg.command.slot.del")) return;
+                if(!$sender->hasPermission("hg.command.slot.del"))
+					return false;
                 if(empty($args[1]) or empty($args[2])){
                     $sender->sendMessage(Msg::color("&a- /hg delslot <game> <name>"));
-                    return;
+					return false;
                 }
                 $game = $args[1];
                 $slot = $args[2];
                 if(!$this->gameResourceExists($game) or !$this->gameArenaExists($game)){
                     $sender->sendMessage(Msg::color("&cGame does not exist!"));
-                    return;
+					return false;
                 }
                 $game1 = $this->getGlobalManager()->getGameEditorByName($game);
                 if($game1->removeSlot($slot)) {
@@ -289,34 +298,37 @@ class Loader extends PluginBase{
                 }
             break;
             case "lobby":
-                if(!$sender->hasPermission("hg.command.lobby")) return;
+                if(!$sender->hasPermission("hg.command.lobby"))
+					return false;
                 if(empty($args[1])){
                     $sender->sendMessage(Msg::color("&a- /hg lobby <game>"));
-                    return;
+					return false;
                 }
                 $game = $args[1];
                 if(!$this->gameResourceExists($game) or !$this->gameArenaExists($game)){
                     $sender->sendMessage(Msg::color("&cGame does not exist!"));
-                    return;
+					return false;
                 }
                 $this->getGlobalManager()->getGameEditorByName($game)->setLobbyPosition($sender);
                 $sender->sendMessage(Msg::color("&aSuccessfully set lobby position where you are standing!"));
             break;
             case "dm":
-                if(!$sender->hasPermission("hg.command.dm")) return;
+                if(!$sender->hasPermission("hg.command.dm"))
+					return false;
                 if(empty($args[1])){
                     $sender->sendMessage(Msg::color("&a- /hg lobby <game>"));
-                    return;
+					return false;
                 }
                 $game = $args[1];
                 if(!$this->gameResourceExists($game) or !$this->gameArenaExists($game)){
                     $sender->sendMessage(Msg::color("&cGame does not exist!"));
-                    return;
+					return false;
                 }
                 $this->getGlobalManager()->getGameEditorByName($game)->setDeathMatchPosition($sender);
                 $sender->sendMessage(Msg::color("&aSuccessfully set death match position where you are standing!"));
             break;
         }
+        return true;
     }
 
     /**
