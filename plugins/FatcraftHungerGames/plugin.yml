@@ -1,0 +1,8 @@
+name: FatcraftHungerGames
+version: Build#16
+main: hungergames\HungerGame
+author: xBeastMode
+description: "HungerGame"
+depend: [FatUtils]
+api: [3.0.0-ALPHA7]
+load: POSTWORLD
