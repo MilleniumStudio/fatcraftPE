@@ -4,6 +4,7 @@ namespace hungergames;
 
 use fatutils\players\PlayersManager;
 use fatutils\tools\WorldUtils;
+use plugins\FatUtils\src\fatutils\game\GameManager;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\SignChangeEvent;
 use pocketmine\event\entity\EntityLevelChangeEvent;
@@ -44,7 +45,7 @@ class EventListener implements Listener
 	 */
 	public function onInteract(PlayerInteractEvent $e)
 	{
-		echo "HG interact";
+
 	}
 
 	/**
@@ -80,20 +81,6 @@ class EventListener implements Listener
 		$p->setGamemode(2);
 		$p->getInventory()->clearAll();
 
-		foreach (HungerGame::getInstance()->getHungerGameConfig()->getSlots() as $l_Slot)
-		{
-			if ($l_Slot instanceof Location)
-			{
-				$l_NearbyEntities = $l_Slot->getLevel()
-					->getNearbyEntities(WorldUtils::getRadiusBB($l_Slot, doubleval(1)));
-
-				if (count($l_NearbyEntities) == 0)
-				{
-					echo $l_Slot . " available !\n";
-					$p->teleport($l_Slot);
-					break;
-				}
-			}
-		}
+		HungerGame::getInstance()->handlePlayerConnection($p);
 	}
 }

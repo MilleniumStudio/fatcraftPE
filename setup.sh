@@ -1,4 +1,4 @@
-# /bin/bash
+#!/bin/bash
 
 # setup PHP7 PocketMineMP version
 if [ ! -d "bin/" ]; then

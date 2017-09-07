@@ -21,7 +21,6 @@ class Timer
 
 	/**
 	 * Timer constructor.
-	 * @param int $p_Delay
 	 * @param int $p_Timeout
 	 */
 	public function __construct(int $p_Timeout)

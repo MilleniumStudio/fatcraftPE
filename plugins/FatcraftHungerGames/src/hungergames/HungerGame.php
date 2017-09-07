@@ -1,7 +1,9 @@
 <?php
 namespace hungergames;
+use fatutils\FatUtils;
 use fatutils\players\PlayersManager;
 use fatutils\tools\WorldUtils;
+use plugins\FatUtils\src\fatutils\game\GameManager;
 use pocketmine\block\Block;
 use pocketmine\item\Item;
 use pocketmine\level\Location;
@@ -25,8 +27,9 @@ class HungerGame extends PluginBase
 
 
     public function onEnable(){
-		$this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
+		$this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
 
+		FatUtils::getInstance()->setTemplateConfig($this->getConfig());
 		$this->m_HungerGameConfig = new HungerGameConfig($this->getConfig());
 		$this->initialize();
     }
@@ -37,43 +40,28 @@ class HungerGame extends PluginBase
 		$this->blockSlots();
 	}
 
-	public function fillChests()
-	{
-		foreach ($this->getHungerGameConfig()->getChests() as $l_ChestLocation)
-		{
-			if ($l_ChestLocation instanceof Location)
-			{
-				$l_ChestBlock = $l_ChestLocation->getLevel()->getBlock($l_ChestLocation);
-				echo $l_ChestBlock->getId() . "\n";
-				if ($l_ChestBlock->getId() == Block::CHEST || $l_ChestBlock->getId() == Block::TRAPPED_CHEST)
-				{
-					echo $l_ChestBlock->getId() . "\n";
-					echo "ChestAT: " . WorldUtils::locationToString($l_ChestLocation) . " " .$l_ChestBlock->getId() . " tile="  . "\n";
-					$l_ChestTile = $l_ChestLocation->getLevel()->getTile($l_ChestBlock);
-					if ($l_ChestTile instanceof Chest)
-					{
-						$l_ChestTile->getInventory()->clearAll();
-						for ($i = 0, $l = rand(2, 10); $i <= $l; $i++)
-						{
-							$slot = rand(0, $l_ChestTile->getInventory()->getSize() - 1);
-							$item = new Item(LootTable::getHGRandomLootId());
-							echo "item[". $slot ."]= ". $item . "\n";
-							$l_ChestTile->getInventory()->setItem($slot, $item);
-						}
-					}
-				}
-			}
-		}
-	}
+    public function handlePlayerConnection(Player $p_Player)
+    {
+        if (GameManager::getInstance()->isWaiting()) {
+            foreach (HungerGame::getInstance()->getHungerGameConfig()->getSlots() as $l_Slot) {
+                if ($l_Slot instanceof Location) {
+                    $l_NearbyEntities = $l_Slot->getLevel()
+                        ->getNearbyEntities(WorldUtils::getRadiusBB($l_Slot, doubleval(1)));
 
-	/**
-	 * @return mixed
-	 */
-	public function getHungerGameConfig():HungerGameConfig
-	{
-		return $this->m_HungerGameConfig;
-	}
+                    if (count($l_NearbyEntities) == 0) {
+                        echo $l_Slot . " available !\n";
+                        $p_Player->teleport($l_Slot);
+                        break;
+                    } else
+                        echo $l_Slot . " not available\n";
+                }
+            }
+        }
+    }
 
+    //---------------------
+    // UTILS
+    //---------------------
 	public function startGame()
 	{
 		foreach ($this->getServer()->getOnlinePlayers() as $l_Player)
@@ -82,7 +70,37 @@ class HungerGame extends PluginBase
 			if ($this->getHungerGameConfig()->isSkyWars())
 				$l_Player->setGamemode(0);
 		}
+
+		$this->unblockSlots();
 	}
+
+    public function fillChests()
+    {
+        foreach ($this->getHungerGameConfig()->getChests() as $l_ChestLocation)
+        {
+            if ($l_ChestLocation instanceof Location)
+            {
+                $l_ChestBlock = $l_ChestLocation->getLevel()->getBlock($l_ChestLocation);
+                if ($l_ChestBlock->getId() == Block::CHEST || $l_ChestBlock->getId() == Block::TRAPPED_CHEST)
+                {
+                    $l_ChestTile = $l_ChestLocation->getLevel()->getTile($l_ChestBlock);
+                    echo "ChestAT: " . WorldUtils::locationToString($l_ChestLocation) . " " .$l_ChestBlock->getId() . " tile=" . $l_ChestTile . "\n";
+                    if ($l_ChestTile instanceof Chest)
+                    {
+                        $l_ChestTile->getInventory()->clearAll();
+                        for ($i = 0, $l = rand(2, 10); $i <= $l; $i++)
+                        {
+                            $slot = rand(0, $l_ChestTile->getInventory()->getSize() - 1);
+                            $item = new Item(LootTable::getHGRandomLootId());
+                            echo "item[". $slot ."]= ". $item . "\n";
+                            $l_ChestTile->getInventory()->setItem($slot, $item);
+                        }
+                    }
+                }
+                echo "NoChestAT: " . WorldUtils::locationToString($l_ChestLocation) . "...\n";
+            }
+        }
+    }
 
 	private function blockSlots()
 	{
@@ -127,4 +145,15 @@ class HungerGame extends PluginBase
 			}
 		}
 	}
+
+	//---------------------
+    // GETTERS
+	//---------------------
+    /**
+     * @return mixed
+     */
+    public function getHungerGameConfig():HungerGameConfig
+    {
+        return $this->m_HungerGameConfig;
+    }
 }

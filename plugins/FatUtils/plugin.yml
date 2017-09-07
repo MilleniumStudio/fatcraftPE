@@ -1,7 +1,6 @@
 name: FatUtils
 version: Build#16
 main: fatutils\FatUtils
-author: xBeastMode
 description: "FatUtils"
 api: [3.0.0-ALPHA7]
 load: POSTWORLD

@@ -11,13 +11,13 @@ namespace fatutils\players;
 
 use pocketmine\Player;
 
-define("STATE_WAITING", 0);
-define("STATE_PLAYING", 1);
-
 class FatPlayer
 {
+    const PLAYER_STATE_WAITING = 0;
+    const PLAYER_STATE_PLAYING = 1;
+
 	private $m_Player;
-	private $m_State = 0; // 0 is waiting, 1 is playing
+	private $m_State = 0;
 
 	/**
 	 * FatPlayer constructor.
