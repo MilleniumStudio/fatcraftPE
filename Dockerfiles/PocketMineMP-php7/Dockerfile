@@ -3,6 +3,7 @@ FROM ubuntu:latest
 EXPOSE 19132/tcp
 EXPOSE 19132/udp
 
+ENV DEBIAN_FRONTEND noninteractive
 ENV SERVER_PORT 19132
 ENV SERVER_NAME "pocketmine-base"
 
