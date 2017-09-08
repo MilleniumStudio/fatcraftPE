@@ -1,0 +1,8 @@
+---
+branches: master
+projects:
+  Parkour:
+    icon: obstacle.png
+    path: ""
+    model: default
+...
