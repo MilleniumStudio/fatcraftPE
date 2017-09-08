@@ -1,0 +1,10 @@
+name: Bedwars
+version: 0.1
+api: [3.0.0-ALPHA7]
+main: bedwars\Bedwars
+commands:
+    Bedwars:
+        description: Bedwars Main Command
+        aliases: [bw]
+    Start:
+        description: Bedwars Forcestart Command
