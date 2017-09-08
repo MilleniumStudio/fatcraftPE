@@ -37,7 +37,7 @@ class SpawnManager
         foreach (FatUtils::getInstance()->getTemplateConfig()->get("spawns") as $l_RawLocation)
         {
             $this->m_Spawns[] = WorldUtils::stringToLocation($l_RawLocation);
-            echo "Spawn loaded at " . $l_RawLocation . "\n";
+            echo "   - " . $l_RawLocation . "\n";
         }
     }
 

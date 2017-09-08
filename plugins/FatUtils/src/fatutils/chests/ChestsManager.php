@@ -41,7 +41,7 @@ class ChestsManager
         {
             $l_Loc = WorldUtils::stringToLocation($l_RawLocation);
             $this->m_Chests[] = $l_Loc;
-            echo "Chests loaded at " . $l_Loc . "\n";
+            echo "   - " . $l_Loc . "\n";
         }
     }
 

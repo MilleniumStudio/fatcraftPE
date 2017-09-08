@@ -39,6 +39,9 @@ class PlayersManager
     {
         $this->setMinPlayer(FatUtils::getInstance()->getTemplateConfig()->get("minPlayer"));
         $this->setMaxPlayer(FatUtils::getInstance()->getTemplateConfig()->get("maxPlayer"));
+        echo "Initializing PlayersManager\n";
+        echo "  - minPlayers: " . $this->getMinPlayer() . "\n";
+        echo "  - maxPlayers: " . $this->getMaxPlayer() . "\n";
     }
 
 	public function addPlayer(Player $p_Player)

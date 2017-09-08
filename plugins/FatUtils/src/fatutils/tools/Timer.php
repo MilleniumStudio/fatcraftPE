@@ -11,13 +11,19 @@ namespace fatutils\tools;
 use fatutils\FatUtils;
 use pocketmine\plugin\Plugin;
 use pocketmine\scheduler\PluginTask;
+use pocketmine\scheduler\TaskHandler;
 
 class Timer
 {
-	private $m_Timeout;
+	private $m_OriginTimeout = 0;
+    private $m_Delay = 0;
+	private $m_TimeLeft = 0;
 
 	private $m_StartCallback;
 	private $m_StopCallback;
+	private $m_TickCallback;
+
+	private $m_Task;
 
 	/**
 	 * Timer constructor.
@@ -25,8 +31,15 @@ class Timer
 	 */
 	public function __construct(int $p_Timeout)
 	{
-		$this->m_Timeout = $p_Timeout;
+		$this->m_OriginTimeout = $p_Timeout;
+        $this->m_TimeLeft = $p_Timeout;
 	}
+
+    public function addDelay(int $p_Delay):Timer
+    {
+        $this->m_Delay = $p_Delay;
+        return $this;
+    }
 
 	public function addStartCallback(Callable $p_StartCallback):Timer
 	{
@@ -40,13 +53,45 @@ class Timer
 		return $this;
 	}
 
+    public function addTickCallback(Callable $p_TickCallback):Timer
+    {
+        $this->m_TickCallback = $p_TickCallback;
+        return $this;
+    }
+
 	/**
 	 * @return int
 	 */
-	public function getTimeout(): int
+	public function getTimeLeft(): int
 	{
-		return $this->m_Timeout;
+		return $this->m_TimeLeft;
 	}
+
+    public function getSecondLeft(): int
+    {
+        return $this->m_TimeLeft / 20;
+    }
+
+    public function getDelayLeft(): int
+    {
+        return $this->m_Delay;
+    }
+
+    function _modTime(int $p_Modifier)
+    {
+        $this->m_TimeLeft += $p_Modifier;
+    }
+
+    function _modDelay(int $p_Modifier)
+    {
+        $this->m_Delay += $p_Modifier;
+    }
+
+    public function addTime(int $p_Modifier)
+    {
+        $this->m_TimeLeft += $p_Modifier;
+        $this->m_OriginTimeout += $p_Modifier;
+    }
 
 	/**
 	 * @return mixed
@@ -56,6 +101,11 @@ class Timer
 		return $this->m_StartCallback;
 	}
 
+    public function getTickCallback()
+    {
+        return $this->m_TickCallback;
+    }
+
 	/**
 	 * @return mixed
 	 */
@@ -64,12 +114,18 @@ class Timer
 		return $this->m_StopCallback;
 	}
 
-	public function start()
+	public function cancel()
+    {
+        if ($this->m_Task instanceof TaskHandler)
+            $this->m_Task->cancel();
+    }
+
+	public function start():Timer
 	{
-		FatUtils::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new class(FatUtils::getInstance(), $this) extends PluginTask
+        $this->m_Task = FatUtils::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new class(FatUtils::getInstance(), $this) extends PluginTask
 		{
 			private $m_TimerInstance = null;
-			private $m_TickLived = 0;
+			private $m_Started = false;
 
 			/**
 			 *  constructor.
@@ -91,13 +147,28 @@ class Timer
 			 */
 			public function onRun(int $currentTick)
 			{
-				$this->m_TickLived++;
-				if ($this->m_TickLived > $this->m_TimerInstance->getTimeout())
-				{
-					call_user_func($this->m_TimerInstance->getStopCallback());
-					FatUtils::getInstance()->getServer()->getScheduler()->cancelTask($this->getTaskId());
-				}
+//			    echo "ticking " . $this->m_TimerInstance->getDelayLeft() . " " . $this->m_TimerInstance->getTimeLeft() . " " . $this->m_Started . "\n";
+                if ($this->m_TimerInstance->getDelayLeft() > 0)
+                    $this->m_TimerInstance->_modDelay(-1);
+                else if ($this->m_TimerInstance->getTimeLeft() > 0)
+                {
+                    if (!$this->m_Started)
+                    {
+                        if (!is_null($this->m_TimerInstance->getStartCallback()))
+                            call_user_func($this->m_TimerInstance->getStartCallback());
+                        $this->m_Started = true;
+                    }
+                    if (!is_null($this->m_TimerInstance->getTickCallback()))
+                        call_user_func($this->m_TimerInstance->getTickCallback());
+                    $this->m_TimerInstance->_modTime(-1);
+                } else {
+                    if (!is_null($this->m_TimerInstance->getStopCallback()))
+                        call_user_func($this->m_TimerInstance->getStopCallback());
+                    FatUtils::getInstance()->getServer()->getScheduler()->cancelTask($this->getTaskId());
+                }
 			}
 		}, 1);
+
+        return $this;
 	}
 }

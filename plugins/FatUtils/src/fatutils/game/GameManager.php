@@ -14,7 +14,7 @@ class GameManager
     const GAME_STATE_WAITING = 0;
     const GAME_STATE_PLAYING = 1;
 
-    private $m_State = GAME_STATE_WAITING;
+    private $m_State = GameManager::GAME_STATE_WAITING;
     private static $m_Instance = null;
 
     public static function getInstance(): GameManager
@@ -31,22 +31,22 @@ class GameManager
 
     public function setWaiting()
     {
-        $this->m_State = GAME_STATE_PLAYING;
+        $this->m_State = GameManager::GAME_STATE_PLAYING;
     }
 
     public function setPlaying()
     {
-        $this->m_State = GAME_STATE_PLAYING;
+        $this->m_State = GameManager::GAME_STATE_PLAYING;
     }
 
     public function isWaiting()
     {
-        return $this->m_State === GAME_STATE_WAITING;
+        return $this->m_State === GameManager::GAME_STATE_WAITING;
     }
 
     public function isPlaying()
     {
-        return $this->m_State === GAME_STATE_PLAYING;
+        return $this->m_State === GameManager::GAME_STATE_PLAYING;
     }
 
 }

@@ -18,12 +18,6 @@ class EventListener implements Listener
 		$p = $e->getPlayer();
 		$p->getInventory()->clearAll();
 		PlayersManager::getInstance()->addPlayer($p);
-
-		(new Timer(20))
-			->addStopCallback(function () {
-				echo "call from stop callback";
-			})
-			->start();
 	}
 
 	public function onQuit(PlayerQuitEvent $e)

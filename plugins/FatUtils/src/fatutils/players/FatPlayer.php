@@ -30,17 +30,17 @@ class FatPlayer
 
 	public function setPlaying()
 	{
-		$this->m_State = STATE_PLAYING;
+		$this->m_State = FatPlayer::PLAYER_STATE_PLAYING;
 	}
 
 	public function isWaiting()
 	{
-		return $this->m_State === STATE_WAITING;
+		return $this->m_State === FatPlayer::PLAYER_STATE_WAITING;
 	}
 
 	public function isPlaying()
 	{
-		return $this->m_State === STATE_PLAYING;
+		return $this->m_State === FatPlayer::PLAYER_STATE_WAITING;
 	}
 
 	/**

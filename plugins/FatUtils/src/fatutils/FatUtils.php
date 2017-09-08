@@ -46,6 +46,13 @@ class FatUtils extends PluginBase
                 if($sender instanceof Player)
                     $sender->sendMessage("CurrentLocation: " . WorldUtils::locationToString($sender->getLocation()));
                 break;
+            case "atest":
+                if($sender instanceof Player)
+                {
+                    $sender->sendTip("ceci est un tips");
+                    $sender->sendPopup("Ceci est un popup Title", "Ceci est un popup subtitle");
+                }
+                break;
             case "fillchests":
                 ChestsManager::getInstance()->fillChests(LootTable::$m_GeneralLoot);
             default;

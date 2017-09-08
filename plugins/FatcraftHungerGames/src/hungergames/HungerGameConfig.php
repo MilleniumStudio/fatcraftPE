@@ -15,7 +15,6 @@ use pocketmine\utils\Config;
 
 class HungerGameConfig
 {
-	private $m_Chests = [];
 	private $m_IsSkyWars = false;
 
 	/**
@@ -25,23 +24,12 @@ class HungerGameConfig
 	public function __construct(Config $p_Config)
 	{
 		$this->m_IsSkyWars = $p_Config->get("isSkywar");
-
-		foreach ($p_Config->get("chests") as $l_RawLocation)
-			$this->m_Chests[] = WorldUtils::stringToLocation($l_RawLocation);
 	}
 
 	/**
-	 * @return array
+	 * @return bool
 	 */
-	public function getChests():array
-	{
-		return $this->m_Chests;
-	}
-
-	/**
-	 * @return bool|mixed
-	 */
-	public function isSkyWars():boolean
+	public function isSkyWars():bool
 	{
 		return $this->m_IsSkyWars;
 	}
