@@ -4,11 +4,12 @@ namespace fatcraft\loadbalancer;
 
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
-use \pocketmine\event\player\PlayerLoginEvent;
+use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\server\QueryRegenerateEvent;
+use pocketmine\event\player\PlayerTransferEvent;
+use pocketmine\network\mcpe\protocol\TransferPacket;
 use pocketmine\plugin\PluginBase;
 use pocketmine\Player;
-//use pocketmine\Server;
 use pocketmine\utils\Config;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
@@ -136,16 +137,13 @@ class LoadBalancer extends PluginBase implements Listener
             laston TIMESTAMP
         )");
 
-//        $this->m_Mysql->query("INSERT INTO servers (sid, type, id, ip, port, online, max, laston) VALUES ('{$this->m_Mysql->escape_string($this->getServer()->getServerUniqueId())}', '{$this->config->get("node.type")}', '{$this->config->get("node.id")}', '{$this->m_Mysql->escape_string($this->config->get("external_ip"))}', {$this->getServer()->getPort()}, 0, {$this->getServer()->getMaxPlayers()}, unix_timestamp())");
-//        $this->m_Mysql->query("CREATE TABLE IF NOT EXISTS transferts (
-//            id INT AUTO_INCREMENT PRIMARY KEY,
-//            player CHAR(31),
-//            ip VARCHAR(63),
-//            authed TIBYINT(1),
-//            source CHAR(31) REFERENCES servers(sid),
-//            target CHAR(31) REFERENCES servers(sid),
-//            updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-//        )");
+        $this->m_Mysql->query("CREATE TABLE IF NOT EXISTS players_on_servers (
+            name CHAR(50),
+            uuid CHAR(36) PRIMARY KEY,
+            sid CHAR(36),
+            ip VARCHAR(63),
+            updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )");
     }
 
     // update this server row in mysql
@@ -174,7 +172,7 @@ class LoadBalancer extends PluginBase implements Listener
     {
         MysqlResult::executeQuery($this::getInstance()->connectMainThreadMysql(), "DELETE FROM servers WHERE sid=?", [
             ["s", $this::getInstance()->m_ServerUUID]
-                ]
+        ]
         );
     }
 
@@ -267,8 +265,18 @@ class LoadBalancer extends PluginBase implements Listener
     public function transferPlayer(Player $p_Player, string $p_Ip, int $p_Port, string $p_Message)
     {
         $p_Player->sendMessage($p_Message);
-        $this->getLogger()->info($p_Message . " " . $p_Player->getName() . "  to " . $p_Ip . ":" . $p_Port . "");
-        $p_Player->transfer($p_Ip, $p_Port, $p_Message);
+        $this->getLogger()->info($p_Message . " " . $p_Player->getName() . " to " . $p_Ip . ":" . $p_Port . "");
+
+        $this->getServer()->getPluginManager()->callEvent($ev = new PlayerTransferEvent($p_Player, $p_Ip, $p_Port, $p_Message));
+
+        if(!$ev->isCancelled())
+        {
+            $pk = new TransferPacket();
+            $pk->address = $ev->getAddress();
+            $pk->port = $ev->getPort();
+            $p_Player->directDataPacket($pk);
+//            $p_Player->close("", $ev->getMessage(), false);
+        }
     }
 
     /**
@@ -286,29 +294,48 @@ class LoadBalancer extends PluginBase implements Listener
         }
     }
 
+    /**
+     * @param PlayerJoinEvent $p_Event
+     *
+     * @priority HIGH
+     */
     public function onPlayerJoinEvent(PlayerJoinEvent $p_Event)
     {
-        if (!$this->config->getNested("redirect.to_type"))
+        if ($this->config->getNested("redirect.to_type") && !count($this->getServer()->getOnlinePlayers()) < $this->config->getNested("redirect.limit"))
         {
-            return;
-        }
-        if (count($this->getServer()->getOnlinePlayers()) < $this->config->getNested("redirect.limit"))
-        {
+            // select random server
+            $server = $this->getBest($this->config->getNested("redirect.to_type"));
+            // fire event
+            $this->getServer()->getPluginManager()->callEvent($l_Event = new BalancePlayerEvent($this, $p_Event->getPlayer(), $server["ip"], $server["port"]));
+            if ($l_Event->getIp() === null or $l_Event->getPort() === null)
+            {
+                $p_Event->getPlayer()->kick("%disconnectScreen.serverFull", false);
+            } else
+            {
+                $this->transferPlayer($p_Event->getPlayer(), $l_Event->getIp(), $l_Event->getPort(), "redirect" /*$this->config->getNested("redirect.message")*/);
+            }
             return;
         }
 
-        $player = $p_Event->getPlayer();
-        // select random server
-        $server = $this->getBest($this->config->getNested("redirect.to_type"));
-        // fire event
-        $this->getServer()->getPluginManager()->callEvent($l_Event = new BalancePlayerEvent($this, $player, $server["ip"], $server["port"]));
-        if ($l_Event->getIp() === null or $l_Event->getPort() === null)
-        {
-            $player->kick("%disconnectScreen.serverFull", false);
-        } else
-        {
-            $this->transferPlayer($player, $l_Event->getIp(), $l_Event->getPort(), "redirect" /*$this->config->getNested("redirect.message")*/);
-        }
+        $this::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
+            new DirectQueryMysqlTask($this::getInstance()->getCredentials(),
+                "INSERT INTO players_on_servers (name, uuid, sid, ip) VALUES (?, ?, ?, ?)", [
+                ["s", $p_Event->getPlayer()->getName()],
+                ["s", $p_Event->getPlayer()->getUniqueId()->toString()],
+                ["s", $this->getServer()->getServerUniqueId()->toString()],
+                ["s", $p_Event->getPlayer()->getAddress()]
+            ]
+        ));
+    }
+
+    public function onPlayerQuitEvent(PlayerQuitEvent $p_Event)
+    {
+        $this::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
+            new DirectQueryMysqlTask($this::getInstance()->getCredentials(),
+                "DELETE FROM players_on_servers WHERE name = ?", [
+                ["s", $p_Event->getPlayer()->getName()]
+            ]
+        ));
     }
 
     public function onCommand(CommandSender $sender, Command $cmd, string $label, array $param): bool
