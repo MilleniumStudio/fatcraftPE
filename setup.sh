@@ -6,6 +6,8 @@ git submodule update --recursive
 
 if [ ! -d "PocketMine-MP/bin/" ]; then
     cd PocketMine-MP
+    git submodule init
+    git submodule update --recursive
     ./compile.sh
     cd ../
 fi
