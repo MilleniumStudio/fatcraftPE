@@ -97,6 +97,24 @@ class LoadBalancer extends PluginBase implements Listener
 
     public function onDisable()
     {
+        // select random server
+        $server = $this->getBest($this->config->getNested("redirect.to_type"));
+        if ($server != false)
+        {
+            foreach ($this->getServer()->getLoggedInPlayers() as $l_Player)
+            {
+                // fire event
+                $this->getServer()->getPluginManager()->callEvent($l_Event = new BalancePlayerEvent($this, $l_Player, $server["ip"], $server["port"]));
+                if ($l_Event->getIp() === null or $l_Event->getPort() === null)
+                {
+                    $l_Player->kick("%disconnectScreen.restarting", false);
+                } else
+                {
+                    $this->transferPlayer($l_Event->getPlayer(), $l_Event->getIp(), $l_Event->getPort(), $this->config->getNested("redirect.message"));
+                }
+            }
+        }
+
         if (isset($this->m_Credentials))
         {
             $this->deleteMe();
@@ -171,6 +189,11 @@ class LoadBalancer extends PluginBase implements Listener
     public function deleteMe()
     {
         MysqlResult::executeQuery($this::getInstance()->connectMainThreadMysql(), "DELETE FROM servers WHERE sid=?", [
+            ["s", $this::getInstance()->m_ServerUUID]
+        ]
+        );
+        //delete players
+        MysqlResult::executeQuery($this::getInstance()->connectMainThreadMysql(), "DELETE FROM players_on_servers WHERE sid=?", [
             ["s", $this::getInstance()->m_ServerUUID]
         ]
         );
@@ -301,7 +324,7 @@ class LoadBalancer extends PluginBase implements Listener
      */
     public function onPlayerJoinEvent(PlayerJoinEvent $p_Event)
     {
-        if ($this->config->getNested("redirect.to_type") && !count($this->getServer()->getOnlinePlayers()) < $this->config->getNested("redirect.limit"))
+        if ($this->config->getNested("redirect.to_type") != false && count($this->getServer()->getOnlinePlayers()) > $this->config->getNested("redirect.limit"))
         {
             // select random server
             $server = $this->getBest($this->config->getNested("redirect.to_type"));
@@ -312,7 +335,7 @@ class LoadBalancer extends PluginBase implements Listener
                 $p_Event->getPlayer()->kick("%disconnectScreen.serverFull", false);
             } else
             {
-                $this->transferPlayer($p_Event->getPlayer(), $l_Event->getIp(), $l_Event->getPort(), "redirect" /*$this->config->getNested("redirect.message")*/);
+                $this->transferPlayer($p_Event->getPlayer(), $l_Event->getIp(), $l_Event->getPort(), $this->config->getNested("redirect.message"));
             }
             return;
         }
