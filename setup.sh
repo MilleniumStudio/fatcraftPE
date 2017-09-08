@@ -1,10 +1,11 @@
 #!/bin/bash
 
 # Setup custom PocketMineMP & PocketMine-DevTools
-git submodule init --recursive
+git submodule init
+git submodule update --recursive
 
-if [ ! -d "PocketMineMP/bin/" ]; then
-    cd ../PocketMineMP
+if [ ! -d "PocketMine-MP/bin/" ]; then
+    cd PocketMine-MP
     ./compile.sh
     cd ../
 fi
