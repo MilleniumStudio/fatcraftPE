@@ -18,6 +18,22 @@ use pocketmine\math\AxisAlignedBB;
 
 class WorldUtils
 {
+    const INTRACTABLE_BLOCKS = [
+        Block::CHEST,
+        Block::ENDER_CHEST,
+        Block::TRAPPED_CHEST,
+        Block::LEVER,
+        Block::OAK_DOOR_BLOCK,
+        Block::IRON_DOOR_BLOCK,
+        Block::WOODEN_TRAPDOOR,
+        Block::IRON_TRAPDOOR,
+        Block::SPRUCE_DOOR_BLOCK,
+        Block::BIRCH_DOOR_BLOCK,
+        Block::JUNGLE_DOOR_BLOCK,
+        Block::ACACIA_DOOR_BLOCK,
+        Block::DARK_OAK_DOOR_BLOCK
+    ];
+
 	public static function stringToLocation(string $p_RawLoc):Location
 	{
 		$x = 0.0;
@@ -88,4 +104,9 @@ class WorldUtils
 				$l_Block->getLevel()->setBlock($l_Block, BlockFactory::get($p_Id), true, true);
 		}
 	}
+
+	public static function loadChunkAt(Position $p_Pos)
+    {
+        $p_Pos->getLevel()->loadChunk($p_Pos->getFloorX() >> 4, $p_Pos->getFloorZ() >> 4);
+    }
 }

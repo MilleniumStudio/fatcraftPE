@@ -4,3 +4,8 @@ main: fatutils\FatUtils
 description: "FatUtils"
 api: [3.0.0-ALPHA7]
 load: POSTWORLD
+commands:
+  fatUtils:
+    description: "do stuff"
+    usage: "/fu"
+    aliases: ["fu"]

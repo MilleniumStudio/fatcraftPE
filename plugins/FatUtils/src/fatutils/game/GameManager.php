@@ -6,7 +6,7 @@
  * Time: 11:18
  */
 
-namespace plugins\FatUtils\src\fatutils\game;
+namespace fatutils\game;
 
 
 class GameManager
