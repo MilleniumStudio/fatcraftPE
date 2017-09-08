@@ -1,8 +1,12 @@
 #!/bin/bash
 
-# setup PHP7 PocketMineMP version
-if [ ! -d "bin/" ]; then
-    ./php-installer.sh
+# Setup custom PocketMineMP & PocketMine-DevTools
+git submodule init --recursive
+
+if [ ! -d "PocketMineMP/bin/" ]; then
+    cd ../PocketMineMP
+    ./compile.sh
+    cd ../
 fi
 
 # Build server core

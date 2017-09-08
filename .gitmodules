@@ -1,0 +1,6 @@
+[submodule "PocketMine-MP"]
+	path = PocketMine-MP
+	url = git@github.com:MilleniumStudio/PocketMine-MP.git
+[submodule "PocketMine-DevTools"]
+	path = PocketMine-DevTools
+	url = git@github.com:pmmp/PocketMine-DevTools.git
