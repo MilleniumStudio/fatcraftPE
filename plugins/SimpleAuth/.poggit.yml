@@ -1,0 +1,8 @@
+--- # Poggit-CI Manifest
+branches:
+- master
+projects:
+  SimpleAuth:
+    path: ""
+    icon: sa.png
+...

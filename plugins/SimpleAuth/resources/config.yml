@@ -1,0 +1,37 @@
+# Default config for SimpleAuth plugin
+
+#Sets the data provider (yaml, sqlite3, mysql, none).
+#Only use none when there is another plugin that will integrate its dataProvider with SimpleAuth
+#Be aware that data is not automatically moved between data providers.
+dataProvider: yaml
+
+#For MySQL:
+#dataProviderSettings:
+# host: "127.0.0.1"
+# port: 3306
+# user: "user"
+# password: "password"
+# database: "databaseName"
+dataProviderSettings: []
+
+#If enabled, existing logged-in accounts won't be kicked if a new player joins with the same name
+forceSingleSession: true
+
+#Sets the minimum amount of characters to be used when registering a new account
+minPasswordLength: 6
+
+#Will block user after this number of failed attempts. Set to 0 to disable
+blockAfterFail: 6
+
+#If enabled, accounts that are using the same unique id (ip + clientId + name) when logging in again will be automatically authenticated
+authenticateByLastUniqueId: false
+
+#If enabled, will set all the permissions for simleauth.command.register to false
+disableRegister: false
+
+#If enabled, will set all the permissions for simleauth.command.login to false
+disableLogin: false
+
+#Number of seconds to wait for a player to be authenticated. If false, disables the timeout
+#TODO
+authenticateTimeout: 120
