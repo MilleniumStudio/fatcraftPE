@@ -206,14 +206,12 @@ class LoadBalancer extends PluginBase implements Listener
     // get online servers list
     public function getOthers()
     {
-//        $this->getLogger()->critical("Get servers Task");
         $l_Servers = array();
         $l_TotalPlayers = 0;
         $result = MysqlResult::executeQuery($this->connectMainThreadMysql(),
             "SELECT * FROM servers WHERE UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston) < 5000 AND sid != ?", [
                 ["s", $this::getInstance()->m_ServerUUID]
         ]);
-//            var_dump($result);
         if (($result instanceof MysqlSelectResult) and count($result->rows) > 0)
         {
             foreach ($result->rows as $row)
@@ -268,15 +266,8 @@ class LoadBalancer extends PluginBase implements Listener
 
     public function transferPlayer(Player $p_Player, string $p_Ip, int $p_Port, string $p_Message)
     {
-//        $p_Packet = new TransferPacket;
-//        $p_Packet->address = $p_Ip;
-//        $p_Packet->m_Port = $p_Port;
-        if ($p_Player->loggedIn)
-        {
-            $p_Player->sendMessage($p_Message);
-        }
+        $p_Player->sendMessage($p_Message);
         $this->getLogger()->info($p_Message . " " . $p_Player->getName() . "  to " . $p_Ip . ":" . $p_Port . "");
-//        $p_Player->dataPacket($p_Packet);
         $p_Player->transfer($p_Ip, $p_Port, $p_Message);
     }
 
