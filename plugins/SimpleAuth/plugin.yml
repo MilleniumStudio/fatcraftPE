@@ -11,11 +11,9 @@ commands:
  login:
   description: "Logs into an account"
   usage: "/login <password>"
-  permission: simpleauth.command.login
  register:
   description: "Registers an account"
   usage: "/register <password>"
-  permission: simpleauth.command.register
 
 permissions:
  simpleauth:
@@ -28,9 +26,9 @@ permissions:
    simpleauth.move:
     description: "Allows moving while not being authenticated"
     default: false
-   simpleauth.lastid:
-    description: "Allows authenticating using the last id when enabled in the config"
-    default: true
+#   simpleauth.lastid:
+#    description: "Allows authenticating using the last id when enabled in the config"
+#    default: true
    simpleauth.command:
     description: "Allows using SimpleAuth commands"
     default: true

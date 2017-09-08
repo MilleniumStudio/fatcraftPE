@@ -48,12 +48,14 @@ class EventListener implements Listener{
 	 * @priority LOWEST
 	 */
 	public function onPlayerJoin(PlayerJoinEvent $event){
-		if($this->plugin->getConfig()->get("authenticateByLastUniqueId") === true and $event->getPlayer()->hasPermission("simpleauth.lastid")){
-			$config = $this->plugin->getDataProvider()->getPlayer($event->getPlayer());
-			if($config !== null and $config["lastip"] === $event->getPlayer()->getUniqueId()->toString()){
-				$this->plugin->authenticatePlayer($event->getPlayer());
-				return;
-			}
+		if($this->plugin->getConfig()->get("authenticateByLastUniqueId") === true /* and $event->getPlayer()->hasPermission("simpleauth.lastid")*/){
+                    $config = $this->plugin->getDataProvider()->getPlayer($event->getPlayer());
+                    // check UUID
+                    if($config !== null and $config["lastip"] === $event->getPlayer()->getUniqueId()->toString()){
+                        $this->plugin->getLogger()->info("Reloging user " . $event->getPlayer()->getName() . " with LastUniqueId");
+                        $this->plugin->authenticatePlayer($event->getPlayer());
+                        return;
+                    }
 		}
 		$this->plugin->deauthenticatePlayer($event->getPlayer());
 	}
