@@ -9,3 +9,4 @@
 /servers/
 /env.sh
 /.idea/
+Dockerfiles/*/install/

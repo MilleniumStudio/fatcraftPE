@@ -1,0 +1,36 @@
+## configuration for LoadBalancer
+
+## Mysql connector config
+mysql:
+  host: mysql
+  username: fatcraftpe
+  password: s54c5xcw4v56xc74g534cxb54g65b4gf654145bg
+  schema: fatcraft_pe
+
+## This node configuration
+## type : is the server type, ex : entry, main_lobby, parkour_lobby...
+## id   : is the server id, different server types can have the same server id
+node:
+  type: entry
+  id: 1
+
+## Max players management
+## max        : if set to -1, the type based is used
+## type_based : sum the max players for the selected type and set the network max players
+## online : total or type based
+network:
+  max: 0
+  type_based: lobby
+  online : total
+
+## Redirect section
+## to_type : redirect incomming players to the specified node type, false to disable
+## limit   : if reach, playerswill be redirected to to_type, -1 to always redirect
+## message : message sent to the player on redirect
+redirect:
+  to_type: false
+  limit: 10
+  message: ""
+
+## External IP for transferts
+external_ip: "192.168.4.10"

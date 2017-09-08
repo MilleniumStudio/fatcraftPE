@@ -1,0 +1,10 @@
+name: LoadBalancer
+main: fatcraft\loadbalancer\LoadBalancer
+description: The fatcraftPE PocketMine-MP load balancing solution
+version: 1.0
+api: [3.0.0-ALPHA7]
+authors:
+- BaguetteJambon
+commands:
+ servers:
+  description: servers commands
