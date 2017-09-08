@@ -4,6 +4,7 @@ namespace fatcraft\loadbalancer;
 
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
+use \pocketmine\event\player\PlayerLoginEvent;
 use pocketmine\event\server\QueryRegenerateEvent;
 use pocketmine\plugin\PluginBase;
 use pocketmine\Player;
@@ -274,7 +275,7 @@ class LoadBalancer extends PluginBase implements Listener
         {
             $p_Player->sendMessage($p_Message);
         }
-        $this->getLogger()->info($p_Message . " (" . $p_Ip . ":" . $p_Port . ")");
+        $this->getLogger()->info($p_Message . " " . $p_Player->getName() . "  to " . $p_Ip . ":" . $p_Port . "");
 //        $p_Player->dataPacket($p_Packet);
         $p_Player->transfer($p_Ip, $p_Port, $p_Message);
     }
@@ -284,7 +285,7 @@ class LoadBalancer extends PluginBase implements Listener
      *
      * @priority LOW
      */
-    public function e_onQueryRegen(QueryRegenerateEvent $event)
+    public function onServerPing(QueryRegenerateEvent $event)
     {
         $event->setMaxPlayerCount($this->config->getNested("network.max"));
 
