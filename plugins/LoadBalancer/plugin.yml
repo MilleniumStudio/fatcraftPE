@@ -6,5 +6,5 @@ api: [3.0.0-ALPHA7]
 authors:
 - BaguetteJambon
 commands:
- servers:
-  description: servers commands
+ server:
+  description: server commands

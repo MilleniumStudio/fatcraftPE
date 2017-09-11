@@ -88,7 +88,7 @@ class LoadBalancer extends PluginBase implements Listener
 
             public function onRun(int $currentTick)
             {
-//                LoadBalancer::getInstance()->cleanOrphaned();
+                LoadBalancer::getInstance()->cleanOrphaned();
                 LoadBalancer::getInstance()->getOthers();
             }
         }, 20, 20);
@@ -152,7 +152,7 @@ class LoadBalancer extends PluginBase implements Listener
             status VARCHAR(63),
             online SMALLINT,
             max SMALLINT,
-            laston TIMESTAMP
+            laston TIMESTAMP default CURRENT_TIMESTAMP
         )");
 
         $this->m_Mysql->query("CREATE TABLE IF NOT EXISTS players_on_servers (
@@ -170,7 +170,7 @@ class LoadBalancer extends PluginBase implements Listener
 //        $this->getLogger()->critical("Update me Task ");
         $this::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
             new DirectQueryMysqlTask($this::getInstance()->getCredentials(),
-                "INSERT INTO servers (sid, type, id, ip, port, status, online, max, laston) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE online = ?, laston=CURRENT_TIMESTAMP", [
+                "INSERT INTO servers (sid, type, id, ip, port, status, online, max) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE online = ?, laston=CURRENT_TIMESTAMP", [
                 ["s", $this::getInstance()->m_ServerUUID],
                 ["s", $this->m_ServerType],
                 ["i", $this->m_ServerId],
@@ -179,7 +179,6 @@ class LoadBalancer extends PluginBase implements Listener
                 ["s", "test"],
                 ["i", count($this::getInstance()->getServer()->getOnlinePlayers())],
                 ["i", $this::getInstance()->getServer()->getMaxPlayers()],
-                ["i", "CURRENT_TIMESTAMP"],
                 ["i", count($this::getInstance()->getServer()->getOnlinePlayers())]
             ]
         ));
@@ -260,11 +259,12 @@ class LoadBalancer extends PluginBase implements Listener
     {
 //        $this->getLogger()->critical("Clean orphaned servers task");
         $result = MysqlResult::executeQuery($this->connectMainThreadMysql(),
-            "SELECT * FROM servers WHERE UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston) > 10000 AND sid != ?", [
+            "SELECT * FROM servers WHERE (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) > 10 AND sid != ?", [
                 ["s", $this::getInstance()->m_ServerUUID]
         ]);
         if (($result instanceof MysqlSelectResult) and count($result->rows) > 0)
         {
+            var_dump($result);
             foreach ($result->rows as $row)
             {
                 $this->getLogger()->info('Orphaned server : ' . $row["type"] . '-' . $row["id"] . ' players : ' . $row["online"] . '-' . $row["max"]);
@@ -297,8 +297,8 @@ class LoadBalancer extends PluginBase implements Listener
             $pk = new TransferPacket();
             $pk->address = $ev->getAddress();
             $pk->port = $ev->getPort();
-            $p_Player->directDataPacket($pk);
-//            $p_Player->close("", $ev->getMessage(), false);
+            $p_Player->directDataPacket($pk, true);
+            $p_Player->close("", $ev->getMessage(), false);
         }
     }
 
@@ -337,7 +337,6 @@ class LoadBalancer extends PluginBase implements Listener
             {
                 $this->transferPlayer($p_Event->getPlayer(), $l_Event->getIp(), $l_Event->getPort(), $this->config->getNested("redirect.message"));
             }
-            return;
         }
 
         $this::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
@@ -361,61 +360,89 @@ class LoadBalancer extends PluginBase implements Listener
         ));
     }
 
-    public function onCommand(CommandSender $sender, Command $cmd, string $label, array $param): bool
+    public function onCommand(CommandSender $sender, Command $cmd, string $label, array $p_Param): bool
     {
-        if ($cmd->getName() === "servers")
+        if ($cmd->getName() === "server")
         {
-            if (count($param) >= 1)
+            if (count($p_Param) >= 1)
             {
-                switch ($param[0])
+                switch ($p_Param[0])
                 {
-                    case "list":    // /servers list
+                    case "list":    // /server list
                         $sender->sendMessage('This server : ' . $this->config->getNested("node.type") . '-' . $this->config->getNested("node.id") . ' players : ' . count($this::getInstance()->getServer()->getOnlinePlayers()) . ' / ' . $this::getInstance()->getServer()->getMaxPlayers());
                         if (count($this->m_Servers) > 0)
                         {
-                            foreach ($this->m_Servers as $l_Types)
+                            if (count($p_Param) == 1) // /server list
                             {
-                                foreach ($l_Types as $server)
+                                foreach ($this->m_Servers as $l_Type)
                                 {
-                                    $sender->sendMessage('Other server : ' . $server["type"] . '-' . $server["id"] . ' players : ' . $server["online"] . '-' . $server["max"]);
+//                                    $sender->sendMessage('Servers ' . $l_Type[0]["type"] . ':');
+                                    foreach ($l_Type as $l_Server)
+                                    {
+                                        $sender->sendMessage(' - ' . $l_Server["type"] . '-' . $l_Server["id"] . ' ' . $l_Server["online"] . '/' . $l_Server["max"]);
+                                    }
+                                }
+                            }
+                            elseif (count($p_Param) == 2) // /server list <template>
+                            {
+                                $l_Type = $p_Param[1];
+                                $sender->sendMessage('Servers ' . $l_Type . ':');
+                                foreach ($this->m_Servers[$l_Type] as $l_Server)
+                                {
+                                    $sender->sendMessage(' - ' . $l_Server["type"] . '-' . $l_Server["id"] . ' ' . $l_Server["online"] . '/' . $l_Server["max"]);
                                 }
                             }
                         }
-                        break;
-                    case "connect":    // /servers connect lobby 1
-                        if (count($param) == 3 && $sender instanceof Player)
+                        else
                         {
-                            $server = $this->m_Servers[$param[1]][$param[2]];
-                            if (isset($server))
-                            {
-                                $this->transferPlayer($sender, $server["ip"], $server["port"], "Transfering to " . $server["type"] . "-" . $server["id"]);
-                            }
-                        }
-                        else if (count($param) == 4) // /server connect lobby 1 <pseudo>
-                        {
-                            $l_Player = $this->getServer()->getPlayer($param[3]);
-                            $server = $this->m_Servers[$param[1]][$param[2]];
-                            if (isset($server))
-                            {
-                                $this->transferPlayer($l_Player, $server["ip"], $server["port"], "Transfering to " . $server["type"] . "-" . $server["id"]);
-                            }
+                            $sender->sendMessage('No other server online !');
                         }
                         break;
-                    case "test":    // /servers connect lobby 1
-//                    if ($sender instanceof Player)
-//                    {
-//                        $server = $this->getBest();
-//                        $this->transferPlayer($sender, $server["ip"], $server["port"], "Transfering to " . $server["type"] . "-" . $server["id"]);
-                            var_dump($this->m_Servers);
-//                    }
+                    case "connect":
+                        if (count($p_Param) >= 3) // /server connect <player> <template> [id]
+                        {
+                            $l_Player = $this->getServer()->getPlayer($p_Param[1]);
+                            $l_Template = $p_Param[2];
+                            if (count($p_Param) == 3)   // /server connect <player> lobby
+                            {
+                                $l_Server = $this->getBest($l_Template);
+                                if (isset($l_Server))
+                                {
+                                    $this->transferPlayer($l_Player, $l_Server["ip"], $l_Server["port"], "Transfering to " . $l_Server["type"] . "-" . $l_Server["id"]);
+                                }
+                            }
+                            else if (count($p_Param) == 4) // /server connect <player> lobby 1
+                            {
+                                $l_Id = $p_Param[3];
+                                $l_Server = $this->m_Servers[$l_Template][$l_Id];
+                                if (isset($l_Server))
+                                {
+                                    $this->transferPlayer($l_Player, $l_Server["ip"], $l_Server["port"], "Transfering to " . $l_Server["type"] . "-" . $l_Server["id"]);
+                                }
+                            }
+                            else
+                            {
+                                $this->sendServerHelp($sender);
+                            }
+                        }
+                        break;
+                    case "test":
+                        var_dump($this->m_Servers);
                     break;
                     default:
-                        // send help
+                        $this->sendServerHelp($sender);
                         break;
                 }
             }
         }
         return true;
+    }
+
+    private function sendServerHelp(CommandSender $sender)
+    {
+        $sender->sendMessage("Servers help :");
+        $sender->sendMessage(" /server list [template]");
+        $sender->sendMessage(" /server connect <player> <template> [id]");
     }
 
 }
