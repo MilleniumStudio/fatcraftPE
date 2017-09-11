@@ -6,7 +6,6 @@ use pocketmine\block\Block;
 use pocketmine\Command\Command;
 use pocketmine\Command\CommandSender;
 use pocketmine\entity\Entity;
-use pocketmine\entity\Villager;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
@@ -48,6 +47,9 @@ use pocketmine\tile\Sign;
 use pocketmine\tile\Tile;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
+use Bedwars\Merchant;
+
+include("Merchant.php");
 
 class Bedwars extends PluginBase implements Listener
 {
@@ -69,10 +71,11 @@ class Bedwars extends PluginBase implements Listener
 
     // new vars
     public $currentState = STATE::IDLE;
-    public $maxTimeWaiting = 30*20;
+    public $maxTimeWaiting = 30 * 20;
     public $teams;
     public $playerPerTeam;
     public $maxPlayer, $minPlayer;
+    public $shopContent;
 
     public function onEnable()
     {
@@ -80,7 +83,7 @@ class Bedwars extends PluginBase implements Listener
         $this->getLogger()->info($this->prefix . TextFormat::GREEN . "Plugin Bedwars enabled !");
         @mkdir($this->getDataFolder());
 
-        prepareConfig();
+        $this->prepareConfig();
 
         $this->getServer()->getScheduler()->scheduleRepeatingTask(new OnTick($this), 1);
     }
@@ -104,84 +107,81 @@ class Bedwars extends PluginBase implements Listener
         $this->breakableblocks = $cfg->get("BreakableBlocks");
         $shop = new Config($this->getDataFolder() . "shop.yml", Config::YAML);
 
-        if ($shop->get("Shop") == null) {
-            $shop->set("Shop", array(
-                    Item::WOODEN_SWORD,
+        $this->shopContent = array(
+            Item::WOODEN_SWORD =>
+                array(
                     array(
-                        array(
-                            Item::STICK, 1, 384, 8
-                        ),
-                        array(
-                            Item::STONE_SWORD, 1, 384, 20
-                        ),
-                        array(
-                            Item::IRON_SWORD, 1, 384, 40
-                        ),
-                        array(
-                            Item::DIAMOND_SWORD, 1, 384, 40
-                        )
+                        Item::STICK, 1, 384, 8
                     ),
-                    Item::HARDENED_CLAY,
                     array(
-                        array(
-                            Item::HARDENED_CLAY, 4, 384, 1
-                        ),
-                        array(
-                            Item::END_STONE, 4, 384, 1
-                        ),
-                        array(
-                            Item::GLASS, 6, 384, 1
-                        )
+                        Item::STONE_SWORD, 1, 384, 20
                     ),
-                    Item::IRON_PICKAXE,
                     array(
-                        array(
-                            Item::STONE_PICKAXE, 4, 384, 1
-                        ),
-                        array(
-                            Item::IRON_PICKAXE, 4, 384, 1
-                        ),
-                        array(
-                            Item::DIAMOND_PICKAXE, 6, 384, 1
-                        )
+                        Item::IRON_SWORD, 1, 384, 40
                     ),
-                    Item::CHEST,
                     array(
-                        array(
-                            Item::SNOWBALL, 1, 384, 2
-                        ),
-                        array(
-                            Item::LADDER, 1, 384, 4
-                        ),
-                        array(
-                            Item::WEB, 1, 384, 2
-                        ),
-                        array(
-                            Item::CHEST, 1, 384, 8
-                        )
+                        Item::DIAMOND_SWORD, 1, 384, 40
+                    )
+                ),
+            Item::HARDENED_CLAY =>
+                array(
+                    array(
+                        Item::HARDENED_CLAY, 4, 384, 1
                     ),
-                    Item::LEATHER_TUNIC,
                     array(
-                        array(
-                            Item::LEATHER_BOOTS, 1, 384, 2
-                        ),
-                        array(
-                            Item::LEATHER_HELMET, 1, 384, 8
-                        ),
-                        array(
-                            Item::CHAIN_CHESTPLATE, 1, 384, 20
-                        ),
-                        array(
-                            Item::IRON_CHESTPLATE, 1, 384, 20
-                        ),
-                        array(
-                            Item::DIAMOND_CHESTPLATE, 1, 384, 20
-                        )
+                        Item::END_STONE, 4, 384, 1
+                    ),
+                    array(
+                        Item::GLASS, 6, 384, 1
+                    )
+                ),
+            Item::IRON_PICKAXE =>
+                array(
+                    array(
+                        Item::STONE_PICKAXE, 4, 384, 1
+                    ),
+                    array(
+                        Item::IRON_PICKAXE, 4, 384, 1
+                    ),
+                    array(
+                        Item::DIAMOND_PICKAXE, 6, 384, 1
+                    )
+                ),
+            Item::CHEST =>
+                array(
+                    array(
+                        Item::SNOWBALL, 1, 384, 2
+                    ),
+                    array(
+                        Item::LADDER, 1, 384, 4
+                    ),
+                    array(
+                        Item::WEB, 1, 384, 2
+                    ),
+                    array(
+                        Item::CHEST, 1, 384, 8
+                    )
+                ),
+            Item::LEATHER_TUNIC =>
+                array(
+                    array(
+                        Item::LEATHER_BOOTS, 1, 384, 2
+                    ),
+                    array(
+                        Item::LEATHER_HELMET, 1, 384, 8
+                    ),
+                    array(
+                        Item::CHAIN_CHESTPLATE, 1, 384, 20
+                    ),
+                    array(
+                        Item::IRON_CHESTPLATE, 1, 384, 20
+                    ),
+                    array(
+                        Item::DIAMOND_CHESTPLATE, 1, 384, 20
                     )
                 )
-            );
-            $shop->save();
-        }
+        );
+
 
         $this->teams = (int)$cfg->get("Teams");
         $this->playerPerTeam = (int)$cfg->get("PlayersPerTeam");
@@ -547,16 +547,7 @@ class Bedwars extends PluginBase implements Listener
         $player = $event->getEntity();
 
         if (!$player instanceof Player) {
-            if ($event instanceof EntityDamageByEntityEvent) {
-                $damager = $event->getDamager();
-                if ($damager instanceof Player) {
-                    if (true/*$this->inArena($damager)*/) {
-                        $event->setCancelled();
-                        $this->isShopping[$damager->getName()] = true;
-                        $this->openShop($damager);
-                    }
-                }
-            }
+            return;
         } else {
             if (true/*$this->inArena($player)*/) {
                 //$arena = $this->getArena($player);
@@ -609,6 +600,7 @@ class Bedwars extends PluginBase implements Listener
 
     public function onPlace(BlockPlaceEvent $event)
     {
+        if (true) return; //todo fix
         $player = $event->getPlayer();
         $name = $player->getName();
         $block = $event->getBlock();
@@ -782,22 +774,33 @@ class Bedwars extends PluginBase implements Listener
 
     public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args): bool
     {
-        if(!$sender->isOp())
+        if (!$sender->isOp()) {
+            $sender->sendMessage("you need to be op");
             return false;
-        $name = $sender->getName();
-        switch ($cmd->getName())
-        {
-            case "state":
-            {
+        }
+        switch ($args[0]) {
+            case "state": {
                 $sender->sendMessage($this->currentState);
             }
+                break;
+            case "npc": {
+                if ($sender instanceof Player) {
+                    $sender->sendMessage("spawn npc");
+                    new Merchant($this, $this->shopContent, $sender->getLocation());
+                } else
+                    $sender->sendMessage("need to be a player to exectue this command");
+            }
+                break;
+
         }
+        $sender->sendMessage("something");
         return true;
     }
 
 }
 
-abstract class STATE{
+abstract class STATE
+{
     const IDLE = 0;
     const WAITING = 1;
     const PREPARING = 2;
@@ -852,25 +855,19 @@ class OnTick extends PluginTask
 
     public function waiting()
     {
-        if(count(Server::getInstance()->getOnlinePlayers()) < $this->plugin->minPlayer)
-        {
+        if (count(Server::getInstance()->getOnlinePlayers()) < $this->plugin->minPlayer) {
             $this->currentTimeWaiting = $this->plugin->maxTimeWaiting;
-            foreach (Server::getInstance()->getOnlinePlayers() as $player)
-            {
-                $player->sendMessage("Il manque encore ".( $this->plugin->minPlayer - count(Server::getInstance()->getOnlinePlayers()))." joueurs minimum");
+            foreach (Server::getInstance()->getOnlinePlayers() as $player) {
+                $player->sendMessage("Il manque encore " . ($this->plugin->minPlayer - count(Server::getInstance()->getOnlinePlayers())) . " joueurs minimum");
             }
-        }
-        else if($this->currentTimeWaiting > 0)
-        {
+        } else if ($this->currentTimeWaiting > 0) {
             $this->currentTimeWaiting--;
-            if($this->currentTimeWaiting %20 == 0) {
+            if ($this->currentTimeWaiting % 20 == 0) {
                 foreach (Server::getInstance()->getOnlinePlayers() as $player) {
-                    $player->sendMessage("La partie commence dans " . $this->currentTimeWaiting/20 . " secondes");
+                    $player->sendMessage("La partie commence dans " . $this->currentTimeWaiting / 20 . " secondes");
                 }
             }
-        }
-        else
-        {
+        } else {
             //start game !
             $this->plugin->currentState = "PREPARING";
         }
@@ -889,8 +886,7 @@ class OnTick extends PluginTask
 
     public function playing()
     {
-        if(count($this->plugin->getAliveTeams()) < 2)
-        {
+        if (count($this->plugin->getAliveTeams()) < 2) {
             $this->plugin->debug("END GAME !");
             $this->plugin->debug($this->plugin->getAliveTeams());
         }
