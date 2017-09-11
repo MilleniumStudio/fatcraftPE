@@ -75,23 +75,29 @@ class LoadBalancer extends PluginBase implements Listener
         // update my status every second
         $this->getServer()->getScheduler()->scheduleDelayedRepeatingTask(new class($this) extends PluginTask
         {
-
             public function onRun(int $currentTick)
             {
                 LoadBalancer::getInstance()->updateMe();
             }
-        }, 0, 20);
+        }, 0, $this->config->getNested("timers.self"));
 
         //update other server status every seconds too
         $this->getServer()->getScheduler()->scheduleDelayedRepeatingTask(new class($this) extends PluginTask
         {
+            public function onRun(int $currentTick)
+            {
+                LoadBalancer::getInstance()->getOthers();
+            }
+        }, 0, $this->config->getNested("timers.others"));
 
+        //Clean orphaned servers
+        $this->getServer()->getScheduler()->scheduleDelayedRepeatingTask(new class($this) extends PluginTask
+        {
             public function onRun(int $currentTick)
             {
                 LoadBalancer::getInstance()->cleanOrphaned();
-                LoadBalancer::getInstance()->getOthers();
             }
-        }, 20, 20);
+        }, 0, $this->config->getNested("timers.cleaner"));
         $this->getLogger()->info("Enabled");
     }
 
@@ -259,18 +265,22 @@ class LoadBalancer extends PluginBase implements Listener
     {
 //        $this->getLogger()->critical("Clean orphaned servers task");
         $result = MysqlResult::executeQuery($this->connectMainThreadMysql(),
-            "SELECT * FROM servers WHERE (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) > 10 AND sid != ?", [
+            "SELECT * FROM servers WHERE (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) > ? AND sid != ?", [
+                ["i", $this->config->getNested("timers.timeout")],
                 ["s", $this::getInstance()->m_ServerUUID]
         ]);
         if (($result instanceof MysqlSelectResult) and count($result->rows) > 0)
         {
-            var_dump($result);
             foreach ($result->rows as $row)
             {
                 $this->getLogger()->info('Orphaned server : ' . $row["type"] . '-' . $row["id"] . ' players : ' . $row["online"] . '-' . $row["max"]);
                 MysqlResult::executeQuery($this::getInstance()->connectMainThreadMysql(), "DELETE FROM servers WHERE sid = ?", [
                     ["s", $row['sid']]
-                        ]
+                ]
+                );
+                MysqlResult::executeQuery($this::getInstance()->connectMainThreadMysql(), "DELETE FROM players_on_servers WHERE sid = ?", [
+                    ["s", $row['sid']]
+                ]
                 );
             }
         }
@@ -294,6 +304,7 @@ class LoadBalancer extends PluginBase implements Listener
 
         if(!$ev->isCancelled())
         {
+            // TODO insert in Transfert table
             $pk = new TransferPacket();
             $pk->address = $ev->getAddress();
             $pk->port = $ev->getPort();
@@ -324,38 +335,73 @@ class LoadBalancer extends PluginBase implements Listener
      */
     public function onPlayerJoinEvent(PlayerJoinEvent $p_Event)
     {
-        if ($this->config->getNested("redirect.to_type") != false && count($this->getServer()->getOnlinePlayers()) > $this->config->getNested("redirect.limit"))
+        if ((!$this->isPlayerConnected($p_Event->getPlayer()->getName()) && $this->config->getNested("players.singlesession")))
         {
-            // select random server
-            $server = $this->getBest($this->config->getNested("redirect.to_type"));
-            // fire event
-            $this->getServer()->getPluginManager()->callEvent($l_Event = new BalancePlayerEvent($this, $p_Event->getPlayer(), $server["ip"], $server["port"]));
-            if ($l_Event->getIp() === null or $l_Event->getPort() === null)
+            $p_Event->setJoinMessage("");
+            if ($this->config->getNested("redirect.to_type") != false && count($this->getServer()->getOnlinePlayers()) > $this->config->getNested("redirect.limit"))
             {
-                $p_Event->getPlayer()->kick("%disconnectScreen.serverFull", false);
-            } else
+                // select random server
+                $server = $this->getBest($this->config->getNested("redirect.to_type"));
+                // fire event
+                $this->getServer()->getPluginManager()->callEvent($l_Event = new BalancePlayerEvent($this, $p_Event->getPlayer(), $server["ip"], $server["port"]));
+                if ($l_Event->getIp() === null or $l_Event->getPort() === null)
+                {
+                    $p_Event->getPlayer()->kick("%disconnectScreen.serverFull", false);
+                } else
+                {
+                    $this->transferPlayer($p_Event->getPlayer(), $l_Event->getIp(), $l_Event->getPort(), $this->config->getNested("redirect.message"));
+                }
+            }
+            else
             {
-                $this->transferPlayer($p_Event->getPlayer(), $l_Event->getIp(), $l_Event->getPort(), $this->config->getNested("redirect.message"));
+                // TODO check Transfert table
+                $this->insertPlayer($p_Event->getPlayer());
             }
         }
+        else
+        {
+            $p_Event->getPlayer()->kick("You are already connected !", false);
+        }
+    }
 
+    public function insertPlayer(Player $p_Player)
+    {
         $this::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
             new DirectQueryMysqlTask($this::getInstance()->getCredentials(),
                 "INSERT INTO players_on_servers (name, uuid, sid, ip) VALUES (?, ?, ?, ?)", [
-                ["s", $p_Event->getPlayer()->getName()],
-                ["s", $p_Event->getPlayer()->getUniqueId()->toString()],
+                ["s", $p_Player->getName()],
+                ["s", $p_Player->getUniqueId()->toString()],
                 ["s", $this->getServer()->getServerUniqueId()->toString()],
-                ["s", $p_Event->getPlayer()->getAddress()]
+                ["s", $p_Player->getAddress()]
             ]
         ));
     }
 
+    public function isPlayerConnected(String $p_Name) : Bool
+    {
+        $result = MysqlResult::executeQuery($this->connectMainThreadMysql(),
+            "SELECT * FROM players_on_servers WHERE sid != ?", [
+                ["s", $this::getInstance()->m_ServerUUID]
+        ]);
+        if (($result instanceof MysqlSelectResult) and count($result->rows) == 1)
+        {
+            return true;
+        }
+        return false;
+    }
+
     public function onPlayerQuitEvent(PlayerQuitEvent $p_Event)
+    {
+        $p_Event->setQuitMessage("");
+        $this->removePlayerPlayer($p_Event->getPlayer());
+    }
+
+    public function removePlayerPlayer(Player $p_Player)
     {
         $this::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
             new DirectQueryMysqlTask($this::getInstance()->getCredentials(),
                 "DELETE FROM players_on_servers WHERE name = ?", [
-                ["s", $p_Event->getPlayer()->getName()]
+                ["s", $p_Player->getName()]
             ]
         ));
     }
@@ -402,27 +448,34 @@ class LoadBalancer extends PluginBase implements Listener
                         if (count($p_Param) >= 3) // /server connect <player> <template> [id]
                         {
                             $l_Player = $this->getServer()->getPlayer($p_Param[1]);
-                            $l_Template = $p_Param[2];
-                            if (count($p_Param) == 3)   // /server connect <player> lobby
+                            if ($l_Player !== null)
                             {
-                                $l_Server = $this->getBest($l_Template);
-                                if (isset($l_Server))
+                                $l_Template = $p_Param[2];
+                                if (count($p_Param) == 3)   // /server connect <player> lobby
                                 {
-                                    $this->transferPlayer($l_Player, $l_Server["ip"], $l_Server["port"], "Transfering to " . $l_Server["type"] . "-" . $l_Server["id"]);
+                                    $l_Server = $this->getBest($l_Template);
+                                    if (isset($l_Server))
+                                    {
+                                        $this->transferPlayer($l_Player, $l_Server["ip"], $l_Server["port"], "Transfering to " . $l_Server["type"] . "-" . $l_Server["id"]);
+                                    }
                                 }
-                            }
-                            else if (count($p_Param) == 4) // /server connect <player> lobby 1
-                            {
-                                $l_Id = $p_Param[3];
-                                $l_Server = $this->m_Servers[$l_Template][$l_Id];
-                                if (isset($l_Server))
+                                else if (count($p_Param) == 4) // /server connect <player> lobby 1
                                 {
-                                    $this->transferPlayer($l_Player, $l_Server["ip"], $l_Server["port"], "Transfering to " . $l_Server["type"] . "-" . $l_Server["id"]);
+                                    $l_Id = $p_Param[3];
+                                    $l_Server = $this->m_Servers[$l_Template][$l_Id];
+                                    if (isset($l_Server))
+                                    {
+                                        $this->transferPlayer($l_Player, $l_Server["ip"], $l_Server["port"], "Transfering to " . $l_Server["type"] . "-" . $l_Server["id"]);
+                                    }
+                                }
+                                else
+                                {
+                                    $this->sendServerHelp($sender);
                                 }
                             }
                             else
                             {
-                                $this->sendServerHelp($sender);
+                                $sender->sendMessage('Unknown player ' . $p_Param[1]);
                             }
                         }
                         break;
