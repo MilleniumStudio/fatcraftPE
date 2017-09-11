@@ -1,7 +1,7 @@
 <?php
 namespace fatutils;
 
-use fatutils\chests\ChestsManager;
+use fatutils\loot\ChestsManager;
 use fatutils\tools\WorldUtils;
 use hungergames\HungerGame;
 use hungergames\LootTable;
@@ -54,7 +54,7 @@ class FatUtils extends PluginBase
                 }
                 break;
             case "fillchests":
-                ChestsManager::getInstance()->fillChests(LootTable::$m_GeneralLoot);
+                ChestsManager::getInstance()->fillChests();
             default;
         }
 

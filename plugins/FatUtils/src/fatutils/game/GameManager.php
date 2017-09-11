@@ -9,12 +9,19 @@
 namespace fatutils\game;
 
 
+use fatutils\FatUtils;
+
 class GameManager
 {
     const GAME_STATE_WAITING = 0;
     const GAME_STATE_PLAYING = 1;
 
+    const CONFIG_KEY_WAITING_TICK_DURATION = "waitingTickDuration";
+    const CONFIG_KEY_PLAYING_TICK_DURATION = "playingTickDuration";
+
     private $m_State = GameManager::GAME_STATE_WAITING;
+    private $m_WaitingTickDuration = 600; // 5min
+    private $m_PlayingTickDuration = 6000; // 5min
     private static $m_Instance = null;
 
     public static function getInstance(): GameManager
@@ -27,7 +34,43 @@ class GameManager
     /**
      * PlayersManager constructor.
      */
-    private function __construct() {}
+    private function __construct()
+    {
+        $this->setWaitingTickDuration(FatUtils::getInstance()->getTemplateConfig()->get(GameManager::CONFIG_KEY_WAITING_TICK_DURATION));
+        $this->setPlayingTickDuration(FatUtils::getInstance()->getTemplateConfig()->get(GameManager::CONFIG_KEY_PLAYING_TICK_DURATION));
+    }
+
+    /**
+     * @return int
+     */
+    public function getWaitingTickDuration(): int
+    {
+        return $this->m_WaitingTickDuration;
+    }
+
+    /**
+     * @param int $m_WaitingTickDuration
+     */
+    public function setWaitingTickDuration(int $m_WaitingTickDuration)
+    {
+        $this->m_WaitingTickDuration = $m_WaitingTickDuration;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPlayingTickDuration(): int
+    {
+        return $this->m_PlayingTickDuration;
+    }
+
+    /**
+     * @param int $m_GameTickDuration
+     */
+    public function setPlayingTickDuration(int $m_GameTickDuration)
+    {
+        $this->m_PlayingTickDuration = $m_GameTickDuration;
+    }
 
     public function setWaiting()
     {

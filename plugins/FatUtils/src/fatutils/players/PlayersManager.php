@@ -14,6 +14,9 @@ use pocketmine\utils\UUID;
 
 class PlayersManager
 {
+    const CONFIG_KEY_MAX_PLAYER = "maxPlayer";
+    const CONFIG_KEY_MIN_PLAYER = "minPlayer";
+
 	private static $m_Instance = null;
 	private $m_FatPlayers = [];
 
@@ -37,8 +40,8 @@ class PlayersManager
 
     public function initialize()
     {
-        $this->setMinPlayer(FatUtils::getInstance()->getTemplateConfig()->get("minPlayer"));
-        $this->setMaxPlayer(FatUtils::getInstance()->getTemplateConfig()->get("maxPlayer"));
+        $this->setMinPlayer(FatUtils::getInstance()->getTemplateConfig()->get(PlayersManager::CONFIG_KEY_MIN_PLAYER));
+        $this->setMaxPlayer(FatUtils::getInstance()->getTemplateConfig()->get(PlayersManager::CONFIG_KEY_MAX_PLAYER));
         echo "Initializing PlayersManager\n";
         echo "  - minPlayers: " . $this->getMinPlayer() . "\n";
         echo "  - maxPlayers: " . $this->getMaxPlayer() . "\n";
