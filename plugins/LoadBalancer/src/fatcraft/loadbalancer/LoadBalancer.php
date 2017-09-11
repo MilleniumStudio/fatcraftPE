@@ -335,7 +335,11 @@ class LoadBalancer extends PluginBase implements Listener
      */
     public function onPlayerJoinEvent(PlayerJoinEvent $p_Event)
     {
-        if ((!$this->isPlayerConnected($p_Event->getPlayer()->getName()) && $this->config->getNested("players.singlesession")))
+        if ($this->isPlayerConnected($p_Event->getPlayer()->getName() && $this->config->getNested("players.singlesession") == "true"))
+        {
+            $p_Event->getPlayer()->kick("You are already connected !", false);
+        }
+        else
         {
             $p_Event->setJoinMessage("");
             if ($this->config->getNested("redirect.to_type") != false && count($this->getServer()->getOnlinePlayers()) > $this->config->getNested("redirect.limit"))
@@ -357,10 +361,6 @@ class LoadBalancer extends PluginBase implements Listener
                 // TODO check Transfert table
                 $this->insertPlayer($p_Event->getPlayer());
             }
-        }
-        else
-        {
-            $p_Event->getPlayer()->kick("You are already connected !", false);
         }
     }
 
