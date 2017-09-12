@@ -35,15 +35,15 @@ goBackLobbyMessage2: "§4to lobby"
 infoSignColor: "§5"
 
 # NetworkInfo sign messages
-networktext: "NetworkInfo"
-#typetext: "§6SERVERS"
+networktext: "Server Info"
 gametext: "§6GAME "
-serveropen: "§6OPEN"
+serveropen: "§2OPEN"
 serverclosed: "§4CLOSED"
 servererror: "§4ERROR"
 serveroffline: "§4OFFLINE"
-lastline: "§4OFFLINE"
-networksignlast: "Click to go"
+networksignlast: "§n§9Click to go"
+noserver: "§cNo Server"
+serversfull: "§6Servers full"
 
 # EXAMPLE SIGNS :
 #

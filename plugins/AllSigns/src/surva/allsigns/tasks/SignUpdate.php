@@ -44,6 +44,8 @@ class SignUpdate extends PluginTask {
                         if ($this->allSigns->getServer()->getPluginManager()->getPlugin("LoadBalancer") != null)
                         {
                             $LoadBalancer = \fatcraft\loadbalancer\LoadBalancer::getInstance();
+                            $l_canJoin = false;
+                            $l_LastLine = "";
                             if (strstr($text[1], '-')) // in case of server sign
                             {
                                 $split = explode('-', $text[1]);
@@ -52,6 +54,7 @@ class SignUpdate extends PluginTask {
                                 {
                                     if ($server["status"] == "open")
                                     {
+                                        $l_canJoin = true;
                                         $text[2] = $this->getAllSigns()->getConfig()->get("serveropen");
                                     }
                                     else if ($server["status"] == "closed")
@@ -74,14 +77,29 @@ class SignUpdate extends PluginTask {
                                 $online = 0;
                                 $max = 0;
                                 $servers = $LoadBalancer->getServersByType($text[1]);
-                                foreach($servers as $server)
+                                if ($servers !== null and count($servers) > 0)
                                 {
-                                    $online += $server["online"];
-                                    $max += $server["max"];
+                                    foreach($servers as $server)
+                                    {
+                                        $online += $server["online"];
+                                        $max += $server["max"];
+                                    }
+                                    if ($online < $max)
+                                    {
+                                        $l_canJoin = true;
+                                    }
+                                }
+                                if ($max == 0)
+                                {
+                                    $l_LastLine = $this->getAllSigns()->getConfig()->get("noserver");
+                                }
+                                else if ($max == $online)
+                                {
+                                    $l_LastLine = $this->getAllSigns()->getConfig()->get("serversfull");
                                 }
                                 $text[2] = $online . "/" . $max;
                             }
-                            $tile->setText($this->getAllSigns()->getConfig()->get("networktext"), $text[1], $text[2], $this->getAllSigns()->getConfig()->get("networksignlast"));
+                            $tile->setText($this->getAllSigns()->getConfig()->get("networktext"), $text[1], $text[2], $l_canJoin ? $this->getAllSigns()->getConfig()->get("networksignlast") : $l_LastLine);
                         }
                     }
                 }
