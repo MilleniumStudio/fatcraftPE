@@ -25,6 +25,10 @@ fi
 --out MSpawns.phar
 
 ../PocketMine-MP/bin/php7/bin/php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
+--make Slapper/ \
+--out Slapper.phar
+
+../PocketMine-MP/bin/php7/bin/php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
 --make Worlds/ \
 --out Worlds.phar
 
