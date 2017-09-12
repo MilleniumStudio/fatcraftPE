@@ -4,14 +4,16 @@ namespace hungergames;
 
 use fatutils\loot\ChestsManager;
 use fatutils\FatUtils;
+use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
+use fatutils\tools\bossBarAPI\BossBarAPI;
 use fatutils\tools\Timer;
 use fatutils\tools\WorldUtils;
 use fatutils\game\GameManager;
 use fatutils\spawns\SpawnManager;
-use fatutils\loot\LootManager;
+use fatutils\tools\MathUtils;
+use fatutils\tools\BossbarTimer;
 use pocketmine\level\Location;
-use pocketmine\network\mcpe\protocol\BossEventPacket;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat;
@@ -21,6 +23,7 @@ class HungerGame extends PluginBase
     private $m_HungerGameConfig;
     private static $m_Instance;
     private $m_WaitingTimer;
+    private $m_PlayTimer;
 
     public static function getInstance(): HungerGame
     {
@@ -80,7 +83,7 @@ class HungerGame extends PluginBase
                 if (is_null($this->m_WaitingTimer))
                 {
                     echo "MIN PLAYER REACH !\n";
-                    $this->m_WaitingTimer = (new Timer(GameManager::getInstance()->getWaitingTickDuration()))
+                    $this->m_WaitingTimer = (new BossbarTimer(GameManager::getInstance()->getWaitingTickDuration()))
                         ->addTickCallback(function ()
                         {
                             if ($this->getServer()->getTick() % 20 == 0)
@@ -122,11 +125,72 @@ class HungerGame extends PluginBase
             PlayersManager::getInstance()->getFatPlayer($l_Player)->setPlaying();
             if ($this->getHungerGameConfig()->isSkyWars())
                 $l_Player->setGamemode(0);
-            $l_Player->sendTip(TextFormat::GREEN . "GO !");
+            $l_Player->addTitle(TextFormat::GREEN . "GO !");
         }
+
+        $this->m_PlayTimer = (new BossbarTimer(GameManager::getInstance()->getPlayingTickDuration()))
+            ->setTitle("Fin dans")
+            ->addTickCallback(function () {
+                if ($this->getServer()->getTick() % 5)
+                {
+                    if ($this->m_PlayTimer instanceof Timer)
+                    {
+                        $secondLeft = $this->m_PlayTimer->getSecondLeft();
+                        if ($secondLeft == 60
+                            || $secondLeft == 10
+                            || $secondLeft < 5)
+                        {
+                            foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+                            {
+                                $l_Player->sendTip("Temps restant: " . TextFormat::YELLOW . $secondLeft . TextFormat::RESET . " secondes");
+                            }
+                        }
+                    }
+                }
+            })
+            ->addStopCallback(function () {
+                if (PlayersManager::getInstance()->getAlivePlayerLeft() == 0)
+                    $this->endGame();
+                else
+                {
+                    $l_ArenaLoc = Location::fromObject($this->getHungerGameConfig()->getDeathArenaLoc());
+
+                    foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+                    {
+                        $l_Player->sendTip(TextFormat::DARK_AQUA . TextFormat::BOLD . "Timer terminé, envoi vers l'arène !");
+                        $l_Player->teleport(WorldUtils::getRandomizedLocation($l_ArenaLoc, 2.5, 0, 2.5));
+                    }
+                }
+            })
+            ->start();
 
         GameManager::getInstance()->setPlaying();
         SpawnManager::getInstance()->unblockSpawns();
+    }
+
+    public function endGame()
+    {
+        foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+        {
+            $winners = PlayersManager::getInstance()->getAlivePlayers();
+            $winnerName = "";
+            if (count($winners) > 0)
+            {
+                $winner = $winners[0];
+                if ($winner instanceof FatPlayer)
+                {
+                    $winnerName = $winner->getPlayer()->getName();
+                }
+            }
+
+            $l_Player->addTitle(TextFormat::DARK_AQUA . TextFormat::BOLD . "Partie terminée", TextFormat::GREEN . TextFormat::BOLD . "le vaiqueur est " . $winnerName, 30, 80, 30);
+            (new Timer(30))
+                ->addStopCallback(function ()
+                {
+                    $this->getServer()->shutdown();
+                })
+                ->start();
+        }
     }
 
     //---------------------

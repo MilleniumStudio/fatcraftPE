@@ -4,18 +4,11 @@ namespace hungergames;
 
 use fatutils\players\PlayersManager;
 use fatutils\tools\WorldUtils;
-use plugins\FatUtils\src\fatutils\game\GameManager;
 use pocketmine\event\block\BlockBreakEvent;
-use pocketmine\event\block\SignChangeEvent;
-use pocketmine\event\entity\EntityLevelChangeEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerDeathEvent;
-use pocketmine\event\player\PlayerInteractEvent;
-use pocketmine\event\player\PlayerMoveEvent;
-use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\player\PlayerJoinEvent;
-use pocketmine\level\Location;
-use function Sodium\library_version_major;
+use pocketmine\utils\TextFormat;
 
 class EventListener implements Listener
 {
@@ -25,43 +18,24 @@ class EventListener implements Listener
 	}
 
 	/**
-	 * @param PlayerMoveEvent $e
-	 */
-	public function onMove(PlayerMoveEvent $e)
-	{
-
-	}
-
-	/**
-	 * @param SignChangeEvent $e
-	 */
-	public function onSignChange(SignChangeEvent $e)
-	{
-		$p = $e->getPlayer();
-	}
-
-	/**
-	 * @param PlayerInteractEvent $e
-	 */
-	public function onInteract(PlayerInteractEvent $e)
-	{
-
-	}
-
-	/**
-	 * @param PlayerQuitEvent $e
-	 */
-	public function playerQuitEvent(PlayerQuitEvent $e)
-	{
-		$p = $e->getPlayer();
-	}
-
-	/**
 	 * @param PlayerDeathEvent $e
 	 */
 	public function playerDeathEvent(PlayerDeathEvent $e)
 	{
 		$p = $e->getEntity();
+		PlayersManager::getInstance()->getFatPlayer($p)->setHasLost(true);
+
+        WorldUtils::addStrike($p->getLocation());
+        $l_PlayerLeft = PlayersManager::getInstance()->getAlivePlayerLeft();
+        if ($l_PlayerLeft > 1)
+        {
+            foreach (HungerGame::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+                $l_Player->sendMessage("Il reste " . TextFormat::YELLOW . PlayersManager::getInstance()->getAlivePlayerLeft() . TextFormat::RESET . " survivants !", "*");
+        } else {
+            HungerGame::getInstance()->endGame();
+        }
+
+		$p->setGamemode(3);
 	}
 
 	/**
@@ -69,7 +43,7 @@ class EventListener implements Listener
 	 */
 	public function onBlockBreak(BlockBreakEvent $e)
 	{
-
+        $e->setCancelled(true);
 	}
 
 	/**
