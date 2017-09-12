@@ -28,7 +28,7 @@ class LoadBalancer extends PluginBase implements Listener
     private $m_ServerUUID;
     private $m_ServerType;
     private $m_Serverid;
-    private $m_ServerState = "closed";
+    private $m_ServerState = "closed"; // open / closed
 
     /** @var \mysqli */
     private $m_Mysql;
@@ -71,6 +71,9 @@ class LoadBalancer extends PluginBase implements Listener
 
         //init database
         $this->initDatabase();
+
+        //test hack
+        $this->setServerState("open");
 
         // update my status every second
         $this->getServer()->getScheduler()->scheduleDelayedRepeatingTask(new class($this) extends PluginTask
@@ -147,6 +150,64 @@ class LoadBalancer extends PluginBase implements Listener
         return $this->m_Credentials;
     }
 
+    public function getServerState()
+    {
+        return $this->m_ServerState;
+    }
+
+    public function setServerState(String $p_State)
+    {
+        $this->m_ServerState = $p_State;
+    }
+
+    public function getPlayerServerUUIDByName(String $p_PlayerName)
+    {
+        $result = MysqlResult::executeQuery($this->connectMainThreadMysql(),
+            "SELECT * FROM players_on_servers WHERE name = ?", [
+                ["s", $p_PlayerName]
+        ]);
+        if (($result instanceof MysqlSelectResult) and count($result->rows) == 1)
+        {
+            return $result->rows[0]["sid"];
+        }
+        return null;
+    }
+
+    public function getPlayerServerUUIDByUUID(String $p_PlayerUUID)
+    {
+        $result = MysqlResult::executeQuery($this->connectMainThreadMysql(),
+            "SELECT * FROM players_on_servers WHERE uuid = ?", [
+                ["s", $p_PlayerUUID]
+        ]);
+        if (($result instanceof MysqlSelectResult) and count($result->rows) == 1)
+        {
+            return $result->rows[0]["sid"];
+        }
+        return null;
+    }
+
+    public function getServerData(String $p_ServerUUID)
+    {
+        $result = MysqlResult::executeQuery($this->connectMainThreadMysql(),
+            "SELECT * FROM servers WHERE sid = ?", [
+                ["s", $p_ServerUUID]
+        ]);
+        if (($result instanceof MysqlSelectResult) and isset($result->rows[0]))
+        {
+            $server["sid"] = $result->rows[0]["sid"];
+            $server["type"] = $result->rows[0]["type"];
+            $server["id"] = $result->rows[0]["id"];
+            $server["ip"] = $result->rows[0]["ip"];
+            $server["port"] = $result->rows[0]["port"];
+            $server["status"] = $result->rows[0]["status"];
+            $server["online"] = $result->rows[0]["online"];
+            $server["max"] = $result->rows[0]["max"];
+            $server["diff"] = $result->rows[0]["diff"];
+            return $server;
+        }
+        return null;
+    }
+
     private function initDatabase()
     {
         $this->m_Mysql->query("CREATE TABLE IF NOT EXISTS servers (
@@ -155,7 +216,7 @@ class LoadBalancer extends PluginBase implements Listener
             id INT(11),
             ip VARCHAR(15),
             port SMALLINT,
-            status VARCHAR(63),
+            status VARCHAR(63) DEFAULT closed,
             online SMALLINT,
             max SMALLINT,
             laston TIMESTAMP default CURRENT_TIMESTAMP
@@ -182,7 +243,7 @@ class LoadBalancer extends PluginBase implements Listener
                 ["i", $this->m_ServerId],
                 ["s", $this->m_Mysql->escape_string($this->config->getNested("external_ip"))],
                 ["i", $this::getInstance()->getServer()->getPort()],
-                ["s", "test"],
+                ["s", $this->m_ServerState],
                 ["i", count($this::getInstance()->getServer()->getOnlinePlayers())],
                 ["i", $this::getInstance()->getServer()->getMaxPlayers()],
                 ["i", count($this::getInstance()->getServer()->getOnlinePlayers())]
@@ -205,12 +266,13 @@ class LoadBalancer extends PluginBase implements Listener
     }
 
     // get best online
-    public function getBest($type = "lobby")
+    public function getBest($type = "lobby", $p_State = "open")
     {
         $result = MysqlResult::executeQuery($this->connectMainThreadMysql(),
-            "SELECT * FROM servers WHERE UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston) < 5000 AND sid != ? AND `max` > `online` AND `type` = ? ORDER BY `max` DESC LIMIT 1", [
+            "SELECT *, (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) AS diff  FROM servers WHERE UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston) < 5 AND sid != ? AND `max` > `online` AND `type` = ? AND `status` = ? ORDER BY `max` DESC LIMIT 1", [
                 ["s", $this::getInstance()->m_ServerUUID],
-                ["s", $type]
+                ["s", $type],
+                ["s", $p_State]
             ]
         );
         if (($result instanceof MysqlSelectResult) and isset($result->rows[0]))
@@ -223,7 +285,7 @@ class LoadBalancer extends PluginBase implements Listener
             $server["status"] = $result->rows[0]["status"];
             $server["online"] = $result->rows[0]["online"];
             $server["max"] = $result->rows[0]["max"];
-            $server["diff"] = 0;
+            $server["diff"] = $result->rows[0]["diff"];
             return $server;
         }
         return null;
@@ -235,7 +297,7 @@ class LoadBalancer extends PluginBase implements Listener
         $l_Servers = array();
         $l_TotalPlayers = 0;
         $result = MysqlResult::executeQuery($this->connectMainThreadMysql(),
-            "SELECT * FROM servers WHERE UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston) < 5000 AND sid != ?", [
+            "SELECT *, (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) AS diff  FROM servers WHERE (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) < 5 AND sid != ?", [
                 ["s", $this::getInstance()->m_ServerUUID]
         ]);
         if (($result instanceof MysqlSelectResult) and count($result->rows) > 0)
@@ -250,7 +312,7 @@ class LoadBalancer extends PluginBase implements Listener
                 $server["status"] = $result->rows[0]["status"];
                 $server["online"] = $row["online"];
                 $server["max"] = $row["max"];
-                $server["diff"] = 0;
+                $server["diff"] = $row["diff"];
 
                 $l_Servers[$server["type"]][$server["id"]] = $server;
                 $l_TotalPlayers = $row["online"];
@@ -258,6 +320,34 @@ class LoadBalancer extends PluginBase implements Listener
         }
         $this->m_Servers = $l_Servers;
         $this->m_TotalPlayers = $l_TotalPlayers;
+    }
+
+    public function getServers($type = "lobby", $p_State = "open")
+    {
+        $result = MysqlResult::executeQuery($this->connectMainThreadMysql(),
+            "SELECT *, (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) AS diff FROM servers WHERE `type` = ? AND `status` = ?", [
+                ["s", $type],
+                ["s", $p_State]
+            ]
+        );
+        if (($result instanceof MysqlSelectResult) and count($result->rows) > 0)
+        {
+            $server = array();
+            foreach ($result->rows as $row)
+            {
+                $server[]["sid"] = $row->rows[0]["sid"];
+                $server[]["type"] = $row->rows[0]["type"];
+                $server[]["id"] = $row->rows[0]["id"];
+                $server[]["ip"] = $row->rows[0]["ip"];
+                $server[]["port"] = $row->rows[0]["port"];
+                $server[]["status"] = $row->rows[0]["status"];
+                $server[]["online"] = $row->rows[0]["online"];
+                $server[]["max"] = $row->rows[0]["max"];
+                $server[]["diff"] = $row->rows[0]["diff"];
+            }
+            return $server;
+        }
+        return null;
     }
 
     // clean old servers unix_timestamp()-unix_timestamp(laston) > 10
@@ -309,7 +399,7 @@ class LoadBalancer extends PluginBase implements Listener
             $pk->address = $ev->getAddress();
             $pk->port = $ev->getPort();
             $p_Player->directDataPacket($pk, true);
-            $p_Player->close("", $ev->getMessage(), false);
+//            $p_Player->close("", $ev->getMessage(), false);
         }
     }
 
@@ -344,16 +434,31 @@ class LoadBalancer extends PluginBase implements Listener
             $p_Event->setJoinMessage("");
             if ($this->config->getNested("redirect.to_type") != false && count($this->getServer()->getOnlinePlayers()) > $this->config->getNested("redirect.limit"))
             {
-                // select random server
-                $server = $this->getBest($this->config->getNested("redirect.to_type"));
-                // fire event
-                $this->getServer()->getPluginManager()->callEvent($l_Event = new BalancePlayerEvent($this, $p_Event->getPlayer(), $server["ip"], $server["port"]));
-                if ($l_Event->getIp() === null or $l_Event->getPort() === null)
+                try
                 {
-                    $p_Event->getPlayer()->kick("%disconnectScreen.serverFull", false);
-                } else
+                    // select random server
+                    $server = $this->getBest($this->config->getNested("redirect.to_type"), "open");
+                    if ($server !== null)
+                    {
+                        // fire event
+                        $this->getServer()->getPluginManager()->callEvent($l_Event = new BalancePlayerEvent($this, $p_Event->getPlayer(), $server["ip"], $server["port"]));
+                        if ($l_Event->getIp() === null or $l_Event->getPort() === null)
+                        {
+                            $p_Event->getPlayer()->kick("%disconnectScreen.serverFull", false);
+                        }
+                        else
+                        {
+                            $this->transferPlayer($p_Event->getPlayer(), $l_Event->getIp(), $l_Event->getPort(), $this->config->getNested("redirect.message"));
+                        }
+                    }
+                    else
+                    {
+                        $p_Event->getPlayer()->kick("LoadBalancer error, no server route !", false);
+                    }
+                }
+                catch (Exception $ex)
                 {
-                    $this->transferPlayer($p_Event->getPlayer(), $l_Event->getIp(), $l_Event->getPort(), $this->config->getNested("redirect.message"));
+                    $p_Event->getPlayer()->kick("Problem occured on LoadBalancer !", false);
                 }
             }
             else

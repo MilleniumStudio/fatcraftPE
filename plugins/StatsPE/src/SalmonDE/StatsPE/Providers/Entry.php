@@ -17,56 +17,63 @@ class Entry
     private $shouldSave;
     private $unsigned;
 
-    public function __construct(string $name, $default, int $type, bool $shouldSave, bool $unsigned = false){
+    public function __construct(string $name, $default, int $type, bool $shouldSave, bool $unsigned = false)
+    {
         $this->name = $name;
         $this->expectedType = $type;
-        if($this->isValidType($default)){
+        if ($this->isValidType($default)) {
             $this->defaultValue = $default;
             $this->shouldSave = $shouldSave;
             $this->valid = true;
+        } else {
+            echo "\"" . $default . "\" is not a valid value for type " . $type . " for entry named " . $name;
         }
     }
 
-    public function getName() : string{
+    public function getName(): string
+    {
         return $this->name;
     }
 
-    public function getExpectedType() : int{
+    public function getExpectedType(): int
+    {
         return $this->expectedType;
     }
 
-    public function getDefault(){
+    public function getDefault()
+    {
         return $this->defaultValue;
     }
 
-    public final function isValidType($value) : bool{
-        switch($this->expectedType){
+    public final function isValidType($value): bool
+    {
+        switch ($this->expectedType) {
             case self::INT:
-                if(is_int($value)){
+                if (is_int($value)) {
                     return true;
                 }
                 break;
 
             case self::FLOAT:
-                if(is_float($value)){
+                if (is_float($value)) {
                     return true;
                 }
                 break;
 
             case self::STRING:
-                if(is_string($value)){
+                if (is_string($value)) {
                     return true;
                 }
                 break;
 
             case self::ARRAY:
-                if(is_array($value)){
+                if (is_array($value)) {
                     return true;
                 }
                 break;
 
             case self::BOOL:
-                if(is_bool($value)){
+                if (is_bool($value)) {
                     return true;
                 }
                 break;
@@ -77,15 +84,18 @@ class Entry
         return false;
     }
 
-    public function isUnsigned() : bool{
+    public function isUnsigned(): bool
+    {
         return ($this->unsigned && $this->expectedType === self::INT);
     }
 
-    public function isValid() : bool{
+    public function isValid(): bool
+    {
         return $this->valid;
     }
 
-    public function shouldSave() : bool{
+    public function shouldSave(): bool
+    {
         return $this->shouldSave;
     }
 }
