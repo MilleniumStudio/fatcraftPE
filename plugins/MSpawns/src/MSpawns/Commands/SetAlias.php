@@ -14,6 +14,7 @@ namespace MSpawns\Commands;
 use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
+use pocketmine\plugin\PluginBase;
 use MSpawns\Main;
 
 class SetAlias extends PluginBase implements CommandExecutor

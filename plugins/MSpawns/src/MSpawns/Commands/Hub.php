@@ -15,9 +15,10 @@ use pocketmine\Player;
 use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
+use pocketmine\plugin\PluginBase;
 use MSpawns\Main;
 
-class Hub  implements CommandExecutor
+class Hub extends PluginBase implements CommandExecutor
 {
 
     public function __construct(Main $plugin)
