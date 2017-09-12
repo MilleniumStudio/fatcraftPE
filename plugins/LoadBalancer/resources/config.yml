@@ -3,9 +3,9 @@
 ## Mysql connector config
 mysql:
   host: mysql
-  username: fatcraftpe
-  password: s54c5xcw4v56xc74g534cxb54g65b4gf654145bg
-  schema: fatcraft_pe
+  username: root
+  password: ""
+  schema: lb
 
 ## This node configuration
 ## type : is the server type, ex : entry, main_lobby, parkour_lobby...

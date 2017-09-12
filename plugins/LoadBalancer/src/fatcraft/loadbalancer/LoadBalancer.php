@@ -39,6 +39,9 @@ class LoadBalancer extends PluginBase implements Listener
     private $m_TotalPlayers = 0;
     private $m_MaxPlayers = 0;
 
+    private $m_NextSign;
+    private $m_Signs = array();
+
     public function onLoad()
     {
         // registering instance
@@ -309,7 +312,7 @@ class LoadBalancer extends PluginBase implements Listener
                 $server["id"] = $row["id"];
                 $server["ip"] = $row["ip"];
                 $server["port"] = $row["port"];
-                $server["status"] = $result->rows[0]["status"];
+                $server["status"] = $row["status"];
                 $server["online"] = $row["online"];
                 $server["max"] = $row["max"];
                 $server["diff"] = $row["diff"];
@@ -320,6 +323,25 @@ class LoadBalancer extends PluginBase implements Listener
         }
         $this->m_Servers = $l_Servers;
         $this->m_TotalPlayers = $l_TotalPlayers;
+    }
+
+    public function getServersByType($type = "lobby")
+    {
+        $result = MysqlResult::executeQuery($this->connectMainThreadMysql(),
+            "SELECT *, (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) AS diff FROM servers WHERE `type` = ?", [
+                ["s", $type]
+            ]
+        );
+        if (($result instanceof MysqlSelectResult) and count($result->rows) > 0)
+        {
+            $server = array();
+            foreach ($result->rows as $row)
+            {
+                $server[] = $row;
+            }
+            return $server;
+        }
+        return null;
     }
 
     public function getServers($type = "lobby", $p_State = "open")
@@ -335,16 +357,40 @@ class LoadBalancer extends PluginBase implements Listener
             $server = array();
             foreach ($result->rows as $row)
             {
-                $server[]["sid"] = $row->rows[0]["sid"];
-                $server[]["type"] = $row->rows[0]["type"];
-                $server[]["id"] = $row->rows[0]["id"];
-                $server[]["ip"] = $row->rows[0]["ip"];
-                $server[]["port"] = $row->rows[0]["port"];
-                $server[]["status"] = $row->rows[0]["status"];
-                $server[]["online"] = $row->rows[0]["online"];
-                $server[]["max"] = $row->rows[0]["max"];
-                $server[]["diff"] = $row->rows[0]["diff"];
+                $server[]["sid"] = $row["sid"];
+                $server[]["type"] = $row["type"];
+                $server[]["id"] = $row["id"];
+                $server[]["ip"] = $row["ip"];
+                $server[]["port"] = $row["port"];
+                $server[]["status"] = $row["status"];
+                $server[]["online"] = $row["online"];
+                $server[]["max"] = $row["max"];
+                $server[]["diff"] = $row["diff"];
             }
+            return $server;
+        }
+        return null;
+    }
+
+    public function getNetworkServer($type = "lobby", $id = -1)
+    {
+        $result = MysqlResult::executeQuery($this->connectMainThreadMysql(),
+            "SELECT *, (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) AS diff FROM servers WHERE `type` = ? AND `id` = ? LIMIT 1", [
+                ["s", $type],
+                ["i", $id]
+            ]
+        );
+        if (($result instanceof MysqlSelectResult) and isset($result->rows[0]))
+        {
+            $server["sid"] = $result->rows[0]["sid"];
+            $server["type"] = $result->rows[0]["type"];
+            $server["id"] = $result->rows[0]["id"];
+            $server["ip"] = $result->rows[0]["ip"];
+            $server["port"] = $result->rows[0]["port"];
+            $server["status"] = $result->rows[0]["status"];
+            $server["online"] = $result->rows[0]["online"];
+            $server["max"] = $result->rows[0]["max"];
+            $server["diff"] = $result->rows[0]["diff"];
             return $server;
         }
         return null;
@@ -584,6 +630,33 @@ class LoadBalancer extends PluginBase implements Listener
                             }
                         }
                         break;
+//                    case "sign":
+//                        if (count($p_Param) >= 2) // /server sign <template> [id]
+//                        {
+//                            if ($l_Player !== null)
+//                            {
+//                                $l_Template = $p_Param[1];
+//                                $this->m_NextSign['type'] = $l_Template;
+//                                if (count($p_Param) == 2) // /server sign lobby 1
+//                                {
+//                                     unset $this->m_NextSign['id'];
+//                                }
+//                                else if (count($p_Param) == 3) // /server sign lobby 1
+//                                {
+//                                    $l_Id = $p_Param[2];
+//                                    $this->m_NextSign['id'] = $l_Id;
+//                                }
+//                                else
+//                                {
+//                                    $this->sendServerHelp($sender);
+//                                }
+//                            }
+//                            else
+//                            {
+//                                $sender->sendMessage('Unknown player ' . $p_Param[1]);
+//                            }
+//                        }
+//                        break;
                     case "test":
                         var_dump($this->m_Servers);
                     break;
@@ -595,6 +668,28 @@ class LoadBalancer extends PluginBase implements Listener
         }
         return true;
     }
+
+//    public function onBlockPlace(\pocketmine\event\block\BlockPlaceEvent $event){
+//        if(!$event->isCancelled())
+//        {
+//            if ($event->getItem()->getId() == \pocketmine\item\ItemIds::SIGN or $event->getItem()->getId() == \pocketmine\item\ItemIds::SIGN_POST)
+//            if($this->m_NextSign !== null)
+//            {
+//                if($this->m_NextSign['type'])
+//                {
+//                    $this->m_NextSign['id'];
+//                    //create sign
+//                    $this->getConfig()->
+//                }
+//            }
+//        }
+//    }
+
+//    function updateSign(pocketmine\tile\Sign $p_Sign, String $p_SignPattern, Array $Data)
+//    {
+//        $text = $p_Sign->getText();
+//        $p_Sign->setText($text[0], $text[1], $text[2], $this->getAllSigns()->getConfig()->get("error"));
+//    }
 
     private function sendServerHelp(CommandSender $sender)
     {
