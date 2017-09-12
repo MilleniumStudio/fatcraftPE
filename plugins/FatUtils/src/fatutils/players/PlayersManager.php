@@ -40,11 +40,14 @@ class PlayersManager
 
     public function initialize()
     {
-        $this->setMinPlayer(FatUtils::getInstance()->getTemplateConfig()->get(PlayersManager::CONFIG_KEY_MIN_PLAYER));
-        $this->setMaxPlayer(FatUtils::getInstance()->getTemplateConfig()->get(PlayersManager::CONFIG_KEY_MAX_PLAYER));
-        echo "Initializing PlayersManager\n";
-        echo "  - minPlayers: " . $this->getMinPlayer() . "\n";
-        echo "  - maxPlayers: " . $this->getMaxPlayer() . "\n";
+        if (!is_null(FatUtils::getInstance()->getTemplateConfig()))
+        {
+            $this->setMinPlayer(FatUtils::getInstance()->getTemplateConfig()->get(PlayersManager::CONFIG_KEY_MIN_PLAYER));
+            $this->setMaxPlayer(FatUtils::getInstance()->getTemplateConfig()->get(PlayersManager::CONFIG_KEY_MAX_PLAYER));
+            echo "Initializing PlayersManager\n";
+            echo "  - minPlayers: " . $this->getMinPlayer() . "\n";
+            echo "  - maxPlayers: " . $this->getMaxPlayer() . "\n";
+        }
     }
 
 	public function addPlayer(Player $p_Player)
@@ -76,6 +79,28 @@ class PlayersManager
 	{
 		return $this->m_FatPlayers[$p_UUID->toBinary()];
 	}
+
+	public function getAlivePlayerLeft(): int
+    {
+        $i = 0;
+        foreach ($this->m_FatPlayers as $l_FatPlayer)
+        {
+            if ($l_FatPlayer instanceof FatPlayer && !$l_FatPlayer->hasLost())
+                $i++;
+        }
+        return $i;
+    }
+
+    public function getAlivePlayers(): array
+    {
+        $l_Ret = [];
+        foreach ($this->m_FatPlayers as $l_FatPlayer)
+        {
+            if ($l_FatPlayer instanceof FatPlayer && !$l_FatPlayer->hasLost())
+                $l_Ret[] = $l_FatPlayer;
+        }
+        return $l_Ret;
+    }
 
 	//----------------
 	// GETTERS

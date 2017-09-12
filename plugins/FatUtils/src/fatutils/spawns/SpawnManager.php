@@ -32,12 +32,14 @@ class SpawnManager
 
     public function initialize()
     {
-
-        echo "SpawnManager loading...\n";
-        foreach (FatUtils::getInstance()->getTemplateConfig()->get("spawns") as $l_RawLocation)
+        if (!is_null(FatUtils::getInstance()->getTemplateConfig()))
         {
-            $this->m_Spawns[] = WorldUtils::stringToLocation($l_RawLocation);
-            echo "   - " . $l_RawLocation . "\n";
+            echo "SpawnManager loading...\n";
+            foreach (FatUtils::getInstance()->getTemplateConfig()->get("spawns") as $l_RawLocation)
+            {
+                $this->m_Spawns[] = WorldUtils::stringToLocation($l_RawLocation);
+                echo "   - " . $l_RawLocation . "\n";
+            }
         }
     }
 

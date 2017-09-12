@@ -16,11 +16,11 @@ class GameManager
     const GAME_STATE_WAITING = 0;
     const GAME_STATE_PLAYING = 1;
 
-    const CONFIG_KEY_WAITING_TICK_DURATION = "waitingTickDuration";
-    const CONFIG_KEY_PLAYING_TICK_DURATION = "playingTickDuration";
+    const CONFIG_KEY_WAITING_SEC_DURATION = "waitingSecDuration";
+    const CONFIG_KEY_PLAYING_SEC_DURATION = "playingSecDuration";
 
     private $m_State = GameManager::GAME_STATE_WAITING;
-    private $m_WaitingTickDuration = 600; // 5min
+    private $m_WaitingTickDuration = 1800; // 30sec
     private $m_PlayingTickDuration = 6000; // 5min
     private static $m_Instance = null;
 
@@ -36,8 +36,11 @@ class GameManager
      */
     private function __construct()
     {
-        $this->setWaitingTickDuration(FatUtils::getInstance()->getTemplateConfig()->get(GameManager::CONFIG_KEY_WAITING_TICK_DURATION));
-        $this->setPlayingTickDuration(FatUtils::getInstance()->getTemplateConfig()->get(GameManager::CONFIG_KEY_PLAYING_TICK_DURATION));
+        if (!is_null(FatUtils::getInstance()->getTemplateConfig()))
+        {
+            $this->setWaitingTickDuration(FatUtils::getInstance()->getTemplateConfig()->get(GameManager::CONFIG_KEY_WAITING_SEC_DURATION, 30) * 20);
+            $this->setPlayingTickDuration(FatUtils::getInstance()->getTemplateConfig()->get(GameManager::CONFIG_KEY_PLAYING_SEC_DURATION, 5 * 60) * 20);
+        }
     }
 
     /**

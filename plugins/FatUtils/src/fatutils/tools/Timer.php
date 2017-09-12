@@ -59,6 +59,16 @@ class Timer
         return $this;
     }
 
+    public function getElapsedTimeInTick():int
+    {
+        return $this->m_OriginTimeout - $this->m_TimeLeft;
+    }
+
+    public function getTimeSpentRatio():float
+    {
+        return (1.0 - ((((float) ($this->getElapsedTimeInTick())) / (float) $this->m_OriginTimeout)));
+    }
+
 	/**
 	 * @return int
 	 */
@@ -154,21 +164,36 @@ class Timer
                 {
                     if (!$this->m_Started)
                     {
-                        if (!is_null($this->m_TimerInstance->getStartCallback()))
-                            call_user_func($this->m_TimerInstance->getStartCallback());
+                        $this->m_TimerInstance->_onStart();
                         $this->m_Started = true;
                     }
-                    if (!is_null($this->m_TimerInstance->getTickCallback()))
-                        call_user_func($this->m_TimerInstance->getTickCallback());
+                    $this->m_TimerInstance->_onTick();
                     $this->m_TimerInstance->_modTime(-1);
                 } else {
-                    if (!is_null($this->m_TimerInstance->getStopCallback()))
-                        call_user_func($this->m_TimerInstance->getStopCallback());
                     FatUtils::getInstance()->getServer()->getScheduler()->cancelTask($this->getTaskId());
+                    $this->m_TimerInstance->_onStop();
                 }
 			}
 		}, 1);
 
         return $this;
 	}
+
+	public function _onStart()
+    {
+        if (!is_null($this->getStartCallback()))
+            call_user_func($this->getStartCallback());
+    }
+
+    public function _onTick()
+    {
+        if (!is_null($this->getTickCallback()))
+            call_user_func($this->getTickCallback());
+    }
+
+    public function _onStop()
+    {
+        if (!is_null($this->getStopCallback()))
+            call_user_func($this->getStopCallback());
+    }
 }

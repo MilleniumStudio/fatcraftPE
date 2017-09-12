@@ -39,23 +39,26 @@ class LootManager
 
     public function initialize()
     {
-        $l_FullConfig = FatUtils::getInstance()->getTemplateConfig()->get(LootManager::CONFIG_KEY_LOOT_ROOT);
-
-        foreach ($l_FullConfig as $l_LootKey)
+        if (!is_null(FatUtils::getInstance()->getTemplateConfig()))
         {
-            if (gettype($l_LootKey) == "array")
+            $l_FullConfig = FatUtils::getInstance()->getTemplateConfig()->get(LootManager::CONFIG_KEY_LOOT_ROOT);
+
+            foreach ($l_FullConfig as $l_LootKey)
             {
-                $this->m_LootTables[] = new LootTable($l_LootKey);
+                if (gettype($l_LootKey) == "array")
+                {
+                    $this->m_LootTables[] = new LootTable($l_LootKey);
+                }
             }
-        }
 
-        $weights = [];
-        foreach ($this->m_LootTables as $lootTable)
-        {
-            if ($lootTable instanceof LootTable)
-                $weights[] = $lootTable->getChance();
+            $weights = [];
+            foreach ($this->m_LootTables as $lootTable)
+            {
+                if ($lootTable instanceof LootTable)
+                    $weights[] = $lootTable->getChance();
+            }
+            $this->m_MainWeightedRandom = new WeightedRandom($weights);
         }
-        $this->m_MainWeightedRandom = new WeightedRandom($weights);
     }
 
     public function getRandomLootTable(int $p_MinItemValue = -1, int $p_MaxItemValue = -1):LootTable

@@ -7,13 +7,15 @@ use hungergames\HungerGame;
 use hungergames\LootTable;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
+use pocketmine\level\sound\GenericSound;
+use pocketmine\network\mcpe\protocol\LevelEventPacket;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 
 class FatUtils extends PluginBase
 {
-    private $m_TemplateConfig;
+    private $m_TemplateConfig = null;
 	private static $m_Instance;
 
 	public static function getInstance():FatUtils
@@ -33,7 +35,6 @@ class FatUtils extends PluginBase
 
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool
     {
-        var_dump($args);
         switch(strtolower($args[0]))
         {
             case "?":
@@ -49,8 +50,10 @@ class FatUtils extends PluginBase
             case "atest":
                 if($sender instanceof Player)
                 {
-                    $sender->sendTip("ceci est un tips");
-                    $sender->sendPopup("Ceci est un popup Title", "Ceci est un popup subtitle");
+                    $sender->getLocation()->getLevel()->addSound(new GenericSound($sender->getLocation(), LevelEventPacket::EVENT_START_THUNDER, 1));
+                    $sender->getLocation()->getLevel()->addSound(new GenericSound($sender->getLocation(), LevelEventPacket::EVENT_STOP_THUNDER, 1));
+//                    $sender->sendTip("ceci est un tips");
+//                    $sender->sendPopup("Ceci est un popup Title", "Ceci est un popup subtitle");
                 }
                 break;
             case "fillchests":
