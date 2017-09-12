@@ -21,10 +21,12 @@ class EventListener implements Listener
     /* @var AllSigns */
 
     private $allSigns;
+    private $m_ConsoleCommandSender;
 
     public function __construct(AllSigns $allSigns)
     {
         $this->allSigns = $allSigns;
+        $this->m_ConsoleCommandSender = new ConsoleCommandSender();
     }
 
     /**
@@ -67,7 +69,52 @@ class EventListener implements Listener
                         break;
 
                     case $configFile->get("command"):
-                        $tile->setText($configFile->get("commandtext"), $text[1], $text[2], $text[3]);
+                        $tile->setText($configFile->get("networktext"), $text[1], $text[2], $text[3]);
+                        break;
+
+                    case $configFile->get("network"):
+                        if ($this->allSigns->getServer()->getPluginManager()->getPlugin("LoadBalancer") != null)
+                        {
+                            $LoadBalancer = \fatcraft\loadbalancer\LoadBalancer::getInstance();
+                            if (strstr($text[1], '-')) // in case of server sign
+                            {
+                                $split = explode('-', $text[1]);
+                                $server = $LoadBalancer->getNetworkServer($split[0], $split[1]);
+                                if ($server !== null)
+                                {
+                                    if ($server["status"] == "open")
+                                    {
+                                        $text[2] = $configFile->get("serveropen");
+                                    }
+                                    else if ($server["status"] == "closed")
+                                    {
+                                        $text[2] = $configFile->get("serverclosed");
+                                    }
+                                    else
+                                    {
+                                        $text[2] = $server["status"];
+                                    }
+                                    $text[2] .= "§r    " . $server["online"] . "/" . $server["max"];
+                                }
+                                else
+                                {
+                                    $text[2] = $configFile->get("serveroffline");
+                                }
+                            }
+                            else // in case of type sign
+                            {
+                                $online = 0;
+                                $max = 0;
+                                $servers = $LoadBalancer->getServersByType($text[1]);
+                                foreach($servers as $server)
+                                {
+                                    $online += $server["online"];
+                                    $max += $server["max"];
+                                }
+                                $text[2] = $online . "/" . $max;
+                            }
+                            $tile->setText($configFile->get("networktext"), $text[1], $text[2], $configFile->get("networksignlast"));
+                        }
                         break;
 
                     case $configFile->get("tpNextLevel"):
@@ -106,10 +153,32 @@ class EventListener implements Listener
                         $this->getAllSigns()->getServer()->dispatchCommand($player, $text[2] . $text[3]);
                         break;
 
+                    case $configFile->get("networktext"):
+                        if ($this->allSigns->getServer()->getPluginManager()->getPlugin("LoadBalancer") != null)
+                        {
+                            $LoadBalancer = \fatcraft\loadbalancer\LoadBalancer::getInstance();
+                            if (strstr($text[1], '-')) // in case of server sign
+                            {
+                                $split = explode('-', $text[1]);
+                                $server = $LoadBalancer->getNetworkServer($split[0], $split[1]);
+                                if ($server !== null)
+                                {
+                                    if ($server["status"] == "open")
+                                    {
+                                        $this->getAllSigns()->getServer()->dispatchCommand($this->m_ConsoleCommandSender, "server connect " . $player->getName() . " ". $split[0] . " " . $split[1]);
+                                    }
+                                }
+                            }
+                            else // in case of type sign
+                            {
+                                $this->getAllSigns()->getServer()->dispatchCommand($this->m_ConsoleCommandSender, "server connect " . $player->getName() . " ". $text[1]);
+                            }
+                        }
+                        break;
+
                     case $configFile->get("tpNextLevelMessage1"):
                         $command = 'tp ' . $player->getName() . ' ' . substr($text[2], 6);
-                        var_dump($command);
-                        $this->getAllSigns()->getServer()->dispatchCommand(new ConsoleCommandSender(), $command);
+                        $this->getAllSigns()->getServer()->dispatchCommand($this->m_ConsoleCommandSender, $command);
                         break;
 
                     case $configFile->get("infoSign"):
@@ -117,24 +186,23 @@ class EventListener implements Listener
                         break;
                     case $configFile->get("Obf") . $configFile->get("infoSign"):
                         $command = substr($text[2], 3) . ' ' . $player->getName() . ' ' . substr($text[3], 3);
-                        $this->getAllSigns()->getServer()->dispatchCommand(new ConsoleCommandSender(), $command);
+                        $this->getAllSigns()->getServer()->dispatchCommand($this->m_ConsoleCommandSender, $command);
                         var_dump(substr($text[2], 3));
                         var_dump(substr($text[3], 3));
                         break;
 
                     default:
-                        var_dump($text[1]);
                         if ($text[1] == $configFile->get("checkpoint"))
                         {
                             $command = "spawnpoint " . $player->getName() . " " . $player->getPosition()->getX() . " " . $player->getPosition()->getY() . " " . $player->getPosition()->getZ();
-                            $this->getAllSigns()->getServer()->dispatchCommand(new ConsoleCommandSender(), $command);
+                            $this->getAllSigns()->getServer()->dispatchCommand($this->m_ConsoleCommandSender, $command);
                         }
 
                         if ($text[1] == $configFile->get("goToGameMessage1") || $text[1] == $configFile->get("goBackLobbyMessage1"))
                         {
                             $command = substr($text[0], 3) . " " . $player->getName() . " " . substr($text[3], 3);
                             var_dump($command);
-                            $this->getAllSigns()->getServer()->dispatchCommand(new ConsoleCommandSender(), $command);
+                            $this->getAllSigns()->getServer()->dispatchCommand($this->m_ConsoleCommandSender, $command);
                         }
                 }
             }

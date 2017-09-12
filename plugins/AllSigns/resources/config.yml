@@ -13,6 +13,7 @@ worldtext: "§9World"
 players: "players"
 
 command: "command"
+network: "network"
 addCheckpoint: "addCheckpoint"
 Obf: "§k"
 tpNextLevel: "tpNextLevel"
@@ -32,6 +33,17 @@ goToGameMessage2: "§6the game !"
 goBackLobbyMessage1: "§4Go back"
 goBackLobbyMessage2: "§4to lobby"
 infoSignColor: "§5"
+
+# NetworkInfo sign messages
+networktext: "NetworkInfo"
+#typetext: "§6SERVERS"
+gametext: "§6GAME "
+serveropen: "§6OPEN"
+serverclosed: "§4CLOSED"
+servererror: "§4ERROR"
+serveroffline: "§4OFFLINE"
+lastline: "§4OFFLINE"
+networksignlast: "Click to go"
 
 # EXAMPLE SIGNS :
 #
@@ -57,6 +69,15 @@ infoSignColor: "§5"
 # line 3 : type your info      | command1
 # line 4 : type your command   | command2
 # the command will executed like this by the console: /command1 playerName command2
+
+# REQUIRE LoadBalancer PLUGIN
+# server info sign & join command (/server connect <player> <type> [id])
+#
+# line 1 : NetworkInfo      | type sign
+# line 2 : lobby-1          | the first line message, template (and id if provided) displayer if blanc
+# line 3 :                  | blanc
+# line 4 :                  | blanc
+# IF ID IS NOT PROVIDED, it's a "global sign"
 
 # REQUIRE WORLDS PLUGIN
 # go to a game in a different world / go back to lobby (in a different world)
