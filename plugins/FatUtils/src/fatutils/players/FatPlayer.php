@@ -18,6 +18,7 @@ class FatPlayer
 
 	private $m_Player;
 	private $m_State = 0;
+	private $m_HasLost = false;
 
 	/**
 	 * FatPlayer constructor.
@@ -42,6 +43,16 @@ class FatPlayer
 	{
 		return $this->m_State === FatPlayer::PLAYER_STATE_WAITING;
 	}
+
+    public function hasLost()
+    {
+        return $this->m_HasLost;
+    }
+
+    public function setHasLost(bool $p_HasLost = true)
+    {
+        $this->m_HasLost = $p_HasLost;
+    }
 
 	/**
 	 * @return Player

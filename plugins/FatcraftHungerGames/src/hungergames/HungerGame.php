@@ -2,16 +2,19 @@
 
 namespace hungergames;
 
-use fatutils\chests\ChestsManager;
+use fatutils\loot\ChestsManager;
 use fatutils\FatUtils;
 use fatutils\players\PlayersManager;
 use fatutils\tools\Timer;
 use fatutils\tools\WorldUtils;
 use fatutils\game\GameManager;
 use fatutils\spawns\SpawnManager;
+use fatutils\loot\LootManager;
 use pocketmine\level\Location;
+use pocketmine\network\mcpe\protocol\BossEventPacket;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
+use pocketmine\utils\TextFormat;
 
 class HungerGame extends PluginBase
 {
@@ -77,7 +80,7 @@ class HungerGame extends PluginBase
                 if (is_null($this->m_WaitingTimer))
                 {
                     echo "MIN PLAYER REACH !\n";
-                    $this->m_WaitingTimer = (new Timer(85))
+                    $this->m_WaitingTimer = (new Timer(GameManager::getInstance()->getWaitingTickDuration()))
                         ->addTickCallback(function ()
                         {
                             if ($this->getServer()->getTick() % 20 == 0)
@@ -85,7 +88,9 @@ class HungerGame extends PluginBase
                                 if ($this->m_WaitingTimer instanceof Timer)
                                 {
                                     foreach ($this->getServer()->getOnlinePlayers() as $l_Player)
-                                        $l_Player->sendMessage($this->m_WaitingTimer->getSecondLeft() . " sec left");
+                                    {
+                                        $l_Player->sendTip(TextFormat::YELLOW . $this->m_WaitingTimer->getSecondLeft() . TextFormat::RESET . " sec left");
+                                    }
                                 }
                             }
                         })
@@ -96,8 +101,13 @@ class HungerGame extends PluginBase
                         ->start();
                 }
             }
+
         } else
+        {
             $p_Player->setGamemode(3);
+            $p_Player->sendMessage(TextFormat::YELLOW . "You've been automatically set to SPECTATOR");
+            $this->getServer()->getLogger()->info($p_Player->getName() . " has been set to SPECTATOR");
+        }
     }
 
     //---------------------
@@ -105,17 +115,14 @@ class HungerGame extends PluginBase
     //---------------------
     public function startGame()
     {
-        ChestsManager::getInstance()->fillChests(LootTable::$m_GeneralLoot);
+        ChestsManager::getInstance()->fillChests();
 
         foreach ($this->getServer()->getOnlinePlayers() as $l_Player)
         {
             PlayersManager::getInstance()->getFatPlayer($l_Player)->setPlaying();
             if ($this->getHungerGameConfig()->isSkyWars())
                 $l_Player->setGamemode(0);
-
-            $l_Player->sendTip("ceci est un tips");
-            $l_Player->sendWhisper("admin", "ceci est un whisper");
-            $l_Player->sendPopup("Ceci est un popup Title", "Ceci est un popup subtitle");
+            $l_Player->sendTip(TextFormat::GREEN . "GO !");
         }
 
         GameManager::getInstance()->setPlaying();
