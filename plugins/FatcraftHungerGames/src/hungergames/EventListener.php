@@ -27,14 +27,19 @@ class EventListener implements Listener
 
         WorldUtils::addStrike($p->getLocation());
         $l_PlayerLeft = PlayersManager::getInstance()->getAlivePlayerLeft();
-        if ($l_PlayerLeft > 1)
+
+
+        foreach (HungerGame::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
         {
-            foreach (HungerGame::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+            $l_Player->sendMessage($e->getDeathMessage());
+            if ($l_PlayerLeft > 1)
                 $l_Player->sendMessage("Il reste " . TextFormat::YELLOW . PlayersManager::getInstance()->getAlivePlayerLeft() . TextFormat::RESET . " survivants !", "*");
-        } else {
-            HungerGame::getInstance()->endGame();
         }
 
+        if ($l_PlayerLeft <= 1)
+            HungerGame::getInstance()->endGame();
+
+        $e->setDeathMessage("");
 		$p->setGamemode(3);
 	}
 

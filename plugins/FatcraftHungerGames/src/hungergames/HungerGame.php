@@ -149,7 +149,7 @@ class HungerGame extends PluginBase
                 }
             })
             ->addStopCallback(function () {
-                if (PlayersManager::getInstance()->getAlivePlayerLeft() == 0)
+                if (PlayersManager::getInstance()->getAlivePlayerLeft() <= 1)
                     $this->endGame();
                 else
                 {
@@ -183,7 +183,7 @@ class HungerGame extends PluginBase
                 }
             }
 
-            $l_Player->addTitle(TextFormat::DARK_AQUA . TextFormat::BOLD . "Partie terminée", TextFormat::GREEN . TextFormat::BOLD . "le vaiqueur est " . $winnerName, 30, 80, 30);
+            $l_Player->addTitle(TextFormat::DARK_AQUA . TextFormat::BOLD . "Partie terminée", TextFormat::GREEN . TextFormat::BOLD . "le vainqueur est " . $winnerName, 30, 80, 30);
             (new Timer(30))
                 ->addStopCallback(function ()
                 {
