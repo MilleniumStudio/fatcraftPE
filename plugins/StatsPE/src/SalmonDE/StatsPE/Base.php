@@ -219,6 +219,8 @@ class Base extends \pocketmine\plugin\PluginBase
                 $this->getDataProvider()->removeEntry($this->getDataProvider()->getEntry('K/D'));
             }
         }
+        // Add Fatcraft customs entries
+        new CustomEntries();
     }
 
     private function registerCommands(){
