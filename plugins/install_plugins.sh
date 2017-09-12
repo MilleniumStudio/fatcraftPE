@@ -21,6 +21,10 @@ fi
 --out StatsPE.phar
 
 ../PocketMine-MP/bin/php7/bin/php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
+--make MSpawns/ \
+--out MSpawns.phar
+
+../PocketMine-MP/bin/php7/bin/php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
 --make Worlds/ \
 --out Worlds.phar
 
