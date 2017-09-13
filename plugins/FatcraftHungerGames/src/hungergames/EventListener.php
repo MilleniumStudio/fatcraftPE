@@ -51,7 +51,17 @@ class EventListener implements Listener
         $e->setCancelled(true);
 	}
 
-	/**
+//    /**
+//     * @param EntityDamageEvent $e
+//     */
+//    public function onEntityDamageEvent(EntityDamageEvent $e)
+//    {
+//        if (GameManager::getInstance()->getSecondSinceStart() < 30)
+//            $e->setCancelled(true);
+//    }
+
+
+    /**
 	 * @param PlayerJoinEvent $e
 	 */
 	public function onSpawn(PlayerJoinEvent $e)

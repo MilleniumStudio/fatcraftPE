@@ -1,24 +1,14 @@
-minPlayer: 1
+minPlayer: 2
 maxPlayer: 18
+waitingSecDuration: 15
+playingSecDuration: 60
+deathArenaLoc: 0.5/6.1/60.5
 
-isSkywar: false
+isSkywar: true
 
 spawns:
-  1: -2.5/9.5/3.5
-  2: 3.5/9.5/3.5
-  3: 3.5/9.5/-2.5
-  4: -2.5/9.5/-2.5
 
 chests:
-  1:
-    location: -0.5/8.5/8.5
-    total-item-value: 20
-  2:
-    location: 2.5/8.5/8.5
-    total-item-value: 20
-  3:
-    location: 0.5/9.5/0.5
-    total-item-value: 20
 
 loots:
   level-1:

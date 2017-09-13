@@ -35,33 +35,37 @@ class FatUtils extends PluginBase
 
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool
     {
-        switch(strtolower($args[0]))
+        if ($sender->isOp())
         {
-            case "?":
-            case "help":
-                $sender->sendMessage("/fatUtils");
-                $sender->sendMessage("  - help (or ?)");
-                $sender->sendMessage("  - getPos");
-                break;
-            case "getpos":
-                if($sender instanceof Player)
-                    $sender->sendMessage("CurrentLocation: " . WorldUtils::locationToString($sender->getLocation()));
-                break;
-            case "atest":
-                if($sender instanceof Player)
-                {
-                    $sender->getLocation()->getLevel()->addSound(new GenericSound($sender->getLocation(), LevelEventPacket::EVENT_START_THUNDER, 1));
-                    $sender->getLocation()->getLevel()->addSound(new GenericSound($sender->getLocation(), LevelEventPacket::EVENT_STOP_THUNDER, 1));
-//                    $sender->sendTip("ceci est un tips");
-//                    $sender->sendPopup("Ceci est un popup Title", "Ceci est un popup subtitle");
-                }
-                break;
-            case "fillchests":
-                ChestsManager::getInstance()->fillChests();
-            default;
+            switch (strtolower($args[0]))
+            {
+                case "?":
+                case "help":
+                    $sender->sendMessage("/fatUtils");
+                    $sender->sendMessage("  - help (or ?)");
+                    $sender->sendMessage("  - getPos");
+                    break;
+                case "getpos":
+                    if ($sender instanceof Player)
+                        $sender->sendMessage("CurrentLocation: " . WorldUtils::locationToString($sender->getLocation()));
+                    break;
+                case "atest":
+                    if ($sender instanceof Player)
+                    {
+//                        $loc = WorldUtils::getRandomizedLocation($sender->getLocation(), 2.5, 0, 2.5);
+//                        self::getInstance()->getLogger()->info($loc);
+//                        $sender->teleport($loc);
+                    }
+                    break;
+                case "fillchests":
+                    ChestsManager::getInstance()->fillChests();
+                default;
+            }
+
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     public function setTemplateConfig(Config $p_Config)
