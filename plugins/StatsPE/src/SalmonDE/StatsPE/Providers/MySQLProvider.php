@@ -330,7 +330,7 @@ class MySQLProvider implements DataProvider
         $this->changes['data'] = [];
     }
 
-    private function queryDb(string $query, array $values)
+    public function queryDb(string $query, array $values)
     { // reconnecting?
         $valueTypes = '';
         foreach ($values as $value) {

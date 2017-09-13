@@ -2,6 +2,7 @@
 namespace SalmonDE\StatsPE;
 
 use pocketmine\utils\Config;
+use SalmonDE\StatsPE\FloatingTexts\CustomFloatingText\CustomFloatingTextManager;
 use SalmonDE\StatsPE\Providers\Entry;
 
 class Base extends \pocketmine\plugin\PluginBase
@@ -50,6 +51,7 @@ class Base extends \pocketmine\plugin\PluginBase
             $this->floatingTextManager = $this->floatingTextManager instanceof FloatingTexts\FloatingTextManager ? $this->floatingTextManager : new FloatingTexts\FloatingTextManager();
             $this->getServer()->getPluginManager()->registerEvents($this->listener = new EventListener(), $this);
         }
+        CustomFloatingTextManager::getInstance();
     }
 
     public function onDisable(){

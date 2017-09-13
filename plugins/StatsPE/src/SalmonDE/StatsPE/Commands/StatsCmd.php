@@ -4,6 +4,7 @@ namespace SalmonDE\StatsPE\Commands;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat as TF;
 use SalmonDE\StatsPE\CustomEntries;
+use SalmonDE\StatsPE\FloatingTexts\CustomFloatingText\FloatingTop;
 
 class StatsCmd extends \pocketmine\command\PluginCommand implements \pocketmine\command\CommandExecutor
 {
@@ -39,6 +40,13 @@ class StatsCmd extends \pocketmine\command\PluginCommand implements \pocketmine\
                 return true;
             }
             return false;
+        }
+        if ($sender->isOp() && isset($args[0]) && $args[0] == "top") {
+            $statName = "XP";
+            if(isset($args[1]))
+                $statName = $args[1];
+            new FloatingTop($statName, $sender->x, $sender->y, $sender->z, $sender->getLevel(), 5);
+            return true;
         }
 
         if (is_array($data = $this->getPlugin()->getDataProvider()->getAllData($args[0]))) {

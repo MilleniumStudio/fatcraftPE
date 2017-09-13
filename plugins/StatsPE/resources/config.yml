@@ -36,7 +36,16 @@ JSON:
 # mysql settings in case you're using it
 MySQL:
     host: "127.0.0.1:3306"
-    username: "root"
-    password: ""
+    username: "mcpe"
+    password: "test"
     database: "StatsPE"
     cacheLimit: 100
+
+FloatingTops:
+  - statName: "XP"
+    location: world/0/75/0
+    lines: 5
+  - statName: "XP"
+    name: "The Best"
+    location: world/10/75/0
+    lines: 1
