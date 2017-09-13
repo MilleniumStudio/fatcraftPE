@@ -25,7 +25,7 @@ start_docker lobby 1 19133 fatcraft/pocketmine:lobby
 start_docker lobby 2 19134 fatcraft/pocketmine:lobby
 
 # start games
-
+start_docker hg 1 19135 fatcraft/pocketmine:hg-1
 
 
 

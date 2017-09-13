@@ -88,4 +88,8 @@ cd lobby/
 ./docker_build.sh
 cd ../
 
+cd hg-1/
+./docker_build.sh
+cd ../
+
 
