@@ -1,0 +1,22 @@
+---
+version: 4
+identity: NP9JR35535
+secret: 2RRJBRRJFP5PH6KJB93M
+lock: true
+vote-expiration: 7
+multi-server:
+  enabled: true
+  role: master
+  mysql:
+    host: <<MYSQL_HOST>>
+    port: <<MYSQL_PORT>>
+    username: <<MYSQL_USER>>
+    password: <<MYSQL_PASS>>
+    database: <<MYSQL_DATA>>
+onvote:
+  run-cmd: []
+  online-cmd:
+  - tell %player vous avez voté sur %site !
+  - tell %player Here is some golds to by happyness on the server =)
+votes: []
+...
