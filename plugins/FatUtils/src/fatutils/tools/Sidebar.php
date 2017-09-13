@@ -13,6 +13,7 @@ use fatutils\FatUtils;
 use pocketmine\Player;
 use pocketmine\plugin\Plugin;
 use pocketmine\scheduler\PluginTask;
+use pocketmine\utils\TextFormat;
 use ReflectionObject;
 
 class Sidebar
@@ -20,8 +21,21 @@ class Sidebar
     private $m_LineGetters = [];
     private $m_LineCache = [];
     private $m_TaskId;
+    private $m_DisplayTickInterval = 20;
 
-    private $m_Spaces = "                                                         ";
+    // -1 means no automatic update
+    private $m_UpdateTickInterval = -1;
+
+    /**
+     * This is the formater for the sidebar,
+     *  the sidebar is base on the Player::sendPopup() function which
+     *  while display lines in the center bottom of the screen.
+     *
+     * So if you want your sidebar to the screen left, use "%s                                                               ",
+     *  or in the center use "%s".
+     *  Default is screen right.
+     */
+    private $m_SidebarFormat = "                                                               %s". TextFormat::RESET;
 
     private static $m_Instance = null;
 
@@ -62,8 +76,10 @@ class Sidebar
              */
             public function onRun(int $currentTick)
             {
-                if ($currentTick % 20 == 0)
+                if ($currentTick % $this->m_SidebarInstance->getDisplayTickInterval() == 0)
                     $this->m_SidebarInstance->_display();
+                if ($this->m_SidebarInstance->getUpdateTickInterval() >= 0 && $currentTick % $this->m_SidebarInstance->getUpdateTickInterval() == 0)
+                    $this->m_SidebarInstance->update();
             }
         }, 1);
     }
@@ -71,6 +87,12 @@ class Sidebar
     //------------------
     // UTILS
     //------------------
+    public function setFormat(string $p_Format): Sidebar
+    {
+        $this->m_SidebarFormat = $p_Format;
+        return $this;
+    }
+
     public function addLine(string $p_Line): Sidebar
     {
         $this->m_LineGetters[] = $p_Line;
@@ -107,6 +129,28 @@ class Sidebar
         if (isset($this->m_TaskId))
             $this->m_TaskId->cancel();
     }
+
+    // only use positive values (advised value 20 (cause no difference otherwise...))
+    public function setDisplayTickInterval(int $m_DisplayTickInterval): Sidebar
+    {
+        $this->m_DisplayTickInterval = $m_DisplayTickInterval;
+        return $this;
+    }
+
+    /**
+     * -1 means no automatic update
+     * prefer high values, update can be costly...
+     *
+     * @param int $m_UpdateTickInterval
+     * @return Sidebar
+     */
+    public function setUpdateTickInterval(int $m_UpdateTickInterval): Sidebar
+    {
+        $this->m_UpdateTickInterval = $m_UpdateTickInterval;
+        return $this;
+    }
+
+
 
     //------------------
     // INTERNAL UTILS
@@ -180,8 +224,25 @@ class Sidebar
     private function addSpaces(array $p_Lines): array
     {
         for ($i = 0, $l = count($p_Lines); $i < $l; $i++)
-            $p_Lines[$i] = $this->m_Spaces . $p_Lines[$i];
+            $p_Lines[$i] = sprintf($this->m_SidebarFormat, $p_Lines[$i]);
 
         return $p_Lines;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDisplayTickInterval(): int
+    {
+        return $this->m_DisplayTickInterval;
+    }
+
+
+    /**
+     * @return int
+     */
+    public function getUpdateTickInterval(): int
+    {
+        return $this->m_UpdateTickInterval;
     }
 }

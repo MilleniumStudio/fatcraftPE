@@ -60,27 +60,6 @@ class FatUtils extends PluginBase
                     if ($sender instanceof Player)
                     {
                         echo "====================\n";
-                        Sidebar::getInstance()
-                            ->addLine("Title")
-                            ->addWhiteSpace()
-                            ->addMutableLine(function ()
-                            {
-                                return TextFormat::BLUE . "Ceci est une ligne";
-                            })
-                            ->addMutableLine(function ()
-                            {
-                                return TextFormat::BLUE . "Ceci est une ligne\navec backslashN";
-                            })
-                            ->addMutableLine(function ()
-                            {
-                                return [TextFormat::BLUE . "Ceci est une ligne", "anotherLine" . $this->getServer()->getTick()];
-                            })
-                            ->addWhiteSpace()
-                            ->addMutableLine(function (Player $p_Player)
-                            {
-                                return "Bonjour " . $p_Player->getName();
-                            })
-                            ->update();
                     }
                     break;
                 case "fillchests":
