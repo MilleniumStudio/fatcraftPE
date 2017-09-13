@@ -29,7 +29,7 @@ class LoadBalancer extends PluginBase implements Listener
     private $m_Langs;
     private $m_ServerUUID;
     private $m_ServerType;
-    private $m_Serverid;
+    private $m_ServerId;
     private $m_ServerState = LoadBalancer::SERVER_STATE_CLOSED; // open / closed
 
     /** @var \mysqli */
@@ -564,7 +564,7 @@ class LoadBalancer extends PluginBase implements Listener
                 switch ($p_Param[0])
                 {
                     case "list":    // /server list
-                        $sender->sendMessage('This server : ' . $this->m_ServerType . '-' . $this->m_Serverid . ' players : ' . count($this::getInstance()->getServer()->getOnlinePlayers()) . ' / ' . $this::getInstance()->getServer()->getMaxPlayers());
+                        $sender->sendMessage('This server : ' . $this->m_ServerType . '-' . $this->m_ServerId . ' players : ' . count($this::getInstance()->getServer()->getOnlinePlayers()) . ' / ' . $this::getInstance()->getServer()->getMaxPlayers());
                         if (count($this->m_Servers) > 0)
                         {
                             if (count($p_Param) == 1) // /server list
@@ -628,33 +628,6 @@ class LoadBalancer extends PluginBase implements Listener
                             }
                         }
                         break;
-//                    case "sign":
-//                        if (count($p_Param) >= 2) // /server sign <template> [id]
-//                        {
-//                            if ($l_Player !== null)
-//                            {
-//                                $l_Template = $p_Param[1];
-//                                $this->m_NextSign['type'] = $l_Template;
-//                                if (count($p_Param) == 2) // /server sign lobby 1
-//                                {
-//                                     unset $this->m_NextSign['id'];
-//                                }
-//                                else if (count($p_Param) == 3) // /server sign lobby 1
-//                                {
-//                                    $l_Id = $p_Param[2];
-//                                    $this->m_NextSign['id'] = $l_Id;
-//                                }
-//                                else
-//                                {
-//                                    $this->sendServerHelp($sender);
-//                                }
-//                            }
-//                            else
-//                            {
-//                                $sender->sendMessage('Unknown player ' . $p_Param[1]);
-//                            }
-//                        }
-//                        break;
                     case "test":
                         var_dump($this->m_Servers);
                     break;
@@ -666,28 +639,6 @@ class LoadBalancer extends PluginBase implements Listener
         }
         return true;
     }
-
-//    public function onBlockPlace(\pocketmine\event\block\BlockPlaceEvent $event){
-//        if(!$event->isCancelled())
-//        {
-//            if ($event->getItem()->getId() == \pocketmine\item\ItemIds::SIGN or $event->getItem()->getId() == \pocketmine\item\ItemIds::SIGN_POST)
-//            if($this->m_NextSign !== null)
-//            {
-//                if($this->m_NextSign['type'])
-//                {
-//                    $this->m_NextSign['id'];
-//                    //create sign
-//                    $this->getConfig()->
-//                }
-//            }
-//        }
-//    }
-
-//    function updateSign(pocketmine\tile\Sign $p_Sign, String $p_SignPattern, Array $Data)
-//    {
-//        $text = $p_Sign->getText();
-//        $p_Sign->setText($text[0], $text[1], $text[2], $this->getAllSigns()->getConfig()->get("error"));
-//    }
 
     private function sendServerHelp(CommandSender $sender)
     {
