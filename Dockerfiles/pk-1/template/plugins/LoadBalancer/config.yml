@@ -14,7 +14,7 @@ mysql:
 node:
   type: hg
   id: 1
-  state: closed
+  state: open
 
 ## Max players management
 ## max        : if set to -1, the type based is used
