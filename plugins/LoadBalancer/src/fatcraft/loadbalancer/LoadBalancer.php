@@ -637,6 +637,18 @@ class LoadBalancer extends PluginBase implements Listener
                 }
             }
         }
+        else if ($cmd->getName() === "hub" or $cmd->getName() === "lobby")
+        {
+            if ($sender instanceof Player and $this->getConfig()->getNested("redirect.to_type") !== $this->m_ServerType)
+            {
+                $l_Player = $sender;
+                $l_Server = $this->getBest($this->getConfig()->getNested("redirect.to_type"));
+                if ($l_Server !== null)
+                {
+                    $this->transferPlayer($l_Player, $l_Server["ip"], $l_Server["port"], "Transfering to " . $l_Server["type"] . "-" . $l_Server["id"]);
+                }
+            }
+        }
         return true;
     }
 
