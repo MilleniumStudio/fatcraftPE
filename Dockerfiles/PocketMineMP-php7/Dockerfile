@@ -31,12 +31,7 @@ RUN rm -rf /tmp/* /var/tmp/* /var/cache/apk/*
 WORKDIR /home/minecraft
 
 RUN apt-get -y update && \
- apt-get -y install wget && \
- wget -q https://raw.githubusercontent.com/PocketMine/php-build-scripts/master/installer.sh && \
- chmod +x installer.sh && \
- ./installer.sh -r && \
- rm installer.sh  && \
- apt-get -y remove wget && \
+ apt-get -y install curl make bison libtool-bin autoconf bzip2 g++ && \
  apt-get clean
 
 ADD install /home/minecraft
