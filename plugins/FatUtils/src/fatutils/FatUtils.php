@@ -1,36 +1,43 @@
 <?php
+
 namespace fatutils;
 
 use fatutils\loot\ChestsManager;
 use fatutils\tools\WorldUtils;
 use hungergames\HungerGame;
 use hungergames\LootTable;
+use fatutils\tools\Sidebar;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
+use pocketmine\item\enchantment\Enchantment;
+use pocketmine\item\ItemFactory;
+use pocketmine\item\ItemIds;
 use pocketmine\level\sound\GenericSound;
 use pocketmine\network\mcpe\protocol\LevelEventPacket;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
+use pocketmine\utils\TextFormat;
 
 class FatUtils extends PluginBase
 {
     private $m_TemplateConfig = null;
-	private static $m_Instance;
+    private static $m_Instance;
+    private $sidebar;
 
-	public static function getInstance():FatUtils
-	{
-		return self::$m_Instance;
-	}
+    public static function getInstance(): FatUtils
+    {
+        return self::$m_Instance;
+    }
 
     public function onLoad()
-	{
-		self::$m_Instance = $this;
+    {
+        self::$m_Instance = $this;
     }
 
     public function onEnable()
-	{
-		$this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
+    {
+        $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
     }
 
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool
@@ -52,9 +59,28 @@ class FatUtils extends PluginBase
                 case "atest":
                     if ($sender instanceof Player)
                     {
-//                        $loc = WorldUtils::getRandomizedLocation($sender->getLocation(), 2.5, 0, 2.5);
-//                        self::getInstance()->getLogger()->info($loc);
-//                        $sender->teleport($loc);
+                        echo "====================\n";
+                        Sidebar::getInstance()
+                            ->addLine("Title")
+                            ->addWhiteSpace()
+                            ->addMutableLine(function ()
+                            {
+                                return TextFormat::BLUE . "Ceci est une ligne";
+                            })
+                            ->addMutableLine(function ()
+                            {
+                                return TextFormat::BLUE . "Ceci est une ligne\navec backslashN";
+                            })
+                            ->addMutableLine(function ()
+                            {
+                                return [TextFormat::BLUE . "Ceci est une ligne", "anotherLine" . $this->getServer()->getTick()];
+                            })
+                            ->addWhiteSpace()
+                            ->addMutableLine(function (Player $p_Player)
+                            {
+                                return "Bonjour " . $p_Player->getName();
+                            })
+                            ->update();
                     }
                     break;
                 case "fillchests":
@@ -84,7 +110,7 @@ class FatUtils extends PluginBase
     /**
      * @return array
      */
-    public function getSpawns():array
+    public function getSpawns(): array
     {
         return $this->m_Spawns;
     }
