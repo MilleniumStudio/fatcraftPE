@@ -23,7 +23,7 @@ minPasswordLength: 6
 blockAfterFail: 6
 
 #If enabled, accounts that are using the same unique id (ip + clientId + name) when logging in again will be automatically authenticated
-authenticateByLastUniqueId: false
+authenticateByLastUniqueId: true
 
 #If enabled, will set all the permissions for simleauth.command.register to false
 disableRegister: false
