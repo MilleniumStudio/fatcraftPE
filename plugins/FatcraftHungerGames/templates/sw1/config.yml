@@ -13,7 +13,7 @@ chests:
 loots:
   level-1:
     item-value: 1
-    chance: 35
+    chance: 38
     items:
       - '{"material": "WOODEN_SWORD"}'
       - '{"material": "LEATHER_HELMET"}'
@@ -22,6 +22,10 @@ loots:
       - '{"material": "LEATHER_BOOTS"}'
       - '{"material": "PORKCHOP", "amount": 3}'
       - '{"material": "ARROW", "amount": 7}'
+
+      - '{"material": "DIRT", "amount": 30}'
+      - '{"material": "STONE", "amount": 15}'
+      - '{"material": "COBBLESTONE", "amount": 10}'
   level-2:
     item-value: 3
     chance: 35
@@ -38,6 +42,9 @@ loots:
       - '{"material": "COOKED_BEEF", "amount": 2}'
       - '{"material": "RAW_CHICKEN", "amount": 4}'
       - '{"material": "COOKED_CHICKEN", "amount": 2}'
+
+      - '{"material": "WOOD", "amount": 15}'
+      - '{"material": "COBBLESTONE", "amount": 40}'
   level-3:
     item-value: 5
     chance: 15
@@ -60,7 +67,7 @@ loots:
       - '{"material": "IRON_SWORD"}'
   level-5:
     item-value: 15
-    chance: 5
+    chance: 2
     items:
       - '{"material": "DIAMOND_SWORD"}'
       - '{"material": "DIAMOND_HELMET"}'
