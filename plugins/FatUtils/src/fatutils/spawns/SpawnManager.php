@@ -11,6 +11,7 @@ namespace fatutils\spawns;
 use fatutils\FatUtils;
 use fatutils\tools\WorldUtils;
 use pocketmine\block\Block;
+use pocketmine\block\BlockIds;
 use pocketmine\level\Location;
 
 class SpawnManager
@@ -63,7 +64,7 @@ class SpawnManager
                     WorldUtils::getRelativeBlock($l_SlotBlock, 0, 1, -1),
                     WorldUtils::getRelativeBlock($l_SlotBlock, 0, 1, 1),
                     WorldUtils::getRelativeBlock($l_SlotBlock, 0, 2, 0)
-                ], Block::GLASS);
+                ], BlockIds::INVISIBLE_BEDROCK);
             }
         }
     }
@@ -85,7 +86,7 @@ class SpawnManager
                     WorldUtils::getRelativeBlock($l_SlotBlock, 0, 1, -1),
                     WorldUtils::getRelativeBlock($l_SlotBlock, 0, 1, 1),
                     WorldUtils::getRelativeBlock($l_SlotBlock, 0, 2, 0)
-                ], Block::AIR);
+                ], BlockIds::AIR);
             }
         }
     }

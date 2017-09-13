@@ -24,6 +24,9 @@ class GameManager
     private $m_PlayingTickDuration = 6000; // 5min
     private static $m_Instance = null;
 
+    private $m_StartGameTimestamp = null;
+    private $m_EndGameTimestamp = null;
+
     public static function getInstance(): GameManager
     {
         if (is_null(self::$m_Instance))
@@ -41,6 +44,40 @@ class GameManager
             $this->setWaitingTickDuration(FatUtils::getInstance()->getTemplateConfig()->get(GameManager::CONFIG_KEY_WAITING_SEC_DURATION, 30) * 20);
             $this->setPlayingTickDuration(FatUtils::getInstance()->getTemplateConfig()->get(GameManager::CONFIG_KEY_PLAYING_SEC_DURATION, 5 * 60) * 20);
         }
+    }
+
+    public function startGame()
+    {
+        $this->setPlaying();
+        $this->m_StartGameTimestamp = time();
+        FatUtils::getInstance()->getLogger()->info("=== GameStarted ===");
+    }
+
+    public function endGame()
+    {
+        $this->m_EndGameTimestamp = time();
+        FatUtils::getInstance()->getLogger()->info("=== GameFinished ===");
+    }
+
+    public function isGameStarted():bool
+    {
+        return isset($this->m_StartGameTimestamp);
+    }
+
+    public function isGameFinished():bool
+    {
+        return isset($this->m_EndGameTimestamp);
+    }
+
+    public function getSecondSinceStart(): int
+    {
+        if (!isset($this->m_StartGameTimestamp))
+            return 0;
+
+        if (isset($this->m_EndGameTimestamp))
+            return $this->m_EndGameTimestamp - $this->m_StartGameTimestamp;
+
+        return time() - $this->m_StartGameTimestamp;
     }
 
     /**

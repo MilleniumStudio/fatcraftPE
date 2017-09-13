@@ -11,7 +11,6 @@ namespace fatutils\tools;
 
 use fatutils\FatUtils;
 use fatutils\tools\bossBarAPI\BossBar;
-use pocketmine\network\mcpe\protocol\BossEventPacket;
 
 class BossbarTimer extends Timer
 {
@@ -56,7 +55,9 @@ class BossbarTimer extends Timer
         {
             if ($this->m_BossBar instanceof BossBar)
             {
-                $this->m_BossBar->setTitle($this->m_Title . ": " . $this->getSecondLeft() . " sec");
+                $timeFormat = gmdate("H:i:s", $this->getSecondLeft());
+
+                $this->m_BossBar->setTitle($this->m_Title . ": " . $timeFormat);
                 $this->m_BossBar->setRatio($this->getTimeSpentRatio());
             }
         }
