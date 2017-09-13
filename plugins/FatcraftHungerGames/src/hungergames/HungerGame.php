@@ -15,6 +15,8 @@ use fatutils\spawns\SpawnManager;
 use fatutils\tools\MathUtils;
 use fatutils\tools\BossbarTimer;
 use pocketmine\entity\Effect;
+use pocketmine\item\ItemFactory;
+use pocketmine\item\ItemIds;
 use pocketmine\level\Location;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
@@ -116,9 +118,14 @@ class HungerGame extends PluginBase
         {
             PlayersManager::getInstance()->getFatPlayer($l_Player)->setPlaying();
             if ($this->getHungerGameConfig()->isSkyWars())
+            {
+                $l_Player->getInventory()->addItem(ItemFactory::get(ItemIds::STONE_PICKAXE));
                 $l_Player->setGamemode(Player::SURVIVAL);
+            }
             else
+            {
                 $l_Player->setGamemode(Player::ADVENTURE);
+            }
             $l_Player->addTitle(TextFormat::GREEN . "GO !");
             $l_Player->addEffect(Effect::getEffect(Effect::DAMAGE_RESISTANCE)->setAmplifier(10)->setDuration(30 * 20));
         }

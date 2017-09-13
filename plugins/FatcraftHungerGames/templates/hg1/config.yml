@@ -31,25 +31,27 @@ loots:
     chance: 38
     items:
       - '{"material": "WOODEN_SWORD"}'
+
+      - '{"material": "ARROW", "amount": 7}'
+
       - '{"material": "LEATHER_HELMET"}'
       - '{"material": "LEATHER_CHESTPLATE"}'
       - '{"material": "LEATHER_LEGGINGS"}'
       - '{"material": "LEATHER_BOOTS"}'
-      - '{"material": "PORKCHOP", "amount": 3}'
-      - '{"material": "ARROW", "amount": 7}'
 
-      - '{"material": "DIRT", "amount": 30}'
-      - '{"material": "STONE", "amount": 15}'
-      - '{"material": "COBBLESTONE", "amount": 10}'
+      - '{"material": "PORKCHOP", "amount": 3}'
   level-2:
     item-value: 3
     chance: 35
     items:
+      - '{"material": "STONE_AXE"}'
       - '{"material": "BOW"}'
+
       - '{"material": "GOLD_HELMET"}'
       - '{"material": "GOLD_CHESTPLATE"}'
       - '{"material": "GOLD_LEGGINGS"}'
       - '{"material": "GOLD_BOOTS"}'
+
       - '{"material": "MUSHROOM_STEW"}'
       - '{"material": "COOKED_PORKCHOP", "amount": 3}'
       - '{"material": "APPLE", "amount": 3}'
@@ -57,34 +59,36 @@ loots:
       - '{"material": "COOKED_BEEF", "amount": 2}'
       - '{"material": "RAW_CHICKEN", "amount": 4}'
       - '{"material": "COOKED_CHICKEN", "amount": 2}'
-
-      - '{"material": "WOOD", "amount": 15}'
-      - '{"material": "COBBLESTONE", "amount": 40}'
   level-3:
     item-value: 5
     chance: 15
     items:
+      - '{"material": "GOLD_SWORD"}'
+
       - '{"material": "IRON_HELMET"}'
       - '{"material": "IRON_CHESTPLATE"}'
       - '{"material": "IRON_LEGGINGS"}'
       - '{"material": "IRON_BOOTS"}'
-      - '{"material": "GOLD_SWORD"}'
       - '{"material": "CHAINMAIL_HELMET"}'
       - '{"material": "CHAINMAIL_CHESTPLATE"}'
       - '{"material": "CHAINMAIL_BOOTS"}'
+
       - '{"material": "MELON_BLOCK", "amount": 4}'
       - '{"material": "GOLDEN_APPLE", "amount": 2}'
+
       - '{"material": "FLINT_AND_STEEL"}'
   level-4:
     item-value: 7
     chance: 10
     items:
       - '{"material": "IRON_SWORD"}'
+      - '{"material": "IRON_AXE"}'
   level-5:
     item-value: 15
     chance: 2
     items:
       - '{"material": "DIAMOND_SWORD"}'
+
       - '{"material": "DIAMOND_HELMET"}'
       - '{"material": "DIAMOND_CHESTPLATE"}'
       - '{"material": "DIAMOND_LEGGINGS"}'
