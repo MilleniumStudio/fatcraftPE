@@ -69,7 +69,7 @@ class EventListener implements Listener
                         break;
 
                     case $configFile->get("command"):
-                        $tile->setText($configFile->get("networktext"), $text[1], $text[2], $text[3]);
+                        $tile->setText($configFile->get("commandtext"), $text[1], $text[2], $text[3]);
                         break;
 
                     case $configFile->get("network"):
@@ -144,6 +144,21 @@ class EventListener implements Listener
                         $tile->setText($configFile->get("Obf") . "checkpoint", $configFile->get("checkpoint"), "", "");
                         break;
 
+                    case $configFile->get("endgame"):
+                        $location = $block->x."/".$block->y."/".$block->z;
+                        $end['money'] = $text[1] != "" ? $text[1] : 0;
+                        $end['xp'] = $text[2] != "" ? $text[2] : 0;
+                        $end['template'] = $text[3] != "" ? $text[3] : "";
+                        // todo create config
+                        $configFile->set("rewardsSigns." . $location, $end);
+                        $configFile->save();
+
+                        $text[1] = str_replace("{0}", $end['money'], $configFile->get("endgameText2"));
+                        $text[2] = str_replace("{0}", $end['xp'], $configFile->get("endgameText3"));
+                        $text[3] = str_replace("{0}", $end['template'], $configFile->get("endgameText4"));
+                        $tile->setText($configFile->get("endgameText"), $text[1], $text[2], $text[3]);
+                        break;
+
                     case $configFile->get("goToGame"):
                         $tile->setText($configFile->get("Obf") . $text[1], $configFile->get("goToGameMessage1"), $configFile->get("goToGameMessage2"), $configFile->get("Obf") . $text[2]);
                         break;
@@ -203,6 +218,37 @@ class EventListener implements Listener
                     case $configFile->get("infoSign"):
                         $tile->setText($configFile->get("Obf") . $configFile->get("infoSign"), $configFile->get("infoSignColor") . $text[1], $configFile->get("Obf") . $text[2], $configFile->get("Obf") . $text[3]);
                         break;
+
+                    case $configFile->get("endgameText"):
+                        $location = $block->x."/".$block->y."/".$block->z;
+                        if ($configFile->exists("rewardsSigns." . $location))
+                        {
+                            $reward = $configFile->get("rewardsSigns." . $location);
+                            // rewards
+                            if ($this->allSigns->getServer()->getPluginManager()->getPlugin("StatsPE") != null)
+                            {
+                                \SalmonDE\StatsPE\CustomEntries::getInstance()->modIntEntry("Money", $player, $reward["money"]);
+                                \SalmonDE\StatsPE\CustomEntries::getInstance()->modIntEntry("XP", $player, $reward["xp"]);
+                                $player->sendMessage(str_replace("{0}", $reward['money'], $configFile->get("endgameMessageMoney")));
+                                $player->sendMessage(str_replace("{0}", $reward['xp'], $configFile->get("endgameMessageXP")));
+                            }
+                            // transport to lobby
+                            if ($this->allSigns->getServer()->getPluginManager()->getPlugin("LoadBalancer") != null and $reward["template"] != "")
+                            {
+                                $LoadBalancer = \fatcraft\loadbalancer\LoadBalancer::getInstance();
+                                $servers = $LoadBalancer->getServersByType($reward["template"]);
+                                if ($servers !== null and count($servers) > 0)
+                                {
+                                    $this->getAllSigns()->getServer()->dispatchCommand($this->m_ConsoleCommandSender, "server connect " . $player->getName() . " ". $reward["template"]);
+                                    $player->sendMessage(str_replace("{0}", $reward["template"], $configFile->get("endgameMessageTransport")));
+                                    break;
+                                }
+                            }
+                            $player->sendMessage(str_replace("{0}", "world spawn", $configFile->get("endgameMessageTransport")));
+                            $player->teleport($player->getLocation()->level->getSpawnLocation());
+                        }
+                        break;
+
                     case $configFile->get("Obf") . $configFile->get("infoSign"):
                         $command = substr($text[2], 3) . ' ' . $player->getName() . ' ' . substr($text[3], 3);
                         $this->getAllSigns()->getServer()->dispatchCommand($this->m_ConsoleCommandSender, $command);
