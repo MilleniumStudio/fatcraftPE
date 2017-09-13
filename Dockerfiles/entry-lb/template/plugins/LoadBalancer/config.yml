@@ -14,6 +14,7 @@ mysql:
 node:
   type: lb
   id: 1
+  state: open
 
 ## Max players management
 ## max        : if set to -1, the type based is used

@@ -78,7 +78,7 @@ class LoadBalancer extends PluginBase implements Listener
         $this->initDatabase();
 
         //test hack
-        $this->setServerState(LoadBalancer::SERVER_STATE_OPEN);
+        $this->setServerState($this->getConfig()->getNested("node.state"));
 
         // update my status every second
         $this->getServer()->getScheduler()->scheduleDelayedRepeatingTask(new class($this) extends PluginTask
