@@ -2,17 +2,17 @@
 
 
 # for mysql docker container
-MYSQL_ROOT_PASS="sd2354fcv453df4v35df4v536df454dfv654dfvj"
+MYSQL_ROOT_PASS="root"
 
 # for building docker images
-MYSQL_HOST="mysql"
+MYSQL_HOST="localhost"
 MYSQL_PORT=3306
-MYSQL_USER="fatcraftpe"
-MYSQL_PASS="s54c5xcw4v56xc74g534cxb54g65b4gf654145bg"
-MYSQL_DATA="fatcraft_pe"
+MYSQL_USER="root"
+MYSQL_PASS="root"
+MYSQL_DATA="database"
 
 # external IP (auto) OR local IP
-SERVER_IP="192.168.4.10"
+SERVER_IP="192.168.0.1"
 
 updateConfig() {
     sed -i 's/<<MYSQL_USER>>/'$MYSQL_USER'/g' $1
