@@ -68,8 +68,8 @@ class LoadBalancer extends PluginBase implements Listener
         $this->m_Mysql = $cred->newMysqli();
 
         $this->m_ServerUUID = $this->m_Mysql->escape_string($this->getServer()->getServerUniqueId());
-        $this->m_ServerType = $this->getConfig()->getNested("node.type");
-        $this->m_ServerId = $this->getConfig()->getNested("node.id");
+        $this->m_ServerType = (getenv("SERVER_TYPE") !== null) ? getenv("SERVER_TYPE") : $this->getConfig()->getNested("node.type");
+        $this->m_ServerId = (getenv("SERVER_ID") !== null) ? getenv("SERVER_ID") : $this->getConfig()->getNested("node.id");
 
         $this->getLogger()->info("Config : node -> " . $this->m_ServerType . "-" . $this->m_ServerId);
         $this->getLogger()->info("Server uinique ID : " . $this->m_ServerUUID);
@@ -564,7 +564,7 @@ class LoadBalancer extends PluginBase implements Listener
                 switch ($p_Param[0])
                 {
                     case "list":    // /server list
-                        $sender->sendMessage('This server : ' . $this->getConfig()->getNested("node.type") . '-' . $this->getConfig()->getNested("node.id") . ' players : ' . count($this::getInstance()->getServer()->getOnlinePlayers()) . ' / ' . $this::getInstance()->getServer()->getMaxPlayers());
+                        $sender->sendMessage('This server : ' . $this->m_ServerType . '-' . $this->m_Serverid . ' players : ' . count($this::getInstance()->getServer()->getOnlinePlayers()) . ' / ' . $this::getInstance()->getServer()->getMaxPlayers());
                         if (count($this->m_Servers) > 0)
                         {
                             if (count($p_Param) == 1) // /server list

@@ -31,9 +31,9 @@ RUN rm -rf /tmp/* /var/tmp/* /var/cache/apk/*
 WORKDIR /home/minecraft
 
 RUN apt-get -y update && \
- apt-get -y install curl make bison libtool-bin autoconf bzip2 g++ && \
+ apt-get -y install curl make bison libtool-bin autoconf bzip2 g++ inetutils-ping && \
  apt-get clean
 
 ADD install /home/minecraft
 
-CMD ./start.sh --no-wizard --server-port=$SERVER_PORT --server-name=$SERVER_NAME
+CMD ./start.sh --no-wizard
