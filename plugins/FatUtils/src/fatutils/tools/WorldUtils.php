@@ -12,9 +12,11 @@ namespace fatutils\tools;
 use fatutils\FatUtils;
 use pocketmine\block\Block;
 use pocketmine\block\BlockFactory;
+use pocketmine\entity\Entity;
 use pocketmine\level\Location;
 use pocketmine\level\Position;
 use pocketmine\math\AxisAlignedBB;
+use pocketmine\network\mcpe\protocol\AddEntityPacket;
 
 class WorldUtils
 {
@@ -96,6 +98,15 @@ class WorldUtils
 		return $p_Block->getLevel()->getBlock(new Position($p_Block->getX() + $x, $p_Block->getY() + $y, $p_Block->getZ() + $z));
 	}
 
+	public static function getRandomizedLocation(Location $p_StartLocation, float $p_XBound, float $p_YBound, float $p_ZBound)
+    {
+        $l_NewX = MathUtils::rand(-$p_XBound, $p_XBound);
+        $l_NewY = MathUtils::rand(-$p_YBound, $p_YBound);
+        $l_NewZ = MathUtils::rand(-$p_ZBound, $p_ZBound);
+
+        return new Location($p_StartLocation->getX() + $l_NewX, $p_StartLocation->getY() + $l_NewY, $p_StartLocation->getZ() + $l_NewZ, $p_StartLocation->getYaw(), $p_StartLocation->getPitch(), $p_StartLocation->getLevel());
+    }
+
 	public static function setBlocksId(array $p_Blocks, int $p_Id)
 	{
 		foreach ($p_Blocks as $l_Block)
@@ -108,5 +119,28 @@ class WorldUtils
 	public static function loadChunkAt(Position $p_Pos)
     {
         $p_Pos->getLevel()->loadChunk($p_Pos->getFloorX() >> 4, $p_Pos->getFloorZ() >> 4);
+    }
+
+    public static function addStrike(Location $p_Loc, $height = 0){
+
+        $level = $p_Loc->getLevel();
+
+        $light = new AddEntityPacket();
+
+        $light->type = 93;
+        $light->entityUniqueId = Entity::$entityCount++;
+        $light->entityRuntimeId = $light->entityUniqueId;
+        $light->metadata = array();
+        $light->speedX = 0;
+        $light->speedY = 0;
+        $light->speedZ = 0;
+        $light->yaw = $p_Loc->getYaw();
+        $light->pitch = $p_Loc->getPitch();
+        $light->x = $p_Loc->x;
+        $light->y = $p_Loc->y + $height;
+        $light->z = $p_Loc->z;
+
+//        $level->addSound(new GenericSound($p_Loc, LevelEventPacket::EVENT_SOUND_CLICK, 1));
+        FatUtils::getInstance()->getServer()->broadcastPacket($level->getPlayers(), $light);
     }
 }

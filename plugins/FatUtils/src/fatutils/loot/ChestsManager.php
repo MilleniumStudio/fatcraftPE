@@ -10,11 +10,6 @@ namespace fatutils\loot;
 
 use fatutils\FatUtils;
 use fatutils\tools\WorldUtils;
-use pocketmine\block\Block;
-use pocketmine\block\BlockFactory;
-use pocketmine\item\Item;
-use pocketmine\level\Location;
-use pocketmine\tile\Chest;
 
 class ChestsManager
 {
@@ -41,9 +36,9 @@ class ChestsManager
 
     public function initialize()
     {
-        echo "Chests loading...\n";
         foreach (FatUtils::getInstance()->getTemplateConfig()->get(ChestsManager::CONFIG_KEY_CHEST_ROOT) as $l_RandomizeChestConf)
         {
+            echo "Chests loading...\n";
             $l_Loc = WorldUtils::stringToLocation($l_RandomizeChestConf[ChestsManager::CONFIG_KEY_CHEST_LOCATION]);
             $l_RandomizeChest = new RandomizeChest($l_Loc);
 
