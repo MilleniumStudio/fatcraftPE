@@ -45,6 +45,14 @@ fi
 --out Parkour.phar
 
 ../PocketMine-MP/bin/php7/bin/php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
---make HungerGames-UPDATED/HungerGames/ \
---out HungerGames.phar
+--make FatcraftHungerGames/ \
+--out FatcraftHungerGames.phar
+
+../PocketMine-MP/bin/php7/bin/php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
+--make FatUtils/ \
+--out FatUtils.phar
+
+../PocketMine-MP/bin/php7/bin/php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
+--make Lobby/ \
+--out Lobby.phar
 
