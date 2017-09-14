@@ -48,7 +48,7 @@ class CustomFloatingTextManager
     public function loadConfigs()
     {
         // load config for FloatingTops
-        $config = $this->plugin->getConfig()->get("FloatingTops");
+            $config = $this->plugin->getConfig()->get("FloatingTops");
         foreach ($config as $key => $value) {
             $statName = isset($value['statName'])?$value['statName']:null;
             if($statName==null)
@@ -59,8 +59,9 @@ class CustomFloatingTextManager
             $customName = isset($value['name'])?$value['name']:null;
             $nbLines = (int)isset($value['lines'])?$value['lines']:5;
             $location = explode("/", $location);
+            if (Server::getInstance()->getLevelByName($location[0]) == null)
+                throw new Exception("StatsPE Error: world not found");
             new FloatingTop($statName, $location[1], $location[2], $location[3], Server::getInstance()->getLevelByName($location[0]), $nbLines, $customName);
-
         }
     }
 }
