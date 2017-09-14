@@ -229,6 +229,12 @@ class EventListener implements Listener
                             {
                                 \SalmonDE\StatsPE\CustomEntries::getInstance()->modIntEntry("Money", $player, $reward["money"]);
                                 \SalmonDE\StatsPE\CustomEntries::getInstance()->modIntEntry("XP", $player, $reward["xp"]);
+                                if ($this->allSigns->getServer()->getPluginManager()->getPlugin("LoadBalancer") != null and \fatcraft\loadbalancer\LoadBalancer::getInstance()->getServerType() != "" and $reward["xp"] != "")
+                                {
+                                    $l_ServerType = \fatcraft\loadbalancer\LoadBalancer::getInstance()->getServerType();
+                                    \SalmonDE\StatsPE\CustomEntries::getInstance()->modIntEntry($l_ServerType . "_XP", $player, $reward["xp"]);
+                                    \SalmonDE\StatsPE\CustomEntries::getInstance()->modIntEntry($l_ServerType . "_played", $player, 1);
+                                }
                                 $player->sendMessage(str_replace("{0}", $reward['money'], $configFile->get("endgameMessageMoney")));
                                 $player->sendMessage(str_replace("{0}", $reward['xp'], $configFile->get("endgameMessageXP")));
                             }
