@@ -59,8 +59,9 @@ class FloatingTop extends CustomFloatingText
         if ($mysqlProvider instanceof MySQLProvider) {
             $result = $mysqlProvider->queryDb($this->query, []);
             if ($result instanceof \mysqli_result) {
+                $i = 1;
                 while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-                    $texts[] = $row["player"] . ": " . TextFormat::BOLD . TextFormat::GOLD . $row["val"];
+                    $texts[] = $i++." - ".$row["player"] . ": " . TextFormat::BOLD . TextFormat::GOLD . $row["val"];
                 }
                 $this->setText($texts);
             } else {
