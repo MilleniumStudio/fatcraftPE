@@ -10,6 +10,7 @@ namespace fatutils\players;
 
 
 use pocketmine\Player;
+use pocketmine\utils\TextFormat;
 
 class FatPlayer
 {
@@ -19,6 +20,7 @@ class FatPlayer
 	private $m_Player;
 	private $m_State = 0;
 	private $m_HasLost = false;
+	private $m_DisplayHealth = null;
 
 	/**
 	 * FatPlayer constructor.
@@ -54,6 +56,37 @@ class FatPlayer
         $this->m_HasLost = $p_HasLost;
     }
 
+    public function displayHealth(bool $p_Value = true)
+    {
+        $this->m_DisplayHealth = $p_Value;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHealthDisplayed(): bool
+    {
+        return $this->m_DisplayHealth ?? false || PlayersManager::getInstance()->isHealthDisplayed();
+    }
+
+    public function getFormattedNameTag():string
+    {
+        $healthBar = "[";
+        $playerHealth = $this->getPlayer()->getHealth() * 10 / $this->getPlayer()->getMaxHealth();
+        for ($i = 0; $i < 10; $i++)
+        {
+            if ($playerHealth > 0)
+            {
+                $healthBar .= TextFormat::RED . "█";
+                $playerHealth--;
+            } else
+                $healthBar .= " ";
+        }
+        $healthBar .= TextFormat::RESET . "]";
+
+        return $this->getPlayer()->getName() . "\n" . $healthBar;
+    }
+
 	/**
 	 * @return Player
 	 */
@@ -61,4 +94,9 @@ class FatPlayer
 	{
 		return $this->m_Player;
 	}
+
+    public function updateFormattedNameTag()
+    {
+        $this->getPlayer()->setNameTag($this->getFormattedNameTag());
+    }
 }

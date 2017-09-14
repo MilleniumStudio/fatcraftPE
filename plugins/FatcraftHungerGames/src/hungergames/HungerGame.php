@@ -53,6 +53,8 @@ class HungerGame extends PluginBase
     {
         SpawnManager::getInstance()->blockSpawns();
         LoadBalancer::getInstance()->setServerState(LoadBalancer::SERVER_STATE_OPEN);
+        PlayersManager::getInstance()->displayHealth();
+        WorldUtils::stopWorldsTime();
 
         Sidebar::getInstance()
             ->addLine(TextFormat::GOLD . TextFormat::BOLD . "HungerGame")
@@ -152,8 +154,10 @@ class HungerGame extends PluginBase
 
                     foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
                     {
-                        $l_Player->sendTip(TextFormat::DARK_AQUA . TextFormat::BOLD . "Timer terminé, envoi vers l'arène !");
-                        $l_Player->teleport(WorldUtils::getRandomizedLocation($l_ArenaLoc, 2.5, 0, 2.5));
+                        $l_Player->addSubTitle(TextFormat::DARK_AQUA . TextFormat::BOLD . "Timer terminé, match à mort dans l'arène !");
+                        $l_Player->teleport(WorldUtils::getRandomizedLocation($l_ArenaLoc, 3, 0, 3));
+                        $l_Player->sendTip("Vous êtes invulnérable pendant 5 secondes");
+                        $l_Player->addEffect(Effect::getEffect(Effect::DAMAGE_RESISTANCE)->setAmplifier(10)->setDuration(5 * 20));
                     }
                 }
             })
@@ -165,6 +169,9 @@ class HungerGame extends PluginBase
 
     public function endGame()
     {
+        if ($this->m_PlayTimer instanceof Timer)
+            $this->m_PlayTimer->cancel();
+
         $winners = PlayersManager::getInstance()->getAlivePlayers();
         $winnerName = "";
         if (count($winners) > 0)

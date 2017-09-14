@@ -23,7 +23,6 @@ class FatUtils extends PluginBase
 {
     private $m_TemplateConfig = null;
     private static $m_Instance;
-    private $sidebar;
 
     public static function getInstance(): FatUtils
     {
@@ -38,6 +37,7 @@ class FatUtils extends PluginBase
     public function onEnable()
     {
         $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
+        WorldUtils::stopWorldsTime();
     }
 
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool
@@ -60,6 +60,9 @@ class FatUtils extends PluginBase
                     if ($sender instanceof Player)
                     {
                         echo "====================\n";
+                        $sender->sendTip("TIP");
+                        $sender->addTitle("TITLE");
+                        $sender->addSubTitle("SUBTITLE");
                     }
                     break;
                 case "fillchests":
@@ -84,13 +87,5 @@ class FatUtils extends PluginBase
     public function getTemplateConfig(): Config
     {
         return $this->m_TemplateConfig;
-    }
-
-    /**
-     * @return array
-     */
-    public function getSpawns(): array
-    {
-        return $this->m_Spawns;
     }
 }

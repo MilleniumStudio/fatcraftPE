@@ -23,6 +23,8 @@ class PlayersManager
 	private $m_MinPlayer = 0;
 	private $m_MaxPlayer = 18;
 
+    private $m_DisplayHealth = false;
+
 	public static function getInstance(): PlayersManager
 	{
 		if (is_null(self::$m_Instance))
@@ -130,4 +132,14 @@ class PlayersManager
 	{
 		$this->m_MaxPlayer = $p_MaxPlayer;
 	}
+
+    public function displayHealth(bool $p_Value = true)
+    {
+        $this->m_DisplayHealth = $p_Value;
+    }
+
+    public function isHealthDisplayed(): bool
+    {
+        return $this->m_DisplayHealth;
+    }
 }

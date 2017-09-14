@@ -20,22 +20,6 @@ use pocketmine\network\mcpe\protocol\AddEntityPacket;
 
 class WorldUtils
 {
-    const INTRACTABLE_BLOCKS = [
-        Block::CHEST,
-        Block::ENDER_CHEST,
-        Block::TRAPPED_CHEST,
-        Block::LEVER,
-        Block::OAK_DOOR_BLOCK,
-        Block::IRON_DOOR_BLOCK,
-        Block::WOODEN_TRAPDOOR,
-        Block::IRON_TRAPDOOR,
-        Block::SPRUCE_DOOR_BLOCK,
-        Block::BIRCH_DOOR_BLOCK,
-        Block::JUNGLE_DOOR_BLOCK,
-        Block::ACACIA_DOOR_BLOCK,
-        Block::DARK_OAK_DOOR_BLOCK
-    ];
-
 	public static function stringToLocation(string $p_RawLoc):Location
 	{
 		$x = 0.0;
@@ -142,5 +126,11 @@ class WorldUtils
 
 //        $level->addSound(new GenericSound($p_Loc, LevelEventPacket::EVENT_SOUND_CLICK, 1));
         FatUtils::getInstance()->getServer()->broadcastPacket($level->getPlayers(), $light);
+    }
+
+    public static function stopWorldsTime()
+    {
+        foreach (FatUtils::getInstance()->getServer()->getLevels() as $l_Level)
+            $l_Level->stopTime();
     }
 }
