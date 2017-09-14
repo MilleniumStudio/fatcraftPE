@@ -2,6 +2,7 @@
 
 namespace hungergames;
 
+use fatutils\game\GameManager;
 use fatutils\players\PlayersManager;
 use fatutils\tools\Sidebar;
 use fatutils\tools\WorldUtils;
@@ -37,7 +38,7 @@ class EventListener implements Listener
                 $l_Player->sendMessage("Il reste " . TextFormat::YELLOW . PlayersManager::getInstance()->getAlivePlayerLeft() . TextFormat::RESET . " survivants !", "*");
         }
 
-        if ($l_PlayerLeft <= 1)
+        if ($l_PlayerLeft <= 1 && !GameManager::getInstance()->isGameFinished())
             HungerGame::getInstance()->endGame();
 
         $e->setDeathMessage("");
