@@ -48,7 +48,9 @@ class CustomFloatingTextManager
     public function loadConfigs()
     {
         // load config for FloatingTops
-            $config = $this->plugin->getConfig()->get("FloatingTops");
+        $config = $this->plugin->getConfig()->get("FloatingTops");
+        if ($config == null)
+            return;
         foreach ($config as $key => $value) {
             $statName = isset($value['statName'])?$value['statName']:null;
             if($statName==null)

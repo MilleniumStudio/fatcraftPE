@@ -28,27 +28,39 @@ class StatsCmd extends \pocketmine\command\PluginCommand implements \pocketmine\
         }
 
         // Custom Commands
-        if ($sender->isOp() && isset($args[0]) && $args[0] == "test") {
-            if ($sender instanceof Player && isset($args[1])) {
-                $entryName = $args[1];
-                if (isset($args[2]) && $args[2] == "add" && isset($args[3])) {
-                    CustomEntries::getInstance()->modIntEntry($entryName, $sender, (int)$args[3]);
-                } else if (isset($args[2])) {
-                    CustomEntries::getInstance()->setEntry($entryName, $sender, $args[2]);
+        if ($sender->isOp() && isset($args[0])) {
+            if ($args[0] == "test") {
+                if ($sender instanceof Player && isset($args[1])) {
+                    $entryName = $args[1];
+                    if (isset($args[2]) && $args[2] == "add" && isset($args[3])) {
+                        CustomEntries::getInstance()->modIntEntry($entryName, $sender, (int)$args[3]);
+                    } else if (isset($args[2])) {
+                        CustomEntries::getInstance()->setEntry($entryName, $sender, $args[2]);
+                    }
+                    $sender->sendMessage($entryName . ": " . CustomEntries::getInstance()->getEntry($entryName, $sender));
+                    return true;
                 }
-                $sender->sendMessage($entryName . ": " . CustomEntries::getInstance()->getEntry($entryName, $sender));
+                return false;
+            } else if ($args[0] == "top") {
+                $statName = "XP";
+                if (isset($args[1]))
+                    $statName = $args[1];
+                $title = $statName;
+                if (isset($args[2]))
+                    $title = $args[2];
+                $nbLines = 5;
+                if (isset($args[3]))
+                    $nbLines = (int)$args[3];
+                (new FloatingTop($statName, $sender->x, $sender->y, $sender->z, $sender->getLevel(), $nbLines, $title))->saveInYML();
+                return true;
+            } else if ($args[0] == "?" || $args[0] == "help") {
+                $sender->sendMessage(
+                    "/stats test <statName> [add] <value> : set or add a value to the specified stat\n".
+                    "/stats top [statName [title [nbLine]]] : add a leaderboard to the current location. Default value are statName = 'XP', title = statName, nbLines = 5\n"
+                );
                 return true;
             }
-            return false;
         }
-        if ($sender->isOp() && isset($args[0]) && $args[0] == "top") {
-            $statName = "XP";
-            if(isset($args[1]))
-                $statName = $args[1];
-            new FloatingTop($statName, $sender->x, $sender->y, $sender->z, $sender->getLevel(), 5);
-            return true;
-        }
-
         if (is_array($data = $this->getPlugin()->getDataProvider()->getAllData($args[0]))) {
             $text = str_replace('{value}', $data['Username'], $this->getPlugin()->getMessage('general.header'));
             foreach ($this->getPlugin()->getDataProvider()->getEntries() as $entry) {
