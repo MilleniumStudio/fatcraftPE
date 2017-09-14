@@ -16,4 +16,4 @@ updateConfig install/plugins/SimpleAuth/config.yml
 
 # copy map
 mkdir -p install/worlds/map
-cp -Rv ../../worlds/parkour/giantHouse/* install/worlds/map/
+cp -R ../../worlds/parkour/giantHouse/* install/worlds/map/
