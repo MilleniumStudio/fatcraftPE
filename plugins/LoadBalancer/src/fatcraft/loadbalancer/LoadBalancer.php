@@ -13,6 +13,7 @@ use pocketmine\Player;
 use pocketmine\utils\Config;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
+use pocketmine\command\ConsoleCommandSender;
 use pocketmine\scheduler\PluginTask;
 use libasynql\ClearMysqlTask;
 use libasynql\result\MysqlResult;
@@ -26,10 +27,11 @@ class LoadBalancer extends PluginBase implements Listener
     const SERVER_STATE_CLOSED = "closed";
 
     private static $m_Instance;
+    public $m_ConsoleCommandSender;
     private $m_Langs;
     private $m_ServerUUID;
     private $m_ServerType;
-    private $m_Serverid;
+    private $m_ServerId;
     private $m_ServerState = LoadBalancer::SERVER_STATE_CLOSED; // open / closed
 
     /** @var \mysqli */
@@ -41,17 +43,12 @@ class LoadBalancer extends PluginBase implements Listener
     private $m_TotalPlayers = 0;
     private $m_MaxPlayers = 0;
 
-    private $m_NextSign;
-    private $m_Signs = array();
-
     public function onLoad()
     {
         // registering instance
         LoadBalancer::$m_Instance = $this;
 
-//        // Config section
-//        $this->saveResource("config.yml");
-//        $this->config = new Config($this->getDataFolder() . "config.yml", Config::YAML);
+        $this->saveResource("commands.txt");
 
         // Language section
         $this->saveResource("language.properties");
@@ -60,6 +57,7 @@ class LoadBalancer extends PluginBase implements Listener
 
     public function onEnable()
     {
+        $this->m_ConsoleCommandSender = new ConsoleCommandSender();
         // register events listener
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
 
@@ -78,7 +76,7 @@ class LoadBalancer extends PluginBase implements Listener
         $this->initDatabase();
 
         //test hack
-        $this->setServerState(LoadBalancer::SERVER_STATE_OPEN);
+        $this->setServerState($this->getConfig()->getNested("node.state"));
 
         // update my status every second
         $this->getServer()->getScheduler()->scheduleDelayedRepeatingTask(new class($this) extends PluginTask
@@ -106,6 +104,21 @@ class LoadBalancer extends PluginBase implements Listener
                 LoadBalancer::getInstance()->cleanOrphaned();
             }
         }, 0, $this->getConfig()->getNested("timers.cleaner"));
+        $this->getServer()->getScheduler()->scheduleDelayedRepeatingTask(new class($this) extends PluginTask
+        {
+            public function onRun(int $currentTick)
+            {
+                $l_Commands = new Config(LoadBalancer::getInstance()->getDataFolder() . "commands.txt", Config::ENUM);
+                var_dump($l_Commands->getAll());
+                foreach ($l_Commands->getAll() as $l_Command => $l_Value)
+                {
+                    LoadBalancer::getInstance()->getLogger()->info("Executing console command \"" . $l_Command . "\"");
+                    LoadBalancer::getInstance()->getServer()->dispatchCommand(LoadBalancer::getInstance()->m_ConsoleCommandSender, $l_Command);
+                    $l_Commands->remove($l_Command);
+                }
+                $l_Commands->save();
+            }
+        }, 0, 100);
         $this->getLogger()->info("Enabled");
     }
 
@@ -154,6 +167,16 @@ class LoadBalancer extends PluginBase implements Listener
     public function getServerState()
     {
         return $this->m_ServerState;
+    }
+
+    public function getServerType()
+    {
+        return $this->m_ServerType;
+    }
+
+    public function getServerId()
+    {
+        return $this->m_ServerId;
     }
 
     public function setServerState(String $p_State)
@@ -564,7 +587,7 @@ class LoadBalancer extends PluginBase implements Listener
                 switch ($p_Param[0])
                 {
                     case "list":    // /server list
-                        $sender->sendMessage('This server : ' . $this->m_ServerType . '-' . $this->m_Serverid . ' players : ' . count($this::getInstance()->getServer()->getOnlinePlayers()) . ' / ' . $this::getInstance()->getServer()->getMaxPlayers());
+                        $sender->sendMessage('This server : ' . $this->m_ServerType . '-' . $this->m_ServerId . ' players : ' . count($this::getInstance()->getServer()->getOnlinePlayers()) . ' / ' . $this::getInstance()->getServer()->getMaxPlayers());
                         if (count($this->m_Servers) > 0)
                         {
                             if (count($p_Param) == 1) // /server list
@@ -628,33 +651,6 @@ class LoadBalancer extends PluginBase implements Listener
                             }
                         }
                         break;
-//                    case "sign":
-//                        if (count($p_Param) >= 2) // /server sign <template> [id]
-//                        {
-//                            if ($l_Player !== null)
-//                            {
-//                                $l_Template = $p_Param[1];
-//                                $this->m_NextSign['type'] = $l_Template;
-//                                if (count($p_Param) == 2) // /server sign lobby 1
-//                                {
-//                                     unset $this->m_NextSign['id'];
-//                                }
-//                                else if (count($p_Param) == 3) // /server sign lobby 1
-//                                {
-//                                    $l_Id = $p_Param[2];
-//                                    $this->m_NextSign['id'] = $l_Id;
-//                                }
-//                                else
-//                                {
-//                                    $this->sendServerHelp($sender);
-//                                }
-//                            }
-//                            else
-//                            {
-//                                $sender->sendMessage('Unknown player ' . $p_Param[1]);
-//                            }
-//                        }
-//                        break;
                     case "test":
                         var_dump($this->m_Servers);
                     break;
@@ -664,36 +660,67 @@ class LoadBalancer extends PluginBase implements Listener
                 }
             }
         }
+        else if ($cmd->getName() === "hub" or $cmd->getName() === "lobby")
+        {
+            if (count($p_Param) == 1)
+            {
+                if ($sender instanceof Player and $this->getConfig()->getNested("redirect.to_type") !== $this->m_ServerType)
+                {
+                    $l_Player = $sender;
+                    $l_Server = $this->getBest($this->getConfig()->getNested("redirect.to_type"));
+                    if ($l_Server !== null)
+                    {
+                        $this->transferPlayer($l_Player, $l_Server["ip"], $l_Server["port"], "Transfering to " . $l_Server["type"] . "-" . $l_Server["id"]);
+                    }
+                }
+            }
+            else if (count($p_Param) == 2)
+            {
+                $l_Lobbies = $this->m_Servers["lobby"];
+                if ($p_Param[1] == "list")
+                {
+                    if ($l_Lobbies !== null and count($l_Lobbies) > 0)
+                    {
+                        $sender->sendMessage('Lobbies : ');
+                        foreach ($l_Lobbies as $l_Lobby)
+                        {
+                            $sender->sendMessage(' - ' . $l_Lobby["id"] . ' ' . $l_Lobby["online"] . '/' . $l_Lobby["max"]);
+                        }
+                    }
+                }
+                else if (isset($l_Lobbies[$p_Param[1]]))
+                {
+                    if ($sender instanceof Player and $this->getConfig()->getNested("redirect.to_type") !== $this->m_ServerType)
+                    {
+                        $this->transferPlayer($l_Player, $l_Lobbies[$p_Param[1]]["ip"], $l_Lobbies[$p_Param[1]]["port"], "Transfering to " . $l_Lobbies[$p_Param[1]]["type"] . "-" . $l_Lobbies[$p_Param[1]]["id"]);
+                    }
+                }
+                else
+                {
+                    sendLobbyHelp($sender);
+                }
+            }
+            else
+            {
+                sendLobbyHelp($sender);
+            }
+        }
         return true;
     }
-
-//    public function onBlockPlace(\pocketmine\event\block\BlockPlaceEvent $event){
-//        if(!$event->isCancelled())
-//        {
-//            if ($event->getItem()->getId() == \pocketmine\item\ItemIds::SIGN or $event->getItem()->getId() == \pocketmine\item\ItemIds::SIGN_POST)
-//            if($this->m_NextSign !== null)
-//            {
-//                if($this->m_NextSign['type'])
-//                {
-//                    $this->m_NextSign['id'];
-//                    //create sign
-//                    $this->getConfig()->
-//                }
-//            }
-//        }
-//    }
-
-//    function updateSign(pocketmine\tile\Sign $p_Sign, String $p_SignPattern, Array $Data)
-//    {
-//        $text = $p_Sign->getText();
-//        $p_Sign->setText($text[0], $text[1], $text[2], $this->getAllSigns()->getConfig()->get("error"));
-//    }
 
     private function sendServerHelp(CommandSender $sender)
     {
         $sender->sendMessage("Servers help :");
-        $sender->sendMessage(" /server list [template]");
-        $sender->sendMessage(" /server connect <player> <template> [id]");
+        $sender->sendMessage("- /server list [template]");
+        $sender->sendMessage("- /server connect <player> <template> [id]");
+    }
+
+    private function sendLobbyHelp(CommandSender $sender)
+    {
+        $sender->sendMessage("/lobby help :");
+        $sender->sendMessage("- /lobby -> Vous envoi vers un lobby");
+        $sender->sendMessage("- /lobby list -> Affiche la liste des lobbies");
+        $sender->sendMessage("- /lobby <id> -> Vous connect à un lobby");
     }
 
 }

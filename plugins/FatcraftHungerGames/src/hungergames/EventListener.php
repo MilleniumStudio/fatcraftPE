@@ -3,6 +3,7 @@
 namespace hungergames;
 
 use fatutils\players\PlayersManager;
+use fatutils\tools\Sidebar;
 use fatutils\tools\WorldUtils;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\Listener;
@@ -41,6 +42,8 @@ class EventListener implements Listener
 
         $e->setDeathMessage("");
 		$p->setGamemode(3);
+
+        Sidebar::getInstance()->update();
 	}
 
 	/**

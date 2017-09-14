@@ -1,0 +1,109 @@
+#     _    _ _ ____  _
+#    / \  | | / ___|(_) __ _ _ __  ___
+#   / _ \ | | \___ \| |/ _` | '_ \/ __|
+#  / ___ \| | |___) | | (_| | | | \__ \
+# /_/   \_\_|_|____/|_|\__, |_| |_|___/
+#                      |___/
+#
+# (C) 2017 by surva network | https://github.com/survanetwork
+
+# Sign commands and text
+world: "world"
+worldtext: "§9World"
+players: "players"
+
+command: "command"
+network: "network"
+endgame: "endGame"
+addCheckpoint: "addCheckpoint"
+Obf: "§k"
+tpNextLevel: "tpNextLevel"
+goToGame : "goToGame"
+goToLobby : "goToLobby"
+infoSign : "infoSign"
+
+# Messages
+noworld: "§cWorld does not exist"
+error: "§cError"
+commandtext: "§aCommand"
+checkpoint: "§6Checkpoint"
+tpNextLevelMessage1: "§1Teleport"
+tpNextLevelMessage2: "§1to Next Level"
+goToGameMessage1: "§6Go to"
+goToGameMessage2: "§6the game !"
+goBackLobbyMessage1: "§4Go back"
+goBackLobbyMessage2: "§4to lobby"
+infoSignColor: "§5"
+
+# NetworkInfo sign messages
+networktext: "Server Info"
+gametext: "§6GAME "
+serveropen: "§2OPEN"
+serverclosed: "§4CLOSED"
+servererror: "§4ERROR"
+serveroffline: "§4OFFLINE"
+networksignlast: "§n§9Click to go"
+noserver: "§cNo Server"
+serversfull: "§6Servers full"
+
+# Rewards + teleport
+endgameText: "Fin de partie"
+endgameText2: "Gain {0} money"
+endgameText3: "Gain {0} XP"
+endgameText4: "Retour vers {0}"
+endgameMessageMoney: "Vous avez gagné {0} money !"
+endgameMessageXP: "Vous avez gagné {0} XP !"
+endgameMessageTransport: "Téléportation vers {0} !"
+
+# EXAMPLE SIGNS :
+#
+
+# setup checkpoint (it will set the spawn point of the player)
+#
+# line 1 : addCheckpoint
+# line 2 :
+# line 3 :
+# line 4 :
+
+# go to next level IN THE SAME WORLD
+#
+# line 1 : tpNextLevel
+# line 2 : tp ~x~ ~y~ ~z~
+# line 3 :
+# line 4 :
+
+# info sign with small command (e.g. teleport)
+#
+# line 1 : infoSign            | infoSign
+# line 2 : type your info      | Your message
+# line 3 : type your info      | command1
+# line 4 : type your command   | command2
+# the command will executed like this by the console: /command1 playerName command2
+
+# REQUIRE LoadBalancer PLUGIN
+# server info sign & join command (/server connect <player> <type> [id])
+#
+# line 1 : NetworkInfo      | type sign
+# line 2 : lobby-1          | the first line message, template (and id if provided) displayer if blanc
+# line 3 :                  | blanc
+# line 4 :                  | blanc
+# IF ID IS NOT PROVIDED, it's a "global sign"
+
+# REQUIRE  & StatsPE PLUGINS
+#
+# line 1 : endGame          | type sign
+# line 2 : 1                | reward money, can be blanc
+# line 3 : 10               | reward XP, can be blanc
+# line 4 : lobby            | return server, if none, return to world spawn
+
+# REQUIRE WORLDS PLUGIN
+# go to a game in a different world / go back to lobby (in a different world)
+#
+# line 1 : goToGame   /  goToLobby
+# line 2 : worlds tp
+# line 3 : *world name*
+# line 4 :
+
+
+
+

@@ -5,14 +5,14 @@
 MYSQL_ROOT_PASS="root"
 
 # for building docker images
-MYSQL_HOST="127.0.0.1"
+MYSQL_HOST="localhost"
 MYSQL_PORT=3306
 MYSQL_USER="root"
 MYSQL_PASS="root"
 MYSQL_DATA="database"
 
 # external IP (auto) OR local IP
-SERVER_IP="192.168.4.10"
+SERVER_IP="192.168.0.1"
 
 updateConfig() {
     sed -i 's/<<MYSQL_USER>>/'$MYSQL_USER'/g' $1

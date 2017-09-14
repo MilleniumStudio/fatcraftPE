@@ -8,6 +8,7 @@ use fatutils\FatUtils;
 use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
 use fatutils\tools\bossBarAPI\BossBarAPI;
+use fatutils\tools\Sidebar;
 use fatutils\tools\Timer;
 use fatutils\tools\WorldUtils;
 use fatutils\game\GameManager;
@@ -52,6 +53,14 @@ class HungerGame extends PluginBase
     {
         SpawnManager::getInstance()->blockSpawns();
         LoadBalancer::getInstance()->setServerState(LoadBalancer::SERVER_STATE_OPEN);
+
+        Sidebar::getInstance()
+            ->addLine(TextFormat::GOLD . TextFormat::BOLD . "HungerGame")
+            ->addWhiteSpace()
+            ->addMutableLine(function ()
+            {
+                return TextFormat::AQUA . "Joueur en vie: " . TextFormat::RESET . TextFormat::BOLD . PlayersManager::getInstance()->getAlivePlayerLeft();
+            });
     }
 
     public function handlePlayerConnection(Player $p_Player)
@@ -104,6 +113,8 @@ class HungerGame extends PluginBase
             $p_Player->sendMessage(TextFormat::YELLOW . "You've been automatically set to SPECTATOR");
             $this->getServer()->getLogger()->info($p_Player->getName() . " has been set to SPECTATOR");
         }
+
+        Sidebar::getInstance()->update();
     }
 
     //---------------------

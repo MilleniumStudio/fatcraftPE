@@ -8,3 +8,8 @@ authors:
 commands:
  server:
   description: server commands
+  permission: command.server
+ hub:
+  description: return to lobby/hub
+ lobby:
+  description: return to lobby/hub

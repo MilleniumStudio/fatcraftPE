@@ -36,6 +36,15 @@ class CustomEntries
         $this->customEntries[] = new Entry('Money', 0, Entry::INT, true);
         $this->customEntries[] = new Entry('XP', 0, Entry::INT, true);
 
+        $this->customEntries[] = new Entry('pk_played'  , 0, Entry::INT, true);
+        $this->customEntries[] = new Entry('pk_XP'      , 0, Entry::INT, true);
+        $this->customEntries[] = new Entry('bw_played'  , 0, Entry::INT, true);
+        $this->customEntries[] = new Entry('bw_XP'      , 0, Entry::INT, true);
+        $this->customEntries[] = new Entry('hg_played'  , 0, Entry::INT, true);
+        $this->customEntries[] = new Entry('hg_XP'      , 0, Entry::INT, true);
+        $this->customEntries[] = new Entry('sw_played'  , 0, Entry::INT, true);
+        $this->customEntries[] = new Entry('sw_XP'      , 0, Entry::INT, true);
+
         foreach ($this->customEntries as $customEntry) {
             Base::getInstance()->getDataProvider()->addEntry($customEntry);
         }
