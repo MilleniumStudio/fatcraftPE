@@ -41,11 +41,12 @@ MySQL:
     database: "StatsPE"
     cacheLimit: 100
 
-FloatingTops:
-  - statName: "XP"
-    location: world/0/75/0
-    lines: 5
-  - statName: "XP"
-    name: "The Best"
-    location: world/10/75/0
-    lines: 1
+
+#FloatingTops:
+#  - statName: "XP"
+#    location: world/0/75/0
+#    lines: 5
+#  - statName: "XP"
+#    name: "The Best"
+#    location: world/10/75/0
+#    lines: 1
