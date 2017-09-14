@@ -40,3 +40,5 @@ MySQL:
     password: <<MYSQL_PASS>>
     database: <<MYSQL_DATA>>
     cacheLimit: 100
+
+FloatingTops: []
