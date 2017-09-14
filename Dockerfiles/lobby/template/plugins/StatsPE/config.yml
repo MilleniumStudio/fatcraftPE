@@ -41,4 +41,20 @@ MySQL:
     database: <<MYSQL_DATA>>
     cacheLimit: 100
 
-FloatingTops: []
+FloatingTops:
+- statName: sw_XP
+  name: "Top 5 SkyWar"
+  location: map/16/11/-5
+  lines: 5
+- statName: bw_XP
+  name: "Top 5 BedWar"
+  location: map/-5/11/-15
+  lines: 5
+- statName: hg_XP
+  name: "Top 5 HungeGame"
+  location: map/-15/11/6
+  lines: 5
+- statName: pk_XP
+  name: "Top 5 Parkour"
+  location: map/7/11/17
+  lines: 5

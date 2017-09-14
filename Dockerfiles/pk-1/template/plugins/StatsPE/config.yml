@@ -41,4 +41,8 @@ MySQL:
     database: <<MYSQL_DATA>>
     cacheLimit: 100
 
-FloatingTops: []
+FloatingTops:
+- statName: pk_XP
+  name: "Top 20 Parkour"
+  location: map/212/12/-7
+  lines: 20
