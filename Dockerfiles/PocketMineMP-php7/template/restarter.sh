@@ -2,9 +2,11 @@
 
 POCKETMINE_ARGS="";
 
-if [ ! -z "$DO_LOOP" ]; then
-    DO_LOOP="false"
-fi
+DO_LOOP="yes"
+
+#if [ ! -z "$DO_LOOP" ]; then
+#    DO_LOOP="false"
+#fi
 
 while getopts "p:f:l" OPTION 2> /dev/null; do
 	case ${OPTION} in
@@ -58,16 +60,19 @@ if [ ! -z "$SERVER_NAME" ]; then
     POCKETMINE_ARGS="$POCKETMINE_ARGS --server-name=$SERVER_NAME"
 fi
 
-LOOPS=0
+start()
+{
+    echo "Starting server"
+    "$PHP_BINARY" $POCKETMINE_FILE $POCKETMINE_ARGS $@
+    echo "Server stopped !"
+}
+
 set +e
-while [ "$LOOPS" -eq 0 ] || [ "$DO_LOOP" == "yes" ]; do
-	if [ "$DO_LOOP" == "yes" ]; then
-		"$PHP_BINARY" $POCKETMINE_FILE $POCKETMINE_ARGS $@
-	else
-		exec "$PHP_BINARY" $POCKETMINE_FILE $POCKETMINE_ARGS $@
-	fi
-	((LOOPS++))
-done
-if [ ${LOOPS} -gt 1 ]; then
-	echo "[INFO] Restarted $LOOPS times"
+if [ "$DO_LOOP" == "yes" ]; then
+    while true; do
+        start
+        sleep 5
+    done
+else
+    start
 fi

@@ -38,4 +38,4 @@ RUN apt-get -y update && \
 
 ADD install /home/minecraft
 
-CMD ./start.sh
+CMD ./restarter.sh
