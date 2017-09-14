@@ -660,9 +660,9 @@ class LoadBalancer extends PluginBase implements Listener
                 }
             }
         }
-        else if ($cmd->getName() === "hub" or $cmd->getName() === "lobby")
+        else if ($cmd->getName() === "hub" or $cmd->getName() === "lobby") //   /lobby ...
         {
-            if (count($p_Param) == 1)
+            if (count($p_Param) == 0)// /lobby
             {
                 if ($sender instanceof Player and $this->getConfig()->getNested("redirect.to_type") !== $this->m_ServerType)
                 {
@@ -673,36 +673,44 @@ class LoadBalancer extends PluginBase implements Listener
                         $this->transferPlayer($l_Player, $l_Server["ip"], $l_Server["port"], "Transfering to " . $l_Server["type"] . "-" . $l_Server["id"]);
                     }
                 }
-            }
-            else if (count($p_Param) == 2)
-            {
-                $l_Lobbies = $this->m_Servers["lobby"];
-                if ($p_Param[1] == "list")
-                {
-                    if ($l_Lobbies !== null and count($l_Lobbies) > 0)
-                    {
-                        $sender->sendMessage('Lobbies : ');
-                        foreach ($l_Lobbies as $l_Lobby)
-                        {
-                            $sender->sendMessage(' - ' . $l_Lobby["id"] . ' ' . $l_Lobby["online"] . '/' . $l_Lobby["max"]);
-                        }
-                    }
-                }
-                else if (isset($l_Lobbies[$p_Param[1]]))
-                {
-                    if ($sender instanceof Player and $this->getConfig()->getNested("redirect.to_type") !== $this->m_ServerType)
-                    {
-                        $this->transferPlayer($l_Player, $l_Lobbies[$p_Param[1]]["ip"], $l_Lobbies[$p_Param[1]]["port"], "Transfering to " . $l_Lobbies[$p_Param[1]]["type"] . "-" . $l_Lobbies[$p_Param[1]]["id"]);
-                    }
-                }
                 else
                 {
-                    sendLobbyHelp($sender);
+                    $sender->sendMessage('Pour êtes sur ' . $l_Server["type"] . ' ' . $l_Server["id"]);
+                }
+            }
+            else if (count($p_Param) == 1)//    /lobby list/<id>
+            {
+                if (isset($this->m_Servers["lobby"]))
+                {
+                    $l_Lobbies = $this->m_Servers["lobby"];
+                    if ($p_Param[0] == "list")
+                    {
+                        if ($l_Lobbies !== null and count($l_Lobbies) > 0)
+                        {
+                            $sender->sendMessage('Lobbies : ');
+                            foreach ($l_Lobbies as $l_Lobby)
+                            {
+                                $sender->sendMessage(' - ' . $l_Lobby["id"] . ' ' . $l_Lobby["online"] . '/' . $l_Lobby["max"]);
+                            }
+                        }
+                    }
+                    else if (isset($l_Lobbies[$p_Param[0]]))
+                    {
+                        if ($sender instanceof Player and $this->getConfig()->getNested("redirect.to_type") !== $this->m_ServerType)
+                        {
+                            $l_Player = $sender;
+                            $this->transferPlayer($l_Player, $l_Lobbies[$p_Param[0]]["ip"], $l_Lobbies[$p_Param[0]]["port"], "Transfering to " . $l_Lobbies[$p_Param[0]]["type"] . "-" . $l_Lobbies[$p_Param[0]]["id"]);
+                        }
+                    }
+                    else
+                    {
+                        $this->sendLobbyHelp($sender);
+                    }
                 }
             }
             else
             {
-                sendLobbyHelp($sender);
+                $this->sendLobbyHelp($sender);
             }
         }
         return true;
