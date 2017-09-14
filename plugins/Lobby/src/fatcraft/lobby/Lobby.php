@@ -1,53 +1,59 @@
 <?php
+/**
+ * Created by IntelliJ IDEA.
+ * User: Nyhven
+ * Date: 14/09/2017
+ * Time: 13:51
+ */
 
 namespace fatcraft\lobby;
 
+use fatutils\FatUtils;
+use fatutils\tools\Timer;
+use fatutils\tools\WorldUtils;
+use fatutils\tools\DelayedExec;
+use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
-use pocketmine\event\player\PlayerQuitEvent;
+use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 
 class Lobby extends PluginBase implements Listener
 {
+    const CONFIG_KEY_WELCOME_TITLE = "welcomeTitle";
+    const CONFIG_KEY_WELCOME_SUBTITLE = "welcomeSubtitle";
 
     private static $m_Instance;
 
+    public static function getInstance(): Lobby
+    {
+        return self::$m_Instance;
+    }
+
     public function onLoad()
     {
-        // registering instance
-        LoadBalancer::$m_Instance = $this;
+        self::$m_Instance = $this;
     }
 
     public function onEnable()
     {
-        // register events listener
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
-        $this->getLogger()->info("Enabled");
+        FatUtils::getInstance()->setTemplateConfig($this->getConfig());
+        WorldUtils::stopWorldsTime();
     }
 
-    public function onDisable()
+    public function onPlayerJoin(PlayerJoinEvent $e)
     {
-
+        new DelayedExec(5, function () use ($e) {
+            $e->getPlayer()->addTitle($this->getConfig()->get(Lobby::CONFIG_KEY_WELCOME_TITLE, ""));
+            $e->getPlayer()->addSubTitle($this->getConfig()->get(Lobby::CONFIG_KEY_WELCOME_SUBTITLE, ""));
+        });
     }
 
-    public static function getInstance(): Lobby
+    public function onPlayerDamage(EntityDamageEvent $e)
     {
-        return LoadBalancer::$m_Instance;
+        $p = $e->getEntity();
+        if ($p instanceof Player)
+            $e->setCancelled(true);
     }
-
-    /**
-     * @param PlayerJoinEvent $p_Event
-     *
-     * @priority HIGH
-     */
-    public function onPlayerJoinEvent(PlayerJoinEvent $p_Event)
-    {
-
-    }
-
-    public function onPlayerQuitEvent(PlayerQuitEvent $p_Event)
-    {
-
-    }
-
 }
