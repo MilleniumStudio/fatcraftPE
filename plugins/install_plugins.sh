@@ -33,6 +33,10 @@ fi
 --out Worlds.phar
 
 ../PocketMine-MP/bin/php7/bin/php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
+--make Lobby/ \
+--out Lobby.phar
+
+../PocketMine-MP/bin/php7/bin/php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
 --make AllSigns/ \
 --out AllSigns.phar
 
