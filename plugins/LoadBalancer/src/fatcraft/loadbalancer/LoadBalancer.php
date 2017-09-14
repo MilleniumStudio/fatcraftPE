@@ -13,6 +13,7 @@ use pocketmine\Player;
 use pocketmine\utils\Config;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
+use pocketmine\command\ConsoleCommandSender;
 use pocketmine\scheduler\PluginTask;
 use libasynql\ClearMysqlTask;
 use libasynql\result\MysqlResult;
@@ -26,6 +27,7 @@ class LoadBalancer extends PluginBase implements Listener
     const SERVER_STATE_CLOSED = "closed";
 
     private static $m_Instance;
+    public $m_ConsoleCommandSender;
     private $m_Langs;
     private $m_ServerUUID;
     private $m_ServerType;
@@ -46,9 +48,7 @@ class LoadBalancer extends PluginBase implements Listener
         // registering instance
         LoadBalancer::$m_Instance = $this;
 
-//        // Config section
-//        $this->saveResource("config.yml");
-//        $this->config = new Config($this->getDataFolder() . "config.yml", Config::YAML);
+        $this->saveResource("commands.txt");
 
         // Language section
         $this->saveResource("language.properties");
@@ -57,6 +57,7 @@ class LoadBalancer extends PluginBase implements Listener
 
     public function onEnable()
     {
+        $this->m_ConsoleCommandSender = new ConsoleCommandSender();
         // register events listener
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
 
@@ -103,6 +104,21 @@ class LoadBalancer extends PluginBase implements Listener
                 LoadBalancer::getInstance()->cleanOrphaned();
             }
         }, 0, $this->getConfig()->getNested("timers.cleaner"));
+        $this->getServer()->getScheduler()->scheduleDelayedRepeatingTask(new class($this) extends PluginTask
+        {
+            public function onRun(int $currentTick)
+            {
+                $l_Commands = new Config(LoadBalancer::getInstance()->getDataFolder() . "commands.txt", Config::ENUM);
+                var_dump($l_Commands->getAll());
+                foreach ($l_Commands->getAll() as $l_Command => $l_Value)
+                {
+                    LoadBalancer::getInstance()->getLogger()->info("Executing console command \"" . $l_Command . "\"");
+                    LoadBalancer::getInstance()->getServer()->dispatchCommand(LoadBalancer::getInstance()->m_ConsoleCommandSender, $l_Command);
+                    $l_Commands->remove($l_Command);
+                }
+                $l_Commands->save();
+            }
+        }, 0, 100);
         $this->getLogger()->info("Enabled");
     }
 
@@ -658,10 +674,10 @@ class LoadBalancer extends PluginBase implements Listener
                     }
                 }
             }
-            else if (count($p_Param) == 1)
+            else if (count($p_Param) == 2)
             {
                 $l_Lobbies = $this->m_Servers["lobby"];
-                if ($p_Param[0] == "list")
+                if ($p_Param[1] == "list")
                 {
                     if ($l_Lobbies !== null and count($l_Lobbies) > 0)
                     {
@@ -672,17 +688,21 @@ class LoadBalancer extends PluginBase implements Listener
                         }
                     }
                 }
-                else if (isset($l_Lobbies[$p_Param[0]]))
+                else if (isset($l_Lobbies[$p_Param[1]]))
                 {
                     if ($sender instanceof Player and $this->getConfig()->getNested("redirect.to_type") !== $this->m_ServerType)
                     {
-                        $this->transferPlayer($l_Player, $l_Lobbies[$p_Param[0]]["ip"], $l_Lobbies[$p_Param[0]]["port"], "Transfering to " . $l_Lobbies[$p_Param[0]]["type"] . "-" . $l_Lobbies[$p_Param[0]]["id"]);
+                        $this->transferPlayer($l_Player, $l_Lobbies[$p_Param[1]]["ip"], $l_Lobbies[$p_Param[1]]["port"], "Transfering to " . $l_Lobbies[$p_Param[1]]["type"] . "-" . $l_Lobbies[$p_Param[1]]["id"]);
                     }
                 }
                 else
                 {
                     sendLobbyHelp($sender);
                 }
+            }
+            else
+            {
+                sendLobbyHelp($sender);
             }
         }
         return true;
