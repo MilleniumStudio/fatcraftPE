@@ -20,6 +20,7 @@ use libasynql\result\MysqlResult;
 use libasynql\result\MysqlSelectResult;
 use libasynql\DirectQueryMysqlTask;
 use libasynql\MysqlCredentials;
+use fatcraft\loadbalancer\control_socket\RCON;
 
 class LoadBalancer extends PluginBase implements Listener
 {
@@ -33,6 +34,9 @@ class LoadBalancer extends PluginBase implements Listener
     private $m_ServerType;
     private $m_ServerId;
     private $m_ServerState = LoadBalancer::SERVER_STATE_CLOSED; // open / closed
+
+    /** @var RCON */
+    private $rcon;
 
     /** @var \mysqli */
     private $m_Mysql;
@@ -78,6 +82,20 @@ class LoadBalancer extends PluginBase implements Listener
         //test hack
         $this->setServerState($this->getConfig()->getNested("node.state"));
 
+        // Control socket
+        if($this->getConfig()->getNested("controle_socket.enable")){
+            try
+            {
+                $this->rcon = new RCON(
+                    $this,
+                    $this->getConfig()->getNested("controle_socket.port"),
+                    $this->getConfig()->getNested("controle_socket.bind")
+                );
+            }catch(\Throwable $e){
+                $this->getLogger()->critical("RCON can't be started: " . $e->getMessage());
+            }
+        }
+
         // update my status every second
         $this->getServer()->getScheduler()->scheduleDelayedRepeatingTask(new class($this) extends PluginTask
         {
@@ -109,7 +127,6 @@ class LoadBalancer extends PluginBase implements Listener
             public function onRun(int $currentTick)
             {
                 $l_Commands = new Config(LoadBalancer::getInstance()->getDataFolder() . "commands.txt", Config::ENUM);
-                var_dump($l_Commands->getAll());
                 foreach ($l_Commands->getAll() as $l_Command => $l_Value)
                 {
                     LoadBalancer::getInstance()->getLogger()->info("Executing console command \"" . $l_Command . "\"");
@@ -146,6 +163,10 @@ class LoadBalancer extends PluginBase implements Listener
         {
             $this->deleteMe();
             ClearMysqlTask::closeAll($this, $this->m_Credentials);
+        }
+        if ($this->rcon != null)
+        {
+            $this->rcon->stop();
         }
     }
 
@@ -492,7 +513,7 @@ class LoadBalancer extends PluginBase implements Listener
      */
     public function onPlayerJoinEvent(PlayerJoinEvent $p_Event)
     {
-        if ($this->isPlayerConnected($p_Event->getPlayer()->getName() && $this->getConfig()->getNested("players.singlesession") == "true"))
+        if ($this->isPlayerConnected($p_Event->getPlayer()->getName()) and $this->getConfig()->getNested("players.singlesession") == "true")
         {
             $p_Event->getPlayer()->kick("You are already connected !", false);
         }
@@ -552,8 +573,8 @@ class LoadBalancer extends PluginBase implements Listener
     public function isPlayerConnected(String $p_Name) : Bool
     {
         $result = MysqlResult::executeQuery($this->connectMainThreadMysql(),
-            "SELECT * FROM players_on_servers WHERE sid != ?", [
-                ["s", $this::getInstance()->m_ServerUUID]
+            "SELECT * FROM players_on_servers WHERE name = ?", [
+                ["s", $p_Name]
         ]);
         if (($result instanceof MysqlSelectResult) and count($result->rows) == 1)
         {
