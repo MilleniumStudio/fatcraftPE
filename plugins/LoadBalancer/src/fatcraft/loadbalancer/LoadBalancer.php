@@ -41,9 +41,6 @@ class LoadBalancer extends PluginBase implements Listener
     private $m_TotalPlayers = 0;
     private $m_MaxPlayers = 0;
 
-    private $m_NextSign;
-    private $m_Signs = array();
-
     public function onLoad()
     {
         // registering instance
@@ -154,6 +151,16 @@ class LoadBalancer extends PluginBase implements Listener
     public function getServerState()
     {
         return $this->m_ServerState;
+    }
+
+    public function getServerType()
+    {
+        return $this->m_ServerType;
+    }
+
+    public function getServerId()
+    {
+        return $this->m_ServerId;
     }
 
     public function setServerState(String $p_State)
@@ -639,13 +646,42 @@ class LoadBalancer extends PluginBase implements Listener
         }
         else if ($cmd->getName() === "hub" or $cmd->getName() === "lobby")
         {
-            if ($sender instanceof Player and $this->getConfig()->getNested("redirect.to_type") !== $this->m_ServerType)
+            if (count($p_Param) == 1)
             {
-                $l_Player = $sender;
-                $l_Server = $this->getBest($this->getConfig()->getNested("redirect.to_type"));
-                if ($l_Server !== null)
+                if ($sender instanceof Player and $this->getConfig()->getNested("redirect.to_type") !== $this->m_ServerType)
                 {
-                    $this->transferPlayer($l_Player, $l_Server["ip"], $l_Server["port"], "Transfering to " . $l_Server["type"] . "-" . $l_Server["id"]);
+                    $l_Player = $sender;
+                    $l_Server = $this->getBest($this->getConfig()->getNested("redirect.to_type"));
+                    if ($l_Server !== null)
+                    {
+                        $this->transferPlayer($l_Player, $l_Server["ip"], $l_Server["port"], "Transfering to " . $l_Server["type"] . "-" . $l_Server["id"]);
+                    }
+                }
+            }
+            else if (count($p_Param) == 1)
+            {
+                $l_Lobbies = $this->m_Servers["lobby"];
+                if ($p_Param[0] == "list")
+                {
+                    if ($l_Lobbies !== null and count($l_Lobbies) > 0)
+                    {
+                        $sender->sendMessage('Lobbies : ');
+                        foreach ($l_Lobbies as $l_Lobby)
+                        {
+                            $sender->sendMessage(' - ' . $l_Lobby["id"] . ' ' . $l_Lobby["online"] . '/' . $l_Lobby["max"]);
+                        }
+                    }
+                }
+                else if (isset($l_Lobbies[$p_Param[0]]))
+                {
+                    if ($sender instanceof Player and $this->getConfig()->getNested("redirect.to_type") !== $this->m_ServerType)
+                    {
+                        $this->transferPlayer($l_Player, $l_Lobbies[$p_Param[0]]["ip"], $l_Lobbies[$p_Param[0]]["port"], "Transfering to " . $l_Lobbies[$p_Param[0]]["type"] . "-" . $l_Lobbies[$p_Param[0]]["id"]);
+                    }
+                }
+                else
+                {
+                    sendLobbyHelp($sender);
                 }
             }
         }
@@ -655,8 +691,16 @@ class LoadBalancer extends PluginBase implements Listener
     private function sendServerHelp(CommandSender $sender)
     {
         $sender->sendMessage("Servers help :");
-        $sender->sendMessage(" /server list [template]");
-        $sender->sendMessage(" /server connect <player> <template> [id]");
+        $sender->sendMessage("- /server list [template]");
+        $sender->sendMessage("- /server connect <player> <template> [id]");
+    }
+
+    private function sendLobbyHelp(CommandSender $sender)
+    {
+        $sender->sendMessage("/lobby help :");
+        $sender->sendMessage("- /lobby -> Vous envoi vers un lobby");
+        $sender->sendMessage("- /lobby list -> Affiche la liste des lobbies");
+        $sender->sendMessage("- /lobby <id> -> Vous connect à un lobby");
     }
 
 }
