@@ -6,10 +6,12 @@ EXPOSE 19132/udp
 ENV DEBIAN_FRONTEND noninteractive
 ENV SERVER_PORT 19132
 ENV SERVER_NAME "pocketmine-base"
+ENV SERVER_TYPE "type"
+ENV SERVER_ID 0
 
 # app vars
-ENV JAVA_APP_DIR /home/minecraft
-ENV LOGFILE $JAVA_APP_DIR/server.log
+ENV APP_DIR /home/minecraft
+ENV LOGFILE $APP_DIR/server.log
 
 ADD settings/bashrc /etc/bash.bashrc
 ADD settings/bashrc /etc/skel/.bashrc
@@ -31,9 +33,9 @@ RUN rm -rf /tmp/* /var/tmp/* /var/cache/apk/*
 WORKDIR /home/minecraft
 
 RUN apt-get -y update && \
- apt-get -y install curl make bison libtool-bin autoconf bzip2 g++ inetutils-ping && \
+ apt-get -y install curl make bison libtool-bin autoconf bzip2 g++ inetutils-ping screen netcat && \
  apt-get clean
 
 ADD install /home/minecraft
 
-CMD ./start.sh --no-wizard
+CMD ./start.sh
