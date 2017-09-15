@@ -34,8 +34,9 @@ class HungerGameScoreManager
 
     public function giveRewards()
     {
-        
+        HungerGame::getInstance()->getLogger()->info("Giving rewards :");
         $l_ReverseDeathOrder = array_reverse($this->m_DeathOrder);
+        var_dump($l_ReverseDeathOrder);
 
         // record ordered players
         GameDataManager::getInstance()->recordBoard($l_ReverseDeathOrder);

@@ -165,7 +165,10 @@ class HungerGame extends PluginBase
         {
             $winner = $winners[0];
             if ($winner instanceof FatPlayer)
+            {
                 $winnerName = $winner->getPlayer()->getName();
+                score\HungerGameScoreManager::getInstance()->registerDeath($winner->getPlayer());
+            }
         }
         foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
             $l_Player->addTitle(TextFormat::DARK_AQUA . TextFormat::BOLD . "Partie terminée", TextFormat::GREEN . TextFormat::BOLD . "le vainqueur est " . $winnerName, 30, 80, 30);
