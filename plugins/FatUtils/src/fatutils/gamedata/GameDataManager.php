@@ -84,7 +84,7 @@ class GameDataManager
     {
         FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
             new DirectQueryMysqlTask(LoadBalancer::getInstance()->getCredentials(),
-                "UPDATE games SET end = CURRENT_TIMESTAMP, start = ? WHERE id = ?", [
+                "UPDATE games SET start = CURRENT_TIMESTAMP WHERE id = ?", [
                 ["i", $this->m_GameId]
             ]
         ));
@@ -145,7 +145,7 @@ class GameDataManager
         }
     }
 
-    private function insertGameData(String $p_EventType, String $p_Player, $p_Data)
+    private function insertGameData(String $p_EventType, $p_Player, $p_Data)
     {
         if ($this->m_GameId != 0)
         {
