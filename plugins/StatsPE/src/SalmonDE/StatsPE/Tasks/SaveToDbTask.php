@@ -37,19 +37,22 @@ class SaveToDbTask extends \pocketmine\scheduler\AsyncTask
 
         $i = 0;
 
-        if($db->multi_query($query)){
-            do{
-                $db->next_result();
+        if ($query != "")
+        {
+            if($db->multi_query($query)){
+                do{
+                    $db->next_result();
 
-                $i++;
-            }while($db->more_results());
+                    $i++;
+                }while($db->more_results());
+            }
+
+            if($db->errno){
+                $this->setResult('Error: '.$db->error.PHP_EOL.'Query: '.explode(';', $query)[$i]);
+            }
+
+            $db->close();
         }
-
-        if($db->errno){
-            $this->setResult('Error: '.$db->error.PHP_EOL.'Query: '.explode(';', $query)[$i]);
-        }
-
-        $db->close();
     }
 
     public function onCompletion(Server $server){

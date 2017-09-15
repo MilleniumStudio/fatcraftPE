@@ -12,7 +12,7 @@ class StatsCmd extends \pocketmine\command\PluginCommand implements \pocketmine\
     public function __construct(\SalmonDE\StatsPE\Base $owner)
     {
         parent::__construct('stats', $owner);
-        $this->setPermission('statspe.cmd.stats');
+//        $this->setPermission('statspe.cmd.stats');
         $this->setDescription($owner->getMessage('commands.stats.description'));
         $this->setUsage($owner->getMessage('commands.stats.usage'));
         $this->setExecutor($this);
@@ -61,7 +61,7 @@ class StatsCmd extends \pocketmine\command\PluginCommand implements \pocketmine\
                 return true;
             }
         }
-        if (is_array($data = $this->getPlugin()->getDataProvider()->getAllData($args[0]))) {
+        else if (is_array($data = $this->getPlugin()->getDataProvider()->getAllData($args[0]))) {
             $text = str_replace('{value}', $data['Username'], $this->getPlugin()->getMessage('general.header'));
             foreach ($this->getPlugin()->getDataProvider()->getEntries() as $entry) {
                 if ($sender->hasPermission('statspe.entry.' . $entry->getName())) {
