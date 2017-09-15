@@ -45,6 +45,7 @@ class EventListener implements Listener
 		$p->setGamemode(3);
 
             Sidebar::getInstance()->update();
+            score\HungerGameScoreManager::getInstance()->registerDeath($p);
 	}
 
 	/**
