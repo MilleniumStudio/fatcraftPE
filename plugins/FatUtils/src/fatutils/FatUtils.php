@@ -7,20 +7,15 @@ use fatutils\tools\WorldUtils;
 use hungergames\HungerGame;
 use hungergames\LootTable;
 use fatutils\tools\Sidebar;
-use pocketmine\block\BlockFactory;
-use pocketmine\block\BlockIds;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\item\enchantment\Enchantment;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
 use pocketmine\level\sound\GenericSound;
-use pocketmine\nbt\tag\CompoundTag;
-use pocketmine\nbt\tag\StringTag;
 use pocketmine\network\mcpe\protocol\LevelEventPacket;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
-use pocketmine\tile\Chest;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
 
@@ -71,30 +66,7 @@ class FatUtils extends PluginBase
                     }
                     break;
                 case "fillchests":
-//                    ChestsManager::getInstance()->fillChests();
-                    if ($sender instanceof Player) {
-                        WorldUtils::loadChunkAt($sender->getPosition());
-//                        $sender->getPosition()->getLevel()->setBlock($sender->getPosition(), BlockFactory::get(BlockIds::CHEST));
-                        $l_ChestBlock = $sender->getPosition()->getLevel()->getBlock($sender->getPosition());
-                        $l_ChestTile = $sender->getPosition()->getLevel()->getTile($l_ChestBlock);
-                        var_dump($l_ChestTile);
-                        if ($l_ChestTile instanceof Chest) {
-                            $l_ChestTile->getInventory()->clearAll();
-
-                            $l_InventoryTotalValue = 0;
-                            for ($i = 0; $i < 10; $i++)
-                            {
-                                echo "fillingItem:\n";
-                                $l_Item = ItemFactory::get(ItemIds::ACACIA_DOOR);
-                                $nbt = $l_Item->getNamedTag() ?? new CompoundTag("", []);
-                                $nbt->test = new StringTag("shop", "...");
-//                                $nbt->offsetSet("shop", "salut");
-                                $l_Item->setNamedTag($nbt);
-                                $l_ChestTile->getInventory()->setItem($i, $l_Item);
-                            }
-                        }
-                    }
-                    break;
+                    ChestsManager::getInstance()->fillChests();
                 default;
             }
 
