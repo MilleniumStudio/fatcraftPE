@@ -79,7 +79,9 @@ class WorldUtils
 
 	public static function getRelativeBlock(Block $p_Block, int $x, int $y, int $z):Block
 	{
-		return $p_Block->getLevel()->getBlock(new Position($p_Block->getX() + $x, $p_Block->getY() + $y, $p_Block->getZ() + $z));
+            $_Pos = new Position($p_Block->getX() + $x, $p_Block->getY() + $y, $p_Block->getZ() + $z);
+            self::loadChunkAt($_Pos);
+            return $p_Block->getLevel()->getBlock($_Pos);
 	}
 
 	public static function getRandomizedLocation(Location $p_StartLocation, float $p_XBound, float $p_YBound, float $p_ZBound)
