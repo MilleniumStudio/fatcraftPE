@@ -11,6 +11,7 @@ use fatutils\teams\Team;
 use fatutils\teams\TeamsManager;
 use fatutils\tools\bossBarAPI\BossBarAPI;
 use fatutils\tools\DelayedExec;
+use fatutils\tools\ItemUtils;
 use fatutils\tools\Sidebar;
 use fatutils\tools\Timer;
 use fatutils\tools\WorldUtils;
@@ -29,6 +30,7 @@ use pocketmine\level\Location;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\NamedTag;
 use pocketmine\nbt\tag\StringTag;
+use pocketmine\network\mcpe\protocol\BlockEntityDataPacket;
 use pocketmine\network\mcpe\protocol\ContainerSetSlotPacket;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
@@ -37,6 +39,12 @@ use pocketmine\utils\TextFormat;
 
 class Bedwars extends PluginBase implements Listener
 {
+    const CONFIG_KEY_FORGES_ROOT = "forges";
+    const CONFIG_KEY_FORGES_LOCATION = "location";
+    const CONFIG_KEY_FORGES_ITEM_TYPE = "itemType";
+    const CONFIG_KEY_FORGES_POP_DELAY = "popDelay";
+    const CONFIG_KEY_FORGES_POP_AMOUNT = "popAmount";
+
     const PLAYER_DATA_CURRENCY_IRON = "currency.iron";
     const PLAYER_DATA_CURRENCY_GOLD = "currency.gold";
     const PLAYER_DATA_CURRENCY_DIAMOND = "currency.diamond";
@@ -45,6 +53,8 @@ class Bedwars extends PluginBase implements Listener
     private static $m_Instance;
     private $m_WaitingTimer;
     private $m_PlayTimer;
+
+    private $m_Forges = [];
 
     public static function getInstance(): Bedwars
     {
@@ -72,6 +82,32 @@ class Bedwars extends PluginBase implements Listener
         LoadBalancer::getInstance()->setServerState(LoadBalancer::SERVER_STATE_OPEN);
         PlayersManager::getInstance()->displayHealth();
         WorldUtils::stopWorldsTime();
+
+
+        // FORGE CONFIG LOADING
+        if ($this->getConfig()->exists(TeamsManager::CONFIG_KEY_TEAM_ROOT))
+        {
+            FatUtils::getInstance()->getLogger()->info("FORGES loading...");
+            foreach ($this->getConfig()->get(Bedwars::CONFIG_KEY_FORGES_ROOT) as $key => $value)
+            {
+                if (array_key_exists(Bedwars::CONFIG_KEY_FORGES_LOCATION, $value))
+                {
+                    $newForge = new Forge(WorldUtils::stringToLocation($value[Bedwars::CONFIG_KEY_FORGES_LOCATION]));
+
+                    if (array_key_exists(Bedwars::CONFIG_KEY_FORGES_ITEM_TYPE, $value))
+                        $newForge->setItemType(ItemUtils::getItemIdFromName($value[Bedwars::CONFIG_KEY_FORGES_ITEM_TYPE]));
+
+                    if (array_key_exists(Bedwars::CONFIG_KEY_FORGES_POP_DELAY, $value))
+                        $newForge->setPopDelay($value[Bedwars::CONFIG_KEY_FORGES_POP_DELAY]);
+
+                    if (array_key_exists(Bedwars::CONFIG_KEY_FORGES_POP_AMOUNT, $value))
+                        $newForge->setPopAmount($value[Bedwars::CONFIG_KEY_FORGES_POP_AMOUNT]);
+
+                    FatUtils::getInstance()->getLogger()->info("   - " . $key);
+                    $this->m_Forges[] = $newForge;
+                }
+            }
+        }
 
         Sidebar::getInstance()
 //            ->setUpdateTickInterval(40)
@@ -135,20 +171,25 @@ class Bedwars extends PluginBase implements Listener
                 $p_Player->addSubTitle("Vous êtes dans la team " . $l_Team->getName());
             });
 
-//            (new BossbarTimer(600))
-//                ->addDelay(20)
-//                ->addTickCallback(function () use ($l_FatPlayer)
-//                {
-//                    if ($this->getServer()->getTick() % 20 == 0)
-//                    {
-//                        $l_FatPlayer->addData(Bedwars::PLAYER_DATA_CURRENCY_IRON, 10);
-//                        $l_FatPlayer->addData(Bedwars::PLAYER_DATA_CURRENCY_GOLD, 6);
-//                        $l_FatPlayer->addData(Bedwars::PLAYER_DATA_CURRENCY_DIAMOND, 1);
-//
-//                        Sidebar::getInstance()->update();
-//                    }
-//                })
-//                ->start();
+            (new Timer(600))
+                ->addStartCallback(function() {
+                    FatUtils::getInstance()->getLogger()->info("Forges are starting up !");
+                })
+                ->addTickCallback(function () use ($l_FatPlayer)
+                {
+                    if ($this->getServer()->getTick() % 20 == 0)
+                    {
+                        foreach ($this->m_Forges as $l_Forge)
+                        {
+                            if ($l_Forge instanceof Forge)
+                            {
+                                if ($l_Forge->canPop())
+                                    $l_Forge->pop();
+                            }
+                        }
+                    }
+                })
+                ->start();
         } else
         {
             $p_Player->setGamemode(3);

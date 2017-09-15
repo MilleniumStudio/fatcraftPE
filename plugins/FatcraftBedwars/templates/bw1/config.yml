@@ -20,6 +20,23 @@ spawns:
     location: -3/9/-3
     blockType: BED_BLOCK
 
+forges:
+  i1:
+    location: 2.5/8.5/5.5
+    itemType: IRON_INGOT
+    popDelay: 20
+    popAmount: 10
+  g1:
+    location: 0.5/8.5/5.5
+    itemType: GOLD_INGOT
+    popDelay: 40
+    popAmount: 10
+  d1:
+    location: -1.5/8.5/5.5
+    itemType: DIAMOND
+    popDelay: 60
+    popAmount: 10
+
 teams:
   §1Bleu§r:
     spawn: blueSpawn
