@@ -145,7 +145,7 @@ class GameDataManager
         }
     }
 
-    private function insertGameData(String $p_EventType, String $p_Player, String $p_Data)
+    private function insertGameData(String $p_EventType, String $p_Player, $p_Data)
     {
         if ($this->m_GameId != 0)
         {
