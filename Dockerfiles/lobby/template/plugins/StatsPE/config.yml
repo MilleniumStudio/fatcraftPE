@@ -51,7 +51,7 @@ FloatingTops:
   location: map/-5/11/-15
   lines: 5
 - statName: hg_XP
-  name: "Top 5 HungeGame"
+  name: "Top 5 HungerGame"
   location: map/-15/11/6
   lines: 5
 - statName: pk_XP
