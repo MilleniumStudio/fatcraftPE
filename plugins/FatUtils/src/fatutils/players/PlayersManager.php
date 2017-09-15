@@ -56,7 +56,7 @@ class PlayersManager
 	public function addPlayer(Player $p_Player)
 	{
 		$this->m_FatPlayers[$p_Player->getUniqueId()->toBinary()] = new FatPlayer($p_Player);
-                GameDataManager::getInstance()->recordJoin($p_Player->getUniqueId());
+                GameDataManager::getInstance()->recordJoin($p_Player->getUniqueId(), $p_Player->getAddress());
 	}
 
 	public function removePlayer(Player $p_Player)

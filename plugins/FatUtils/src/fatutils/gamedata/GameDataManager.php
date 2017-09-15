@@ -4,7 +4,7 @@ namespace fatutils\gamedata;
 
 use fatcraft\loadbalancer\LoadBalancer;
 use libasynql\result\MysqlResult;
-use libasynql\result\MysqlSelectResult;
+use libasynql\result\MysqlSuccessResult;
 use libasynql\DirectQueryMysqlTask;
 use fatutils\FatUtils;
 use pocketmine\utils\UUID;
@@ -72,8 +72,7 @@ class GameDataManager
         $result = MysqlResult::executeQuery($this->m_Mysql, "INSERT INTO games (type) VALUES (?)", [
                     ["s", $p_Type]
         ]);
-        var_dump($result);
-        if (($result instanceof MysqlSelectResult))
+        if (($result instanceof MysqlSuccessResult))
         {
             return $result->insertId;
         }
@@ -101,9 +100,10 @@ class GameDataManager
         ));
     }
 
-    public function recordJoin(UUID $p_Player)
+    public function recordJoin(UUID $p_Player, String $p_IP)
     {
-        $this->insertGameData(GameDataManager::JOIN, $p_Player->toString(), "");
+        $data['ip'] = $p_IP;
+        $this->insertGameData(GameDataManager::JOIN, $p_Player->toString(), json_encode($data));
     }
 
     public function recordLeave(UUID $p_Player)
@@ -141,14 +141,17 @@ class GameDataManager
 
     private function insertGameData(String $p_EventType, String $p_Player, String $p_Data)
     {
-        FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
-            new DirectQueryMysqlTask(LoadBalancer::getInstance()->getCredentials(),
-                "INSERT INTO games_data (game_id, event, player, data) VALUES (?, ?, ?, ?)", [
-                ["i", $this->m_GameId],
-                ["s", $p_EventType],
-                ["s", $p_Player],
-                ["s", $p_Data]
-            ]
-        ));
+        if ($this->m_GameId != 0)
+        {
+            FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
+                new DirectQueryMysqlTask(LoadBalancer::getInstance()->getCredentials(),
+                    "INSERT INTO games_data (game_id, event, player, data) VALUES (?, ?, ?, ?)", [
+                    ["i", $this->m_GameId],
+                    ["s", $p_EventType],
+                    ["s", $p_Player],
+                    ["s", $p_Data]
+                ]
+            ));
+        }
     }
 }
