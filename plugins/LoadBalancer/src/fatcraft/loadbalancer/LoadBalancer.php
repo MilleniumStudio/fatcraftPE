@@ -305,7 +305,7 @@ class LoadBalancer extends PluginBase implements Listener
                 $l_Player = $this->getServer()->getPlayer($row["name"]);
                 if ($l_Player == null)
                 {
-                    $this->removePlayerPlayer($l_Player->getName());
+                    $this->removePlayerPlayer($row["name"]);
                 }
             }
         }
