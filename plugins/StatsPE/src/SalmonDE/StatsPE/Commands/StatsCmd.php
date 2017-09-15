@@ -55,7 +55,7 @@ class StatsCmd extends \pocketmine\command\PluginCommand implements \pocketmine\
                 return true;
             } else if ($args[0] == "?" || $args[0] == "help") {
                 $sender->sendMessage(
-                    "/stats test <statName> [add] <value> : set or add a value to the specified stat\n".
+                    "/stats test <statName> [add] <value> : set or add a value to the specified stat\n" .
                     "/stats top [statName [title [nbLine]]] : add a leaderboard to the current location. Default value are statName = 'XP', title = statName, nbLines = 5\n"
                 );
                 return true;
@@ -64,40 +64,58 @@ class StatsCmd extends \pocketmine\command\PluginCommand implements \pocketmine\
         if (is_array($data = $this->getPlugin()->getDataProvider()->getAllData($args[0]))) {
             $text = str_replace('{value}', $data['Username'], $this->getPlugin()->getMessage('general.header'));
             foreach ($this->getPlugin()->getDataProvider()->getEntries() as $entry) {
-                if ($sender->hasPermission('statspe.entry.' . $entry->getName())) {
-                    switch ($entry->getName()) {
-                        case 'FirstJoin':
-                            $p = $sender->getServer()->getOfflinePlayer($args[0]);
-                            $value = date($this->getPlugin()->getConfig()->get('dateFormat'), $p->getFirstPlayed() / 1000);
-                            break;
+                $value = null;
+                switch ($entry->getName()) {
+                    case "ClientID":
+                    case "LastIP":
+                    case "UUID":
+                    case "JoinCount":
+                    case "ChatCount":
+                        if (!($sender->isOp() || $sender->getName() == $args[0]))
+                            continue;
+                        $value = $data[$entry->getName()];
+                        break;
+                    case 'FirstJoin':
+                        if (!($sender->isOp() || $sender->getName() == $args[0]))
+                            continue;
+                        $p = $sender->getServer()->getOfflinePlayer($args[0]);
+                        $value = date($this->getPlugin()->getConfig()->get('dateFormat'), $p->getFirstPlayed() / 1000);
+                        break;
 
-                        case 'LastJoin':
-                            $p = $sender->getServer()->getOfflinePlayer($args[0]);
-                            $value = date($this->getPlugin()->getConfig()->get('dateFormat'), $p->getLastPlayed() / 1000);
-                            break;
+                    case 'LastJoin':
+                        if (!($sender->isOp() || $sender->getName() == $args[0]))
+                            continue;
+                        $p = $sender->getServer()->getOfflinePlayer($args[0]);
+                        $value = date($this->getPlugin()->getConfig()->get('dateFormat'), $p->getLastPlayed() / 1000);
+                        break;
 
-                        case 'OnlineTime':
-                            $seconds = $data['OnlineTime'];
-                            if (($p = $sender->getServer()->getPlayerExact($data['Username'])) instanceof Player) {
-                                $seconds += round(time() - ($p->getLastPlayed() / 1000));
-                            }
+                    case 'OnlineTime':
+                        if (!($sender->isOp() || $sender->getName() == $args[0]))
+                            continue;
+                        $seconds = $data['OnlineTime'];
+                        if (($p = $sender->getServer()->getPlayerExact($data['Username'])) instanceof Player) {
+                            $seconds += round(time() - ($p->getLastPlayed() / 1000));
+                        }
 
-                            $value = \SalmonDE\StatsPE\Utils::getPeriodFromSeconds($seconds);
-                            break;
+                        $value = \SalmonDE\StatsPE\Utils::getPeriodFromSeconds($seconds);
+                        break;
 
-                        case 'K/D':
-                            $value = \SalmonDE\StatsPE\Utils::getKD($data['KillCount'], $data['DeathCount']);
-                            break;
+                    case 'K/D':
+                        $value = \SalmonDE\StatsPE\Utils::getKD($data['KillCount'], $data['DeathCount']);
+                        break;
 
-                        case 'Online':
-                            $value = $data['Online'] ? $this->getPlugin()->getMessage('commands.stats.true') : $this->getPlugin()->getMessage('commands.stats.false');
-                            break;
+                    case 'Online':
+                        if (!($sender->isOp() || $sender->getName() == $args[0]))
+                            continue;
+                        $value = $data['Online'] ? $this->getPlugin()->getMessage('commands.stats.true') : $this->getPlugin()->getMessage('commands.stats.false');
+                        break;
 
-                        default:
-                            $value = $data[$entry->getName()];
-                    }
-                    $text .= TF::RESET . "\n" . TF::AQUA . $entry->getName() . ': ' . TF::GOLD . $value;
+                    default:
+                        $value = $data[$entry->getName()];
                 }
+                if ($value != null)
+                    $text .= TF::RESET . "\n" . TF::AQUA . $entry->getName() . ': ' . TF::GOLD . $value;
+
             }
             $sender->sendMessage($text);
         } else {
