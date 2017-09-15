@@ -6,6 +6,15 @@ deathArenaLoc: 0.5/6.1/60.5
 
 isSkywar: true
 
+#Max rewards for the first player, divided by place un score
+rewards:
+  xp: 1
+  money: 1
+
+endgameMessageMoney: "Vous avez gagné {0} money !"
+endgameMessageXP: "Vous avez gagné {0} XP !"
+endgameMessageTransport: "Téléportation vers {0} !"
+
 spawns:
 
 chests:

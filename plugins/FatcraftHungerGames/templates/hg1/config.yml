@@ -8,8 +8,12 @@ isSkywar: false
 
 #Max rewards for the first player, divided by place un score
 rewards:
-  xp: 100
-  money: 100
+  xp: 1
+  money: 1
+
+endgameMessageMoney: "Vous avez gagné {0} money !"
+endgameMessageXP: "Vous avez gagné {0} XP !"
+endgameMessageTransport: "Téléportation vers {0} !"
 
 spawns:
   1: -2.5/9.1/3.5

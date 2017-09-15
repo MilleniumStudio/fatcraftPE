@@ -22,7 +22,6 @@ use pocketmine\level\Location;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat;
-use fatutils\gamedata\GameDataManager;
 
 class HungerGame extends PluginBase
 {
@@ -180,10 +179,7 @@ class HungerGame extends PluginBase
         {
             $winner = $winners[0];
             if ($winner instanceof FatPlayer)
-            {
                 $winnerName = $winner->getPlayer()->getName();
-                GameDataManager::getInstance()->recordWin($winner->getPlayer()->getUniqueId(), "");
-            }
         }
         foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
             $l_Player->addTitle(TextFormat::DARK_AQUA . TextFormat::BOLD . "Partie terminée", TextFormat::GREEN . TextFormat::BOLD . "le vainqueur est " . $winnerName, 30, 80, 30);

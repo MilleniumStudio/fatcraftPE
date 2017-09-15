@@ -4,6 +4,7 @@ namespace hungergames\score;
 
 use hungergames\HungerGame;
 use pocketmine\Player;
+use fatutils\gamedata\GameDataManager;
 
 class HungerGameScoreManager
 {
@@ -33,6 +34,12 @@ class HungerGameScoreManager
 
     public function giveRewards()
     {
+        
+        $l_ReverseDeathOrder = array_reverse($this->m_DeathOrder);
+
+        // record ordered players
+        GameDataManager::getInstance()->recordBoard($l_ReverseDeathOrder);
+
         // get max rewards from config
         $l_Rewards = HungerGame::getInstance()->getConfig()->get("rewards");
 
@@ -40,7 +47,7 @@ class HungerGameScoreManager
         $l_Divider = 1;
 
         // reverse death order & iter
-        foreach (array_reverse($this->m_DeathOrder) as  $l_PlayerName)
+        foreach ($l_ReverseDeathOrder as  $l_PlayerName)
         {
             // get player instance
             $p_Player = HungerGame::getInstance()->getServer()->getPlayer($l_PlayerName);
@@ -57,6 +64,9 @@ class HungerGameScoreManager
                 // add general stats
                 \SalmonDE\StatsPE\CustomEntries::getInstance()->modIntEntry("Money", $p_Player, $l_Money);
                 \SalmonDE\StatsPE\CustomEntries::getInstance()->modIntEntry("XP", $p_Player, $l_XP);
+
+                $p_Player->sendMessage(str_replace("{0}", $l_Money, HungerGame::getInstance()->getConfig()->get("endgameMessageMoney")));
+                $p_Player->sendMessage(str_replace("{0}", $l_XP, HungerGame::getInstance()->getConfig()->get("endgameMessageXP")));
 
                 // add game specific stats
                 $l_ServerType = \fatcraft\loadbalancer\LoadBalancer::getInstance()->getServerType();
