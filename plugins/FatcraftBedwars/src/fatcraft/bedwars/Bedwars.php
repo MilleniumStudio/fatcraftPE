@@ -7,7 +7,10 @@ use fatutils\loot\ChestsManager;
 use fatutils\FatUtils;
 use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
+use fatutils\teams\Team;
+use fatutils\teams\TeamsManager;
 use fatutils\tools\bossBarAPI\BossBarAPI;
+use fatutils\tools\DelayedExec;
 use fatutils\tools\Sidebar;
 use fatutils\tools\Timer;
 use fatutils\tools\WorldUtils;
@@ -15,6 +18,7 @@ use fatutils\game\GameManager;
 use fatutils\spawns\SpawnManager;
 use fatutils\tools\MathUtils;
 use fatutils\tools\BossbarTimer;
+use pocketmine\block\BlockIds;
 use pocketmine\entity\Effect;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
@@ -25,6 +29,10 @@ use pocketmine\utils\TextFormat;
 
 class Bedwars extends PluginBase
 {
+    const PLAYER_DATA_CURRENCY_IRON = "currency.iron";
+    const PLAYER_DATA_CURRENCY_GOLD = "currency.gold";
+    const PLAYER_DATA_CURRENCY_DIAMOND = "currency.diamond";
+
     private $m_BedwarsConfig;
     private static $m_Instance;
     private $m_WaitingTimer;
@@ -51,64 +59,83 @@ class Bedwars extends PluginBase
 
     private function initialize()
     {
-        SpawnManager::getInstance()->blockSpawns();
+//        SpawnManager::getInstance()->blockSpawns();
         LoadBalancer::getInstance()->setServerState(LoadBalancer::SERVER_STATE_OPEN);
         PlayersManager::getInstance()->displayHealth();
         WorldUtils::stopWorldsTime();
 
         Sidebar::getInstance()
-            ->addLine(TextFormat::GOLD . TextFormat::BOLD . "HungerGame")
+            ->addLine(TextFormat::DARK_GREEN . TextFormat::BOLD . "== Bedwars ==")
             ->addWhiteSpace()
+            ->addLine(TextFormat::DARK_PURPLE . TextFormat::BOLD . "< TEAMS >")
             ->addMutableLine(function ()
             {
-                return TextFormat::AQUA . "Joueur en vie: " . TextFormat::RESET . TextFormat::BOLD . PlayersManager::getInstance()->getAlivePlayerLeft();
+                $l_Ret = [];
+
+                foreach (TeamsManager::getInstance()->getTeams() as $l_Team)
+                {
+                    if ($l_Team instanceof Team)
+                    {
+                        $l_State = "";
+                        if ($l_Team->getSpawn()->isActive())
+                            $l_State = TextFormat::GREEN . "OK";
+                        else
+                        {
+                            $l_AliveTeamPlayer = $l_Team->getAlivePlayerLeft();
+                            if ($l_AliveTeamPlayer > 0)
+                                $l_State = TextFormat::AQUA . $l_AliveTeamPlayer;
+                            else
+                                $l_State = TextFormat::RED . "X";
+                        }
+
+                        $l_Ret[] = $l_Team->getName() . TextFormat::WHITE . " : " . $l_State;
+                    }
+                }
+
+                return $l_Ret;
+            })
+            ->addWhiteSpace()
+            ->addLine(TextFormat::DARK_PURPLE . TextFormat::BOLD . "< MONNAIES >")
+            ->addMutableLine(function (Player $p_Player)
+            {
+                $l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Player);
+
+                return [
+                    TextFormat::GRAY . "IRON" . TextFormat::WHITE . " : " . TextFormat::GRAY . $l_FatPlayer->getData(Bedwars::PLAYER_DATA_CURRENCY_IRON, 0),
+                    TextFormat::GOLD . "GOLD" . TextFormat::WHITE . " : " . TextFormat::GOLD . $l_FatPlayer->getData(Bedwars::PLAYER_DATA_CURRENCY_GOLD, 0),
+                    TextFormat::AQUA . "DIAMOND" . TextFormat::WHITE . " : " . TextFormat::AQUA . $l_FatPlayer->getData(Bedwars::PLAYER_DATA_CURRENCY_DIAMOND, 0)
+                ];
             });
     }
 
     public function handlePlayerConnection(Player $p_Player)
     {
-        if (GameManager::getInstance()->isWaiting())
+        $l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Player);
+
+        $l_Spawn = SpawnManager::getInstance()->getRandomEmptySpawn();
+        if (GameManager::getInstance()->isWaiting() && isset($l_Spawn))
         {
-            foreach (SpawnManager::getInstance()->getSpawns() as $l_Slot)
-            {
-                if ($l_Slot instanceof Location)
-                {
-                    $l_NearbyEntities = $l_Slot->getLevel()
-                        ->getNearbyEntities(WorldUtils::getRadiusBB($l_Slot, doubleval(1)));
+            $l_Team = TeamsManager::getInstance()->addInBestTeam($p_Player);
+            $l_Spawn->teleport($p_Player);
 
-                    if (count($l_NearbyEntities) == 0)
-                    {
-                        echo $l_Slot . " available !\n";
-                        $p_Player->teleport($l_Slot);
-                        break;
-                    } else
-                        echo $l_Slot . " not available\n";
-                }
-            }
-
-            echo "onlinePlayers: " . count($this->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMinPlayer() . "\n";
-            if (count($this->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMaxPlayer())
+            new DelayedExec(5, function() use ($p_Player, $l_Team)
             {
-                echo "MAX PLAYER REACH !\n";
-                if ($this->m_WaitingTimer instanceof Timer)
-                    $this->m_WaitingTimer->cancel();
-                $this->startGame();
-            }
-            else if (count($this->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMinPlayer())
-            {
-                if (is_null($this->m_WaitingTimer))
-                {
-                    echo "MIN PLAYER REACH !\n";
-                    $this->m_WaitingTimer = (new BossbarTimer(GameManager::getInstance()->getWaitingTickDuration()))
-                        ->setTitle("Debut dans")
-                        ->addStopCallback(function ()
-                        {
-                            $this->startGame();
-                        })
-                        ->start();
-                }
-            }
+                $p_Player->addSubTitle("Vous êtes dans la team " . $l_Team->getName());
+            });
 
+//            (new Timer(600))
+//                ->addTickCallback(function () use ($l_FatPlayer)
+//                {
+//                    if ($this->getServer()->getTick() % 20 == 0)
+//                    {
+//                        $l_FatPlayer->addData(Bedwars::PLAYER_DATA_CURRENCY_IRON, 10);
+//                        $l_FatPlayer->addData(Bedwars::PLAYER_DATA_CURRENCY_GOLD, 6);
+//                        $l_FatPlayer->addData(Bedwars::PLAYER_DATA_CURRENCY_DIAMOND, 1);
+//
+//                        Sidebar::getInstance()->update();
+//                    }
+//                })
+//                ->start();
         } else
         {
             $p_Player->setGamemode(3);
@@ -117,6 +144,45 @@ class Bedwars extends PluginBase
         }
 
         Sidebar::getInstance()->update();
+    }
+
+    //---------------------
+    // CURRENCIES
+    //---------------------
+    public function modPlayerIron(Player $p_Player, int $p_Value)
+    {
+        PlayersManager::getInstance()->getFatPlayer($p_Player)
+            ->addData(Bedwars::PLAYER_DATA_CURRENCY_IRON, $p_Value);
+    }
+
+    public function modPlayerGold(Player $p_Player, int $p_Value)
+    {
+        PlayersManager::getInstance()->getFatPlayer($p_Player)
+            ->addData(Bedwars::PLAYER_DATA_CURRENCY_GOLD, $p_Value);
+    }
+
+    public function modPlayerDiamond(Player $p_Player, int $p_Value)
+    {
+        PlayersManager::getInstance()->getFatPlayer($p_Player)
+            ->addData(Bedwars::PLAYER_DATA_CURRENCY_DIAMOND, $p_Value);
+    }
+
+    public function getPlayerIron(Player $p_Player)
+    {
+        PlayersManager::getInstance()->getFatPlayer($p_Player)
+            ->getData(Bedwars::PLAYER_DATA_CURRENCY_IRON, 0);
+    }
+
+    public function getPlayerGold(Player $p_Player)
+    {
+        PlayersManager::getInstance()->getFatPlayer($p_Player)
+            ->getData(Bedwars::PLAYER_DATA_CURRENCY_GOLD, 0);
+    }
+
+    public function getPlayerDiamond(Player $p_Player)
+    {
+        PlayersManager::getInstance()->getFatPlayer($p_Player)
+            ->getData(Bedwars::PLAYER_DATA_CURRENCY_DIAMOND, 0);
     }
 
     //---------------------
@@ -134,8 +200,7 @@ class Bedwars extends PluginBase
             {
                 $l_Player->getInventory()->addItem(ItemFactory::get(ItemIds::STONE_PICKAXE));
                 $l_Player->setGamemode(Player::SURVIVAL);
-            }
-            else
+            } else
             {
                 $l_Player->setGamemode(Player::ADVENTURE);
             }
@@ -145,7 +210,8 @@ class Bedwars extends PluginBase
 
         $this->m_PlayTimer = (new BossbarTimer(GameManager::getInstance()->getPlayingTickDuration()))
             ->setTitle("Fin de la partie dans")
-            ->addStopCallback(function () {
+            ->addStopCallback(function ()
+            {
                 if (PlayersManager::getInstance()->getAlivePlayerLeft() <= 1)
                     $this->endGame();
                 else

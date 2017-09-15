@@ -35,7 +35,7 @@ class Sidebar
      *  or in the center use "%s".
      *  Default is screen right.
      */
-    private $m_SidebarFormat = "                                                               %s". TextFormat::RESET;
+    private $m_SidebarFormat = TextFormat::RESET . TextFormat::WHITE . "                                                               %s". TextFormat::RESET . TextFormat::WHITE;
 
     private static $m_Instance = null;
 

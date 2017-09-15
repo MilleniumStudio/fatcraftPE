@@ -79,10 +79,20 @@ class WorldUtils
 
 	public static function getRelativeBlock(Block $p_Block, int $x, int $y, int $z):Block
 	{
-            $_Pos = new Position($p_Block->getX() + $x, $p_Block->getY() + $y, $p_Block->getZ() + $z, $p_Block->level);
-            WorldUtils::loadChunkAt($_Pos);
-            return $p_Block->getLevel()->getBlock($_Pos);
+	    $pos = new Position($p_Block->getX() + $x, $p_Block->getY() + $y, $p_Block->getZ() + $z, $p_Block->getLevel());
+        WorldUtils::loadChunkAt($pos);
+		return $p_Block->getLevel()->getBlock($pos);
 	}
+
+    public static function getDistanceBetween(Position $p_Loc1, Position $p_Loc2):float
+    {
+        return sqrt(self::getDistanceSquaredBetween($p_Loc1, $p_Loc2));
+    }
+
+    public static function getDistanceSquaredBetween(Position $p_Loc1, Position $p_Loc2):float
+    {
+        return pow($p_Loc1->getX() - $p_Loc2->getX(), 2) + pow($p_Loc1->getY() - $p_Loc2->getY(), 2) + pow($p_Loc1->getZ() - $p_Loc2->getZ(), 2);
+    }
 
 	public static function getRandomizedLocation(Location $p_StartLocation, float $p_XBound, float $p_YBound, float $p_ZBound)
     {
@@ -97,11 +107,12 @@ class WorldUtils
 	{
 		foreach ($p_Blocks as $l_Block)
 		{
-			if ($l_Block instanceof Block){
-                            $_Pos = new Position($l_Block->getX(), $l_Block->getY(), $l_Block->getZ(), $l_Block->level);
-                            WorldUtils::loadChunkAt($_Pos);
-                            $l_Block->getLevel()->setBlock($l_Block, BlockFactory::get($p_Id), true, true);
-                        }
+			if ($l_Block instanceof Block)
+			{
+                $_Pos = new Position($l_Block->getX(), $l_Block->getY(), $l_Block->getZ(), $l_Block->level);
+                WorldUtils::loadChunkAt($_Pos);
+                $l_Block->getLevel()->setBlock($l_Block, BlockFactory::get($p_Id), true, true);
+            }
 		}
 	}
 

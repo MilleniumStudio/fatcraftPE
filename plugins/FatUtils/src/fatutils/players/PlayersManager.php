@@ -47,24 +47,30 @@ class PlayersManager
         {
             $this->setMinPlayer(FatUtils::getInstance()->getTemplateConfig()->get(PlayersManager::CONFIG_KEY_MIN_PLAYER));
             $this->setMaxPlayer(FatUtils::getInstance()->getTemplateConfig()->get(PlayersManager::CONFIG_KEY_MAX_PLAYER));
-            echo "Initializing PlayersManager\n";
-            echo "  - minPlayers: " . $this->getMinPlayer() . "\n";
-            echo "  - maxPlayers: " . $this->getMaxPlayer() . "\n";
+            FatUtils::getInstance()->getLogger()->info("Initializing PlayersManager");
+            FatUtils::getInstance()->getLogger()->info("  - minPlayers: " . $this->getMinPlayer());
+            FatUtils::getInstance()->getLogger()->info("  - maxPlayers: " . $this->getMaxPlayer());
         }
     }
 
 	public function addPlayer(Player $p_Player)
 	{
-		$this->m_FatPlayers[$p_Player->getUniqueId()->toBinary()] = new FatPlayer($p_Player);
-                GameDataManager::getInstance()->recordJoin($p_Player->getUniqueId(), $p_Player->getAddress());
+        $this->m_FatPlayers[$p_Player->getUniqueId()->toBinary()] = new FatPlayer($p_Player);
+        GameDataManager::getInstance()->recordJoin($p_Player->getUniqueId(), $p_Player->getAddress());
 	}
 
 	public function removePlayer(Player $p_Player)
 	{
-		if (isset($this->m_FatPlayers[$p_Player->getUniqueId()->toBinary()]))
-			unset($this->m_FatPlayers[$p_Player->getUniqueId()->toBinary()]);
-                GameDataManager::getInstance()->recordLeave($p_Player->getUniqueId());
+        $key = $p_Player->getUniqueId()->toBinary();
+		if (isset($this->m_FatPlayers[$key]))
+			unset($this->m_FatPlayers[$key]);
+        GameDataManager::getInstance()->recordLeave($p_Player->getUniqueId());
 	}
+
+    public function fatPlayerExist(Player $p_Player)
+    {
+        return isset($this->m_FatPlayers[$p_Player->getUniqueId()->toBinary()]);
+    }
 
 	public function getFatPlayerByName(string $p_PlayerName):FatPlayer
 	{
@@ -77,13 +83,27 @@ class PlayersManager
 
 	public function getFatPlayer(Player $p_Player):FatPlayer
 	{
-		return $this->m_FatPlayers[$p_Player->getUniqueId()->toBinary()];
+	    $key = $p_Player->getUniqueId()->toBinary();
+	    if (!isset($this->m_FatPlayers[$key]))
+            $this->addPlayer($p_Player);
+
+		return $this->m_FatPlayers[$key];
 	}
 
-	public function getFatPlayerByUUID(UUID $p_UUID):FatPlayer
+	public function getFatPlayerByUUID(UUID $p_UUID):?FatPlayer
 	{
 		return $this->m_FatPlayers[$p_UUID->toBinary()];
 	}
+
+	public function getPlayerFromUUID(UUID $p_PlayerUUID):?Player
+    {
+        foreach(FatUtils::getInstance()->getServer()->getOnlinePlayers() as $player){
+            if($player->getUniqueId() === $p_PlayerUUID)
+                return $player;
+        }
+
+        return null;
+    }
 
 	public function getAlivePlayerLeft(): int
     {

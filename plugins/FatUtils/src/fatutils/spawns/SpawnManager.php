@@ -9,6 +9,7 @@
 namespace fatutils\spawns;
 
 use fatutils\FatUtils;
+use fatutils\tools\ItemUtils;
 use fatutils\tools\WorldUtils;
 use pocketmine\block\Block;
 use pocketmine\block\BlockIds;
@@ -16,6 +17,11 @@ use pocketmine\level\Location;
 
 class SpawnManager
 {
+    const CONFIG_KEY_SPAWN_ROOT = "spawns";
+    const CONFIG_KEY_SPAWN_LOCATION = "location";
+    const CONFIG_KEY_SPAWN_BLOCK_TYPE = "blockType";
+    const CONFIG_KEY_SPAWN_BARRIER_TYPE = "barrierType";
+
     private static $m_Instance = null;
     private $m_Spawns = [];
 
@@ -33,13 +39,25 @@ class SpawnManager
 
     public function initialize()
     {
-        if (!is_null(FatUtils::getInstance()->getTemplateConfig()))
+        if (!is_null(FatUtils::getInstance()->getTemplateConfig()) && FatUtils::getInstance()->getTemplateConfig()->exists(SpawnManager::CONFIG_KEY_SPAWN_ROOT))
         {
-            echo "SpawnManager loading...\n";
-            foreach (FatUtils::getInstance()->getTemplateConfig()->get("spawns") as $l_RawLocation)
+            FatUtils::getInstance()->getLogger()->info("SpawnManager loading...");
+            foreach (FatUtils::getInstance()->getTemplateConfig()->get(SpawnManager::CONFIG_KEY_SPAWN_ROOT) as $l_SpawnName => $l_SpawnConf)
             {
-                $this->m_Spawns[] = WorldUtils::stringToLocation($l_RawLocation);
-                echo "   - " . $l_RawLocation . "\n";
+                if (array_key_exists(SpawnManager::CONFIG_KEY_SPAWN_LOCATION, $l_SpawnConf))
+                {
+                    $l_NewSpawn = new Spawn(WorldUtils::stringToLocation($l_SpawnConf[SpawnManager::CONFIG_KEY_SPAWN_LOCATION]));
+                    $l_NewSpawn->setName($l_SpawnName);
+
+                    if (array_key_exists(SpawnManager::CONFIG_KEY_SPAWN_BLOCK_TYPE, $l_SpawnConf))
+                        $l_NewSpawn->setBlockType(ItemUtils::getItemIdFromName($l_SpawnConf[SpawnManager::CONFIG_KEY_SPAWN_BLOCK_TYPE]));
+
+                    if (array_key_exists(SpawnManager::CONFIG_KEY_SPAWN_BARRIER_TYPE, $l_SpawnConf))
+                        $l_NewSpawn->setBarrierType(ItemUtils::getItemIdFromName($l_SpawnConf[SpawnManager::CONFIG_KEY_SPAWN_BARRIER_TYPE]));
+
+                    FatUtils::getInstance()->getLogger()->info("   - " . $l_NewSpawn->getLocation());
+                    $this->addSpawn($l_NewSpawn);
+                }
             }
         }
     }
@@ -47,48 +65,41 @@ class SpawnManager
     //----------------
     // UTILS
     //----------------
+    public function addSpawn(Spawn $p_Spawn)
+    {
+        $this->m_Spawns[] = $p_Spawn;
+    }
+
     public function blockSpawns()
     {
-        foreach ($this->m_Spawns as $l_Slot)
+        foreach ($this->m_Spawns as $l_Spawn)
         {
-            if ($l_Slot instanceof Location)
-            {
-                $l_SlotBlock = $l_Slot->getLevel()->getBlock($l_Slot);
-                WorldUtils::setBlocksId([
-                    WorldUtils::getRelativeBlock($l_SlotBlock, -1, 0, 0),
-                    WorldUtils::getRelativeBlock($l_SlotBlock, 1, 0, 0),
-                    WorldUtils::getRelativeBlock($l_SlotBlock, 0, 0, -1),
-                    WorldUtils::getRelativeBlock($l_SlotBlock, 0, 0, 1),
-                    WorldUtils::getRelativeBlock($l_SlotBlock, -1, 1, 0),
-                    WorldUtils::getRelativeBlock($l_SlotBlock, 1, 1, 0),
-                    WorldUtils::getRelativeBlock($l_SlotBlock, 0, 1, -1),
-                    WorldUtils::getRelativeBlock($l_SlotBlock, 0, 1, 1),
-                    WorldUtils::getRelativeBlock($l_SlotBlock, 0, 2, 0)
-                ], BlockIds::GLASS);
-            }
+            if ($l_Spawn instanceof Spawn)
+                $l_Spawn->blockSpawn();
         }
     }
 
     public function unblockSpawns()
     {
-        foreach ($this->m_Spawns as $l_Slot)
+        foreach ($this->m_Spawns as $l_Spawn)
         {
-            if ($l_Slot instanceof Location)
+            if ($l_Spawn instanceof Spawn)
+                $l_Spawn->unblockSpawn();
+        }
+    }
+
+    public function getRandomEmptySpawn(): ?Spawn
+    {
+        foreach ($this->getSpawns() as $l_Spawn)
+        {
+            if ($l_Spawn instanceof Spawn)
             {
-                $l_SlotBlock = $l_Slot->getLevel()->getBlock($l_Slot);
-                WorldUtils::setBlocksId([
-                    WorldUtils::getRelativeBlock($l_SlotBlock, -1, 0, 0),
-                    WorldUtils::getRelativeBlock($l_SlotBlock, 1, 0, 0),
-                    WorldUtils::getRelativeBlock($l_SlotBlock, 0, 0, -1),
-                    WorldUtils::getRelativeBlock($l_SlotBlock, 0, 0, 1),
-                    WorldUtils::getRelativeBlock($l_SlotBlock, -1, 1, 0),
-                    WorldUtils::getRelativeBlock($l_SlotBlock, 1, 1, 0),
-                    WorldUtils::getRelativeBlock($l_SlotBlock, 0, 1, -1),
-                    WorldUtils::getRelativeBlock($l_SlotBlock, 0, 1, 1),
-                    WorldUtils::getRelativeBlock($l_SlotBlock, 0, 2, 0)
-                ], BlockIds::AIR);
+                if ($l_Spawn->isEmpty())
+                    return $l_Spawn;
             }
         }
+
+        return null;
     }
 
     //----------------
@@ -100,5 +111,18 @@ class SpawnManager
     public function getSpawns(): array
     {
         return $this->m_Spawns;
+    }
+
+    public function getSpawnByName(string $p_Name): ?Spawn
+    {
+        foreach ($this->m_Spawns as $l_Spawn)
+        {
+            if ($l_Spawn instanceof Spawn)
+            {
+                if ($l_Spawn->getName() === $p_Name)
+                    return $l_Spawn;
+            }
+        }
+        return null;
     }
 }

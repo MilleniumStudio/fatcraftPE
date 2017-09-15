@@ -68,29 +68,15 @@ class HungerGame extends PluginBase
 
     public function handlePlayerConnection(Player $p_Player)
     {
-        if (GameManager::getInstance()->isWaiting())
+        $l_Spawn = SpawnManager::getInstance()->getRandomEmptySpawn();
+        if (GameManager::getInstance()->isWaiting() && isset($l_Spawn))
         {
-            foreach (SpawnManager::getInstance()->getSpawns() as $l_Slot)
-            {
-                if ($l_Slot instanceof Location)
-                {
-                    $l_NearbyEntities = $l_Slot->getLevel()
-                        ->getNearbyEntities(WorldUtils::getRadiusBB($l_Slot, doubleval(1)));
+            $l_Spawn->teleport($p_Player);
 
-                    if (count($l_NearbyEntities) == 0)
-                    {
-                        echo $l_Slot . " available !\n";
-                        $p_Player->teleport($l_Slot);
-                        break;
-                    } else
-                        echo $l_Slot . " not available\n";
-                }
-            }
-
-            echo "onlinePlayers: " . count($this->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMinPlayer() . "\n";
+            $this->getLogger()->info("onlinePlayers: " . count($this->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMinPlayer());
             if (count($this->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMaxPlayer())
             {
-                echo "MAX PLAYER REACH !\n";
+                $this->getLogger()->info("MAX PLAYER REACH !");
                 if ($this->m_WaitingTimer instanceof Timer)
                     $this->m_WaitingTimer->cancel();
                 $this->startGame();
@@ -99,7 +85,7 @@ class HungerGame extends PluginBase
             {
                 if (is_null($this->m_WaitingTimer))
                 {
-                    echo "MIN PLAYER REACH !\n";
+                    $this->getLogger()->info("MIN PLAYER REACH !");
                     $this->m_WaitingTimer = (new BossbarTimer(GameManager::getInstance()->getWaitingTickDuration()))
                         ->setTitle("Debut dans")
                         ->addStopCallback(function ()

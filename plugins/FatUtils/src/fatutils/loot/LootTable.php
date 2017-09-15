@@ -14,6 +14,8 @@ use pocketmine\item\Item;
 
 class LootTable
 {
+    private $m_Name;
+
     private $m_ItemValue = 0;
     private $m_Chance = 0;
     private $m_items = [];
@@ -22,8 +24,10 @@ class LootTable
      * LootConfig constructor.
      * @param array $p_LootTableConfig
      */
-    public function __construct(array $p_LootTableConfig)
+    public function __construct(string $p_Name, array $p_LootTableConfig)
     {
+        $this->m_Name = $p_Name;
+
         if (array_key_exists(LootManager::CONFIG_KEY_LOOT_ITEM_VALUE, $p_LootTableConfig))
             $this->m_ItemValue = $p_LootTableConfig[LootManager::CONFIG_KEY_LOOT_ITEM_VALUE];
 
@@ -52,6 +56,11 @@ class LootTable
     public function getItemValue():int
     {
         return $this->m_ItemValue;
+    }
+
+    public function getName():string
+    {
+        return $this->m_Name;
     }
 
     /**

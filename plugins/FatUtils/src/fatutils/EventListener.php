@@ -15,25 +15,28 @@ use fatutils\gamedata\GameDataManager;
 
 class EventListener implements Listener
 {
-	/**
-	 * @param PlayerJoinEvent $e
-	 */
-	public function onSpawn(PlayerJoinEvent $e)
-	{
-		$p = $e->getPlayer();
-		$p->getInventory()->clearAll();
-		PlayersManager::getInstance()->addPlayer($p);
-        new DelayedExec(1, function () use ($p) {
-            if (PlayersManager::getInstance()->getFatPlayer($p)->isHealthDisplayed())
-                PlayersManager::getInstance()->getFatPlayer($p)->updateFormattedNameTag();
-        });
-	}
+    /**
+     * @param PlayerJoinEvent $e
+     * @priority LOWEST
+     */
+    public function onSpawn(PlayerJoinEvent $e)
+    {
+        $p = $e->getPlayer();
+        $p->getInventory()->clearAll();
 
-	public function onQuit(PlayerQuitEvent $e)
-	{
-		$p = $e->getPlayer();
-		PlayersManager::getInstance()->removePlayer($p);
-	}
+        if (PlayersManager::getInstance()->fatPlayerExist($p))
+            PlayersManager::getInstance()->addPlayer($p);
+        new DelayedExec(1, function () use ($p)
+        {
+            PlayersManager::getInstance()->getFatPlayer($p)->updateFormattedNameTag();
+        });
+    }
+
+    public function onQuit(PlayerQuitEvent $e)
+    {
+        $p = $e->getPlayer();
+        PlayersManager::getInstance()->removePlayer($p);
+    }
 
     /**
      * @priority MONITOR
@@ -43,10 +46,13 @@ class EventListener implements Listener
         $p = $e->getEntity();
         if ($p instanceof Player)
         {
-            new DelayedExec(1, function () use ($p) {
-                if (PlayersManager::getInstance()->getFatPlayer($p)->isHealthDisplayed())
+            if (PlayersManager::getInstance()->getFatPlayer($p)->isHealthDisplayed())
+            {
+                new DelayedExec(1, function () use ($p)
+                {
                     PlayersManager::getInstance()->getFatPlayer($p)->updateFormattedNameTag();
-            });
+                });
+            }
         }
     }
 
@@ -58,10 +64,13 @@ class EventListener implements Listener
         $p = $e->getEntity();
         if ($p instanceof Player)
         {
-            new DelayedExec(1, function () use ($p) {
-                if (PlayersManager::getInstance()->getFatPlayer($p)->isHealthDisplayed())
+            if (PlayersManager::getInstance()->getFatPlayer($p)->isHealthDisplayed())
+            {
+                new DelayedExec(1, function () use ($p)
+                {
                     PlayersManager::getInstance()->getFatPlayer($p)->updateFormattedNameTag();
-            });
+                });
+            }
         }
     }
 

@@ -2,10 +2,14 @@
 
 namespace fatcraft\bedwars;
 
+use fatutils\FatUtils;
 use fatutils\players\PlayersManager;
+use fatutils\teams\TeamsManager;
 use fatutils\tools\Sidebar;
 use fatutils\tools\WorldUtils;
+use pocketmine\block\BlockIds;
 use pocketmine\event\block\BlockBreakEvent;
+use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerJoinEvent;
@@ -51,8 +55,27 @@ class EventListener implements Listener
 	 */
 	public function onBlockBreak(BlockBreakEvent $e)
 	{
+	    if ($e->getBlock()->getId() == BlockIds::BED_BLOCK)
+        {
+            $l_PlayerTeam = TeamsManager::getInstance()->getPlayerTeam($e->getPlayer());
+            if (isset($l_PlayerTeam))
+            {
+                if (WorldUtils::getDistanceBetween($e->getBlock(), $l_PlayerTeam->getSpawn()->getLocation()) < 2)
+                {
+                    $e->setCancelled(true);
+                }
+            }
+
+            FatUtils::getInstance()->getLogger()->info("Bed destroyed !");
+        }
+
         $e->setCancelled(true);
 	}
+
+    public function onBlockPlace(BlockPlaceEvent $e)
+    {
+        $e->getBlock()->setMetadata("isCustom", null);
+    }
 
 //    /**
 //     * @param EntityDamageEvent $e

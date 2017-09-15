@@ -43,11 +43,11 @@ class LootManager
         {
             $l_FullConfig = FatUtils::getInstance()->getTemplateConfig()->get(LootManager::CONFIG_KEY_LOOT_ROOT);
 
-            foreach ($l_FullConfig as $l_LootKey)
+            foreach ($l_FullConfig as $key => $value)
             {
-                if (gettype($l_LootKey) == "array")
+                if (gettype($value) == "array")
                 {
-                    $this->m_LootTables[] = new LootTable($l_LootKey);
+                    $this->m_LootTables[] = new LootTable($key, $value);
                 }
             }
 
@@ -59,6 +59,19 @@ class LootManager
             }
             $this->m_MainWeightedRandom = new WeightedRandom($weights);
         }
+    }
+
+    public function getLootTableByName(string $p_Name):LootTable
+    {
+        foreach ($this->m_LootTables as $l_LootTable)
+        {
+            if ($l_LootTable instanceof LootTable)
+            {
+                if ($l_LootTable->getName() === $p_Name)
+                    return $l_LootTable;
+            }
+        }
+        return null;
     }
 
     public function getRandomLootTable(int $p_MinItemValue = -1, int $p_MaxItemValue = -1):LootTable

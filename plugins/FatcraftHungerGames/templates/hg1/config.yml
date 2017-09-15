@@ -16,10 +16,18 @@ endgameMessageXP: "Vous avez gagné {0} XP !"
 endgameMessageTransport: "Téléportation vers {0} !"
 
 spawns:
-  1: -2.5/9.1/3.5
-  2: 3.5/9.1/3.5
-  3: 3.5/9.1/-2.5
-  4: -2.5/9.1/-2.5
+  1:
+    location: -2.5/9.1/3.5
+    barrierType: GLASS
+  2:
+    location: 3.5/9.1/3.5
+    barrierType: GLASS
+  3:
+    location: 3.5/9.1/-2.5
+    barrierType: GLASS
+  4:
+    location: -2.5/9.1/-2.5
+    barrierType: GLASS
 
 chests:
   1:

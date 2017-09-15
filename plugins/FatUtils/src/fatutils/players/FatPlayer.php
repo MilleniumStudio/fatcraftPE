@@ -9,6 +9,8 @@
 namespace fatutils\players;
 
 
+use fatutils\teams\Team;
+use fatutils\teams\TeamsManager;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
@@ -21,6 +23,7 @@ class FatPlayer
 	private $m_State = 0;
 	private $m_HasLost = false;
 	private $m_DisplayHealth = null;
+	private $m_Data = [];
 
 	/**
 	 * FatPlayer constructor.
@@ -61,6 +64,31 @@ class FatPlayer
         $this->m_DisplayHealth = $p_Value;
     }
 
+    public function addData(string $p_Key, $value)
+    {
+        $l_OldData = $this->getData($p_Key, 0);
+        if (is_numeric($l_OldData))
+            $this->m_Data[$p_Key] = $l_OldData + $value;
+    }
+
+    public function setData(string $p_Key, $value)
+    {
+        $this->m_Data[$p_Key] = $value;
+    }
+
+    public function getData(string $p_Key, $p_DefaultValue)
+    {
+        if (array_key_exists($p_Key, $this->m_Data))
+            return $this->m_Data[$p_Key];
+        else
+            return $p_DefaultValue;
+    }
+
+    public function getTeam(): ?Team
+    {
+        return TeamsManager::getInstance()->getPlayerTeam($this->getPlayer());
+    }
+
     /**
      * @return bool
      */
@@ -71,20 +99,25 @@ class FatPlayer
 
     public function getFormattedNameTag():string
     {
-        $healthBar = "[";
-        $playerHealth = $this->getPlayer()->getHealth() * 10 / $this->getPlayer()->getMaxHealth();
-        for ($i = 0; $i < 10; $i++)
+        $healthBar = "";
+        if ($this->isHealthDisplayed())
         {
-            if ($playerHealth > 0)
+            $healthBar = "[";
+            $playerHealth = $this->getPlayer()->getHealth() * 10 / $this->getPlayer()->getMaxHealth();
+            for ($i = 0; $i < 10; $i++)
             {
-                $healthBar .= TextFormat::RED . "█";
-                $playerHealth--;
-            } else
-                $healthBar .= " ";
+                if ($playerHealth > 0)
+                {
+                    $healthBar .= TextFormat::RED . "█";
+                    $playerHealth--;
+                } else
+                    $healthBar .= " ";
+            }
+            $healthBar .= TextFormat::RESET . "]";
         }
-        $healthBar .= TextFormat::RESET . "]";
 
-        return $this->getPlayer()->getName() . "\n" . $healthBar;
+        $l_Team =TeamsManager::getInstance()->getPlayerTeam($this->getPlayer());
+        return (isset($l_Team) ? $l_Team->getPrefix() : "") . $this->getPlayer()->getName() . "\n" . $healthBar;
     }
 
 	/**
