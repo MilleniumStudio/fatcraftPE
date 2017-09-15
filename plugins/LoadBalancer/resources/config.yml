@@ -6,22 +6,22 @@ mysql:
   username: root
   password: ""
   schema: lb
+  port: 3306
 
 ## This node configuration
 ## type : is the server type, ex : entry, main_lobby, parkour_lobby...
 ## id   : is the server id, different server types can have the same server id
-## state: the default server state at start
 node:
   type: entry
   id: 1
-  state: closed
+  state: open
 
 ## Max players management
 ## max        : if set to -1, the type based is used
 ## type_based : sum the max players for the selected type and set the network max players
 ## online : total or type based
 network:
-  max: 0
+  max: 20
   type_based: lobby
   online : total
 
@@ -52,7 +52,7 @@ redirect:
 
 ## Controle socket
 controle_socket:
-  enable: true
+  enable: false
   bind: 0.0.0.0
   port: 5000
 
