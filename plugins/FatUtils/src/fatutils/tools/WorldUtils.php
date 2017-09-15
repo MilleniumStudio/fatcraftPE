@@ -79,9 +79,10 @@ class WorldUtils
 
 	public static function getRelativeBlock(Block $p_Block, int $x, int $y, int $z):Block
 	{
-	    $pos = new Position($p_Block->getX() + $x, $p_Block->getY() + $y, $p_Block->getZ() + $z, $p_Block->getLevel());
-            WorldUtils::loadChunkAt($pos);
-            return $p_Block->getLevel()->getBlock($pos);
+            $_Pos = new Position($p_Block->getX() + $x, $p_Block->getY() + $y, $p_Block->getZ() + $z, $p_Block->level);
+            WorldUtils::loadChunkAt($_Pos);
+            $p_Block->getLevel()->getBlock($_Pos)->getId();
+            return $p_Block->getLevel()->getBlock($_Pos);
 	}
 
     public static function getDistanceBetween(Position $p_Loc1, Position $p_Loc2):float
