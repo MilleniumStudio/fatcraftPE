@@ -20,14 +20,22 @@ use fatutils\tools\MathUtils;
 use fatutils\tools\BossbarTimer;
 use pocketmine\block\BlockIds;
 use pocketmine\entity\Effect;
+use pocketmine\event\Listener;
+use pocketmine\event\server\DataPacketReceiveEvent;
+use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
 use pocketmine\level\Location;
+use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\nbt\tag\NamedTag;
+use pocketmine\nbt\tag\StringTag;
+use pocketmine\network\mcpe\protocol\ContainerSetSlotPacket;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
+use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 
-class Bedwars extends PluginBase
+class Bedwars extends PluginBase implements Listener
 {
     const PLAYER_DATA_CURRENCY_IRON = "currency.iron";
     const PLAYER_DATA_CURRENCY_GOLD = "currency.gold";
@@ -51,10 +59,12 @@ class Bedwars extends PluginBase
     public function onEnable()
     {
         $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
+        $this->getServer()->getPluginManager()->registerEvents($this, $this);
 
         FatUtils::getInstance()->setTemplateConfig($this->getConfig());
         $this->m_BedwarsConfig = new BedwarsConfig($this->getConfig());
         $this->initialize();
+
     }
 
     private function initialize()
@@ -185,6 +195,30 @@ class Bedwars extends PluginBase
             ->getData(Bedwars::PLAYER_DATA_CURRENCY_DIAMOND, 0);
     }
 
+    public $i = 0;
+    public $lastPacket = [];
+
+    /**
+     * @priority LOWEST
+     */
+    public function onPacket(DataPacketReceiveEvent $event)
+    {
+        $packet = $event->getPacket();
+        if ($packet instanceof ContainerSetSlotPacket) {
+            echo $this->i++;
+            if (!$packet->item instanceof Air) {
+                echo "#";
+                if ($packet->item->getNamedTagEntry("shop") != "") {
+                    $event->setCancelled(true);
+                    $event->getPlayer()->getInventory()->addItem(ItemFactory::get(Item::GOLD_BLOCK,0, 10));
+                    $event->getPlayer()->getInventory()->resetHotbar(true);
+                }
+            }
+            echo "\n";
+        }
+    }
+
+
     //---------------------
     // UTILS
     //---------------------
@@ -193,11 +227,9 @@ class Bedwars extends PluginBase
         LoadBalancer::getInstance()->setServerState(LoadBalancer::SERVER_STATE_CLOSED);
         ChestsManager::getInstance()->fillChests();
 
-        foreach ($this->getServer()->getOnlinePlayers() as $l_Player)
-        {
+        foreach ($this->getServer()->getOnlinePlayers() as $l_Player) {
             PlayersManager::getInstance()->getFatPlayer($l_Player)->setPlaying();
-            if ($this->getHungerGameConfig()->isSkyWars())
-            {
+            if ($this->getHungerGameConfig()->isSkyWars()) {
                 $l_Player->getInventory()->addItem(ItemFactory::get(ItemIds::STONE_PICKAXE));
                 $l_Player->setGamemode(Player::SURVIVAL);
             } else
@@ -214,12 +246,10 @@ class Bedwars extends PluginBase
             {
                 if (PlayersManager::getInstance()->getAlivePlayerLeft() <= 1)
                     $this->endGame();
-                else
-                {
+                else {
                     $l_ArenaLoc = Location::fromObject($this->getHungerGameConfig()->getDeathArenaLoc());
 
-                    foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-                    {
+                    foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player) {
                         $l_Player->addSubTitle(TextFormat::DARK_AQUA . TextFormat::BOLD . "Timer terminé, match à mort dans l'arène !");
                         $l_Player->teleport(WorldUtils::getRandomizedLocation($l_ArenaLoc, 3, 0, 3));
                         $l_Player->sendTip("Vous êtes invulnérable pendant 5 secondes");
@@ -240,8 +270,7 @@ class Bedwars extends PluginBase
 
         $winners = PlayersManager::getInstance()->getAlivePlayers();
         $winnerName = "";
-        if (count($winners) > 0)
-        {
+        if (count($winners) > 0) {
             $winner = $winners[0];
             if ($winner instanceof FatPlayer)
                 $winnerName = $winner->getPlayer()->getName();
@@ -251,8 +280,7 @@ class Bedwars extends PluginBase
 
         (new BossbarTimer(150))
             ->setTitle("Retour au lobby")
-            ->addStopCallback(function ()
-            {
+            ->addStopCallback(function () {
                 $this->getServer()->shutdown();
             })
             ->start();
