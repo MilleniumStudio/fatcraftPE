@@ -1,19 +1,19 @@
-lang: English
+lang: Français
 version: 1.0.0
 
 lines:
     commands:
         stats:
-            description: "Shows the statistics of a player"
-            usage: "/stats [player]"
-            notFound: "Couldn't find any statistics for: \"{player}\"!"
-            "true": "Yes"
-            "false": "No"
+            description: "Montre les statistiques pour un joueur"
+            usage: "/stats [joueur]"
+            notFound: "Pas de statistiques pour: \"{player}\"!"
+            "true": "Oui"
+            "false": "Non"
         statspe:
-            description: "Shows information about the statspe plugin and manages floating texts"
+            description: "Montre les informations à propos du plugin statspe et configure les textes flotants"
             usage: "/statspe [floatingtext <add|remove|list|info> [name]]"
-            header: "§4~~~ §bInformation about §d{full_name} §4~~~"
-            author: "§6Author: §d{author}"
+            header: "§4~~~ §bInformations à propos §d{full_name} §4~~~"
+            author: "§6Auteur: §d{author}"
             api: "§6Supported API versions: §d{apis}"
             provider: "§6Data provider: §d{provider}"
             datarecords: "§6Data records: §d{records_amount}"
@@ -31,11 +31,11 @@ lines:
                     position: "§6Position: §b{x}, {y}, {z} in level '{level}'"
                     entries: "§6Shown entries: §b{entries}"
     general:
-        header: "§c--- §dStatistics of §a{value} §c---"
+        header: "§c--- §dStatistiques pour §a{value} §c---"
         onlinetime:
-            years: "y"
-            months: "month(s)"
-            days: "d"
+            years: "a"
+            months: "mois(s)"
+            days: "j"
             hours: "h"
             minutes: "m"
             seconds: "s"

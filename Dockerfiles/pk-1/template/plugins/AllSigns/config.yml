@@ -55,6 +55,12 @@ endgameMessageMoney: "Vous avez gagné {0} money !"
 endgameMessageXP: "Vous avez gagné {0} XP !"
 endgameMessageTransport: "Téléportation vers {0} !"
 
+# rewards
+rewardsSigns.259/7/4:
+  money: "250"
+  xp: "50"
+  template: lobby
+
 # EXAMPLE SIGNS :
 #
 
