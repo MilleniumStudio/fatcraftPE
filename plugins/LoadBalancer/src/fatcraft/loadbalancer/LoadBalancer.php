@@ -294,6 +294,21 @@ class LoadBalancer extends PluginBase implements Listener
                 ["i", count($this::getInstance()->getServer()->getOnlinePlayers())]
             ]
         ));
+        $result = MysqlResult::executeQuery($this->connectMainThreadMysql(),
+            "SELECT * FROM players_on_servers WHERE sid = ?", [
+                ["s", $this::getInstance()->m_ServerUUID]
+        ]);
+        if (($result instanceof MysqlSelectResult) and count($result->rows) > 0)
+        {
+            foreach ($result->rows as $row)
+            {
+                $l_Player = $this->getServer()->getPlayer($row["name"]);
+                if ($l_Player == null)
+                {
+                    $this->removePlayerPlayer($l_Player->getName());
+                }
+            }
+        }
     }
 
     // update this server row in mysql
@@ -586,15 +601,15 @@ class LoadBalancer extends PluginBase implements Listener
     public function onPlayerQuitEvent(PlayerQuitEvent $p_Event)
     {
         $p_Event->setQuitMessage("");
-        $this->removePlayerPlayer($p_Event->getPlayer());
+        $this->removePlayerPlayer($p_Event->getPlayer()->getName());
     }
 
-    public function removePlayerPlayer(Player $p_Player)
+    public function removePlayerPlayer(String $p_Name)
     {
         $this::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
             new DirectQueryMysqlTask($this::getInstance()->getCredentials(),
                 "DELETE FROM players_on_servers WHERE name = ?", [
-                ["s", $p_Player->getName()]
+                ["s", $p_Name]
             ]
         ));
     }
