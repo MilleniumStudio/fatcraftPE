@@ -11,6 +11,7 @@ namespace fatutils\players;
 use fatutils\FatUtils;
 use pocketmine\Player;
 use pocketmine\utils\UUID;
+use fatutils\gamedata\GameDataManager;
 
 class PlayersManager
 {
@@ -55,12 +56,14 @@ class PlayersManager
 	public function addPlayer(Player $p_Player)
 	{
 		$this->m_FatPlayers[$p_Player->getUniqueId()->toBinary()] = new FatPlayer($p_Player);
+                GameDataManager::getInstance()->recordJoin($p_Player->getUniqueId());
 	}
 
 	public function removePlayer(Player $p_Player)
 	{
 		if (isset($this->m_FatPlayers[$p_Player->getUniqueId()->toBinary()]))
 			unset($this->m_FatPlayers[$p_Player->getUniqueId()->toBinary()]);
+                GameDataManager::getInstance()->recordLeave($p_Player->getUniqueId());
 	}
 
 	public function getFatPlayerByName(string $p_PlayerName):FatPlayer

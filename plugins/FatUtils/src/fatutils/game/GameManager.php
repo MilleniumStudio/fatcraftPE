@@ -8,7 +8,7 @@
 
 namespace fatutils\game;
 
-
+use fatutils\gamedata\GameDataManager;
 use fatutils\FatUtils;
 
 class GameManager
@@ -44,18 +44,21 @@ class GameManager
             $this->setWaitingTickDuration(FatUtils::getInstance()->getTemplateConfig()->get(GameManager::CONFIG_KEY_WAITING_SEC_DURATION, 30) * 20);
             $this->setPlayingTickDuration(FatUtils::getInstance()->getTemplateConfig()->get(GameManager::CONFIG_KEY_PLAYING_SEC_DURATION, 5 * 60) * 20);
         }
+        GameDataManager::getInstance();
     }
 
     public function startGame()
     {
         $this->setPlaying();
         $this->m_StartGameTimestamp = time();
+        GameDataManager::getInstance()->recordStartGame();
         FatUtils::getInstance()->getLogger()->info("=== GameStarted ===");
     }
 
     public function endGame()
     {
         $this->m_EndGameTimestamp = time();
+        GameDataManager::getInstance()->recordStopGame();
         FatUtils::getInstance()->getLogger()->info("=== GameFinished ===");
     }
 

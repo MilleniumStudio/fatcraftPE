@@ -4,13 +4,14 @@ namespace fatutils;
 
 use fatutils\players\PlayersManager;
 use fatutils\tools\DelayedExec;
-use fatutils\tools\Timer;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityRegainHealthEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\Player;
+use pocketmine\event\player\PlayerDeathEvent;
+use fatutils\gamedata\GameDataManager;
 
 class EventListener implements Listener
 {
@@ -62,5 +63,23 @@ class EventListener implements Listener
                     PlayersManager::getInstance()->getFatPlayer($p)->updateFormattedNameTag();
             });
         }
+    }
+
+    public function playerDeathEvent(PlayerDeathEvent $p_Event)
+    {
+        $l_Player = $p_Event->getEntity();
+        $l_Killer = null;
+        if ($l_Player->getLastDamageCause()->getEntity() instanceof Player)
+        {
+            $l_Killer = $l_Player->getLastDamageCause()->getEntity();
+            GameDataManager::getInstance()->recordKill($l_Killer->getUniqueId(), $l_Player->getName());
+        }
+        else
+        {
+            // see pocketmine\event\entity\EntityDamageEvent for details
+            $l_Killer = $l_Player->getLastDamageCause()->getCause();
+        }
+        GameDataManager::getInstance()->recordDeath($l_Player->getUniqueId(), $l_Killer);
+        score\HungerGameScoreManager::getInstance()->registerDeath($l_Player);
     }
 }
