@@ -28,7 +28,7 @@ class StatsCmd extends \pocketmine\command\PluginCommand implements \pocketmine\
         }
 
         // Custom Commands
-        if ($sender->isOp() && isset($args[0])) {
+        if ($sender->isOp()) {
             if ($args[0] == "test") {
                 if ($sender instanceof Player && isset($args[1])) {
                     $entryName = $args[1];
@@ -61,7 +61,7 @@ class StatsCmd extends \pocketmine\command\PluginCommand implements \pocketmine\
                 return true;
             }
         }
-        else if (is_array($data = $this->getPlugin()->getDataProvider()->getAllData($args[0]))) {
+        if (is_array($data = $this->getPlugin()->getDataProvider()->getAllData($args[0]))) {
             $text = str_replace('{value}', $data['Username'], $this->getPlugin()->getMessage('general.header'));
             foreach ($this->getPlugin()->getDataProvider()->getEntries() as $entry) {
                 if ($sender->hasPermission('statspe.entry.' . $entry->getName())) {
