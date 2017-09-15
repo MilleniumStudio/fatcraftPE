@@ -58,7 +58,7 @@ class GameManager
     public function endGame()
     {
         $this->m_EndGameTimestamp = time();
-        GameDataManager::getInstance()->recordStopGame();
+        GameDataManager::getInstance()->recordStopGame("eng_game");
         FatUtils::getInstance()->getLogger()->info("=== GameFinished ===");
     }
 
