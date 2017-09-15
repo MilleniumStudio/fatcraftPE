@@ -24,6 +24,7 @@ class GameDataManager
     const KILL = "kill";
     const DEATH = "death";
     const WIN = "win";
+    const BOARD = "board";
     const END = "end";
 
     public static function getInstance(): GameDataManager
@@ -123,10 +124,15 @@ class GameDataManager
         $this->insertGameData(GameDataManager::JOIN, $p_Player->toString(), json_encode($data));
     }
 
-    public function recordWin(UUID $p_Player, array $p_Rewards = [])
+    public function recordBoard($p_Data = array())
+    {
+        $this->insertGameData(GameDataManager::BOARD, null, json_encode($p_Data));
+    }
+
+    public function recordWin(UUID $p_Player, array $p_Rewards)
     {
         $data['rewards'] = $p_Rewards;
-        $this->insertGameData(GameDataManager::JOIN, $p_Player->toString(), json_encode($data));
+        $this->insertGameData(GameDataManager::WIN, $p_Player->toString(), json_encode($data));
     }
 
     public function recordWinTeam(array $p_Players, String $p_Team, array $p_Rewards)
@@ -135,7 +141,7 @@ class GameDataManager
         $data['rewards'] = $p_Rewards;
         foreach ($p_Players as $l_Player)
         {
-            $this->insertGameData(GameDataManager::JOIN, $l_Player->toString(), json_encode($data));
+            $this->insertGameData(GameDataManager::WIN, $l_Player->toString(), json_encode($data));
         }
     }
 

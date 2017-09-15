@@ -80,6 +80,7 @@ class WorldUtils
 	public static function getRelativeBlock(Block $p_Block, int $x, int $y, int $z):Block
 	{
             $_Pos = new Position($p_Block->getX() + $x, $p_Block->getY() + $y, $p_Block->getZ() + $z, $p_Block->level);
+            WorldUtils::loadChunkAt($_Pos);
             return $p_Block->getLevel()->getBlock($_Pos);
 	}
 
