@@ -115,13 +115,13 @@ class GameDataManager
     public function recordKill(UUID $p_Player, String $p_Killed)
     {
         $data['target'] = $p_Killed;
-        $this->insertGameData(GameDataManager::JOIN, $p_Player->toString(), json_encode($data));
+        $this->insertGameData(GameDataManager::KILL, $p_Player->toString(), json_encode($data));
     }
 
     public function recordDeath(UUID $p_Player, String $p_By)
     {
         $data['by'] = $p_By;
-        $this->insertGameData(GameDataManager::JOIN, $p_Player->toString(), json_encode($data));
+        $this->insertGameData(GameDataManager::DEATH, $p_Player->toString(), json_encode($data));
     }
 
     public function recordBoard($p_Data = array())
