@@ -8,16 +8,16 @@ isSkywar: false
 
 spawns:
   blueSpawn:
-    location: -2.5/9.1/3.5
+    location: -3/9/3
     blockType: BED_BLOCK
   redSpawn:
     location: 3.5/9.1/3.5
     blockType: BED_BLOCK
   greenSpawn:
-    location: 3.5/9.1/-2.5
+    location: 3/9/-3
     blockType: BED_BLOCK
   yellowSpawn:
-    location: -2.5/9.1/-2.5
+    location: -3/9/-3
     blockType: BED_BLOCK
 
 teams:

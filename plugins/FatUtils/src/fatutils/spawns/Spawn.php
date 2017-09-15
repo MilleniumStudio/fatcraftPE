@@ -49,8 +49,13 @@ class Spawn
         if ($this->m_Location instanceof Location)
         {
             WorldUtils::loadChunkAt($this->m_Location);
-            $l_IdAt = $this->m_Location->getLevel()->getBlockIdAt($this->m_Location->getX(), $this->m_Location->getY(), $this->m_Location->getZ());
-            FatUtils::getInstance()->getLogger()->info("IdAt " . $this->m_Location . "=" . $l_IdAt);
+
+            //debug
+//            $l_IdAt = $this->m_Location->getLevel()->getBlockIdAt($this->m_Location->getX(), $this->m_Location->getY(), $this->m_Location->getZ());
+//            FatUtils::getInstance()->getLogger()->info("IdAt " . $this->m_Location . "=" . $l_IdAt);
+//            if ($l_IdAt != BlockIds::BED_BLOCK)
+//                $this->m_Location->getLevel()->setBlockIdAt($this->m_Location->getX(), $this->m_Location->getY(), $this->m_Location->getZ(), BlockIds::GLASS);
+
             return $this->m_BlockType === $this->m_Location->getLevel()->getBlockIdAt($this->m_Location->getX(), $this->m_Location->getY(), $this->m_Location->getZ());
         }
 

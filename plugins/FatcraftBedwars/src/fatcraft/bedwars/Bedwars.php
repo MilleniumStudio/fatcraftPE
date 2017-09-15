@@ -64,7 +64,6 @@ class Bedwars extends PluginBase implements Listener
         FatUtils::getInstance()->setTemplateConfig($this->getConfig());
         $this->m_BedwarsConfig = new BedwarsConfig($this->getConfig());
         $this->initialize();
-
     }
 
     private function initialize()
@@ -75,6 +74,7 @@ class Bedwars extends PluginBase implements Listener
         WorldUtils::stopWorldsTime();
 
         Sidebar::getInstance()
+//            ->setUpdateTickInterval(40)
             ->addLine(TextFormat::DARK_GREEN . TextFormat::BOLD . "== Bedwars ==")
             ->addWhiteSpace()
             ->addLine(TextFormat::DARK_PURPLE . TextFormat::BOLD . "< TEAMS >")
@@ -111,9 +111,9 @@ class Bedwars extends PluginBase implements Listener
                 $l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Player);
 
                 return [
-                    TextFormat::GRAY . "IRON" . TextFormat::WHITE . " : " . TextFormat::GRAY . $l_FatPlayer->getData(Bedwars::PLAYER_DATA_CURRENCY_IRON, 0),
-                    TextFormat::GOLD . "GOLD" . TextFormat::WHITE . " : " . TextFormat::GOLD . $l_FatPlayer->getData(Bedwars::PLAYER_DATA_CURRENCY_GOLD, 0),
-                    TextFormat::AQUA . "DIAMOND" . TextFormat::WHITE . " : " . TextFormat::AQUA . $l_FatPlayer->getData(Bedwars::PLAYER_DATA_CURRENCY_DIAMOND, 0)
+                    TextFormat::GRAY . "IRON" . TextFormat::WHITE . " : " . TextFormat::GRAY . $this->getPlayerIron($p_Player),
+                    TextFormat::GOLD . "GOLD" . TextFormat::WHITE . " : " . TextFormat::GOLD . $this->getPlayerGold($p_Player),
+                    TextFormat::AQUA . "DIAMOND" . TextFormat::WHITE . " : " . TextFormat::AQUA . $this->getPlayerDiamond($p_Player)
                 ];
             });
     }
@@ -123,17 +123,20 @@ class Bedwars extends PluginBase implements Listener
         $l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Player);
 
         $l_Spawn = SpawnManager::getInstance()->getRandomEmptySpawn();
-        if (GameManager::getInstance()->isWaiting() && isset($l_Spawn))
+        if (GameManager::getInstance()->isWaiting() && !is_null($l_Spawn))
         {
+            FatUtils::getInstance()->getLogger()->info("WELCOME TO " . $p_Player->getName());
             $l_Team = TeamsManager::getInstance()->addInBestTeam($p_Player);
-            $l_Spawn->teleport($p_Player);
+            $l_Spawn->teleport($p_Player, 3);
+            $p_Player->setGamemode(Player::SURVIVAL);
 
             new DelayedExec(5, function() use ($p_Player, $l_Team)
             {
                 $p_Player->addSubTitle("Vous êtes dans la team " . $l_Team->getName());
             });
 
-//            (new Timer(600))
+//            (new BossbarTimer(600))
+//                ->addDelay(20)
 //                ->addTickCallback(function () use ($l_FatPlayer)
 //                {
 //                    if ($this->getServer()->getTick() % 20 == 0)
@@ -179,19 +182,19 @@ class Bedwars extends PluginBase implements Listener
 
     public function getPlayerIron(Player $p_Player)
     {
-        PlayersManager::getInstance()->getFatPlayer($p_Player)
+        return PlayersManager::getInstance()->getFatPlayer($p_Player)
             ->getData(Bedwars::PLAYER_DATA_CURRENCY_IRON, 0);
     }
 
     public function getPlayerGold(Player $p_Player)
     {
-        PlayersManager::getInstance()->getFatPlayer($p_Player)
+        return PlayersManager::getInstance()->getFatPlayer($p_Player)
             ->getData(Bedwars::PLAYER_DATA_CURRENCY_GOLD, 0);
     }
 
     public function getPlayerDiamond(Player $p_Player)
     {
-        PlayersManager::getInstance()->getFatPlayer($p_Player)
+        return PlayersManager::getInstance()->getFatPlayer($p_Player)
             ->getData(Bedwars::PLAYER_DATA_CURRENCY_DIAMOND, 0);
     }
 
@@ -225,19 +228,11 @@ class Bedwars extends PluginBase implements Listener
     public function startGame()
     {
         LoadBalancer::getInstance()->setServerState(LoadBalancer::SERVER_STATE_CLOSED);
-        ChestsManager::getInstance()->fillChests();
 
-        foreach ($this->getServer()->getOnlinePlayers() as $l_Player) {
+        foreach ($this->getServer()->getOnlinePlayers() as $l_Player)
+        {
             PlayersManager::getInstance()->getFatPlayer($l_Player)->setPlaying();
-            if ($this->getHungerGameConfig()->isSkyWars()) {
-                $l_Player->getInventory()->addItem(ItemFactory::get(ItemIds::STONE_PICKAXE));
-                $l_Player->setGamemode(Player::SURVIVAL);
-            } else
-            {
-                $l_Player->setGamemode(Player::ADVENTURE);
-            }
             $l_Player->addTitle(TextFormat::GREEN . "GO !");
-            $l_Player->addEffect(Effect::getEffect(Effect::DAMAGE_RESISTANCE)->setAmplifier(10)->setDuration(30 * 20));
         }
 
         $this->m_PlayTimer = (new BossbarTimer(GameManager::getInstance()->getPlayingTickDuration()))
@@ -246,10 +241,12 @@ class Bedwars extends PluginBase implements Listener
             {
                 if (PlayersManager::getInstance()->getAlivePlayerLeft() <= 1)
                     $this->endGame();
-                else {
-                    $l_ArenaLoc = Location::fromObject($this->getHungerGameConfig()->getDeathArenaLoc());
+                else
+                {
+                    $l_ArenaLoc = Location::fromObject($this->getBedwarsConfig()->getDeathArenaLoc());
 
-                    foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player) {
+                    foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+                    {
                         $l_Player->addSubTitle(TextFormat::DARK_AQUA . TextFormat::BOLD . "Timer terminé, match à mort dans l'arène !");
                         $l_Player->teleport(WorldUtils::getRandomizedLocation($l_ArenaLoc, 3, 0, 3));
                         $l_Player->sendTip("Vous êtes invulnérable pendant 5 secondes");
@@ -294,7 +291,7 @@ class Bedwars extends PluginBase implements Listener
     /**
      * @return mixed
      */
-    public function getHungerGameConfig(): BedwarsConfig
+    public function getBedwarsConfig(): BedwarsConfig
     {
         return $this->m_BedwarsConfig;
     }

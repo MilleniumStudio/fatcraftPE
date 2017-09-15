@@ -68,7 +68,7 @@ class Team
 
     public function isPlayerInTeam(Player $p_Player)
     {
-        return array_key_exists($p_Player->getUniqueId()->toBinary(), $this->m_Players);
+        return in_array($p_Player->getUniqueId()->toBinary(), $this->m_Players);
     }
 
     public function getPlaceLeft():int
