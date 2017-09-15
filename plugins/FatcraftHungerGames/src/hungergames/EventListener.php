@@ -28,23 +28,23 @@ class EventListener implements Listener
 		PlayersManager::getInstance()->getFatPlayer($p)->setHasLost(true);
 
         WorldUtils::addStrike($p->getLocation());
-        $l_PlayerLeft = PlayersManager::getInstance()->getAlivePlayerLeft();
+            $l_PlayerLeft = PlayersManager::getInstance()->getAlivePlayerLeft();
 
 
-        foreach (HungerGame::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-        {
+            foreach (HungerGame::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+            {
             $l_Player->sendMessage($e->getDeathMessage());
-            if ($l_PlayerLeft > 1)
-                $l_Player->sendMessage("Il reste " . TextFormat::YELLOW . PlayersManager::getInstance()->getAlivePlayerLeft() . TextFormat::RESET . " survivants !", "*");
-        }
+                if ($l_PlayerLeft > 1)
+                    $l_Player->sendMessage("Il reste " . TextFormat::YELLOW . PlayersManager::getInstance()->getAlivePlayerLeft() . TextFormat::RESET . " survivants !", "*");
+            }
 
-        if ($l_PlayerLeft <= 1 && !GameManager::getInstance()->isGameFinished())
-            HungerGame::getInstance()->endGame();
+            if ($l_PlayerLeft <= 1 && !GameManager::getInstance()->isGameFinished())
+                HungerGame::getInstance()->endGame();
 
         $e->setDeathMessage("");
 		$p->setGamemode(3);
 
-        Sidebar::getInstance()->update();
+            Sidebar::getInstance()->update();
 	}
 
 	/**

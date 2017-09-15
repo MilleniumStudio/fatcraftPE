@@ -22,6 +22,7 @@ use pocketmine\level\Location;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat;
+use fatutils\gamedata\GameDataManager;
 
 class HungerGame extends PluginBase
 {
@@ -63,6 +64,7 @@ class HungerGame extends PluginBase
             {
                 return TextFormat::AQUA . "Joueur en vie: " . TextFormat::RESET . TextFormat::BOLD . PlayersManager::getInstance()->getAlivePlayerLeft();
             });
+        GameManager::getInstance();
     }
 
     public function handlePlayerConnection(Player $p_Player)
@@ -178,7 +180,10 @@ class HungerGame extends PluginBase
         {
             $winner = $winners[0];
             if ($winner instanceof FatPlayer)
+            {
                 $winnerName = $winner->getPlayer()->getName();
+                GameDataManager::getInstance()->recordWin($winner->getPlayer()->getUniqueId(), "");
+            }
         }
         foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
             $l_Player->addTitle(TextFormat::DARK_AQUA . TextFormat::BOLD . "Partie terminée", TextFormat::GREEN . TextFormat::BOLD . "le vainqueur est " . $winnerName, 30, 80, 30);
@@ -190,6 +195,8 @@ class HungerGame extends PluginBase
                 $this->getServer()->shutdown();
             })
             ->start();
+
+        score\HungerGameScoreManager::getInstance()->giveRewards();
 
         GameManager::getInstance()->endGame();
     }
