@@ -80,7 +80,6 @@ class WorldUtils
 	public static function getRelativeBlock(Block $p_Block, int $x, int $y, int $z):Block
 	{
             $_Pos = new Position($p_Block->getX() + $x, $p_Block->getY() + $y, $p_Block->getZ() + $z, $p_Block->level);
-            WorldUtils::loadChunkAt($_Pos);
             return $p_Block->getLevel()->getBlock($_Pos);
 	}
 
@@ -97,8 +96,11 @@ class WorldUtils
 	{
 		foreach ($p_Blocks as $l_Block)
 		{
-			if ($l_Block instanceof Block)
-				$l_Block->getLevel()->setBlock($l_Block, BlockFactory::get($p_Id), true, true);
+			if ($l_Block instanceof Block){
+                            $_Pos = new Position($l_Block->getX(), $l_Block->getY(), $l_Block->getZ(), $l_Block->level);
+                            WorldUtils::loadChunkAt($_Pos);
+                            $l_Block->getLevel()->setBlock($l_Block, BlockFactory::get($p_Id), true, true);
+                        }
 		}
 	}
 
