@@ -80,6 +80,5 @@ class EventListener implements Listener
             $l_Killer = $l_Player->getLastDamageCause()->getCause();
         }
         GameDataManager::getInstance()->recordDeath($l_Player->getUniqueId(), $l_Killer);
-        score\HungerGameScoreManager::getInstance()->registerDeath($l_Player);
     }
 }

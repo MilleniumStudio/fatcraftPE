@@ -64,7 +64,7 @@ class SpawnManager
                     WorldUtils::getRelativeBlock($l_SlotBlock, 0, 1, -1),
                     WorldUtils::getRelativeBlock($l_SlotBlock, 0, 1, 1),
                     WorldUtils::getRelativeBlock($l_SlotBlock, 0, 2, 0)
-                ], BlockIds::INVISIBLE_BEDROCK);
+                ], BlockIds::GLASS);
             }
         }
     }

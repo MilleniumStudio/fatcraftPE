@@ -123,7 +123,7 @@ class GameDataManager
         $this->insertGameData(GameDataManager::JOIN, $p_Player->toString(), json_encode($data));
     }
 
-    public function recordWin(UUID $p_Player, array $p_Rewards)
+    public function recordWin(UUID $p_Player, array $p_Rewards = [])
     {
         $data['rewards'] = $p_Rewards;
         $this->insertGameData(GameDataManager::JOIN, $p_Player->toString(), json_encode($data));
