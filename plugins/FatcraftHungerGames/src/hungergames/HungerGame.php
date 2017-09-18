@@ -56,14 +56,27 @@ class HungerGame extends PluginBase
         PlayersManager::getInstance()->displayHealth();
         WorldUtils::stopWorldsTime();
 
-        Sidebar::getInstance()
-            ->addLine(TextFormat::GOLD . TextFormat::BOLD . "HungerGame")
-            ->addWhiteSpace()
-            ->addMutableLine(function ()
-            {
-                return TextFormat::AQUA . "Joueur en vie: " . TextFormat::RESET . TextFormat::BOLD . PlayersManager::getInstance()->getAlivePlayerLeft();
-            });
-        GameManager::getInstance();
+        if ($this->getHungerGameConfig()->isSkyWars())
+		{
+			Sidebar::getInstance()
+				->addLine(TextFormat::GOLD . TextFormat::BOLD . "SkyWars")
+				->addWhiteSpace()
+				->addMutableLine(function ()
+				{
+					return TextFormat::AQUA . "Joueur en vie: " . TextFormat::RESET . TextFormat::BOLD . PlayersManager::getInstance()->getAlivePlayerLeft();
+				});
+		}
+		else
+		{
+			Sidebar::getInstance()
+				->addLine(TextFormat::GOLD . TextFormat::BOLD . "HungerGame")
+				->addWhiteSpace()
+				->addMutableLine(function ()
+				{
+					return TextFormat::AQUA . "Joueur en vie: " . TextFormat::RESET . TextFormat::BOLD . PlayersManager::getInstance()->getAlivePlayerLeft();
+				});
+		}
+        GameManager::getInstance(); // not sure why this line is here
     }
 
     public function handlePlayerConnection(Player $p_Player)
