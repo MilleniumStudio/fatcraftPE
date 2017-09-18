@@ -96,4 +96,6 @@ cd pk-1/
 ./docker_build.sh
 cd ../
 
-
+cd sw-1/
+./docker_build.sh
+cd ../

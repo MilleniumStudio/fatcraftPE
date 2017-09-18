@@ -14,7 +14,7 @@ start_docker()
 --publish $3:$3 \
 --publish $3:$3/udp \
 --link mysql:mysql \
--d $4
+ $4
 }
 
 # start front load-balancer
@@ -26,6 +26,7 @@ start_docker lobby 1 19133 fatcraft/pocketmine:lobby
 # start games
 start_docker hg 1 19134 fatcraft/pocketmine:hg-1
 start_docker pk 1 19135 fatcraft/pocketmine:pk-1
+start_docker sw 1 19136 fatcraft/pocketmine:sw-1
 
 
 ## DEBUG
