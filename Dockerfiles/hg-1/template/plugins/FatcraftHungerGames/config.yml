@@ -1,4 +1,4 @@
-minPlayer: 2
+minPlayer: 4
 maxPlayer: 12
 waitingSecDuration: 30
 playingSecDuration: 600
@@ -8,7 +8,7 @@ isSkywar: false
 
 #Max rewards for the first player, divided by place un score
 rewards:
-  xp: 30
+  xp: 80
   money: 100
 
 endgameMessageMoney: "Vous avez gagné {0} money !"
