@@ -2,7 +2,7 @@ name: FatUtils
 version: Build#16
 main: fatutils\FatUtils
 description: "FatUtils"
-api: [3.0.0-ALPHA7]
+api: [3.0.0-ALPHA8]
 depend: ["StatsPE", "LoadBalancer"]
 load: POSTWORLD
 commands:

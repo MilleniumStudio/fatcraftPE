@@ -1,6 +1,6 @@
 name: Lobby
 main: fatcraft\lobby\Lobby
 version: 1.0
-api: 3.0.0-ALPHA7
+api: 3.0.0-ALPHA8
 depend: [FatUtils]
 load: POSTWORLD
