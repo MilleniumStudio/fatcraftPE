@@ -14,7 +14,7 @@ start_docker()
 --publish $3:$3 \
 --publish $3:$3/udp \
 --link mysql:mysql \
- $4
+ -d $4
 }
 
 # start front load-balancer
