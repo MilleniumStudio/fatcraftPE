@@ -138,9 +138,9 @@ class HungerGame extends PluginBase
             else
             {
                 $l_Player->setGamemode(Player::ADVENTURE);
+                $l_Player->addEffect(Effect::getEffect(Effect::DAMAGE_RESISTANCE)->setAmplifier(10)->setDuration(30 * 20));
             }
             $l_Player->addTitle(TextFormat::GREEN . "GO !");
-            $l_Player->addEffect(Effect::getEffect(Effect::DAMAGE_RESISTANCE)->setAmplifier(10)->setDuration(30 * 20));
         }
 
         $this->m_PlayTimer = (new BossbarTimer(GameManager::getInstance()->getPlayingTickDuration()))

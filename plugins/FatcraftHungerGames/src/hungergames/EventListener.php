@@ -53,7 +53,8 @@ class EventListener implements Listener
      */
     public function onBlockBreak(BlockBreakEvent $e)
     {
-        $e->setCancelled(true);
+        if (!HungerGame::getInstance()->getHungerGameConfig()->isSkyWars())
+            $e->setCancelled(true);
     }
 
 //    /**
