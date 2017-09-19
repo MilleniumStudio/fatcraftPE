@@ -107,7 +107,7 @@ class PlayersManager
 
 	public function getAlivePlayerLeft(): int
     {
-        $i = 1;
+        $i = 0;
         foreach ($this->m_FatPlayers as $l_FatPlayer)
         {
             if ($l_FatPlayer instanceof FatPlayer && !$l_FatPlayer->hasLost())
