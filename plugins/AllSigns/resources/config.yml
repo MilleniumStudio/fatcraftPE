@@ -47,13 +47,13 @@ noserver: "§cNo Server"
 serversfull: "§6Servers full"
 
 # Rewards + teleport
-endgameText: "Fin de partie"
-endgameText2: "Gain {0} money"
-endgameText3: "Gain {0} XP"
-endgameText4: "Retour vers {0}"
-endgameMessageMoney: "Vous avez gagné {0} money !"
-endgameMessageXP: "Vous avez gagné {0} XP !"
-endgameMessageTransport: "Téléportation vers {0} !"
+endgameText: "§2Partir maintenant"
+endgameText2: "§0avec §5{0} §0money"
+endgameText3: "§0et §5{0} §0 XP"
+endgameText4: "Retour §2vers {0}"
+endgameMessageMoney: "§2Vous avez gagné {0} money !"
+endgameMessageXP: "§2Vous avez gagné {0} XP !"
+endgameMessageTransport: "§4Téléportation vers {0} !"
 
 # rewards
 rewardsSigns.259/7/4:
@@ -90,7 +90,7 @@ rewardsSigns.259/7/4:
 # server info sign & join command (/server connect <player> <type> [id])
 #
 # line 1 : NetworkInfo      | type sign
-# line 2 : lobby-1          | the first line message, template (and id if provided) displayer if blanc
+# line 2 : lobby-1          | the first line message, template (and id if provided) displayed if blank
 # line 3 :                  | blanc
 # line 4 :                  | blanc
 # IF ID IS NOT PROVIDED, it's a "global sign"
@@ -98,8 +98,8 @@ rewardsSigns.259/7/4:
 # REQUIRE  & StatsPE PLUGINS
 #
 # line 1 : endGame          | type sign
-# line 2 : 1                | reward money, can be blanc
-# line 3 : 10               | reward XP, can be blanc
+# line 2 : 1                | reward money, can be blank
+# line 3 : 10               | reward XP, can be blank
 # line 4 : lobby            | return server, if 
 
 # REQUIRE WORLDS PLUGIN
@@ -109,7 +109,4 @@ rewardsSigns.259/7/4:
 # line 2 : worlds tp
 # line 3 : *world name*
 # line 4 :
-
-
-
 
