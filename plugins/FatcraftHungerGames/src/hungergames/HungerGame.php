@@ -63,7 +63,7 @@ class HungerGame extends PluginBase
 				->addWhiteSpace()
 				->addMutableLine(function ()
 				{
-					return TextFormat::AQUA . "Joueur en vie: " . TextFormat::RESET . TextFormat::BOLD . PlayersManager::getInstance()->getAlivePlayerLeft();
+					return TextFormat::AQUA . "Joueurs en vie: " . TextFormat::RESET . TextFormat::BOLD . PlayersManager::getInstance()->getAlivePlayerLeft() + 1;
 				});
 		}
 		else
@@ -73,7 +73,7 @@ class HungerGame extends PluginBase
 				->addWhiteSpace()
 				->addMutableLine(function ()
 				{
-					return TextFormat::AQUA . "Joueur en vie: " . TextFormat::RESET . TextFormat::BOLD . PlayersManager::getInstance()->getAlivePlayerLeft();
+					return TextFormat::AQUA . "Joueurs en vie: " . TextFormat::RESET . TextFormat::BOLD . PlayersManager::getInstance()->getAlivePlayerLeft() + 1;
 				});
 		}
         GameManager::getInstance(); // not sure why this line is here
@@ -138,9 +138,9 @@ class HungerGame extends PluginBase
             else
             {
                 $l_Player->setGamemode(Player::ADVENTURE);
+                $l_Player->addEffect(Effect::getEffect(Effect::DAMAGE_RESISTANCE)->setAmplifier(10)->setDuration(30 * 20));
             }
             $l_Player->addTitle(TextFormat::GREEN . "GO !");
-            $l_Player->addEffect(Effect::getEffect(Effect::DAMAGE_RESISTANCE)->setAmplifier(10)->setDuration(30 * 20));
         }
 
         $this->m_PlayTimer = (new BossbarTimer(GameManager::getInstance()->getPlayingTickDuration()))

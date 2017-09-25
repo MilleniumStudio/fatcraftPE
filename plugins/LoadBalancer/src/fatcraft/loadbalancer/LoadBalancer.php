@@ -495,6 +495,7 @@ class LoadBalancer extends PluginBase implements Listener
 
         $this->getServer()->getPluginManager()->callEvent($ev = new PlayerTransferEvent($p_Player, $p_Ip, $p_Port, $p_Message));
 
+
         if(!$ev->isCancelled())
         {
             // TODO insert in Transfert table
@@ -504,6 +505,8 @@ class LoadBalancer extends PluginBase implements Listener
             $p_Player->directDataPacket($pk, true);
 //            $p_Player->close("", $ev->getMessage(), false);
         }
+        else
+            $this->getLogger()->info("transferPlayer: event is canceled  !!!!" . $ev->getAddress() . " " . $ev->getPort());
     }
 
     /**
@@ -513,6 +516,7 @@ class LoadBalancer extends PluginBase implements Listener
      */
     public function onServerPing(QueryRegenerateEvent $event)
     {
+
         $event->setMaxPlayerCount($this->getConfig()->getNested("network.max"));
 
         if ($this->getConfig()->getNested("network.online") == "total")
