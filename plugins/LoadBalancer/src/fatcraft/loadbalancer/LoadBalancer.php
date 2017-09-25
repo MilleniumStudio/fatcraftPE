@@ -491,14 +491,13 @@ class LoadBalancer extends PluginBase implements Listener
     public function transferPlayer(Player $p_Player, string $p_Ip, int $p_Port, string $p_Message)
     {
         $p_Player->sendMessage($p_Message);
-        $this->getLogger()->info($p_Message . " DFSGDFGGFFFDGDFGDFG " . $p_Player->getName() . " to " . $p_Ip . ":" . $p_Port . "");
+        $this->getLogger()->info($p_Message . " " . $p_Player->getName() . " to " . $p_Ip . ":" . $p_Port . "");
 
         $this->getServer()->getPluginManager()->callEvent($ev = new PlayerTransferEvent($p_Player, $p_Ip, $p_Port, $p_Message));
 
 
         if(!$ev->isCancelled())
         {
-            $this->getLogger()->info("transferPlayer: event isnt canceled " . $ev->getAddress() . " " . $ev->getPort());
             // TODO insert in Transfert table
             $pk = new TransferPacket();
             $pk->address = $ev->getAddress();
@@ -533,19 +532,15 @@ class LoadBalancer extends PluginBase implements Listener
      */
     public function onPlayerJoinEvent(PlayerJoinEvent $p_Event)
     {
-	$this->getLogger()->info("Yo");
         if ($this->isPlayerConnected($p_Event->getPlayer()->getName()) and $this->getConfig()->getNested("players.singlesession") == "true")
         {
-		$this->getLogger()->info("nope");
             $p_Event->getPlayer()->kick("You are already connected !", false);
         }
         else
         {
-		$this->getLogger()->info("yepyep");
             $p_Event->setJoinMessage("");
             if ($this->getConfig()->getNested("redirect.to_type") != false && count($this->getServer()->getOnlinePlayers()) > $this->getConfig()->getNested("redirect.limit"))
             {
-		$this->getLogger()->info("qewqweqewqweqew");
                 try
                 {
                     // select random server
