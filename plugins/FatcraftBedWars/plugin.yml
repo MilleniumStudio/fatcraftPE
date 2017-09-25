@@ -1,0 +1,7 @@
+name: FatcraftBedwars
+version: Build#16
+main: fatcraft\bedwars\Bedwars
+description: "Bedwars"
+depend: [FatUtils]
+api: [3.0.0-ALPHA8]
+load: POSTWORLD
