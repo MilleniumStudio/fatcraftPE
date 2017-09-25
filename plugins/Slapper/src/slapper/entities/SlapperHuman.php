@@ -4,6 +4,7 @@ namespace slapper\entities;
 use pocketmine\entity\Entity;
 use pocketmine\entity\Human;
 use pocketmine\level\Level;
+use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\FloatTag;
 use pocketmine\nbt\tag\IntTag;
@@ -66,9 +67,7 @@ class SlapperHuman extends Human {
 			$pk->uuid = $uuid;
 			$pk->username = "";
 			$pk->entityRuntimeId = $entityId;
-			$pk->x = $this->x;
-			$pk->y = $this->y;
-			$pk->z = $this->z;
+			$pk->position = $this->asVector3();
 			$pk->speedX = $pk->speedY = $pk->speedZ = 0.0;
 			$pk->yaw = $this->yaw;
 			$pk->pitch = $this->pitch;
