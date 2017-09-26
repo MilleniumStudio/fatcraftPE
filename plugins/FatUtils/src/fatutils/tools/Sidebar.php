@@ -35,7 +35,7 @@ class Sidebar
      *  or in the center use "%s".
      *  Default is screen right.
      */
-    private $m_SidebarFormat = TextFormat::RESET . TextFormat::WHITE . "                                                               %s". TextFormat::RESET . TextFormat::WHITE;
+    private $m_SidebarFormat = TextFormat::RESET . TextFormat::WHITE . "                                                                   %s". TextFormat::RESET . TextFormat::WHITE;
 
     private static $m_Instance = null;
 
@@ -218,7 +218,7 @@ class Sidebar
             $this->updatePlayerLines($p_Player);
 
         $p_Content = $this->m_LineCache[$p_Player->getUniqueId()->toBinary()];
-        $p_Player->sendPopup("", $p_Content);
+        $p_Player->sendPopup($p_Content, "");
     }
 
     private function addSpaces(array $p_Lines): array
