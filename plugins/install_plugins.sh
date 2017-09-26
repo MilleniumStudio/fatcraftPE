@@ -51,3 +51,7 @@ php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
 php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
 --make Lobby/ \
 --out Lobby.phar
+
+php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
+--make FatcraftBedwars/ \
+--out FatcraftBedwars.phar
