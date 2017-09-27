@@ -63,7 +63,7 @@ class HungerGame extends PluginBase
 				->addWhiteSpace()
 				->addMutableLine(function ()
 				{
-					return TextFormat::AQUA . "Joueurs en vie: " . TextFormat::RESET . TextFormat::BOLD . PlayersManager::getInstance()->getAlivePlayerLeft() + 1;
+					return TextFormat::AQUA . "Joueurs en vie: " . TextFormat::RESET . TextFormat::BOLD . PlayersManager::getInstance()->getAlivePlayerLeft();
 				});
 		}
 		else
@@ -73,7 +73,7 @@ class HungerGame extends PluginBase
 				->addWhiteSpace()
 				->addMutableLine(function ()
 				{
-					return TextFormat::AQUA . "Joueurs en vie: " . TextFormat::RESET . TextFormat::BOLD . PlayersManager::getInstance()->getAlivePlayerLeft() + 1;
+					return TextFormat::AQUA . "Joueurs en vie: " . TextFormat::RESET . TextFormat::BOLD . PlayersManager::getInstance()->getAlivePlayerLeft();
 				});
 		}
         GameManager::getInstance(); // not sure why this line is here
