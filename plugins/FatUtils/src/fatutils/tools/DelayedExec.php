@@ -18,7 +18,7 @@ class DelayedExec
 
     /**
      * DelayedExec constructor.
-     * @param int $p_Delay
+     * @param int $p_Delay in tick
      * @param callable $p_Callback
      */
     public function __construct(int $p_Delay, callable $p_Callback)

@@ -158,7 +158,7 @@ class Team
         return $l_Players;
     }
 
-    public function getSpawn(): Spawn
+    public function getSpawn(): ?Spawn
     {
         return $this->m_Spawn;
     }

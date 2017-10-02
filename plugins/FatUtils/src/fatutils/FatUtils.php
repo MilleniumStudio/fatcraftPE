@@ -3,6 +3,7 @@
 namespace fatutils;
 
 use fatutils\loot\ChestsManager;
+use fatutils\tools\TextFormatter;
 use fatutils\tools\WorldUtils;
 use hungergames\HungerGame;
 use hungergames\LootTable;

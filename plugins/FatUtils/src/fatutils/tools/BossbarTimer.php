@@ -81,4 +81,13 @@ class BossbarTimer extends Timer
             $this->m_BossBar->remove();
         parent::_onStop();
     }
+
+    public function cancel()
+    {
+        parent::cancel();
+        if ($this->m_BossBar instanceof BossBar)
+            $this->m_BossBar->remove();
+    }
+
+
 }
