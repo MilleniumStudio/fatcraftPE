@@ -66,9 +66,6 @@ class EventListener implements Listener
             FatUtils::getInstance()->getLogger()->info(gettype($p));
             if ($p instanceof Player)
             {
-		var_dump("sldkjflkjsdfljfksd");
-		var_dump($p);
-		$p->sendPopup("ca marche bien !");
                 FatUtils::getInstance()->getLogger()->info("InventoryPickupItemEvent " . $e->getItem() . " from " . $p->getName() . "> " . $e->getItem()->getItem()->getId());
                 switch ($e->getItem()->getItem()->getId())
                 {

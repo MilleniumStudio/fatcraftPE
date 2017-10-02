@@ -109,8 +109,8 @@ class Bedwars extends PluginBase implements Listener
             }
         }
 
-/*        Sidebar::getInstance()
-            ->setUpdateTickInterval(40)
+        Sidebar::getInstance()
+//            ->setUpdateTickInterval(40)
             ->addLine(TextFormat::DARK_GREEN . TextFormat::BOLD . "== Bedwars ==")
             ->addWhiteSpace()
             ->addLine(TextFormat::DARK_PURPLE . TextFormat::BOLD . "< TEAMS >")
@@ -151,7 +151,7 @@ class Bedwars extends PluginBase implements Listener
                     TextFormat::GOLD . "GOLD" . TextFormat::WHITE . " : " . TextFormat::GOLD . $this->getPlayerGold($p_Player),
                     TextFormat::AQUA . "DIAMOND" . TextFormat::WHITE . " : " . TextFormat::AQUA . $this->getPlayerDiamond($p_Player)
                 ];
-            });*/
+            });
     }
 
     public function handlePlayerConnection(Player $p_Player)
