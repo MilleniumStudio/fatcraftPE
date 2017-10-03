@@ -4,3 +4,6 @@ version: 1.0
 api: 3.0.0-ALPHA8
 depend: [FatUtils]
 load: POSTWORLD
+commands:
+ menu:
+  description: menu Command.
