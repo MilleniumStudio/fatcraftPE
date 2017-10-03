@@ -21,7 +21,7 @@ node:
 ## type_based : sum the max players for the selected type and set the network max players
 ## online : total or type based
 network:
-  max: 0
+  max: 1337
   type_based: lobby
   online : total
 
