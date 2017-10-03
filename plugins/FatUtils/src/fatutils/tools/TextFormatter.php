@@ -68,7 +68,9 @@ class TextFormatter
         FatUtils::getInstance()->getLogger()->info("TextFormatter Loading...");
         foreach (self::$m_AvailableLanguages as $l_Index => $l_LangName)
         {
-            $l_Config = new Config(FatUtils::getInstance()->getDataFolder() . "lang" . $l_LangName . ".properties", Config::PROPERTIES);
+            $l_File = "lang" . $l_LangName . ".properties";
+            FatUtils::getInstance()->saveResource($l_File);
+            $l_Config = new Config(FatUtils::getInstance()->getDataFolder() . $l_File);
             self::$m_LangsLines[$l_Index] = $l_Config;
             FatUtils::getInstance()->getLogger()->info("   - Loaded" . $l_LangName . " with " . count($l_Config->getAll()) . " entries");
         }
