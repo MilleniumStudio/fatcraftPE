@@ -12,7 +12,6 @@ cp ../../plugins/StatsPE.phar install/plugins
 
 updateConfig install/plugins/LoadBalancer/config.yml
 updateConfig install/plugins/StatsPE/config.yml
-updateConfig install/plugins/SimpleAuth/config.yml
 
 # copy map
 mkdir -p install/worlds/map
