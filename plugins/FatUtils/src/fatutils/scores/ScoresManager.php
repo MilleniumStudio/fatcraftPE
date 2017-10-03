@@ -4,12 +4,8 @@ namespace fatutils\scores;
 
 use fatutils\gamedata\GameDataManager;
 use fatcraft\loadbalancer\LoadBalancer;
-use libasynql\result\MysqlResult;
-use libasynql\result\MysqlSuccessResult;
 use libasynql\DirectQueryMysqlTask;
 use fatutils\FatUtils;
-use pocketmine\utils\UUID;
-use pocketmine\Player;
 
 abstract class ScoresManager
 {
@@ -31,7 +27,7 @@ abstract class ScoresManager
         LoadBalancer::getInstance()->connectMainThreadMysql()->query("CREATE TABLE IF NOT EXISTS `scores` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `game` int(11) NOT NULL,
-            `varchar` varchar(36) NOT NULL,
+            `player` varchar(36) NOT NULL,
             `position` int(11) NOT NULL,
             `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (`id`)
@@ -44,7 +40,7 @@ abstract class ScoresManager
         {
             FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
                 new DirectQueryMysqlTask(LoadBalancer::getInstance()->getCredentials(),
-                    "INSERT INTO scores (game, varchar, position) VALUES (?, ?, ?)", [
+                    "INSERT INTO scores (game, player, position) VALUES (?, ?, ?)", [
                     ["i", GameDataManager::getInstance()->getGameId()],
                     ["s", $p_Player],
                     ["i", $p_Position]
@@ -82,7 +78,7 @@ abstract class ScoresManager
         $l_Divider = 1;
 
         // reverse order & iter
-        for ($i = 0; $i <= count($l_ReversePositions); $i++)
+        for ($i = 0; $i < count($l_ReversePositions); $i++)
         {
             $l_PlayerName = $l_ReversePositions[$i];
 
@@ -104,8 +100,8 @@ abstract class ScoresManager
                 \SalmonDE\StatsPE\CustomEntries::getInstance()->modIntEntry("Money", $p_Player, $l_Money);
                 \SalmonDE\StatsPE\CustomEntries::getInstance()->modIntEntry("XP", $p_Player, $l_XP);
 
-                $p_Player->sendMessage(str_replace("{0}", $l_Money, HungerGame::getInstance()->getConfig()->get("endgameMessageMoney")));
-                $p_Player->sendMessage(str_replace("{0}", $l_XP, HungerGame::getInstance()->getConfig()->get("endgameMessageXP")));
+                $p_Player->sendMessage(str_replace("{0}", $l_Money, FatUtils::getInstance()->getTemplateConfig()->get("endgameMessageMoney")));
+                $p_Player->sendMessage(str_replace("{0}", $l_XP, FatUtils::getInstance()->getTemplateConfig()->get("endgameMessageXP")));
 
                 // add game specific stats
                 $l_ServerType = \fatcraft\loadbalancer\LoadBalancer::getInstance()->getServerType();
