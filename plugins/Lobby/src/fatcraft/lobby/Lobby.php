@@ -57,27 +57,27 @@ class Lobby extends PluginBase implements Listener
             $e->getPlayer()->addSubTitle($this->getConfig()->get(Lobby::CONFIG_KEY_WELCOME_SUBTITLE, ""));
         });
         // Items in player bar
-        $e->getPlayer()->getInventory()->setHeldItemIndex(4);
-        $l_Item1 = \pocketmine\item\Item::get(\pocketmine\item\Item::COMPASS);
-        $e->getPlayer()->getInventory()->setItem(2, $l_Item1);
-        $l_Item2 = \pocketmine\item\Item::get(\pocketmine\item\Item::NETHERSTAR);
-        $e->getPlayer()->getInventory()->setItem(6, $l_Item2);
-        $e->getPlayer()->getInventory()->sendContents($e->getPlayer());
+//        $e->getPlayer()->getInventory()->setHeldItemIndex(4);
+//        $l_Item1 = \pocketmine\item\Item::get(\pocketmine\item\Item::COMPASS);
+//        $e->getPlayer()->getInventory()->setItem(2, $l_Item1);
+//        $l_Item2 = \pocketmine\item\Item::get(\pocketmine\item\Item::NETHERSTAR);
+//        $e->getPlayer()->getInventory()->setItem(6, $l_Item2);
+//        $e->getPlayer()->getInventory()->sendContents($e->getPlayer());
     }
 
     // actions on item select / touch
     public function onPlayerItemHeld(PlayerItemHeldEvent $p_Event)
     {
-        if ($p_Event->getItem()->getId() == \pocketmine\item\Item::COMPASS)
-        {
-            WindowsManager::getInstance()->sendMenu($p_Event->getPlayer(), WindowsManager::WINDOW_BUTTON_MENU);
-            $p_Event->getPlayer()->getInventory()->setHeldItemIndex(4);
-        }
-        elseif ($p_Event->getItem()->getId() == \pocketmine\item\Item::NETHERSTAR)
-        {
-            WindowsManager::getInstance()->sendMenu($p_Event->getPlayer(), WindowsManager::WINDOW_INPUT_MENU);
-            $p_Event->getPlayer()->getInventory()->setHeldItemIndex(4);
-        }
+//        if ($p_Event->getItem()->getId() == \pocketmine\item\Item::COMPASS)
+//        {
+//            WindowsManager::getInstance()->sendMenu($p_Event->getPlayer(), WindowsManager::WINDOW_BUTTON_MENU);
+//            $p_Event->getPlayer()->getInventory()->setHeldItemIndex(4);
+//        }
+//        elseif ($p_Event->getItem()->getId() == \pocketmine\item\Item::NETHERSTAR)
+//        {
+//            WindowsManager::getInstance()->sendMenu($p_Event->getPlayer(), WindowsManager::WINDOW_INPUT_MENU);
+//            $p_Event->getPlayer()->getInventory()->setHeldItemIndex(4);
+//        }
     }
 
     // disable all inventory items move
