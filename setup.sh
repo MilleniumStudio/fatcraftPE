@@ -70,9 +70,9 @@ cd plugins/
 ./install_plugins.sh
 cd ../
 
-cd virions/
-./install_virions.sh
-cd ../
+#cd virions/
+#./install_virions.sh
+#cd ../
 
 cd Dockerfiles/
 
