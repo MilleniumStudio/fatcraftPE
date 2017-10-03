@@ -41,7 +41,7 @@ class TextFormatter
     const LANG_ID_EN = 0;
     const LANG_ID_FR = 1;
     const LANG_ID_ES = 2;
-    const LANG_ID_DEFAULT = TextFormatter::LANG_ID_FR;
+    const LANG_ID_DEFAULT = TextFormatter::LANG_ID_EN;
 
     public static $m_AvailableLanguages = [
         TextFormatter::LANG_ID_EN => "EN",
@@ -115,7 +115,7 @@ class TextFormatter
     public function asStringForPlayer(Player $p_Player = null):string
     {
         if (!is_null($p_Player))
-            return $this->asString(PlayersManager::getInstance()->getFatPlayer($p_Player));
+            return $this->asString(PlayersManager::getInstance()->getFatPlayer($p_Player)->getLanguage());
         else
             return $this->asString();
     }

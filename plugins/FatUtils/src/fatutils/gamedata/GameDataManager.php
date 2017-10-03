@@ -160,4 +160,9 @@ class GameDataManager
             ));
         }
     }
+
+    public function getGameId()
+    {
+        return $this->m_GameId;
+    }
 }
