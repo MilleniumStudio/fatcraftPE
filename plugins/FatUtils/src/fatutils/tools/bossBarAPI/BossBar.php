@@ -152,9 +152,7 @@ class BossBar
         $packet->entityRuntimeId = $this->getEntityId();
         $packet->type = 52;
         $pos = $p_Position->subtract(0, 28);
-        $packet->x = $pos->x;
-        $packet->y = $pos->y;
-        $packet->z = $pos->z;
+        $packet->position = $pos;
         $packet->metadata = [Entity::DATA_LEAD_HOLDER_EID => [Entity::DATA_TYPE_LONG, -1], Entity::DATA_FLAGS => [Entity::DATA_TYPE_LONG, 0 ^ 1 << Entity::DATA_FLAG_SILENT ^ 1 << Entity::DATA_FLAG_INVISIBLE ^ 1 << Entity::DATA_FLAG_NO_AI], Entity::DATA_SCALE => [Entity::DATA_TYPE_FLOAT, 0],
             Entity::DATA_NAMETAG => [Entity::DATA_TYPE_STRING, $p_Name], Entity::DATA_BOUNDING_BOX_WIDTH => [Entity::DATA_TYPE_FLOAT, 0], Entity::DATA_BOUNDING_BOX_HEIGHT => [Entity::DATA_TYPE_FLOAT, 0]];
 
