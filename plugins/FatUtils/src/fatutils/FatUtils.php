@@ -39,6 +39,14 @@ class FatUtils extends PluginBase
     {
         $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
         WorldUtils::stopWorldsTime();
+
+//        echo (new TextFormatter("player.earn"))
+//                ->addParam("name", "MACHIN")
+//                ->addParam("quantity", 5)
+//                ->addParam("moneyName", new TextFormatter("money.gold.name", [
+//                    "version" => "v0.1"
+//                ]))
+//                ->asString() . "\n";
     }
 
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool

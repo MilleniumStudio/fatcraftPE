@@ -77,10 +77,7 @@ class Forge
 
     public function canPop():bool
     {
-        if (FatUtils::getInstance()->getServer()->getTick() - $this->m_PopDelay > $this->m_LastTickPop)
-            return true;
-
-        return false;
+        return (bool)FatUtils::getInstance()->getServer()->getTick() - $this->m_PopDelay > $this->m_LastTickPop;
     }
 
     public function pop()

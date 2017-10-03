@@ -19,6 +19,8 @@ use pocketmine\utils\Config;
  * Class TextFormatter
  * @package fatutils\tools
  *
+ * Language lines are stored inside FatUtils resources (ex: FatUtils.phar/resources/langEN.properties)
+ *
  * USAGE examples:
  *
  *  - simple :
@@ -63,20 +65,17 @@ class TextFormatter
     public static function loadLanguages()
     {
         self::$m_LangsLines = [];
-        echo "TextFormatter Loading...\n";
+        FatUtils::getInstance()->getLogger()->info("TextFormatter Loading...");
         foreach (self::$m_AvailableLanguages as $l_Index => $l_LangName)
         {
             $l_Config = new Config(FatUtils::getInstance()->getDataFolder() . "lang" . $l_LangName . ".properties", Config::PROPERTIES);
             self::$m_LangsLines[$l_Index] = $l_Config;
-            echo "   - Loaded" . $l_LangName . "\n";
+            FatUtils::getInstance()->getLogger()->info("   - Loaded" . $l_LangName . " with " . count($l_Config->getAll()) . " entries");
         }
     }
 
-    public static function getFormattedText(?int $p_LangId, string $p_Key, array $p_Params = []):string
+    public static function getFormattedText(string $p_Key, array $p_Params = [], int $p_LangId = TextFormatter::LANG_ID_DEFAULT):string
     {
-        if (!isset($p_LangId))
-            $p_LangId = TextFormatter::LANG_ID_DEFAULT;
-
         if (is_null(self::$m_LangsLines))
             self::loadLanguages();
 
@@ -87,6 +86,8 @@ class TextFormatter
             if ($l_LangLines instanceof Config && $l_LangLines->exists($p_Key))
             {
                 $l_Ret = $l_LangLines->get($p_Key);
+                $l_Ret = str_replace("\\n", "\n", $l_Ret); // cause Config escape backslash when reading them
+
                 foreach ($p_Params as $l_Index => $l_Param)
                 {
                     if ($l_Param instanceof TextFormatter)
@@ -129,7 +130,7 @@ class TextFormatter
 
     public function asString(int $p_LanguageId = TextFormatter::LANG_ID_DEFAULT):string
     {
-        return self::getFormattedText($p_LanguageId, $this->m_Key, $this->m_Params);
+        return self::getFormattedText($this->m_Key, $this->m_Params, $p_LanguageId);
     }
 
     public function toString():string

@@ -9,6 +9,7 @@ use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
 use fatutils\tools\bossBarAPI\BossBarAPI;
 use fatutils\tools\Sidebar;
+use fatutils\tools\TextFormatter;
 use fatutils\tools\Timer;
 use fatutils\tools\WorldUtils;
 use fatutils\game\GameManager;
@@ -184,10 +185,15 @@ class HungerGame extends PluginBase
             }
         }
         foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-            $l_Player->addTitle(TextFormat::DARK_AQUA . TextFormat::BOLD . "Partie terminée", TextFormat::GREEN . TextFormat::BOLD . "le vainqueur est " . $winnerName, 30, 80, 30);
+        {
+            $l_Player->addTitle(
+                (new TextFormatter("game.end"))->asStringForPlayer($l_Player),
+                (new TextFormatter("game.winner.single"))->addParam("name", $winnerName)->asStringForPlayer($l_Player),
+                30, 80, 30);
+        }
 
         (new BossbarTimer(150))
-            ->setTitle("Retour au lobby")
+            ->setTitle(new TextFormatter("bossbar.returnToLobby"))
             ->addStopCallback(function ()
             {
                 $this->getServer()->shutdown();

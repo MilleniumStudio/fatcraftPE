@@ -11,6 +11,7 @@ namespace fatutils\tools\bossBarAPI;
 
 use fatutils\FatUtils;
 use fatutils\tools\bossBarAPI\BossBarValues;
+use fatutils\tools\TextFormatter;
 use pocketmine\entity\Entity;
 use pocketmine\level\Position;
 use pocketmine\network\mcpe\protocol\AddEntityPacket;
@@ -27,7 +28,7 @@ class BossBar
     private $m_Players = null;
 
     /** @var string */
-    private $m_Title = "BossBar";
+    private $m_Title = "";
 
     /** @var float */
     private $m_Ratio = 1.0;
@@ -52,7 +53,8 @@ class BossBar
             $this->m_Players = [];
 
         $this->m_Players[] = $p_Player;
-        $packet = $this->getSpawnEntityPacket($p_Player->getLocation());
+
+        $packet = $this->getSpawnEntityPacket($p_Player->getLocation(), $this->getTitle($p_Player));
         $p_Player->dataPacket($packet);
         return $this;
     }
@@ -76,14 +78,21 @@ class BossBar
         return $this;
     }
 
-    public function setTitle(string $p_Title):BossBar
+    /**
+     * @param string|TextFormatter $p_Title
+     * @return BossBar
+     */
+    public function setTitle($p_Title):BossBar
     {
         $this->m_Title = $p_Title;
 
-        $npk = new SetEntityDataPacket(); // change name of fake wither -> bar text
-        $npk->metadata = [Entity::DATA_NAMETAG => [Entity::DATA_TYPE_STRING, $this->getTitle()]];
-        $npk->entityRuntimeId = $this->getEntityId();
-        $this->broadcastPacketToPlayers($npk);
+        foreach (($this->m_Players ?? FatUtils::getInstance()->getServer()->getOnlinePlayers()) as $l_Player)
+        {
+            $npk = new SetEntityDataPacket(); // change name of fake wither -> bar text
+            $npk->metadata = [Entity::DATA_NAMETAG => [Entity::DATA_TYPE_STRING, $this->getTitle($l_Player)]];
+            $npk->entityRuntimeId = $this->getEntityId();
+            FatUtils::getInstance()->getServer()->broadcastPacket([$l_Player], $npk);
+        }
 
         $this->updateBossBar();
         return $this;
@@ -137,7 +146,7 @@ class BossBar
         FatUtils::getInstance()->getServer()->broadcastPacket(($this->m_Players ?? FatUtils::getInstance()->getServer()->getOnlinePlayers()), $packet);
     }
 
-    private function getSpawnEntityPacket(Position $p_Position):AddEntityPacket
+    private function getSpawnEntityPacket(Position $p_Position, string $p_Name):AddEntityPacket
     {
         $packet = new AddEntityPacket();
         $packet->entityRuntimeId = $this->getEntityId();
@@ -147,7 +156,7 @@ class BossBar
         $packet->y = $pos->y;
         $packet->z = $pos->z;
         $packet->metadata = [Entity::DATA_LEAD_HOLDER_EID => [Entity::DATA_TYPE_LONG, -1], Entity::DATA_FLAGS => [Entity::DATA_TYPE_LONG, 0 ^ 1 << Entity::DATA_FLAG_SILENT ^ 1 << Entity::DATA_FLAG_INVISIBLE ^ 1 << Entity::DATA_FLAG_NO_AI], Entity::DATA_SCALE => [Entity::DATA_TYPE_FLOAT, 0],
-            Entity::DATA_NAMETAG => [Entity::DATA_TYPE_STRING, $this->m_Title], Entity::DATA_BOUNDING_BOX_WIDTH => [Entity::DATA_TYPE_FLOAT, 0], Entity::DATA_BOUNDING_BOX_HEIGHT => [Entity::DATA_TYPE_FLOAT, 0]];
+            Entity::DATA_NAMETAG => [Entity::DATA_TYPE_STRING, $p_Name], Entity::DATA_BOUNDING_BOX_WIDTH => [Entity::DATA_TYPE_FLOAT, 0], Entity::DATA_BOUNDING_BOX_HEIGHT => [Entity::DATA_TYPE_FLOAT, 0]];
 
         return $packet;
     }
@@ -177,11 +186,10 @@ class BossBar
         return $this->m_Eid;
     }
 
-    /**
-     * @return string
-     */
-    public function getTitle(): string
+    public function getTitle(Player $p_Player = null): string
     {
+        if ($this->m_Title instanceof TextFormatter)
+            return $this->m_Title->asStringForPlayer($p_Player);
         return $this->m_Title;
     }
 

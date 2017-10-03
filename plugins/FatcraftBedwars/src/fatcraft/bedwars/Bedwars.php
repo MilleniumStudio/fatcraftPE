@@ -13,6 +13,7 @@ use fatutils\tools\bossBarAPI\BossBarAPI;
 use fatutils\tools\DelayedExec;
 use fatutils\tools\ItemUtils;
 use fatutils\tools\Sidebar;
+use fatutils\tools\TextFormatter;
 use fatutils\tools\Timer;
 use fatutils\tools\WorldUtils;
 use fatutils\game\GameManager;
@@ -111,9 +112,9 @@ class Bedwars extends PluginBase implements Listener
 
         Sidebar::getInstance()
 //            ->setUpdateTickInterval(40)
-            ->addLine(TextFormat::DARK_GREEN . TextFormat::BOLD . "== Bedwars ==")
+            ->addTranslatedLine(new TextFormatter("bedwars.sidebar.title"))
             ->addWhiteSpace()
-            ->addLine(TextFormat::DARK_PURPLE . TextFormat::BOLD . "< TEAMS >")
+            ->addTranslatedLine(new TextFormatter("bedwars.sidebar.teams.title"))
             ->addMutableLine(function ()
             {
                 $l_Ret = [];
@@ -141,15 +142,13 @@ class Bedwars extends PluginBase implements Listener
                 return $l_Ret;
             })
             ->addWhiteSpace()
-            ->addLine(TextFormat::DARK_PURPLE . TextFormat::BOLD . "< MONNAIES >")
+            ->addTranslatedLine(new TextFormatter("bedwars.sidebar.currencies.title"))
             ->addMutableLine(function (Player $p_Player)
             {
-                $l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Player);
-
                 return [
-                    TextFormat::GRAY . "IRON" . TextFormat::WHITE . " : " . TextFormat::GRAY . $this->getPlayerIron($p_Player),
-                    TextFormat::GOLD . "GOLD" . TextFormat::WHITE . " : " . TextFormat::GOLD . $this->getPlayerGold($p_Player),
-                    TextFormat::AQUA . "DIAMOND" . TextFormat::WHITE . " : " . TextFormat::AQUA . $this->getPlayerDiamond($p_Player)
+                    new TextFormatter("bedwars.sidebar.currency.iron", ["amount" => $this->getPlayerIron($p_Player)]),
+                    new TextFormatter("bedwars.sidebar.currency.gold", ["amount" => $this->getPlayerGold($p_Player)]),
+                    new TextFormatter("bedwars.sidebar.currency.diamond", ["amount" => $this->getPlayerDiamond($p_Player)])
                 ];
             });
     }
@@ -158,43 +157,21 @@ class Bedwars extends PluginBase implements Listener
     {
         $l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Player);
 
-        $l_Spawn = SpawnManager::getInstance()->getRandomEmptySpawn();
-        if (GameManager::getInstance()->isWaiting() && !is_null($l_Spawn))
+        $l_Team = TeamsManager::getInstance()->addInBestTeam($p_Player);
+        if (GameManager::getInstance()->isWaiting() && !is_null($l_Team) && !is_null($l_Team->getSpawn()))
         {
-            FatUtils::getInstance()->getLogger()->info("WELCOME TO " . $p_Player->getName());
-            $l_Team = TeamsManager::getInstance()->addInBestTeam($p_Player);
-            $l_Spawn->teleport($p_Player, 3);
-            $p_Player->setGamemode(Player::SURVIVAL);
+            $l_Team->getSpawn()->teleport($p_Player, 3);
+            $p_Player->setGamemode(Player::ADVENTURE);
 
             new DelayedExec(5, function() use ($p_Player, $l_Team)
             {
-                $p_Player->addSubTitle("Vous êtes dans la team " . $l_Team->getName());
+                $p_Player->addSubTitle((new TextFormatter("player.team.join", ["teamName", $l_Team->getName()]))->asStringForPlayer($p_Player));
             });
-
-            (new Timer(600))
-                ->addStartCallback(function() {
-                    FatUtils::getInstance()->getLogger()->info("Forges are starting up !");
-                })
-                ->addTickCallback(function () use ($l_FatPlayer)
-                {
-                    if ($this->getServer()->getTick() % 20 == 0)
-                    {
-                        foreach ($this->m_Forges as $l_Forge)
-                        {
-                            if ($l_Forge instanceof Forge)
-                            {
-                                if ($l_Forge->canPop())
-                                    $l_Forge->pop();
-                            }
-                        }
-                    }
-                })
-                ->start();
         } else
         {
             $p_Player->setGamemode(3);
-            $p_Player->sendMessage(TextFormat::YELLOW . "You've been automatically set to SPECTATOR");
-            $this->getServer()->getLogger()->info($p_Player->getName() . " has been set to SPECTATOR");
+            $p_Player->sendMessage((new TextFormatter("player.autoSwitchToSpec"))->asStringForFatPlayer($l_FatPlayer));
+            $this->getServer()->getLogger()->info($p_Player->getName() . " has been automatically set to SPECTATOR");
         }
 
         Sidebar::getInstance()->update();
@@ -239,6 +216,10 @@ class Bedwars extends PluginBase implements Listener
             ->getData(Bedwars::PLAYER_DATA_CURRENCY_DIAMOND, 0);
     }
 
+
+    //-------------------------------
+    // TEST for SHOP via INVENTORIES
+    //-------------------------------
     public $i = 0;
     public $lastPacket = [];
 
@@ -273,11 +254,30 @@ class Bedwars extends PluginBase implements Listener
         foreach ($this->getServer()->getOnlinePlayers() as $l_Player)
         {
             PlayersManager::getInstance()->getFatPlayer($l_Player)->setPlaying();
+            $l_Player->setGamemode(Player::SURVIVAL);
             $l_Player->addTitle(TextFormat::GREEN . "GO !");
         }
 
         $this->m_PlayTimer = (new BossbarTimer(GameManager::getInstance()->getPlayingTickDuration()))
-            ->setTitle("Fin de la partie dans")
+            ->setTitle(new TextFormatter("bossbar.playing.title"))
+            ->addStartCallback(function() {
+                FatUtils::getInstance()->getLogger()->info("Game end timer starts !");
+                FatUtils::getInstance()->getLogger()->info("Forges are heating up !");
+            })
+            ->addTickCallback(function ()
+            {
+                if ($this->getServer()->getTick() % 20 == 0)
+                {
+                    foreach ($this->m_Forges as $l_Forge)
+                    {
+                        if ($l_Forge instanceof Forge)
+                        {
+                            if ($l_Forge->canPop())
+                                $l_Forge->pop();
+                        }
+                    }
+                }
+            })
             ->addStopCallback(function ()
             {
                 if (PlayersManager::getInstance()->getAlivePlayerLeft() <= 1)
@@ -290,7 +290,7 @@ class Bedwars extends PluginBase implements Listener
                     {
                         $l_Player->addSubTitle(TextFormat::DARK_AQUA . TextFormat::BOLD . "Timer terminé, match à mort dans l'arène !");
                         $l_Player->teleport(WorldUtils::getRandomizedLocation($l_ArenaLoc, 3, 0, 3));
-                        $l_Player->sendTip("Vous êtes invulnérable pendant 5 secondes");
+                        $l_Player->sendTip(TextFormat::YELLOW . "Vous êtes invulnérable pendant 5 secondes" . TextFormat::RESET);
                         $l_Player->addEffect(Effect::getEffect(Effect::DAMAGE_RESISTANCE)->setAmplifier(10)->setDuration(5 * 20));
                     }
                 }
@@ -314,10 +314,13 @@ class Bedwars extends PluginBase implements Listener
                 $winnerName = $winner->getPlayer()->getName();
         }
         foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-            $l_Player->addTitle(TextFormat::DARK_AQUA . TextFormat::BOLD . "Partie terminée", TextFormat::GREEN . TextFormat::BOLD . "le vainqueur est " . $winnerName, 30, 80, 30);
+            $l_Player->addTitle(
+                (new TextFormatter("game.end"))->asStringForPlayer($l_Player),
+                (new TextFormatter("game.winner.single"))->addParam("name", $winnerName)->asStringForPlayer($l_Player),
+                30, 80, 30);
 
         (new BossbarTimer(150))
-            ->setTitle("Retour au lobby")
+            ->setTitle(new TextFormatter("bossbar.returnToLobby"))
             ->addStopCallback(function () {
                 $this->getServer()->shutdown();
             })

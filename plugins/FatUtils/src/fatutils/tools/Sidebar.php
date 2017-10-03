@@ -99,6 +99,12 @@ class Sidebar
         return $this;
     }
 
+    public function addTranslatedLine(TextFormatter $p_TextFormatter): Sidebar
+    {
+        $this->m_LineGetters[] = $p_TextFormatter;
+        return $this;
+    }
+
     public function addMutableLine(Callable $p_GetLine): Sidebar
     {
         $this->m_LineGetters[] = $p_GetLine;
@@ -168,6 +174,11 @@ class Sidebar
             $this->updatePlayerLines($l_Player);
     }
 
+    private function lineSplitter(string $p_line):array
+    {
+        return explode("\n", $p_line);
+    }
+
     private function updatePlayerLines(Player $p_Player)
     {
         $l_Ret = [];
@@ -184,6 +195,9 @@ class Sidebar
                 else if (count($params) == 1)
                     $l_LineGetterRet = $l_LineGetter($p_Player);
 
+                if ($l_LineGetterRet instanceof TextFormatter)
+                    $l_LineGetterRet = $l_LineGetterRet->asStringForPlayer($p_Player);
+
                 switch (gettype($l_LineGetterRet))
                 {
                     case 'array':
@@ -191,13 +205,17 @@ class Sidebar
                             $l_Ret[] = $l_Line;
                         break;
                     case 'string':
-                        foreach (explode("\n", $l_LineGetterRet) as $l_Line)
+                        foreach ($this->lineSplitter($l_LineGetterRet) as $l_Line)
                             $l_Ret[] = $l_Line;
                         break;
                 }
             } else if (gettype($l_LineGetter) === 'string')
             {
-                foreach (explode("\n", $l_LineGetter) as $l_Line)
+                foreach ($this->lineSplitter($l_LineGetter) as $l_Line)
+                    $l_Ret[] = $l_Line;
+            } else if ($l_LineGetter instanceof TextFormatter)
+            {
+                foreach ($this->lineSplitter($l_LineGetter->asStringForPlayer($p_Player)) as $l_Line)
                     $l_Ret[] = $l_Line;
             }
         }
