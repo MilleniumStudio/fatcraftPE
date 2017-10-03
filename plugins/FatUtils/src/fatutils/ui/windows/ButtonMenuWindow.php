@@ -16,7 +16,7 @@ class ButtonMenuWindow extends Window
         $this->data = [
             "type" => "form",
             "title" => "menu title",
-            "content" => "text content",
+            "content" => "text content\ntest second line\ntest 3 lines",
             "buttons" => [
                 [
                     "text" => "text 1",
@@ -57,6 +57,7 @@ class ButtonMenuWindow extends Window
     {
         $data = json_decode($packet->formData, true);
         var_dump($data);
+        // $data is the button id clicked
         return false;
     }
 

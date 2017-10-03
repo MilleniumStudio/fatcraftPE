@@ -7,6 +7,7 @@ namespace fatutils\ui;
 use fatutils\FatUtils;
 use fatutils\ui\windows\ButtonMenuWindow;
 use fatutils\ui\windows\InputMenuWindow;
+use fatutils\ui\windows\ModalMenuWindow;
 use fatutils\ui\windows\Window;
 use pocketmine\Player;
 use pocketmine\network\mcpe\protocol\ModalFormRequestPacket;
@@ -21,11 +22,13 @@ class WindowsManager implements Listener
 
     const WINDOW_BUTTON_MENU = 0;
     const WINDOW_INPUT_MENU = 1;
+    const WINDOW_MODAL_MENU = 2;
 
     /** @var string[] */
     private $types = [
         ButtonMenuWindow::class,
-        InputMenuWindow::class
+        InputMenuWindow::class,
+        ModalMenuWindow::class
     ];
 
     private function __construct()
