@@ -48,6 +48,8 @@ class FatUtils extends PluginBase
                     $sender->sendMessage("  - getPos");
                     break;
                 case "getpos":
+                case "loc":
+                case "location":
                     if ($sender instanceof Player)
                         $sender->sendMessage("CurrentLocation: " . WorldUtils::locationToString($sender->getLocation()));
                     break;

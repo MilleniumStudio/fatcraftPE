@@ -54,20 +54,20 @@ forges:
       - 5
       - 1
 
-#  g1:
-#    location: 0.5/8.5/5.5
-#    itemType: GOLD_INGOT
-#    popDelay:
-#      - 10
-#      - 5
-#      - 1
-#  d1:
-#    location: -1.5/8.5/5.5
-#    itemType: DIAMOND
-#    popDelay:
-#      - 10
-#      - 5
-#      - 1
+  g1:
+    location: 0/8.5/-5
+    itemType: GOLD_INGOT
+    popDelay:
+      - 10
+      - 5
+      - 1
+  d1:
+    location: 3/8.5/-5
+    itemType: DIAMOND
+    popDelay:
+      - 10
+      - 5
+      - 1
 
 teams:
   §1Bleu§r:

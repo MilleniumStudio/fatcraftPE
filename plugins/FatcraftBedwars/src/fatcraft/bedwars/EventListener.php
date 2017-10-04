@@ -25,9 +25,9 @@ use pocketmine\utils\TextFormat;
 class EventListener implements Listener
 {
 
-	public function __construct()
-	{
-	}
+    public function __construct()
+    {
+    }
 
 //	/**
 //	 * @param PlayerDeathEvent $e
@@ -62,16 +62,13 @@ class EventListener implements Listener
     public function onPlayerPickup(InventoryPickupItemEvent $e)
     {
         $l_Viewers = $e->getInventory()->getViewers();
-        var_dump($l_Viewers);
-        if (count($l_Viewers) > 0)
-        {
+//        var_dump($l_Viewers);
+        if (count($l_Viewers) > 0) {
             $p = array_values($l_Viewers)[0];
-            FatUtils::getInstance()->getLogger()->info(gettype($p));
-            if ($p instanceof Player)
-            {
-                FatUtils::getInstance()->getLogger()->info("InventoryPickupItemEvent " . $e->getItem() . " from " . $p->getName() . "> " . $e->getItem()->getItem()->getId());
-                switch ($e->getItem()->getItem()->getId())
-                {
+//            FatUtils::getInstance()->getLogger()->info(gettype($p));
+            if ($p instanceof Player) {
+//                FatUtils::getInstance()->getLogger()->info("InventoryPickupItemEvent " . $e->getItem() . " from " . $p->getName() . "> " . $e->getItem()->getItem()->getId());
+                switch ($e->getItem()->getItem()->getId()) {
                     case ItemIds::IRON_INGOT:
                         Bedwars::getInstance()->modPlayerIron($p, $e->getItem()->getItem()->getCount());
 
@@ -79,7 +76,7 @@ class EventListener implements Listener
                         $e->getItem()->kill();
                         break;
                     case ItemIds::GOLD_INGOT:
-                        FatUtils::getInstance()->getLogger()->info("gold it is");
+//                        FatUtils::getInstance()->getLogger()->info("gold it is");
                         Bedwars::getInstance()->modPlayerGold($p, $e->getItem()->getItem()->getCount());
 
                         $e->setCancelled(true);
@@ -98,35 +95,38 @@ class EventListener implements Listener
         }
     }
 
-	/**
-	 * @param BlockBreakEvent $e
-	 */
-	public function onBlockBreak(BlockBreakEvent $e)
-	{
+    /**
+     * @param BlockBreakEvent $e
+     */
+    public function onBlockBreak(BlockBreakEvent $e)
+    {
 //	    FatUtils::getInstance()->getLogger()->info("BlockBreakEvent ==>");
-	    if ($e->getBlock()->getId() == Bedwars::BLOCK_ID)
-        {
+        if ($e->getBlock()->getId() == Bedwars::BLOCK_ID) {
             $l_PlayerTeam = TeamsManager::getInstance()->getPlayerTeam($e->getPlayer());
 
-            if (isset($l_PlayerTeam) && WorldUtils::getDistanceBetween($e->getBlock(), $l_PlayerTeam->getSpawn()->getLocation()) < 2)
-            {
-                FatUtils::getInstance()->getLogger()->info("destroy of bed cancelled");
-                $e->setCancelled(true);
+            if (isset($l_PlayerTeam) && WorldUtils::getDistanceBetween($e->getBlock(), $l_PlayerTeam->getSpawn()->getLocation()) < 2) {
+                if (Bedwars::DEBUG) {
+                    echo "bed your own bed authorized cause debug is on\n";
+                } else {
+                    FatUtils::getInstance()->getLogger()->info("destroy of bed cancelled");
+                    $e->setCancelled(true);
+                }
             } else {
                 FatUtils::getInstance()->getLogger()->info("Bed destroyed !");
 
-                new DelayedExec(1, function() {
-        	        Sidebar::getInstance()->update();
+                new DelayedExec(1, function () {
+                    Sidebar::getInstance()->update();
                 });
             }
-        } else
-        {
-            //todo debug
-            return;
+        } else {
+            if (Bedwars::DEBUG) {
+                echo "authorized break cause debug is on !\n";
+                return;
+            }
             if (!$e->getBlock()->hasMetadata("isCustom"))
                 $e->setCancelled(true);
         }
-	}
+    }
 
     public function onBlockPlace(BlockPlaceEvent $e)
     {
@@ -156,7 +156,8 @@ class EventListener implements Listener
              * accessed.
              */
             public function invalidate()
-            {}
+            {
+            }
         });
     }
 
@@ -171,13 +172,13 @@ class EventListener implements Listener
 
 
     /**
-	 * @param PlayerJoinEvent $e
-	 */
-	public function onSpawn(PlayerJoinEvent $e)
-	{
-		$p = $e->getPlayer();
-		$p->getInventory()->clearAll();
+     * @param PlayerJoinEvent $e
+     */
+    public function onSpawn(PlayerJoinEvent $e)
+    {
+        $p = $e->getPlayer();
+        $p->getInventory()->clearAll();
 
-		Bedwars::getInstance()->handlePlayerConnection($p);
-	}
+        Bedwars::getInstance()->handlePlayerConnection($p);
+    }
 }

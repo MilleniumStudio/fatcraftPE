@@ -49,6 +49,7 @@ class Bedwars extends PluginBase implements Listener
     const CONFIG_KEY_FORGES_ITEM_TYPE = "itemType";
     const CONFIG_KEY_FORGES_POP_DELAY = "popDelay";
     const CONFIG_KEY_FORGES_POP_AMOUNT = "popAmount";
+    const CONFIG_KEY_FORGES_TEAM = "team";
 
     const PLAYER_DATA_CURRENCY_IRON = "currency.iron";
     const PLAYER_DATA_CURRENCY_GOLD = "currency.gold";
@@ -106,9 +107,13 @@ class Bedwars extends PluginBase implements Listener
                     if (array_key_exists(Bedwars::CONFIG_KEY_FORGES_POP_DELAY, $value)) {
                         $index = 0;
                         foreach ($value[Bedwars::CONFIG_KEY_FORGES_POP_DELAY] as $delay) {
-                            $newForge->setPopDelay($index, $delay);
+                            $newForge->setPopDelay($index, $delay * 20);
+                            $index++;
                         }
-//                        $newForge->setPopDelay($value[Bedwars::CONFIG_KEY_FORGES_POP_DELAY]);
+                    }
+
+                    if (array_key_exists(Bedwars::CONFIG_KEY_FORGES_TEAM, $value)) {
+                        $newForge->setTeam($value[Bedwars::CONFIG_KEY_FORGES_TEAM]);
                     }
 
 
@@ -224,45 +229,36 @@ class Bedwars extends PluginBase implements Listener
             ->getData(Bedwars::PLAYER_DATA_CURRENCY_DIAMOND, 0);
     }
 
-    public function upgradeIronForge(Team $p_team): Forge
+    public function upgradeIronForge(Team $p_team): bool
     {
-        /** @var var Forge $forge */
+        /** @var Forge $forge */
         foreach ($this->m_Forges as $forge) {
-            if ($forge->getTeam() != null && $forge->getTeam() == $p_team) {
-                $forge->upgrade();
-                return $forge;
+            if ($forge->getTeam() != null && $forge->getTeam() == $p_team->getName()) {
+                return $forge->upgrade();
             }
         }
-        return null;
+        return false;
     }
 
-
-    //-------------------------------
-    // TEST for SHOP via INVENTORIES
-    //-------------------------------
-    public $i = 0;
-    public $lastPacket = [];
-
-    /**
-     * @priority LOWEST
-     */
-    public function onPacket(DataPacketReceiveEvent $event)
+    public function upgradeGoldForge()
     {
-        $packet = $event->getPacket();
-        if ($packet instanceof ContainerSetSlotPacket) {
-            echo $this->i++;
-            if (!$packet->item instanceof Air) {
-                echo "#";
-                if ($packet->item->getNamedTagEntry("shop") != "") {
-                    $event->setCancelled(true);
-                    $event->getPlayer()->getInventory()->addItem(ItemFactory::get(Item::GOLD_BLOCK, 0, 10));
-                    $event->getPlayer()->getInventory()->resetHotbar(true);
-                }
+        /** @var Forge $forge */
+        foreach ($this->m_Forges as $forge) {
+            if ($forge->getItemType() == ItemIds::GOLD_INGOT) {
+                $forge->upgrade();
             }
-            echo "\n";
         }
     }
 
+    public function upgradeDiamondForge()
+    {
+        /** @var Forge $forge */
+        foreach ($this->m_Forges as $forge) {
+            if ($forge->getItemType() == ItemIds::DIAMOND) {
+                $forge->upgrade();
+            }
+        }
+    }
 
     //---------------------
     // UTILS
@@ -381,7 +377,11 @@ class Bedwars extends PluginBase implements Listener
                 $l_Player->sendMessage("Il reste " . TextFormat::YELLOW . PlayersManager::getInstance()->getAlivePlayerLeft() . TextFormat::RESET . " survivants !", "*");
         }
 
-        if ($l_PlayerLeft <= 1 && !Bedwars::DEBUG)
+        if(Bedwars::DEBUG && $l_PlayerLeft <= 1)
+        {
+            echo "Should be a end game but cancelled cause debug is on\n";
+        }
+        if ($l_PlayerLeft <= 1)
             Bedwars::getInstance()->endGame();
 
         $e->setDeathMessage("");
@@ -406,11 +406,19 @@ class Bedwars extends PluginBase implements Listener
         switch ($args[0]) {
             case "upgrade": {
                 $team = PlayersManager::getInstance()->getFatPlayer($player)->getTeam();
-                $forge = $this->upgradeIronForge($team);
-                echo "Forge " . $team->getName() . " upgrade to level " . $forge->getLevel()."\n";
-           }break;
+                $this->upgradeIronForge($team);
+                echo "Forge " . $team->getName() . " upgraded\n";
+            }
+                break;
+            case "gold": {
+                $this->upgradeGoldForge();
+            }
+                break;
+            case "diam": {
+                $this->upgradeDiamondForge();
+            }
+                break;
         }
-        $sender->sendMessage("something");
         return true;
     }
 }

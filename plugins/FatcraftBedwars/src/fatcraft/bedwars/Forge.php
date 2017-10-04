@@ -43,6 +43,9 @@ class Forge
     {
         $this->m_ItemType = $m_ItemType;
     }
+    public function getItemType(){
+        return $this->m_ItemType;
+    }
 
     /**
      * @param mixed $m_PopDelay
@@ -57,7 +60,7 @@ class Forge
         $this->m_team = $p_team;
     }
 
-    public function getTeam(): Team
+    public function getTeam(): ?String
     {
         return $this->m_team;
     }
@@ -82,14 +85,20 @@ class Forge
     public function pop()
     {
         if ($this->m_Location instanceof Location) {
-            FatUtils::getInstance()->getLogger()->info("POP of " . $this->m_ItemType . "x" . $this->m_ItemType);
+//            FatUtils::getInstance()->getLogger()->info("POP of " . $this->m_ItemType . "x" . $this->m_ItemType);
             $this->m_Location->getLevel()->dropItem($this->m_Location, Item::get($this->m_ItemType));
             $this->m_LastTickPop = FatUtils::getInstance()->getServer()->getTick();
         }
     }
 
     public function upgrade(){
-        $this->m_level++;
+        if(count($this->m_PopDelay)>$this->m_level) {
+            $this->m_level++;
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     public function getLevel():int{
