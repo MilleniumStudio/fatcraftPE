@@ -65,14 +65,6 @@ abstract class Window
     }
 
     /**
-     * @return TextFormatter|string
-     */
-    public function getTitle()
-    {
-        return $this->m_Title;
-    }
-
-    /**
      * @return Player
      */
     public function getPlayer(): Player
@@ -85,6 +77,9 @@ abstract class Window
         $l_Packet = new ModalFormRequestPacket();
         $l_Packet->formId = $this->getWindowIdFor($this->getWindowId());
         $l_Packet->formData = $this->getAsJson();
+
+        var_dump("OPENNING WINDOW", $l_Packet->formData);
+
         $this->getPlayer()->dataPacket($l_Packet);
 
         WindowsManager::getInstance()->registerPlayerWindow($this->getPlayer(), $this);
