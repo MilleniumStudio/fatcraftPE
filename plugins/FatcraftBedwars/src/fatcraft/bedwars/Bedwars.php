@@ -21,6 +21,8 @@ use fatutils\spawns\SpawnManager;
 use fatutils\tools\MathUtils;
 use fatutils\tools\BossbarTimer;
 use pocketmine\block\BlockIds;
+use pocketmine\command\Command;
+use pocketmine\command\CommandSender;
 use pocketmine\entity\Effect;
 use pocketmine\event\Listener;
 use pocketmine\event\server\DataPacketReceiveEvent;
@@ -76,6 +78,8 @@ class Bedwars extends PluginBase implements Listener
         $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
 
+        $this->getCommand("bw")->setExecutor(self::$m_Instance);
+
         FatUtils::getInstance()->setTemplateConfig($this->getConfig());
         $this->m_BedwarsConfig = new BedwarsConfig($this->getConfig());
         $this->initialize();
@@ -90,20 +94,23 @@ class Bedwars extends PluginBase implements Listener
 
 
         // FORGE CONFIG LOADING
-        if ($this->getConfig()->exists(TeamsManager::CONFIG_KEY_TEAM_ROOT))
-        {
+        if ($this->getConfig()->exists(TeamsManager::CONFIG_KEY_TEAM_ROOT)) {
             FatUtils::getInstance()->getLogger()->info("FORGES loading...");
-            foreach ($this->getConfig()->get(Bedwars::CONFIG_KEY_FORGES_ROOT) as $key => $value)
-            {
-                if (array_key_exists(Bedwars::CONFIG_KEY_FORGES_LOCATION, $value))
-                {
+            foreach ($this->getConfig()->get(Bedwars::CONFIG_KEY_FORGES_ROOT) as $key => $value) {
+                if (array_key_exists(Bedwars::CONFIG_KEY_FORGES_LOCATION, $value)) {
                     $newForge = new Forge(WorldUtils::stringToLocation($value[Bedwars::CONFIG_KEY_FORGES_LOCATION]));
 
                     if (array_key_exists(Bedwars::CONFIG_KEY_FORGES_ITEM_TYPE, $value))
                         $newForge->setItemType(ItemUtils::getItemIdFromName($value[Bedwars::CONFIG_KEY_FORGES_ITEM_TYPE]));
 
-                    if (array_key_exists(Bedwars::CONFIG_KEY_FORGES_POP_DELAY, $value))
-                        $newForge->setPopDelay($value[Bedwars::CONFIG_KEY_FORGES_POP_DELAY]);
+                    if (array_key_exists(Bedwars::CONFIG_KEY_FORGES_POP_DELAY, $value)) {
+                        $index = 0;
+                        foreach ($value[Bedwars::CONFIG_KEY_FORGES_POP_DELAY] as $delay) {
+                            $newForge->setPopDelay($index, $delay);
+                        }
+//                        $newForge->setPopDelay($value[Bedwars::CONFIG_KEY_FORGES_POP_DELAY]);
+                    }
+
 
                     if (array_key_exists(Bedwars::CONFIG_KEY_FORGES_POP_AMOUNT, $value))
                         $newForge->setPopAmount($value[Bedwars::CONFIG_KEY_FORGES_POP_AMOUNT]);
@@ -119,20 +126,16 @@ class Bedwars extends PluginBase implements Listener
             ->addTranslatedLine(new TextFormatter("bedwars.sidebar.title"))
             ->addWhiteSpace()
             ->addTranslatedLine(new TextFormatter("bedwars.sidebar.teams.title"))
-            ->addMutableLine(function ()
-            {
+            ->addMutableLine(function () {
                 $l_Ret = [];
 
-                foreach (TeamsManager::getInstance()->getTeams() as $l_Team)
-                {
-                    if ($l_Team instanceof Team)
-                    {
+                foreach (TeamsManager::getInstance()->getTeams() as $l_Team) {
+                    if ($l_Team instanceof Team) {
                         $l_State = "";
                         $bedLocation = $this->getBedwarsConfig()->getBedLocation($l_Team);
-                        if(Server::getInstance()->getDefaultLevel()->getBlockIdAt($bedLocation->getFloorX(), $bedLocation->getFloorY(), $bedLocation->getFloorZ()) == self::BLOCK_ID)
+                        if (Server::getInstance()->getDefaultLevel()->getBlockIdAt($bedLocation->getFloorX(), $bedLocation->getFloorY(), $bedLocation->getFloorZ()) == self::BLOCK_ID)
                             $l_State = TextFormat::GREEN . "OK";
-                        else
-                        {
+                        else {
                             $l_AliveTeamPlayer = $l_Team->getAlivePlayerLeft();
                             if ($l_AliveTeamPlayer > 0)
                                 $l_State = TextFormat::AQUA . $l_AliveTeamPlayer;
@@ -148,8 +151,7 @@ class Bedwars extends PluginBase implements Listener
             })
             ->addWhiteSpace()
             ->addTranslatedLine(new TextFormatter("bedwars.sidebar.currencies.title"))
-            ->addMutableLine(function (Player $p_Player)
-            {
+            ->addMutableLine(function (Player $p_Player) {
                 return [
                     new TextFormatter("bedwars.sidebar.currency.iron", ["amount" => $this->getPlayerIron($p_Player)]),
                     new TextFormatter("bedwars.sidebar.currency.gold", ["amount" => $this->getPlayerGold($p_Player)]),
@@ -163,17 +165,14 @@ class Bedwars extends PluginBase implements Listener
         $l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Player);
 
         $l_Team = TeamsManager::getInstance()->addInBestTeam($p_Player);
-        if (GameManager::getInstance()->isWaiting() && !is_null($l_Team) && !is_null($l_Team->getSpawn()))
-        {
+        if (GameManager::getInstance()->isWaiting() && !is_null($l_Team) && !is_null($l_Team->getSpawn())) {
             $l_Team->getSpawn()->teleport($p_Player, 3);
             $p_Player->setGamemode(Player::ADVENTURE);
 
-            new DelayedExec(5, function() use ($p_Player, $l_Team)
-            {
+            new DelayedExec(5, function () use ($p_Player, $l_Team) {
                 $p_Player->addSubTitle((new TextFormatter("player.team.join", ["teamName", $l_Team->getName()]))->asStringForPlayer($p_Player));
             });
-        } else
-        {
+        } else {
             $p_Player->setGamemode(3);
             $p_Player->sendMessage((new TextFormatter("player.autoSwitchToSpec"))->asStringForFatPlayer($l_FatPlayer));
             $this->getServer()->getLogger()->info($p_Player->getName() . " has been automatically set to SPECTATOR");
@@ -181,7 +180,7 @@ class Bedwars extends PluginBase implements Listener
 
         Sidebar::getInstance()->update();
 
-        if(count($this->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMinPlayer()){
+        if (count($this->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMinPlayer()) {
             $this->startGame();
         }
     }
@@ -225,6 +224,18 @@ class Bedwars extends PluginBase implements Listener
             ->getData(Bedwars::PLAYER_DATA_CURRENCY_DIAMOND, 0);
     }
 
+    public function upgradeIronForge(Team $p_team): Forge
+    {
+        /** @var var Forge $forge */
+        foreach ($this->m_Forges as $forge) {
+            if ($forge->getTeam() != null && $forge->getTeam() == $p_team) {
+                $forge->upgrade();
+                return $forge;
+            }
+        }
+        return null;
+    }
+
 
     //-------------------------------
     // TEST for SHOP via INVENTORIES
@@ -244,7 +255,7 @@ class Bedwars extends PluginBase implements Listener
                 echo "#";
                 if ($packet->item->getNamedTagEntry("shop") != "") {
                     $event->setCancelled(true);
-                    $event->getPlayer()->getInventory()->addItem(ItemFactory::get(Item::GOLD_BLOCK,0, 10));
+                    $event->getPlayer()->getInventory()->addItem(ItemFactory::get(Item::GOLD_BLOCK, 0, 10));
                     $event->getPlayer()->getInventory()->resetHotbar(true);
                 }
             }
@@ -260,8 +271,7 @@ class Bedwars extends PluginBase implements Listener
     {
         LoadBalancer::getInstance()->setServerState(LoadBalancer::SERVER_STATE_CLOSED);
 
-        foreach ($this->getServer()->getOnlinePlayers() as $l_Player)
-        {
+        foreach ($this->getServer()->getOnlinePlayers() as $l_Player) {
             PlayersManager::getInstance()->getFatPlayer($l_Player)->setPlaying();
             $l_Player->setGamemode(Player::SURVIVAL);
             $l_Player->addTitle(TextFormat::GREEN . "GO !");
@@ -269,34 +279,27 @@ class Bedwars extends PluginBase implements Listener
 
         $this->m_PlayTimer = (new BossbarTimer(GameManager::getInstance()->getPlayingTickDuration()))
             ->setTitle(new TextFormatter("bossbar.playing.title"))
-            ->addStartCallback(function() {
+            ->addStartCallback(function () {
                 FatUtils::getInstance()->getLogger()->info("Game end timer starts !");
                 FatUtils::getInstance()->getLogger()->info("Forges are heating up !");
             })
-            ->addTickCallback(function ()
-            {
-                if ($this->getServer()->getTick() % 20 == 0)
-                {
-                    foreach ($this->m_Forges as $l_Forge)
-                    {
-                        if ($l_Forge instanceof Forge)
-                        {
+            ->addTickCallback(function () {
+                if ($this->getServer()->getTick() % 20 == 0) {
+                    foreach ($this->m_Forges as $l_Forge) {
+                        if ($l_Forge instanceof Forge) {
                             if ($l_Forge->canPop())
                                 $l_Forge->pop();
                         }
                     }
                 }
             })
-            ->addStopCallback(function ()
-            {
+            ->addStopCallback(function () {
                 if (PlayersManager::getInstance()->getAlivePlayerLeft() <= 1)
                     $this->endGame();
-                else
-                {
+                else {
                     $l_ArenaLoc = Location::fromObject($this->getBedwarsConfig()->getDeathArenaLoc());
 
-                    foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-                    {
+                    foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player) {
                         $l_Player->addSubTitle(TextFormat::DARK_AQUA . TextFormat::BOLD . "Timer terminé, match à mort dans l'arène !");
                         $l_Player->teleport(WorldUtils::getRandomizedLocation($l_ArenaLoc, 3, 0, 3));
                         $l_Player->sendTip(TextFormat::YELLOW . "Vous êtes invulnérable pendant 5 secondes" . TextFormat::RESET);
@@ -361,7 +364,7 @@ class Bedwars extends PluginBase implements Listener
         $team = PlayersManager::getInstance()->getFatPlayer($p)->getTeam();
 
         $bedLoc = $this->getBedwarsConfig()->getBedLocation($team);
-        if($bedLoc->getLevel()->getBlockIdAt($bedLoc->getFloorX(), $bedLoc->getFloorY(), $bedLoc->getFloorZ()) == self::BLOCK_ID){
+        if ($bedLoc->getLevel()->getBlockIdAt($bedLoc->getFloorX(), $bedLoc->getFloorY(), $bedLoc->getFloorZ()) == self::BLOCK_ID) {
             //bed is still here
             return;
         }
@@ -372,8 +375,7 @@ class Bedwars extends PluginBase implements Listener
         $l_PlayerLeft = PlayersManager::getInstance()->getAlivePlayerLeft();
 
 
-        foreach (Bedwars::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-        {
+        foreach (Bedwars::getInstance()->getServer()->getOnlinePlayers() as $l_Player) {
             $l_Player->sendMessage($e->getDeathMessage());
             if ($l_PlayerLeft > 1)
                 $l_Player->sendMessage("Il reste " . TextFormat::YELLOW . PlayersManager::getInstance()->getAlivePlayerLeft() . TextFormat::RESET . " survivants !", "*");
@@ -386,5 +388,29 @@ class Bedwars extends PluginBase implements Listener
         $p->setGamemode(3);
 
         Sidebar::getInstance()->update();
+    }
+
+
+    public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args): bool
+    {
+        if (!$sender->isOp()) {
+            $sender->sendMessage("you need to be op");
+            return false;
+        }
+        $player = null;
+        if ($sender instanceof Player) {
+            $player = $sender;
+        } else {
+            echo "sender is not a player\n";
+        }
+        switch ($args[0]) {
+            case "upgrade": {
+                $team = PlayersManager::getInstance()->getFatPlayer($player)->getTeam();
+                $forge = $this->upgradeIronForge($team);
+                echo "Forge " . $team->getName() . " upgrade to level " . $forge->getLevel()."\n";
+           }break;
+        }
+        $sender->sendMessage("something");
+        return true;
     }
 }

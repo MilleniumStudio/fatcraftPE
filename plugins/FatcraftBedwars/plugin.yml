@@ -5,3 +5,6 @@ description: "Bedwars"
 depend: [FatUtils]
 api: [3.0.0-ALPHA8]
 load: POSTWORLD
+commands:
+ bw:
+  description: bedwars commands
