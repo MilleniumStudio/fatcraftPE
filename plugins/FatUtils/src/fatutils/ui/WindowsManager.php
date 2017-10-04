@@ -1,13 +1,18 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace fatutils\ui;
 
 use fatutils\FatUtils;
-use fatutils\ui\windows\ButtonMenuWindow;
-use fatutils\ui\windows\InputMenuWindow;
-use fatutils\ui\windows\ModalMenuWindow;
+use fatutils\ui\windows\ButtonWindow;
+use fatutils\ui\windows\FormWindow;
+use fatutils\ui\windows\parts\Dropdown;
+use fatutils\ui\windows\parts\Input;
+use fatutils\ui\windows\parts\Label;
+use fatutils\ui\windows\parts\Slider;
+use fatutils\ui\windows\parts\StepSlider;
+use fatutils\ui\windows\parts\Toggle;
 use fatutils\ui\windows\Window;
 use pocketmine\Player;
 use pocketmine\network\mcpe\protocol\ModalFormRequestPacket;
@@ -17,19 +22,9 @@ use pocketmine\network\mcpe\protocol\ModalFormResponsePacket;
 
 class WindowsManager implements Listener
 {
+    private $m_WindowRegistry = [];
 
     private static $m_Instance;
-
-    const WINDOW_BUTTON_MENU = 0;
-    const WINDOW_INPUT_MENU = 1;
-    const WINDOW_MODAL_MENU = 2;
-
-    /** @var string[] */
-    private $types = [
-        ButtonMenuWindow::class,
-        InputMenuWindow::class,
-        ModalMenuWindow::class
-    ];
 
     private function __construct()
     {
@@ -37,77 +32,17 @@ class WindowsManager implements Listener
         FatUtils::getInstance()->getServer()->getPluginManager()->registerEvents($this, FatUtils::getInstance());
     }
 
-    public static function getInstance() : WindowsManager
+    public static function getInstance(): WindowsManager
     {
-        if (WindowsManager::$m_Instance == NULL)
-        {
+        if (is_null(WindowsManager::$m_Instance))
             WindowsManager::$m_Instance = new WindowsManager();
-        }
+
         return WindowsManager::$m_Instance;
     }
 
-    /**
-     * @param int    $windowId
-     * @param Loader $loader
-     * @param Player $player
-     *
-     * @return string
-     */
-    public function getWindowJson(int $windowId, FatUtils $loader, Player $player): string
+    public function registerPlayerWindow(Player $p_Player, Window $p_Window)
     {
-        return $this->getWindow($windowId, $loader, $player)->getJson();
-    }
-
-    /**
-     * @param int    $windowId
-     * @param Loader $loader
-     * @param Player $player
-     *
-     * @return Window
-     */
-    public function getWindow(int $windowId, FatUtils $loader, Player $player): Window
-    {
-        if (!isset($this->types[$windowId]))
-        {
-            throw new \OutOfBoundsException("Tried to get window of non-existing window ID.");
-        }
-        return new $this->types[$windowId]($loader, $player);
-    }
-
-    /**
-     * @param int $windowId
-     *
-     * @return bool
-     */
-    public function isInRange(int $windowId): bool
-    {
-        if (isset($this->types[$windowId]) || isset($this->types[$windowId + 3200]))
-        {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * @param int $windowId
-     *
-     * @return int
-     */
-    public function getWindowIdFor(int $windowId): int
-    {
-        if ($windowId >= 3200)
-        {
-            return $windowId - 3200;
-        }
-        return 3200 + $windowId;
-    }
-
-    public function sendMenu($p_Player, $p_MenuId)
-    {
-        $l_Packet = new ModalFormRequestPacket();
-        $l_Packet->formId = $this->getWindowIdFor($p_MenuId);
-        $l_Packet->formData = $this->getWindowJson($p_MenuId, FatUtils::getInstance(), $p_Player);
-        $p_Player->dataPacket($l_Packet);
+        $this->m_WindowRegistry[$p_Player->getUniqueId()->toBinary()] = $p_Window;
     }
 
     public function onDataPacket(DataPacketReceiveEvent $event): void
@@ -115,17 +50,21 @@ class WindowsManager implements Listener
         $packet = $event->getPacket();
         if ($packet instanceof ModalFormResponsePacket)
         {
-            if (json_decode($packet->formData, true) === null)
+            $l_PlayerIndex = $event->getPlayer()->getUniqueId()->toBinary();
+            if (isset($this->m_WindowRegistry[$l_PlayerIndex]))
             {
-                return;
+                $l_JsonAsArray = json_decode($packet->formData, true);
+                if (is_null($l_JsonAsArray))
+                    return;
+
+                $l_PlayerWindow = $this->m_WindowRegistry[$l_PlayerIndex];
+                if ($l_PlayerWindow instanceof Window)
+                {
+                    var_dump($l_JsonAsArray, "==========");
+                    if (!$l_PlayerWindow->handleResponse($l_JsonAsArray))
+                        $l_PlayerWindow->open();
+                }
             }
-            $packet->formId = $this->getWindowIdFor($packet->formId);
-            if (!$this->isInRange($packet->formId))
-            {
-                return;
-            }
-            $window = $this->getWindow($packet->formId, FatUtils::getInstance(), $event->getPlayer());
-            $window->handle($packet);
         }
     }
 

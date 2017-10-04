@@ -1,0 +1,52 @@
+<?php
+
+declare(strict_types = 1);
+
+namespace fatutils\ui\windows\parts;
+
+//[
+//    "type" => "slider",
+//    "text" => "Slider",
+//    "min" => 0,
+//    "max" => 10,
+//    "step" => 1,
+//    "default" => 4
+//],
+
+class Slider extends UiPart implements FormWindowCompatible
+{
+    public function __construct()
+    {
+        $this->getData()["type"] = "slider";
+    }
+
+    public function setText(string $p_Text):Slider
+    {
+        $this->getData()["text"] = $p_Text;
+        return $this;
+    }
+
+    public function setMin(int $p_Min):Slider
+    {
+        $this->getData()["min"] = $p_Min;
+        return $this;
+    }
+
+    public function setMax(int $p_Max):Slider
+    {
+        $this->getData()["max"] = $p_Max;
+        return $this;
+    }
+
+    public function setStep(int $p_Step):Slider
+    {
+        $this->getData()["step"] = $p_Step;
+        return $this;
+    }
+
+    public function setDefault(int $p_Default):Slider
+    {
+        $this->getData()["default"] = $p_Default;
+        return $this;
+    }
+}

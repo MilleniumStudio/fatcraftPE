@@ -4,45 +4,72 @@ declare(strict_types = 1);
 
 namespace fatutils\ui\windows;
 
-use fatutils\FatUtils;
+use fatutils\tools\TextFormatter;
+use fatutils\ui\windows\parts\UiPart;
 use fatutils\ui\WindowsManager;
 use pocketmine\network\mcpe\protocol\ModalFormRequestPacket;
-use pocketmine\network\mcpe\protocol\ModalFormResponsePacket;
 use pocketmine\Player;
 
 abstract class Window
 {
-
-    /** @var Loader */
-    protected $m_Plugin = null;
-
     /** @var Player */
-    protected $player = null;
+    private $m_Player = null;
 
     /** @var array */
-    protected $data = [];
+    protected $m_Data = [];
+    protected $m_Parts = [];
 
-    public function __construct(FatUtils $p_Plugin, Player $player)
+    public function __construct(Player $player)
     {
-        $this->m_Plugin = $p_Plugin;
-        $this->player = $player;
-        $this->process();
+        $this->m_Player = $player;
+    }
+
+    protected function setType(string $p_Type)
+    {
+        $this->getData()["type"] = $p_Type;
+    }
+
+    public function setTitle(string $p_Title): Window
+    {
+        $this->getData()["title"] = $p_Title;
+        return $this;
+    }
+
+    protected function _addPart(UiPart $p_Part)
+    {
+        $this->m_Parts[] = $p_Part;
+    }
+
+    /**
+     * @return array
+     */
+    public function getParts(): array
+    {
+        return $this->m_Parts;
     }
 
     /**
      * @return string
      */
-    public function getJson(): string
+    public function getAsJson(): string
     {
-        return json_encode($this->data);
+        return json_encode($this->m_Data);
     }
 
     /**
-     * @return Plugin
+     * @return array
      */
-    public function getPlugin(): FatUtils
+    public function getData(): array
     {
-        return $this->m_Plugin;
+        return $this->m_Data;
+    }
+
+    /**
+     * @return TextFormatter|string
+     */
+    public function getTitle()
+    {
+        return $this->m_Title;
     }
 
     /**
@@ -50,23 +77,35 @@ abstract class Window
      */
     public function getPlayer(): Player
     {
-        return $this->player;
+        return $this->m_Player;
+    }
+
+    public function open()
+    {
+        $l_Packet = new ModalFormRequestPacket();
+        $l_Packet->formId = $this->getWindowIdFor($this->getWindowId());
+        $l_Packet->formData = $this->getAsJson();
+        $this->getPlayer()->dataPacket($l_Packet);
+
+        WindowsManager::getInstance()->registerPlayerWindow($this->getPlayer(), $this);
     }
 
     /**
-     * @param int           $menu
-     * @param Player        $player
-     * @param WindowHandler $windowHandler
+     * Don't ask i don't know...
+     *
+     * @param int $windowId
+     * @return int
      */
-    public function navigate(int $menu, Player $player, WindowsManager $windowHandler): void
+    private function getWindowIdFor(int $windowId): int
     {
-        $packet = new ModalFormRequestPacket();
-        $packet->formId = $windowHandler->getWindowIdFor($menu);
-        $packet->formData = $windowHandler->getWindowJson($menu, $this->m_Plugin, $player);
-        $player->dataPacket($packet);
+        if ($windowId >= 3200)
+        {
+            return $windowId - 3200;
+        }
+        return 3200 + $windowId;
     }
 
-    protected abstract function process(): void;
+    protected abstract function getWindowId(): int;
 
-    public abstract function handle(ModalFormResponsePacket $packet): bool;
+    public abstract function handleResponse(array $packet): bool;
 }

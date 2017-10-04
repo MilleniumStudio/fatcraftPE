@@ -3,22 +3,16 @@
 namespace fatutils;
 
 use fatutils\loot\ChestsManager;
-use fatutils\tools\TextFormatter;
 use fatutils\tools\WorldUtils;
-use hungergames\HungerGame;
+use fatutils\ui\windows\ButtonWindow;
+use fatutils\ui\windows\FormWindow;
+use fatutils\ui\windows\ModalWindow;
 use hungergames\LootTable;
-use fatutils\tools\Sidebar;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use pocketmine\item\enchantment\Enchantment;
-use pocketmine\item\ItemFactory;
-use pocketmine\item\ItemIds;
-use pocketmine\level\sound\GenericSound;
-use pocketmine\network\mcpe\protocol\LevelEventPacket;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
-use pocketmine\utils\TextFormat;
 
 class FatUtils extends PluginBase
 {
@@ -39,14 +33,6 @@ class FatUtils extends PluginBase
     {
         $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
         WorldUtils::stopWorldsTime();
-
-//        echo (new TextFormatter("player.earn"))
-//                ->addParam("name", "MACHIN")
-//                ->addParam("quantity", 5)
-//                ->addParam("moneyName", new TextFormatter("money.gold.name", [
-//                    "version" => "v0.1"
-//                ]))
-//                ->asString() . "\n";
     }
 
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool
@@ -73,6 +59,18 @@ class FatUtils extends PluginBase
                         $sender->addTitle("TITLE");
                         $sender->addSubTitle("SUBTITLE");
                     }
+                    break;
+                case "test1":
+                    if ($sender instanceof Player)
+                        ButtonWindow::openTestWindow($sender);
+                    break;
+                case "test2":
+                    if ($sender instanceof Player)
+                        FormWindow::openTestWindow($sender);
+                    break;
+                case "test3":
+                    if ($sender instanceof Player)
+                        ModalWindow::openTestWindow($sender);
                     break;
                 case "fillchests":
                     ChestsManager::getInstance()->fillChests();
