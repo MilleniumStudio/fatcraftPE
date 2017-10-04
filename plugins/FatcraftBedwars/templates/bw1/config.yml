@@ -98,71 +98,75 @@ beds:
   §aVert§r: 3/9/-3
   §eJaune§r: -3/9/-3
 
-loots:
-  level-1:
-    item-value: 1
-    chance: 38
-    items:
-      - '{"material": "WOODEN_SWORD"}'
-
-      - '{"material": "ARROW", "amount": 7}'
-
-      - '{"material": "LEATHER_HELMET"}'
-      - '{"material": "LEATHER_CHESTPLATE"}'
-      - '{"material": "LEATHER_LEGGINGS"}'
-      - '{"material": "LEATHER_BOOTS"}'
-
-      - '{"material": "PORKCHOP", "amount": 3}'
-  level-2:
-    item-value: 3
-    chance: 35
-    items:
-      - '{"material": "STONE_AXE"}'
-      - '{"material": "BOW"}'
-
-      - '{"material": "GOLD_HELMET"}'
-      - '{"material": "GOLD_CHESTPLATE"}'
-      - '{"material": "GOLD_LEGGINGS"}'
-      - '{"material": "GOLD_BOOTS"}'
-
-      - '{"material": "MUSHROOM_STEW"}'
-      - '{"material": "COOKED_PORKCHOP", "amount": 3}'
-      - '{"material": "APPLE", "amount": 3}'
-      - '{"material": "RAW_BEEF", "amount": 4}'
-      - '{"material": "COOKED_BEEF", "amount": 2}'
-      - '{"material": "RAW_CHICKEN", "amount": 4}'
-      - '{"material": "COOKED_CHICKEN", "amount": 2}'
-  level-3:
-    item-value: 5
-    chance: 15
-    items:
-      - '{"material": "GOLD_SWORD"}'
-
-      - '{"material": "IRON_HELMET"}'
-      - '{"material": "IRON_CHESTPLATE"}'
-      - '{"material": "IRON_LEGGINGS"}'
-      - '{"material": "IRON_BOOTS"}'
-      - '{"material": "CHAINMAIL_HELMET"}'
-      - '{"material": "CHAINMAIL_CHESTPLATE"}'
-      - '{"material": "CHAINMAIL_BOOTS"}'
-
-      - '{"material": "MELON_BLOCK", "amount": 4}'
-      - '{"material": "GOLDEN_APPLE", "amount": 2}'
-
-      - '{"material": "FLINT_AND_STEEL"}'
-  level-4:
-    item-value: 7
-    chance: 10
-    items:
-      - '{"material": "IRON_SWORD"}'
-      - '{"material": "IRON_AXE"}'
-  level-5:
-    item-value: 15
-    chance: 2
-    items:
-      - '{"material": "DIAMOND_SWORD"}'
-
-      - '{"material": "DIAMOND_HELMET"}'
-      - '{"material": "DIAMOND_CHESTPLATE"}'
-      - '{"material": "DIAMOND_LEGGINGS"}'
-      - '{"material": "DIAMOND_BOOTS"}'
+shop:
+  blocks:
+    wool:
+      rawItem: '{"material": "WOOL", "amount": 4}'
+      ironPrice: 4
+    endStone:
+      rawItem: '{"material": "END_STONE", "amount": 4}'
+      ironPrice: 3
+    wood:
+      rawItem: '{"material": "WOOD", "amount": 6}'
+      goldPrice: 3
+    obsidian:
+      rawItem: '{"material": "OBSIDIAN", "amount": 2}'
+      goldPrice: 10
+  weapons:
+    stoneSword:
+      rawItem: '{"material": "STONE_SWORD"}'
+      ironPrice: 1
+    ironSword:
+      rawItem: '{"material": "IRON_SWORD"}'
+      ironPrice: 1
+    diamondSword:
+      rawItem: '{"material": "DIAMOND_SWORD"}'
+      ironPrice: 1
+  armors:
+    leatherSet:
+      helmet: '{"material": "LEATHER_HELMET"}'
+      chestplate: '{"material": "LEATHER_CHESPLATE"}'
+      leggings: '{"material": "LEATHER_LEGGINGS"}'
+      boots: '{"material": "LEATHER_BOOTS"}'
+      ironPrice: 1
+    chainmailSet:
+      helmet: '{"material": "CHAINMAIL_HELMET"}'
+      chestplate: '{"material": "CHAINMAIL_CHESPLATE"}'
+      leggings: '{"material": "CHAINMAIL_LEGGINGS"}'
+      boots: '{"material": "CHAINMAIL_BOOTS"}'
+      ironPrice: 1
+    ironSet:
+      helmet: '{"material": "IRON_HELMET"}'
+      chestplate: '{"material": "IRON_CHESPLATE"}'
+      leggings: '{"material": "IRON_LEGGINGS"}'
+      boots: '{"material": "IRON_BOOTS"}'
+      ironPrice: 1
+    diamondSet:
+      helmet: '{"material": "DIAMOND_HELMET"}'
+      chestplate: '{"material": "DIAMOND_CHESPLATE"}'
+      leggings: '{"material": "DIAMOND_LEGGINGS"}'
+      boots: '{"material": "DIAMOND_BOOTS"}'
+      ironPrice: 1
+  tools:
+    stonePickaxe:
+      rawItem: '{"material": "STONE_PICKAXE"}'
+      ironPrice: 1
+    ironPickaxe:
+      rawItem: '{"material": "IRON_PICKAXE"}'
+      ironPrice: 1
+    diamondPickaxe:
+      rawItem: '{"material": "DIAMOND_PICKAXE"}'
+      ironPrice: 1
+    ironAxe:
+      rawItem: '{"material": "IRON_AXE"}'
+      ironPrice: 1
+  others:
+    snowBalls:
+      rawItem: '{"material": "SNOWBALL", "amount": 5}'
+      ironPrice: 1
+    ladders:
+      rawItem: '{"material": "LADDER", "amount": 3}'
+      ironPrice: 1
+    spiderWebs:
+      rawItem: '{"material": "COBWEB", "amount": 1}'
+      ironPrice: 1
