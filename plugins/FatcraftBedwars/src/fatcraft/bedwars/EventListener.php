@@ -2,6 +2,7 @@
 
 namespace fatcraft\bedwars;
 
+use fatcraft\bedwars\Bedwars;
 use fatutils\FatUtils;
 use fatutils\players\PlayersManager;
 use fatutils\teams\TeamsManager;
@@ -28,33 +29,35 @@ class EventListener implements Listener
 	{
 	}
 
-	/**
-	 * @param PlayerDeathEvent $e
-	 */
-	public function playerDeathEvent(PlayerDeathEvent $e)
-	{
-		$p = $e->getEntity();
-		PlayersManager::getInstance()->getFatPlayer($p)->setHasLost(true);
-
-        WorldUtils::addStrike($p->getLocation());
-        $l_PlayerLeft = PlayersManager::getInstance()->getAlivePlayerLeft();
-
-
-        foreach (Bedwars::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-        {
-            $l_Player->sendMessage($e->getDeathMessage());
-            if ($l_PlayerLeft > 1)
-                $l_Player->sendMessage("Il reste " . TextFormat::YELLOW . PlayersManager::getInstance()->getAlivePlayerLeft() . TextFormat::RESET . " survivants !", "*");
-        }
-
-        if ($l_PlayerLeft <= 1)
-            Bedwars::getInstance()->endGame();
-
-        $e->setDeathMessage("");
-		$p->setGamemode(3);
-
-        Sidebar::getInstance()->update();
-	}
+//	/**
+//	 * @param PlayerDeathEvent $e
+//	 */
+//	public function playerDeathEvent(PlayerDeathEvent $e)
+//	{
+//		$p = $e->getEntity();
+//
+//
+//		PlayersManager::getInstance()->getFatPlayer($p)->setHasLost(true);
+//
+//        WorldUtils::addStrike($p->getLocation());
+//        $l_PlayerLeft = PlayersManager::getInstance()->getAlivePlayerLeft();
+//
+//
+//        foreach (Bedwars::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+//        {
+//            $l_Player->sendMessage($e->getDeathMessage());
+//            if ($l_PlayerLeft > 1)
+//                $l_Player->sendMessage("Il reste " . TextFormat::YELLOW . PlayersManager::getInstance()->getAlivePlayerLeft() . TextFormat::RESET . " survivants !", "*");
+//        }
+//
+//        if ($l_PlayerLeft <= 1 && !Bedwars::DEBUG)
+//            Bedwars::getInstance()->endGame();
+//
+//        $e->setDeathMessage("");
+//		$p->setGamemode(3);
+//
+//        Sidebar::getInstance()->update();
+//	}
 
     public function onPlayerPickup(InventoryPickupItemEvent $e)
     {
@@ -100,14 +103,14 @@ class EventListener implements Listener
 	 */
 	public function onBlockBreak(BlockBreakEvent $e)
 	{
-	    FatUtils::getInstance()->getLogger()->info("BlockBreakEvent ==>");
-	    if ($e->getBlock()->getId() == BlockIds::BED_BLOCK)
+//	    FatUtils::getInstance()->getLogger()->info("BlockBreakEvent ==>");
+	    if ($e->getBlock()->getId() == Bedwars::BLOCK_ID)
         {
             $l_PlayerTeam = TeamsManager::getInstance()->getPlayerTeam($e->getPlayer());
 
             if (isset($l_PlayerTeam) && WorldUtils::getDistanceBetween($e->getBlock(), $l_PlayerTeam->getSpawn()->getLocation()) < 2)
             {
-                FatUtils::getInstance()->getLogger()->info("destroy of be cancelled");
+                FatUtils::getInstance()->getLogger()->info("destroy of bed cancelled");
                 $e->setCancelled(true);
             } else {
                 FatUtils::getInstance()->getLogger()->info("Bed destroyed !");
@@ -118,6 +121,8 @@ class EventListener implements Listener
             }
         } else
         {
+            //todo debug
+            return;
             if (!$e->getBlock()->hasMetadata("isCustom"))
                 $e->setCancelled(true);
         }

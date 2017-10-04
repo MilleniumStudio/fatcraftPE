@@ -37,9 +37,11 @@ use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
+use pocketmine\event\player\PlayerDeathEvent;
 
 class Bedwars extends PluginBase implements Listener
 {
+    const DEBUG = true;
     const CONFIG_KEY_FORGES_ROOT = "forges";
     const CONFIG_KEY_FORGES_LOCATION = "location";
     const CONFIG_KEY_FORGES_ITEM_TYPE = "itemType";
@@ -49,6 +51,8 @@ class Bedwars extends PluginBase implements Listener
     const PLAYER_DATA_CURRENCY_IRON = "currency.iron";
     const PLAYER_DATA_CURRENCY_GOLD = "currency.gold";
     const PLAYER_DATA_CURRENCY_DIAMOND = "currency.diamond";
+
+    const BLOCK_ID = BlockIds::BEACON;
 
     private $m_BedwarsConfig;
     private static $m_Instance;
@@ -79,7 +83,7 @@ class Bedwars extends PluginBase implements Listener
 
     private function initialize()
     {
-//        SpawnManager::getInstance()->blockSpawns();
+        //        SpawnManager::getInstance()->blockSpawns();
         LoadBalancer::getInstance()->setServerState(LoadBalancer::SERVER_STATE_OPEN);
         PlayersManager::getInstance()->displayHealth();
         WorldUtils::stopWorldsTime();
@@ -124,7 +128,8 @@ class Bedwars extends PluginBase implements Listener
                     if ($l_Team instanceof Team)
                     {
                         $l_State = "";
-                        if ($l_Team->getSpawn()->isActive())
+                        $bedLocation = $this->getBedwarsConfig()->getBedLocation($l_Team);
+                        if(Server::getInstance()->getDefaultLevel()->getBlockIdAt($bedLocation->getFloorX(), $bedLocation->getFloorY(), $bedLocation->getFloorZ()) == self::BLOCK_ID)
                             $l_State = TextFormat::GREEN . "OK";
                         else
                         {
@@ -175,6 +180,10 @@ class Bedwars extends PluginBase implements Listener
         }
 
         Sidebar::getInstance()->update();
+
+        if(count($this->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMinPlayer()){
+            $this->startGame();
+        }
     }
 
     //---------------------
@@ -338,5 +347,44 @@ class Bedwars extends PluginBase implements Listener
     public function getBedwarsConfig(): BedwarsConfig
     {
         return $this->m_BedwarsConfig;
+    }
+
+    //---------------------
+    // Event
+    //---------------------
+    /**
+     * @param PlayerDeathEvent $e
+     */
+    public function playerDeathEvent(PlayerDeathEvent $e)
+    {
+        $p = $e->getEntity();
+        $team = PlayersManager::getInstance()->getFatPlayer($p)->getTeam();
+
+        $bedLoc = $this->getBedwarsConfig()->getBedLocation($team);
+        if($bedLoc->getLevel()->getBlockIdAt($bedLoc->getFloorX(), $bedLoc->getFloorY(), $bedLoc->getFloorZ()) == self::BLOCK_ID){
+            //bed is still here
+            return;
+        }
+
+        PlayersManager::getInstance()->getFatPlayer($p)->setHasLost(true);
+
+        WorldUtils::addStrike($p->getLocation());
+        $l_PlayerLeft = PlayersManager::getInstance()->getAlivePlayerLeft();
+
+
+        foreach (Bedwars::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+        {
+            $l_Player->sendMessage($e->getDeathMessage());
+            if ($l_PlayerLeft > 1)
+                $l_Player->sendMessage("Il reste " . TextFormat::YELLOW . PlayersManager::getInstance()->getAlivePlayerLeft() . TextFormat::RESET . " survivants !", "*");
+        }
+
+        if ($l_PlayerLeft <= 1 && !Bedwars::DEBUG)
+            Bedwars::getInstance()->endGame();
+
+        $e->setDeathMessage("");
+        $p->setGamemode(3);
+
+        Sidebar::getInstance()->update();
     }
 }

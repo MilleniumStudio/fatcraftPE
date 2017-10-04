@@ -137,7 +137,12 @@ class WorldUtils
         $light->speedZ = 0;
         $light->yaw = $p_Loc->getYaw();
         $light->pitch = $p_Loc->getPitch();
-        $light->position = $p_Loc;
+        $p_Loc2 = $p_Loc;
+        $p_Loc2->setComponents($p_Loc->x, $p_Loc->y + $height, $p_Loc->z);
+        $light->position = $p_Loc2;
+//        $light->x = $p_Loc->x;
+//        $light->y = $p_Loc->y + $height;
+//        $light->z = $p_Loc->z;
 
 //        $level->addSound(new GenericSound($p_Loc, LevelEventPacket::EVENT_SOUND_CLICK, 1));
         FatUtils::getInstance()->getServer()->broadcastPacket($level->getPlayers(), $light);

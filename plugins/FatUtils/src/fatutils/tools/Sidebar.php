@@ -202,7 +202,12 @@ class Sidebar
                 {
                     case 'array':
                         foreach ($l_LineGetterRet as $l_Line)
+                        {
+                            if ($l_Line instanceof TextFormatter)
+                                $l_Line = $l_Line->asStringForPlayer($p_Player);
+
                             $l_Ret[] = $l_Line;
+                        }
                         break;
                     case 'string':
                         foreach ($this->lineSplitter($l_LineGetterRet) as $l_Line)
