@@ -30,6 +30,10 @@ class Button extends UiPart implements ButtonWindowCompatible
         return $this;
     }
 
+    /**
+     * @param callable(void) $p_Callback
+     * @return Button
+     */
     public function setCallback(Callable $p_Callback):Button
     {
         $this->m_Callback = $p_Callback;

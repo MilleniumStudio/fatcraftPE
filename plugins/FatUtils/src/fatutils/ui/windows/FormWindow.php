@@ -33,6 +33,10 @@ class FormWindow extends Window
         return $this;
     }
 
+    /**
+     * @param callable(void|array) $p_Callback
+     * @return FormWindow
+     */
     public function setCallback(Callable $p_Callback):FormWindow
     {
         $this->m_Callback = $p_Callback;

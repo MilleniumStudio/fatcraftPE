@@ -9,6 +9,7 @@
 namespace fatutils\tools;
 use fatutils\FatUtils;
 use pocketmine\block\BlockIds;
+use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
 use ReflectionClass;
 
@@ -35,7 +36,11 @@ class ItemUtils
         return BlockIds::STONE;
     }
 
-    public static function getItemFromRaw(string $p_RawItem)
+    /**
+     * @param string $p_RawItem as '{"material": "COBBLESTONE", "data": 0, "amount": 10}'
+     * @return null|Item
+     */
+    public static function getItemFromRaw(string $p_RawItem): ?Item
     {
         $l_Ret = null;
 

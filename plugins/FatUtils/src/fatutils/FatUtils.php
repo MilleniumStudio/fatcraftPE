@@ -2,6 +2,7 @@
 
 namespace fatutils;
 
+use fatcraft\bedwars\ShopKeeper;
 use fatutils\loot\ChestsManager;
 use fatutils\tools\WorldUtils;
 use fatutils\ui\windows\ButtonWindow;
@@ -57,9 +58,7 @@ class FatUtils extends PluginBase
                     if ($sender instanceof Player)
                     {
                         echo "====================\n";
-                        $sender->sendTip("TIP");
-                        $sender->addTitle("TITLE");
-                        $sender->addSubTitle("SUBTITLE");
+                        new ShopKeeper($sender->getLocation());
                     }
                     break;
                 case "test1":

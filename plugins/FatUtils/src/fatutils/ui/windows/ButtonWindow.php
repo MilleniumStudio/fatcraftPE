@@ -17,6 +17,7 @@ class ButtonWindow extends Window
     {
         parent::__construct($player);
         $this->setType("form");
+        $this->setContent("");
     }
 
     public function addPart(ButtonWindowCompatible $p_Part): ButtonWindow
