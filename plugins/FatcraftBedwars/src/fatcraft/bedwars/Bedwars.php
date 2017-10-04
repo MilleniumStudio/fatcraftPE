@@ -197,18 +197,21 @@ class Bedwars extends PluginBase implements Listener
     {
         PlayersManager::getInstance()->getFatPlayer($p_Player)
             ->addData(Bedwars::PLAYER_DATA_CURRENCY_IRON, $p_Value);
+        Sidebar::getInstance()->updatePlayer($p_Player);
     }
 
     public function modPlayerGold(Player $p_Player, int $p_Value)
     {
         PlayersManager::getInstance()->getFatPlayer($p_Player)
             ->addData(Bedwars::PLAYER_DATA_CURRENCY_GOLD, $p_Value);
+        Sidebar::getInstance()->updatePlayer($p_Player);
     }
 
     public function modPlayerDiamond(Player $p_Player, int $p_Value)
     {
         PlayersManager::getInstance()->getFatPlayer($p_Player)
             ->addData(Bedwars::PLAYER_DATA_CURRENCY_DIAMOND, $p_Value);
+        Sidebar::getInstance()->updatePlayer($p_Player);
     }
 
     public function getPlayerIron(Player $p_Player)

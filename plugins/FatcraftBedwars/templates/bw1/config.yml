@@ -102,6 +102,7 @@ shop:
   blocks:
     wool:
       rawItem: '{"material": "WOOL", "amount": 4}'
+      imageUrl: "http://fr-minecraft.net/img/blocs/035_11.png"
       ironPrice: 4
     endStone:
       rawItem: '{"material": "END_STONE", "amount": 4}'
