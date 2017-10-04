@@ -6,7 +6,7 @@ namespace fatutils\ui\windows\parts;
 
 abstract class UiPart
 {
-    private $m_Data = [];
+    protected $m_Data = [];
 
     public function getData(): array
     {

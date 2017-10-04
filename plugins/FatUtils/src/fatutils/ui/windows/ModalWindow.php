@@ -16,11 +16,12 @@ class ModalWindow extends Window
     {
         parent::__construct($player);
         $this->setType("modal");
+        $this->setContent("");
     }
 
     public function setContent(string $p_Content): ModalWindow
     {
-        $this->getData()["content"] = $p_Content;
+        $this->m_Data["content"] = $p_Content;
         return $this;
     }
 
@@ -29,7 +30,7 @@ class ModalWindow extends Window
         if (is_null($p_Title))
             $p_Title = (new TextFormatter("window.yes"))->asStringForPlayer($this->getPlayer());
 
-        $this->getData()["button1"] = $p_Title;
+        $this->m_Data["button1"] = $p_Title;
         $this->m_ValidationCallable = $p_Callback;
         return $this;
     }
@@ -39,7 +40,7 @@ class ModalWindow extends Window
         if (is_null($p_Title))
             $p_Title = (new TextFormatter("window.no"))->asStringForPlayer($this->getPlayer());
 
-        $this->getData()["button2"] = $p_Title;
+        $this->m_Data["button2"] = $p_Title;
         $this->m_CancellationCallable = $p_Callback;
         return $this;
     }
@@ -57,10 +58,26 @@ class ModalWindow extends Window
         $l_Window->open();
     }
 
-    public function handleResponse(array $p_Data): bool
+    public function getValidationCallable(): ?Callable
     {
+        return $this->m_ValidationCallable;
+    }
 
-        return false;
+    public function getCancellationCallable(): ?Callable
+    {
+        return $this->m_CancellationCallable;
+    }
+
+    public function handleResponse($p_Data): bool
+    {
+        if (is_bool($p_Data))
+        {
+            if ($p_Data && is_callable($this->getValidationCallable()))
+                $this->getValidationCallable()();
+            else if (is_callable($this->getCancellationCallable()))
+                $this->getCancellationCallable()();
+        }
+        return true;
     }
 
     protected function getWindowId(): int

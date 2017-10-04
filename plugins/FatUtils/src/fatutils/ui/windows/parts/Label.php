@@ -13,12 +13,12 @@ class Label extends UiPart implements FormWindowCompatible
 {
     public function __construct()
     {
-        $this->getData()["type"] = "label";
+        $this->m_Data["type"] = "label";
     }
 
     public function setText(string $p_Text):Label
     {
-        $this->getData()["text"] = $p_Text;
+        $this->m_Data["text"] = $p_Text;
         return $this;
     }
 }

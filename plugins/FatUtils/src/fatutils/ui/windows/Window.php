@@ -26,12 +26,12 @@ abstract class Window
 
     protected function setType(string $p_Type)
     {
-        $this->getData()["type"] = $p_Type;
+        $this->m_Data["type"] = $p_Type;
     }
 
     public function setTitle(string $p_Title): Window
     {
-        $this->getData()["title"] = $p_Title;
+        $this->m_Data["title"] = $p_Title;
         return $this;
     }
 
@@ -57,14 +57,6 @@ abstract class Window
     }
 
     /**
-     * @return array
-     */
-    public function getData(): array
-    {
-        return $this->m_Data;
-    }
-
-    /**
      * @return Player
      */
     public function getPlayer(): Player
@@ -77,8 +69,6 @@ abstract class Window
         $l_Packet = new ModalFormRequestPacket();
         $l_Packet->formId = $this->getWindowIdFor($this->getWindowId());
         $l_Packet->formData = $this->getAsJson();
-
-        var_dump("OPENNING WINDOW", $l_Packet->formData);
 
         $this->getPlayer()->dataPacket($l_Packet);
 
@@ -102,5 +92,5 @@ abstract class Window
 
     protected abstract function getWindowId(): int;
 
-    public abstract function handleResponse(array $packet): bool;
+    public abstract function handleResponse($p_Data): bool;
 }

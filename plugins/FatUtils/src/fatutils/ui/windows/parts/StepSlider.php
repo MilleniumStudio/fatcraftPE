@@ -14,18 +14,18 @@ class StepSlider extends UiPart implements FormWindowCompatible
 {
     public function __construct()
     {
-        $this->getData()["type"] = "step_slider";
+        $this->m_Data["type"] = "step_slider";
     }
 
     public function setText(string $p_Text):StepSlider
     {
-        $this->getData()["text"] = $p_Text;
+        $this->m_Data["text"] = $p_Text;
         return $this;
     }
 
     public function setSteps(array $p_Steps):StepSlider
     {
-        $this->getData()["steps"] = $p_Steps;
+        $this->m_Data["steps"] = $p_Steps;
         return $this;
     }
 }

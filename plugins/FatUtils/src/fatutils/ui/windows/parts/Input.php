@@ -15,24 +15,24 @@ class Input extends UiPart implements FormWindowCompatible
 {
     public function __construct()
     {
-        $this->getData()["type"] = "input";
+        $this->m_Data["type"] = "input";
     }
 
     public function setText(string $p_Text):Input
     {
-        $this->getData()["text"] = $p_Text;
+        $this->m_Data["text"] = $p_Text;
         return $this;
     }
 
     public function setPlaceholder(string $p_PlaceholderText):Input
     {
-        $this->getData()["placeholder"] = $p_PlaceholderText;
+        $this->m_Data["placeholder"] = $p_PlaceholderText;
         return $this;
     }
 
     public function setDefault(string $p_DefaultText):Input
     {
-        $this->getData()["default"] = $p_DefaultText;
+        $this->m_Data["default"] = $p_DefaultText;
         return $this;
     }
 }

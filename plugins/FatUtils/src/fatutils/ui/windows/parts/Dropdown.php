@@ -16,24 +16,24 @@ class Dropdown extends UiPart implements FormWindowCompatible
 {
     public function __construct()
     {
-        $this->getData()["type"] = "dropdown";
+        $this->m_Data["type"] = "dropdown";
     }
 
     public function setText(string $p_Text):Dropdown
     {
-        $this->getData()["text"] = $p_Text;
+        $this->m_Data["text"] = $p_Text;
         return $this;
     }
 
     public function setOptions(array $p_Options):Dropdown
     {
-        $this->getData()["options"] = $p_Options;
+        $this->m_Data["options"] = $p_Options;
         return $this;
     }
 
     public function setDefault(int $p_DefaultOptionsIndex):Dropdown
     {
-        $this->getData()["default"] = $p_DefaultOptionsIndex;
+        $this->m_Data["default"] = $p_DefaultOptionsIndex;
         return $this;
     }
 

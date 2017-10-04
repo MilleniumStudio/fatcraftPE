@@ -18,15 +18,15 @@ class Button extends UiPart implements ButtonWindowCompatible
 
     public function setText(string $p_Text):Button
     {
-        $this->getData()["text"] = $p_Text;
+        $this->m_Data["text"] = $p_Text;
         return $this;
     }
 
     public function setImage(string $p_Url):Button
     {
-        $this->getData()["image"] = [];
-        $this->getData()["image"]["type"] = "url";
-        $this->getData()["image"]["data"] = $p_Url;
+        $this->m_Data["image"] = [];
+        $this->m_Data["image"]["type"] = "url";
+        $this->m_Data["image"]["data"] = $p_Url;
         return $this;
     }
 
@@ -36,7 +36,7 @@ class Button extends UiPart implements ButtonWindowCompatible
         return $this;
     }
 
-    public function getCallback():Callable
+    public function getCallback(): ?Callable
     {
         return $this->m_Callback;
     }

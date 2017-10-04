@@ -53,15 +53,14 @@ class WindowsManager implements Listener
             $l_PlayerIndex = $event->getPlayer()->getUniqueId()->toBinary();
             if (isset($this->m_WindowRegistry[$l_PlayerIndex]))
             {
-                $l_JsonAsArray = json_decode($packet->formData, true);
-                if (is_null($l_JsonAsArray))
+                $l_ResponseData = json_decode($packet->formData, true);
+                if (is_null($l_ResponseData))
                     return;
 
                 $l_PlayerWindow = $this->m_WindowRegistry[$l_PlayerIndex];
                 if ($l_PlayerWindow instanceof Window)
                 {
-                    var_dump("RECEIVING WINDOW Response", $l_JsonAsArray, "==========");
-                    if (!$l_PlayerWindow->handleResponse($l_JsonAsArray))
+                    if (!$l_PlayerWindow->handleResponse($l_ResponseData))
                         $l_PlayerWindow->open();
                 }
             }

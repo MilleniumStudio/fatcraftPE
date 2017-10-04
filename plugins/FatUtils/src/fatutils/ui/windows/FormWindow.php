@@ -41,12 +41,12 @@ class FormWindow extends Window
 
     public function getAsJson(): string
     {
-        $this->getData()["content"] = [];
+        $this->m_Data["content"] = [];
 
         foreach ($this->getParts() as $l_Part)
         {
             if ($l_Part instanceof UiPart)
-                $this->getData()["content"] = $l_Part->getData();
+                $this->m_Data["content"][] = $l_Part->getData();
         }
 
         return parent::getAsJson();
@@ -79,7 +79,7 @@ class FormWindow extends Window
             ->setSteps(["§4red", "green", "yellow", "blue", "black", "white"])
         );
         $l_FormWindow->addPart((new Dropdown())
-            ->setText("Step slider")
+            ->setText("Dropdown")
             ->setOptions(["option 1", "option 2", "option 3"])
             ->setDefault(0)
         );
@@ -158,7 +158,8 @@ class FormWindow extends Window
 //            [7]=>
 //            bool(true)
 //        }
-    public function handleResponse(array $p_Data): bool
+
+    public function handleResponse($p_Data): bool
     {
         if (is_callable($this->getCallback()))
         {
@@ -168,7 +169,7 @@ class FormWindow extends Window
             if (count($params) == 1)
                 $this->getCallback()($p_Data);
         }
-        return false;
+        return true;
     }
 
     protected function getWindowId(): int

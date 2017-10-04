@@ -14,18 +14,18 @@ class Toggle extends UiPart implements FormWindowCompatible
 {
     public function __construct()
     {
-        $this->getData()["type"] = "step_slider";
+        $this->m_Data["type"] = "toggle";
     }
 
     public function setText(string $p_Text):Toggle
     {
-        $this->getData()["text"] = $p_Text;
+        $this->m_Data["text"] = $p_Text;
         return $this;
     }
 
     public function setDefault(bool $p_DefaultValue):Toggle
     {
-        $this->getData()["default"] = $p_DefaultValue;
+        $this->m_Data["default"] = $p_DefaultValue;
         return $this;
     }
 }

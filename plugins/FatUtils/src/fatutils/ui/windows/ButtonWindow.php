@@ -28,18 +28,18 @@ class ButtonWindow extends Window
 
     public function setContent(string $p_Content): ButtonWindow
     {
-        $this->getData()["content"] = $p_Content;
+        $this->m_Data["content"] = $p_Content;
         return $this;
     }
 
     public function getAsJson(): string
     {
-        $this->getData()["buttons"] = [];
+        $this->m_Data["buttons"] = [];
 
         foreach ($this->getParts() as $l_Part)
         {
             if ($l_Part instanceof UiPart)
-                $this->getData()["buttons"][] = $l_Part->getData();
+                $this->m_Data["buttons"][] = $l_Part->getData();
         }
 
         return parent::getAsJson();
@@ -53,21 +53,37 @@ class ButtonWindow extends Window
         $l_Window->addPart((new Button())
             ->setText("text 1")
             ->setImage("https://maxcdn.icons8.com/Share/icon/DIY//paint_brush1600.png")
+            ->setCallback(function() {
+                echo "Button1\n";
+            })
         );
         $l_Window->addPart((new Button())
             ->setText("text 2")
             ->setImage("http://www.sidecarpost.com/wp-content/uploads/2014/03/Icon-BaselinePreset-100x100.png")
+            ->setCallback(function() {
+                echo "Button2\n";
+            })
         );
         $l_Window->addPart((new Button())
             ->setText("text 3")
             ->setImage("http://icons.iconarchive.com/icons/dtafalonso/android-l/512/Settings-L-icon.png")
+            ->setCallback(function() {
+                echo "Button3\n";
+            })
         );
         $l_Window->addPart((new Button())
             ->setText("Coming soon...")
+            ->setCallback(function() {
+                echo "Button sans image\n";
+            })
         );
         $l_Window->addPart((new Button())
             ->setText("text 4")
             ->setImage("http://www.pngmart.com/files/3/Red-Cross-Transparent-PNG.png")
+            ->setCallback(function() use ($l_Window) {
+                echo "Button4\n";
+                $l_Window->open();
+            })
         );
         $l_Window->open();
 
@@ -111,7 +127,7 @@ class ButtonWindow extends Window
 //        ];
     }
 
-    public function handleResponse(array $p_Data): bool
+    public function handleResponse($p_Data): bool
     {
         if (is_int($p_Data))
         {
@@ -119,7 +135,7 @@ class ButtonWindow extends Window
             if ($l_Part instanceof Button && is_callable($l_Part->getCallback()))
                 $l_Part->getCallback()();
         }
-        return false;
+        return true;
     }
 
 
