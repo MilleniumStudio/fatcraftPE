@@ -52,6 +52,30 @@ class FormWindow extends Window
         return parent::getAsJson();
     }
 
+    public function handleResponse($p_Data): bool
+    {
+        if (is_callable($this->getCallback()))
+        {
+            $params = (new ReflectionObject((object)$this->getCallback()))->getMethod('__invoke')->getParameters();
+            if (count($params) == 0)
+                $this->getCallback()();
+            if (count($params) == 1)
+                $this->getCallback()($p_Data);
+        }
+        return true;
+    }
+
+    protected function getWindowId(): int
+    {
+        return 1;
+    }
+
+    public function getCallback():Callable
+    {
+        return $this->m_Callback;
+    }
+
+    //--> TESTING
     public static function openTestWindow(Player $p_Player): void
     {
         $l_FormWindow = new FormWindow($p_Player);
@@ -91,55 +115,10 @@ class FormWindow extends Window
             var_dump($p_Data);
         });
         $l_FormWindow->open();
-
-//        $this->m_Data = [
-//            "type" => "custom_form",
-//            "title" => "menu title",
-//            "content" => [
-//                [
-//                    "type" => "input",
-//                    "text" => "Text input",
-//                    "placeholder" => "placeholder text"
-//                ],
-//                [
-//                    "type" => "input",
-//                    "text" => "Text input",
-//                    "default" => "default text"
-//                ],
-//                [
-//                    "type" => "label",
-//                    "text" => "Label\n§4red : test second line"
-//                ],
-//                [
-//                    "type" => "slider",
-//                    "text" => "Slider",
-//                    "min" => 0,
-//                    "max" => 10,
-//                    "step" => 1,
-//                    "default" => 4
-//                ],
-//                [
-//                    "type" => "step_slider",
-//                    "text" => "Step slider",
-//                    "steps" => ["§4red", "green", "yellow", "blue", "black", "white"]
-//                ],
-//                [
-//                    "type" => "dropdown",
-//                    "text" => "Dropdown",
-//                    "options" => ["option 1", "option 2", "option 3"],
-//                    "default" => 0,
-//                    "enabled" => 1
-//                ],
-//                [
-//                    "type" => "toggle",
-//                    "text" => "Toggle",
-//                    "default" => true
-//                ]
-//            ]
-//        ];
     }
 
-        // $data is an array
+// ANSWER TYPE
+// $data is an array
 //        array(8) {
 //            [0]=>
 //            string(0) ""
@@ -158,27 +137,4 @@ class FormWindow extends Window
 //            [7]=>
 //            bool(true)
 //        }
-
-    public function handleResponse($p_Data): bool
-    {
-        if (is_callable($this->getCallback()))
-        {
-            $params = (new ReflectionObject((object)$this->getCallback()))->getMethod('__invoke')->getParameters();
-            if (count($params) == 0)
-                $this->getCallback()();
-            if (count($params) == 1)
-                $this->getCallback()($p_Data);
-        }
-        return true;
-    }
-
-    protected function getWindowId(): int
-    {
-        return 1;
-    }
-
-    public function getCallback():Callable
-    {
-        return $this->m_Callback;
-    }
 }

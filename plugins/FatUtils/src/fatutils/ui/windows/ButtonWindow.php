@@ -45,6 +45,24 @@ class ButtonWindow extends Window
         return parent::getAsJson();
     }
 
+    public function handleResponse($p_Data): bool
+    {
+        if (is_int($p_Data))
+        {
+            $l_Part = $this->getParts()[$p_Data];
+            if ($l_Part instanceof Button && is_callable($l_Part->getCallback()))
+                $l_Part->getCallback()();
+        }
+        return true;
+    }
+
+
+    protected function getWindowId(): int
+    {
+        return 0;
+    }
+
+    //--> TESTING
     public static function openTestWindow(Player $p_Player): void
     {
         $l_Window = new ButtonWindow($p_Player);
@@ -86,61 +104,5 @@ class ButtonWindow extends Window
             })
         );
         $l_Window->open();
-
-//        $this->m_Data = [
-//            "type" => "form",
-//            "title" => "menu title",
-//            "content" => "text content\ntest second line\ntest 3 lines",
-//            "buttons" => [
-//                [
-//                    "text" => "text 1",
-//                    "image" => [
-//                        "type" => "url",
-//                        "data" => "https://maxcdn.icons8.com/Share/icon/DIY//paint_brush1600.png"
-//                    ]
-//                ],
-//                [
-//                    "text" => "text 2",
-//                    "image" => [
-//                        "type" => "url",
-//                        "data" => "http://www.sidecarpost.com/wp-content/uploads/2014/03/Icon-BaselinePreset-100x100.png"
-//                    ]
-//                ],
-//                [
-//                    "text" => "text 3",
-//                    "image" => [
-//                        "type" => "url",
-//                        "data" => "http://icons.iconarchive.com/icons/dtafalonso/android-l/512/Settings-L-icon.png"
-//                    ]
-//                ],
-//                [
-//                    "text" => "Coming soon..."
-//                ],
-//                [
-//                    "text" => "test 4",
-//                    "image" => [
-//                        "type" => "url",
-//                        "data" => "http://www.pngmart.com/files/3/Red-Cross-Transparent-PNG.png"
-//                    ]
-//                ]
-//            ]
-//        ];
-    }
-
-    public function handleResponse($p_Data): bool
-    {
-        if (is_int($p_Data))
-        {
-            $l_Part = $this->getParts()[$p_Data];
-            if ($l_Part instanceof Button && is_callable($l_Part->getCallback()))
-                $l_Part->getCallback()();
-        }
-        return true;
-    }
-
-
-    protected function getWindowId(): int
-    {
-        return 0;
     }
 }

@@ -45,19 +45,6 @@ class ModalWindow extends Window
         return $this;
     }
 
-    public static function openTestWindow(Player $p_Player): void
-    {
-        $l_Window = new ModalWindow($p_Player);
-        $l_Window->setTitle("ModalWindow");
-        $l_Window->setValidationButton(function () {
-            echo "ModalWindow Validation";
-        });
-        $l_Window->setCancellationButton(function () {
-            echo "ModalWindow Cancellation";
-        });
-        $l_Window->open();
-    }
-
     public function getValidationCallable(): ?Callable
     {
         return $this->m_ValidationCallable;
@@ -83,5 +70,19 @@ class ModalWindow extends Window
     protected function getWindowId(): int
     {
         return 2;
+    }
+
+    //--> TESTING
+    public static function openTestWindow(Player $p_Player): void
+    {
+        $l_Window = new ModalWindow($p_Player);
+        $l_Window->setTitle("ModalWindow");
+        $l_Window->setValidationButton(function () {
+            echo "ModalWindow Validation";
+        });
+        $l_Window->setCancellationButton(function () {
+            echo "ModalWindow Cancellation";
+        });
+        $l_Window->open();
     }
 }
