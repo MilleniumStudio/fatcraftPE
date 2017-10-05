@@ -25,17 +25,21 @@ class MenuCommand extends PluginBase implements CommandExecutor
                 if (isset($args[0]))
                 {
                     $args[0] = strtolower($args[0]);
-                    if ($args[0] === "button")
+//                    if ($args[0] === "button")
+//                    {
+//                        WindowsManager::getInstance()->sendMenu($sender, WindowsManager::WINDOW_BUTTON_MENU);
+//                    }
+//                    if ($args[0] === "input")
+//                    {
+//                        WindowsManager::getInstance()->sendMenu($sender, WindowsManager::WINDOW_INPUT_MENU);
+//                    }
+//                    if ($args[0] === "modal")
+//                    {
+//                        WindowsManager::getInstance()->sendMenu($sender, WindowsManager::WINDOW_MODAL_MENU);
+//                    }
+                    if ($args[0] === "test")
                     {
-                        WindowsManager::getInstance()->sendMenu($sender, WindowsManager::WINDOW_BUTTON_MENU);
-                    }
-                    if ($args[0] === "input")
-                    {
-                        WindowsManager::getInstance()->sendMenu($sender, WindowsManager::WINDOW_INPUT_MENU);
-                    }
-                    if ($args[0] === "modal")
-                    {
-                        WindowsManager::getInstance()->sendMenu($sender, WindowsManager::WINDOW_MODAL_MENU);
+                        \fatutils\holograms\HologramsManager::getInstance()->newHologram($sender, $args[1], $args[1], $args[1]);
                     }
                 }
         }

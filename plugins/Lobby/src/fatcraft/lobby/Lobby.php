@@ -23,7 +23,7 @@ use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use fatcraft\lobby\commands\MenuCommand;
-use fatutils\ui\WindowsManager;
+use fatutils\holograms\HologramsManager;
 
 class Lobby extends PluginBase implements Listener
 {
@@ -48,6 +48,7 @@ class Lobby extends PluginBase implements Listener
         FatUtils::getInstance()->setTemplateConfig($this->getConfig());
         WorldUtils::stopWorldsTime();
         $this->getCommand("menu")->setExecutor(new MenuCommand($this));
+        HologramsManager::getInstance();
     }
 
     public function onPlayerJoin(PlayerJoinEvent $e)
