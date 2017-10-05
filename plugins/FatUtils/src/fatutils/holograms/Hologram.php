@@ -4,26 +4,28 @@ namespace fatutils\holograms;
 
 use pocketmine\math\Vector3;
 use pocketmine\level\particle\FloatingTextParticle;
+use pocketmine\level\Location;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Unikaz
- * Date: 13/09/2017
- * Time: 12:00
- */
 class Hologram
 {
 
-    /** @var FloatingTextParticle $floatingText */
+    public $name;
     public $particle;
     public $level;
 
-    public function __construct(Vector3 $pos, level $level, $title = "", $text)
+    public function __construct(string $p_Name, Location $pos, $text, $title)
     {
-        $this->particle = new FloatingTextParticle($pos, $text, $title);
-        $this->level = $level;
+        $this->name = $p_Name;
+        $this->particle = new FloatingTextParticle(new Vector3($pos->x, $pos->y, $pos->z), $text, $title);
+        $this->level = $pos->level;
+        $this->send();
+    }
+
+    public function updatePosition(Vector3 $pos)
+    {
+        $this->particle->setComponents($pos->x, $pos->y, $pos->z);
         $this->send();
     }
 
