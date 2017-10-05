@@ -79,4 +79,9 @@ class ClickableNPC implements Listener
             }
         }
     }
+
+    public function setVisibleName(string $name){
+        $this->villager->setNameTag($name);
+        $this->villager->setNameTagVisible(true);
+    }
 }
