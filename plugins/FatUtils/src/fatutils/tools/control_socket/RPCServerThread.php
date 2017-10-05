@@ -15,6 +15,7 @@ class RPCServerThread extends Thread
     private $socket;
     private $maxClients;
     private $waiting;
+    private $handlers;
 
     public function isWaiting()
     {
@@ -26,8 +27,9 @@ class RPCServerThread extends Thread
      * @param string   $password
      * @param int      $maxClients
      */
-    public function __construct($socket, int $maxClients = 50)
+    public function __construct($handlers, $socket, int $maxClients = 50)
     {
+        $this->handlers = $handlers;
         $this->stop = false;
         $this->cmd = "";
         $this->response = "";
@@ -76,7 +78,7 @@ class RPCServerThread extends Thread
                 var_dump($request);
 
                 //find the correct handler
-                $handlers = $_ENV['RPCHandlers'];
+                $handlers = $this->handlers;
                 var_dump($handlers);
                 $uri = $request['uri'];
                 if (isset($handlers[$uri]))

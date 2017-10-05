@@ -23,7 +23,7 @@ class RPCServer
     /** @var int */
     private $clientsPerThread;
 
-    public static $handlers = array();
+    public $handlers = array();
 
     public function __construct(PluginBase $plugin, int $port = 8888, string $interface = "0.0.0.0", int $threads = 1, int $clientsPerThread = 50)
     {
@@ -43,7 +43,7 @@ class RPCServer
 
         for ($n = 0; $n < $this->threads; ++$n)
         {
-            $this->workers[$n] = new RPCServerThread($this->socket, $this->clientsPerThread);
+            $this->workers[$n] = new RPCServerThread(& $this->handlers, $this->socket, $this->clientsPerThread);
         }
 
         socket_getsockname($this->socket, $addr, $port);
@@ -65,8 +65,8 @@ class RPCServer
 
     public function registerHandler(string $path, $class)
     {
-        $_ENV['RPCHandlers'][$path] = $class;
+        $this->handlers[$path] = $class;
         \fatutils\FatUtils::getInstance()->getLogger()->info("[RPCServer] Registering handler " . $path . "");
-        var_dump($_ENV['RPCHandlers']);
+        var_dump($this->handlers);
     }
 }
