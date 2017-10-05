@@ -21,7 +21,7 @@ class Team
 {
     private $m_Name = "NoName";
     private $m_Color = ColorUtils::WHITE;
-    private $m_Prefix = TextFormat::RESET . TextFormat::GRAY . "◀N▶" . TextFormat::RESET . TextFormat::WHITE;
+    private $m_Prefix = "";
 
     /* array of Player's uuid as binary */
     private $m_Players = [];
@@ -92,14 +92,20 @@ class Team
     public function setName(string $m_Name)
     {
         $this->m_Name = $m_Name;
+        $this->updatePrefix();
     }
 
-    /**
-     * @param string $m_Prefix
-     */
-    public function setPrefix(string $m_Prefix)
+//    /**
+//     * @param string $m_Prefix
+//     */
+//    public function setPrefix(string $m_Prefix)
+//    {
+//        $this->m_Prefix = $m_Prefix;
+//    }
+
+    public function updatePrefix()
     {
-        $this->m_Prefix = $m_Prefix;
+        $this->m_Prefix = TextFormat::RESET . ColorUtils::getTextFormatFromColor($this->getColor()) . "◀". ucfirst(substr($this->getName(), 0, 1)) ."▶" . TextFormat::WHITE . TextFormat::RESET;
     }
 
     /**
@@ -147,6 +153,7 @@ class Team
     public function setColor(string $p_Color)
     {
         $this->m_Color = $p_Color;
+        $this->updatePrefix();
     }
 
     /**

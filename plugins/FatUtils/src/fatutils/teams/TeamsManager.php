@@ -20,7 +20,7 @@ use pocketmine\utils\Color;
 class TeamsManager
 {
     const CONFIG_KEY_TEAM_ROOT = "teams";
-    const CONFIG_KEY_TEAM_PREFIX = "prefix";
+//    const CONFIG_KEY_TEAM_PREFIX = "prefix";
     const CONFIG_KEY_TEAM_MAX_PLAYERS = "maxPlayer";
     const CONFIG_KEY_TEAM_SPAWN = "spawn";
     const CONFIG_KEY_TEAM_COLOR = "color";
@@ -54,8 +54,8 @@ class TeamsManager
 
                     if (gettype($value) === 'array')
                     {
-                        if (array_key_exists(TeamsManager::CONFIG_KEY_TEAM_PREFIX, $value))
-                            $newTeam->setPrefix($value[TeamsManager::CONFIG_KEY_TEAM_PREFIX]);
+//                        if (array_key_exists(TeamsManager::CONFIG_KEY_TEAM_PREFIX, $value))
+//                            $newTeam->setPrefix($value[TeamsManager::CONFIG_KEY_TEAM_PREFIX]);
 
                         if (array_key_exists(TeamsManager::CONFIG_KEY_TEAM_MAX_PLAYERS, $value) && is_numeric($value[TeamsManager::CONFIG_KEY_TEAM_MAX_PLAYERS]))
                             $newTeam->setMaxPlayer($value[TeamsManager::CONFIG_KEY_TEAM_MAX_PLAYERS]);
