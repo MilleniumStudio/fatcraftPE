@@ -35,9 +35,6 @@ class LoadBalancer extends PluginBase implements Listener
     private $m_ServerId;
     private $m_ServerState = LoadBalancer::SERVER_STATE_CLOSED; // open / closed
 
-    /** @var RCON */
-    private $rcon;
-
     /** @var \mysqli */
     private $m_Mysql;
 
@@ -81,20 +78,6 @@ class LoadBalancer extends PluginBase implements Listener
 
         //test hack
         $this->setServerState($this->getConfig()->getNested("node.state"));
-
-        // Control socket
-        if($this->getConfig()->getNested("controle_socket.enable")){
-            try
-            {
-                $this->rcon = new RCON(
-                    $this,
-                    $this->getConfig()->getNested("controle_socket.port"),
-                    $this->getConfig()->getNested("controle_socket.bind")
-                );
-            }catch(\Throwable $e){
-                $this->getLogger()->critical("RCON can't be started: " . $e->getMessage());
-            }
-        }
 
         // update my status every second
         $this->getServer()->getScheduler()->scheduleDelayedRepeatingTask(new class($this) extends PluginTask
@@ -163,10 +146,6 @@ class LoadBalancer extends PluginBase implements Listener
         {
             $this->deleteMe();
             ClearMysqlTask::closeAll($this, $this->m_Credentials);
-        }
-        if ($this->rcon != null)
-        {
-            $this->rcon->stop();
         }
     }
 
