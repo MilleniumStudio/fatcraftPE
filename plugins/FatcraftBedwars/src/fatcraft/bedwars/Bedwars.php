@@ -279,7 +279,7 @@ class Bedwars extends PluginBase implements Listener
         TeamsManager::getInstance()->clearNPCs();
 
         //load shops
-        foreach (FatUtils::getInstance()->getTemplateConfig()->get(Bedwars::CONFIG_KEY_NPC_SHOP) as $key => $value){
+        foreach (FatUtils::getInstance()->getTemplateConfig()->get(Bedwars::CONFIG_KEY_NPC_SHOP) as $key => $value) {
             new ShopKeeper(WorldUtils::stringToLocation($value));
         }
 
@@ -418,22 +418,24 @@ class Bedwars extends PluginBase implements Listener
             echo "sender is not a player\n";
         }
 
-        $firstSwitch = true;
-        switch ($args[0]) {
-            case "team": {
-                TeamsManager::getInstance()->displayTeamSelection($player);
-            }
-                break;
-            case"balance": {
-                TeamsManager::getInstance()->balanceTeams();
-            }
-                break;
+        if(Bedwars::DEBUG) {
+            $firstSwitch = true;
+            switch ($args[0]) {
+                case "team": {
+                    TeamsManager::getInstance()->displayTeamSelection($player);
+                }
+                    break;
+                case"balance": {
+                    TeamsManager::getInstance()->balanceTeams();
+                }
+                    break;
 
-            default:
-                $firstSwitch = false;
+                default:
+                    $firstSwitch = false;
+            }
+            if ($firstSwitch)
+                return true;
         }
-        if ($firstSwitch)
-            return true;
 
 
         if (!$sender->isOp()) {
@@ -460,12 +462,18 @@ class Bedwars extends PluginBase implements Listener
                 TeamsManager::getInstance()->displayTeamSelection($player);
             }
                 break;
-            case "npc":{
+            case"balance": {
+                TeamsManager::getInstance()->balanceTeams();
+            }
+                break;
+            case "npc": {
                 TeamsManager::getInstance()->addNPC($player->getLocation());
-            }break;
-            case "clear":{
+            }
+                break;
+            case "clear": {
                 TeamsManager::getInstance()->clearNPCs();
-            }break;
+            }
+                break;
         }
         return true;
     }
