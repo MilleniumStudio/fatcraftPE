@@ -70,13 +70,17 @@ forges:
       - 1
 
 teams:
-  §1Bleu§r:
+  Blue:
+    color: BLUE
     spawn: blueSpawn
-  §cRouge§r:
+  Red:
+    color: RED
     spawn: redSpawn
-  §eJaune§r:
+  Yellow:
+    color: YELLOW
     spawn: yellowSpawn
-  §aVert§r:
+  Green:
+    color: GREEN
     spawn: greenSpawn
 
 chests:
