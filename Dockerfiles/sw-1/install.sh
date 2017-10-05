@@ -15,5 +15,5 @@ updateConfig install/plugins/LoadBalancer/config.yml
 updateConfig install/plugins/StatsPE/config.yml
 
 # copy map
-mkdir -p install/worlds/map
-cp -R ../../worlds/sw/sw-end/* install/worlds/map/
+#mkdir -p install/worlds/map
+#cp -R ../../worlds/sw/sw-end/* install/worlds/map/
