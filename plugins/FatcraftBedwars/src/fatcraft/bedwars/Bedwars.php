@@ -280,6 +280,8 @@ class Bedwars extends PluginBase implements Listener
             ->addStartCallback(function () {
                 FatUtils::getInstance()->getLogger()->info("Game end timer starts !");
                 FatUtils::getInstance()->getLogger()->info("Forges are heating up !");
+                Server::getInstance()->broadcastMessage("Team Balance...");
+                TeamsManager::getInstance()->balanceTeams();
             })
             ->addTickCallback(function () {
                 if ($this->getServer()->getTick() % 20 == 0) {
@@ -400,16 +402,36 @@ class Bedwars extends PluginBase implements Listener
 
     public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args): bool
     {
-        if (!$sender->isOp()) {
-            $sender->sendMessage("you need to be op");
-            return false;
-        }
         $player = null;
         if ($sender instanceof Player) {
             $player = $sender;
         } else {
             echo "sender is not a player\n";
         }
+
+        $firstSwitch = true;
+        switch ($args[0]) {
+            case "team": {
+                TeamsManager::getInstance()->displayTeamSelection($player);
+            }
+                break;
+            case"balance": {
+                TeamsManager::getInstance()->balanceTeams();
+            }
+                break;
+
+            default:
+                $firstSwitch = false;
+        }
+        if ($firstSwitch)
+            return true;
+
+
+        if (!$sender->isOp()) {
+            $sender->sendMessage("you need to be op");
+            return false;
+        }
+
         switch ($args[0]) {
             case "upgrade": {
                 $team = PlayersManager::getInstance()->getFatPlayer($player)->getTeam();
@@ -423,6 +445,10 @@ class Bedwars extends PluginBase implements Listener
                 break;
             case "diam": {
                 $this->upgradeDiamondForges();
+            }
+                break;
+            case "team": {
+                TeamsManager::getInstance()->displayTeamSelection($player);
             }
                 break;
         }

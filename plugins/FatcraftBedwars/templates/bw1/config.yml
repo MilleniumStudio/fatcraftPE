@@ -1,4 +1,4 @@
-minPlayer: 1
+minPlayer: 2
 maxPlayer: 18
 waitingSecDuration: 15
 playingSecDuration: 6000
@@ -13,12 +13,12 @@ spawns:
   redSpawn:
     location: 3.5/9.1/3.5
     blockType: AIR
-  greenSpawn:
-    location: 3/9/-3
-    blockType: AIR
-  yellowSpawn:
-    location: -3/9/-3
-    blockType: AIR
+#  greenSpawn:
+#    location: 3/9/-3
+#    blockType: AIR
+#  yellowSpawn:
+#    location: -3/9/-3
+#    blockType: AIR
 
 forges:
   i1:
@@ -37,22 +37,22 @@ forges:
       - 10
       - 5
       - 1
-  i3:
-    location: 6.5/8.5/5.5
-    itemType: IRON_INGOT
-    team: §eJaune§r
-    popDelay:
-      - 10
-      - 5
-      - 1
-  i4:
-    location: 8.5/8.5/5.5
-    itemType: IRON_INGOT
-    team: §aVert§r
-    popDelay:
-      - 10
-      - 5
-      - 1
+#  i3:
+#    location: 6.5/8.5/5.5
+#    itemType: IRON_INGOT
+#    team: §eJaune§r
+#    popDelay:
+#      - 10
+#      - 5
+#      - 1
+#  i4:
+#    location: 8.5/8.5/5.5
+#    itemType: IRON_INGOT
+#    team: §aVert§r
+#    popDelay:
+#      - 10
+#      - 5
+#      - 1
 
   g1:
     location: 0/8.5/-5
@@ -76,12 +76,12 @@ teams:
   Red:
     color: RED
     spawn: redSpawn
-  Yellow:
-    color: YELLOW
-    spawn: yellowSpawn
-  Green:
-    color: GREEN
-    spawn: greenSpawn
+#  Yellow:
+#    color: YELLOW
+#    spawn: yellowSpawn
+#  Green:
+#    color: GREEN
+#    spawn: greenSpawn
 
 chests:
   1:
@@ -99,8 +99,8 @@ chests:
 beds:
   §1Bleu§r: -3/9/3
   §cRouge§r: 3.5/9.1/3.5
-  §aVert§r: 3/9/-3
-  §eJaune§r: -3/9/-3
+#  §aVert§r: 3/9/-3
+#  §eJaune§r: -3/9/-3
 
 shop:
   blocks:

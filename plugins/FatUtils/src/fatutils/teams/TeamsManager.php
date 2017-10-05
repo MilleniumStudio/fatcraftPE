@@ -10,12 +10,18 @@ namespace fatutils\teams;
 
 
 use fatutils\FatUtils;
+use fatutils\players\PlayersManager;
 use fatutils\spawns\Spawn;
 use fatutils\spawns\SpawnManager;
+use fatutils\tools\TextFormatter;
+use fatutils\ui\windows\ButtonWindow;
+use fatutils\ui\windows\parts\Button;
 use pocketmine\block\Wool;
 use pocketmine\item\Dye;
 use pocketmine\Player;
+use pocketmine\Server;
 use pocketmine\utils\Color;
+use pocketmine\utils\UUID;
 
 class TeamsManager
 {
@@ -42,14 +48,11 @@ class TeamsManager
 
     public function initialize()
     {
-        if (!is_null(FatUtils::getInstance()->getTemplateConfig()) && FatUtils::getInstance()->getTemplateConfig()->exists(TeamsManager::CONFIG_KEY_TEAM_ROOT))
-        {
+        if (!is_null(FatUtils::getInstance()->getTemplateConfig()) && FatUtils::getInstance()->getTemplateConfig()->exists(TeamsManager::CONFIG_KEY_TEAM_ROOT)) {
             FatUtils::getInstance()->getLogger()->info("TeamManager loading...");
-            foreach (FatUtils::getInstance()->getTemplateConfig()->get(TeamsManager::CONFIG_KEY_TEAM_ROOT) as $key => $value)
-            {
+            foreach (FatUtils::getInstance()->getTemplateConfig()->get(TeamsManager::CONFIG_KEY_TEAM_ROOT) as $key => $value) {
                 $newTeam = new Team();
-                if (is_string($key))
-                {
+                if (is_string($key)) {
                     $newTeam->setName($key);
 
                     if (gettype($value) === 'array')
@@ -88,10 +91,8 @@ class TeamsManager
 
     public function getPlayerTeam(Player $p_Player): ?Team
     {
-        foreach ($this->m_Teams as $l_Team)
-        {
-            if ($l_Team instanceof Team)
-            {
+        foreach ($this->m_Teams as $l_Team) {
+            if ($l_Team instanceof Team) {
                 if ($l_Team->isPlayerInTeam($p_Player))
                     return $l_Team;
             }
@@ -104,19 +105,32 @@ class TeamsManager
     {
         $l_EmptiestTeam = $this->getEmptiestTeam();
         if (!is_null($l_EmptiestTeam))
-            $l_EmptiestTeam->addPlayer($p_Player);
-        FatUtils::getInstance()->getLogger()->info($p_Player->getName() . " have been put in " . (isset($l_EmptiestTeam) ? $l_EmptiestTeam->getName() : "no") . " team.");
+            $this->addInTeam($p_Player, $l_EmptiestTeam);
+//            $l_EmptiestTeam->addPlayer($p_Player);
+//        FatUtils::getInstance()->getLogger()->info($p_Player->getName() . " have been put in " . (isset($l_EmptiestTeam) ? $l_EmptiestTeam->getName() : "no") . " team.");
         return $l_EmptiestTeam;
+    }
+    public function addInBestTeamByUUID(string $p_PlayerBinUUID): ?Team
+    {
+        return $this->addInBestTeam(PlayersManager::getInstance()->getPlayerFromUUID(UUID::fromBinary($p_PlayerBinUUID)));
+    }
+
+    public function addInTeam(Player $p_Player, Team $p_team)
+    {
+        $team = $this->getPlayerTeam($p_Player);
+        if ($team != null) {
+            $team->removePlayer($p_Player);
+        }
+        $p_team->addPlayer($p_Player);
+        Server::getInstance()->broadcastMessage($p_Player->getName() . " join team " . $p_team->getName());
     }
 
     public function getEmptiestTeam(): ?Team
     {
         $l_LessLoadedTeam = null;
 
-        foreach ($this->m_Teams as $l_Team)
-        {
-            if ($l_Team instanceof Team)
-            {
+        foreach ($this->m_Teams as $l_Team) {
+            if ($l_Team instanceof Team) {
                 if ((is_null($l_LessLoadedTeam) && $l_Team->getPlaceLeft() > 0) || ($l_LessLoadedTeam instanceof Team && $l_Team->getPlayerCount() < $l_LessLoadedTeam->getPlayerCount()))
                     $l_LessLoadedTeam = $l_Team;
             }
@@ -131,5 +145,42 @@ class TeamsManager
     public function getTeams(): array
     {
         return $this->m_Teams;
+    }
+
+
+    public function displayTeamSelection(Player $p_player)
+    {
+        $l_Window = new ButtonWindow($p_player);
+        $l_Window->setTitle((new TextFormatter("team.choice"))->asStringForPlayer($p_player));
+        /** @var Team $team */
+        foreach ($this->getTeams() as $team) {
+            $playerList = " (" . implode(", ", $team->getPlayersNames()) . ")";
+            $l_Window->addPart((new Button())
+                ->setText($team->getName() . $playerList)
+                ->setCallback(function () use (&$p_player, $team) {
+                    $this->addInTeam($p_player, $team);
+                })
+            );
+        }
+        $l_Window->open();
+    }
+
+    public function balanceTeams()
+    {
+        // find the ~number of player per teams
+        $maxPlayerPerTeam = ceil((float)(count(PlayersManager::getInstance()->getAlivePlayers()))/(float)(count($this->m_Teams)));
+        echo "max players per team = ".$maxPlayerPerTeam."\n";
+        /** @var Team $team */
+        foreach ($this->m_Teams as $team) {
+            while($team->getPlayerCount() > $maxPlayerPerTeam)
+            {
+                echo "#".$team->getPlayerCount()." >? ".$maxPlayerPerTeam."\n";
+                $playerBinUUID = array_pop($team->m_Players);
+                $newTeam = $this->addInBestTeamByUUID($playerBinUUID);
+                echo "switch ".PlayersManager::getInstance()->getPlayerFromUUID(UUID::fromBinary($playerBinUUID))->getName()." from ".$team->getName()." to ".$newTeam->getName()."\n";
+            }
+        }
+
+
     }
 }

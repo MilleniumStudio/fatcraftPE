@@ -24,7 +24,7 @@ class Team
     private $m_Prefix = "";
 
     /* array of Player's uuid as binary */
-    private $m_Players = [];
+    public $m_Players = [];
     private $m_MaxPlayer = 10;
 
     private $m_Spawn = null;
@@ -36,18 +36,20 @@ class Team
 
     public function addPlayers(array $p_Players)
     {
-        foreach ($p_Players as $l_Player)
-        {
+        foreach ($p_Players as $l_Player) {
             if ($l_Player instanceof Player)
                 $this->addPlayer($l_Player);
         }
     }
 
+    public function removePlayer(Player $p_player){
+        array_splice($this->m_Players, array_search($p_player->getUniqueId()->toBinary(), $this->m_Players), 1);
+    }
+
     public function getAlivePlayerLeft(): int
     {
         $i = 0;
-        foreach ($this->getOnlinePlayers() as $l_Player)
-        {
+        foreach ($this->getOnlinePlayers() as $l_Player) {
             $l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($l_Player);
             if (!$l_FatPlayer->hasLost())
                 $i++;
@@ -59,8 +61,7 @@ class Team
     public function getAlivePlayers(): array
     {
         $l_Ret = [];
-        foreach ($this->getOnlinePlayers() as $l_Player)
-        {
+        foreach ($this->getOnlinePlayers() as $l_Player) {
             $l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($l_Player);
             if (!$l_FatPlayer->hasLost())
                 $l_Ret[] = $l_FatPlayer;
@@ -68,12 +69,25 @@ class Team
         return $l_Ret;
     }
 
+    public function getPlayersNames(): array
+    {
+        $array = [];
+        foreach ($this->m_Players as $playerBinUUID) {
+            $player = PlayersManager::getInstance()->getPlayerFromUUID(UUID::fromBinary($playerBinUUID));
+            if ($player != null && $player instanceof Player)
+                $array[] = $player->getName();
+            else
+                echo "No player for " . $playerBinUUID . " -> " . (UUID::fromBinary($playerBinUUID)) . "\n";
+        }
+        return $array;
+    }
+
     public function isPlayerInTeam(Player $p_Player)
     {
         return in_array($p_Player->getUniqueId()->toBinary(), $this->m_Players);
     }
 
-    public function getPlaceLeft():int
+    public function getPlaceLeft(): int
     {
         return $this->getMaxPlayer() - $this->getPlayerCount();
     }
@@ -171,11 +185,9 @@ class Team
     {
         $l_Players = [];
 
-        foreach ($this->m_Players as $l_PlayerRawUUID)
-        {
+        foreach ($this->m_Players as $l_PlayerRawUUID) {
             $l_PlayerUUID = UUID::fromBinary($l_PlayerRawUUID);
-            if ($l_PlayerUUID instanceof UUID)
-            {
+            if ($l_PlayerUUID instanceof UUID) {
                 $l_Player = PlayersManager::getInstance()->getPlayerFromUUID($l_PlayerUUID);
                 if (!is_null($l_Player))
                     $l_Players[] = $l_Player;
