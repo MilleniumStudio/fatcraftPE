@@ -19,6 +19,7 @@ class FatUtils extends PluginBase
 {
     private $m_TemplateConfig = null;
     private static $m_Instance;
+    public $rpcServer;
 
     public static function getInstance(): FatUtils
     {
@@ -34,6 +35,15 @@ class FatUtils extends PluginBase
     {
         $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
         WorldUtils::stopWorldsTime();
+//        $this->rpcServer = new \fatutils\tools\control_socket\RPCServer($this);
+    }
+
+    public function onDisable()
+    {
+        if ($this->rpcServer != null)
+        {
+            $this->rpcServer->stop();
+        }
     }
 
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool
