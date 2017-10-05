@@ -23,6 +23,8 @@ class Sidebar
     private $m_TaskId;
     private $m_DisplayTickInterval = 20;
 
+    private $m_Enabled = true;
+
     // -1 means no automatic update
     private $m_UpdateTickInterval = -1;
 
@@ -76,10 +78,13 @@ class Sidebar
              */
             public function onRun(int $currentTick)
             {
-                if ($currentTick % $this->m_SidebarInstance->getDisplayTickInterval() == 0)
-                    $this->m_SidebarInstance->_display();
-                if ($this->m_SidebarInstance->getUpdateTickInterval() >= 0 && $currentTick % $this->m_SidebarInstance->getUpdateTickInterval() == 0)
-                    $this->m_SidebarInstance->update();
+                if ($this->m_SidebarInstance->isEnabled())
+                {
+                    if ($currentTick % $this->m_SidebarInstance->getDisplayTickInterval() == 0)
+                        $this->m_SidebarInstance->_display();
+                    if ($this->m_SidebarInstance->getUpdateTickInterval() >= 0 && $currentTick % $this->m_SidebarInstance->getUpdateTickInterval() == 0)
+                        $this->m_SidebarInstance->update();
+                }
             }
         }, 1);
     }
@@ -130,6 +135,17 @@ class Sidebar
         return $this;
     }
 
+    public function enable()
+    {
+        $this->m_Enabled = true;
+    }
+
+    public function disable()
+    {
+        $this->m_Enabled = false;
+    }
+
+    // preferably use disable()
     public function destroy()
     {
         if (isset($this->m_TaskId))
@@ -260,6 +276,10 @@ class Sidebar
         return $this->m_DisplayTickInterval;
     }
 
+    public function isEnabled():bool
+    {
+        return (bool)$this->m_Enabled;
+    }
 
     /**
      * @return int

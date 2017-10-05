@@ -146,7 +146,7 @@ class Bedwars extends PluginBase implements Listener
                                 $l_State = TextFormat::RED . "X";
                         }
 
-                        $l_Ret[] = $l_Team->getName() . TextFormat::WHITE . " : " . $l_State;
+                        $l_Ret[] = $l_Team->getColoredName() . TextFormat::WHITE . " : " . $l_State;
                     }
                 }
 
@@ -173,7 +173,7 @@ class Bedwars extends PluginBase implements Listener
             $p_Player->setGamemode(Player::ADVENTURE);
 
             new DelayedExec(5, function () use ($p_Player, $l_Team) {
-                $p_Player->addSubTitle((new TextFormatter("player.team.join", ["teamName", $l_Team->getName()]))->asStringForPlayer($p_Player));
+                $p_Player->addSubTitle((new TextFormatter("player.team.join", ["teamName", $l_Team->getColoredName()]))->asStringForPlayer($p_Player));
             });
         } else {
             $p_Player->setGamemode(3);
@@ -436,7 +436,7 @@ class Bedwars extends PluginBase implements Listener
             case "upgrade": {
                 $team = PlayersManager::getInstance()->getFatPlayer($player)->getTeam();
                 $this->upgradeIronForge($team);
-                echo "Forge " . $team->getName() . " upgraded\n";
+                echo "Forge " . $team->getColoredName() . " upgraded\n";
             }
                 break;
             case "gold": {

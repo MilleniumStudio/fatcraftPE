@@ -61,7 +61,7 @@ class ColorUtils
             case ColorUtils::AQUA:
                 return 3;
             case ColorUtils::RED:
-                return 2;
+                return 14; // same as DARK_RED, otherwise it's ugly...
             case ColorUtils::LIGHT_PURPLE:
                 return 6;
             case ColorUtils::YELLOW:

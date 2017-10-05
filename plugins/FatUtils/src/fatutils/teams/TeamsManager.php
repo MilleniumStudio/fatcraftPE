@@ -78,7 +78,7 @@ class TeamsManager
                 } else
                     $newTeam->setName($value);
 
-                FatUtils::getInstance()->getLogger()->info("   - " . $newTeam->getName() . " (maxPlayer:" . $newTeam->getMaxPlayer() . ")");
+                FatUtils::getInstance()->getLogger()->info("   - " . $newTeam->getColoredName() . " (maxPlayer:" . $newTeam->getMaxPlayer() . ")");
                 $this->addTeam($newTeam);
             }
         }
@@ -122,7 +122,7 @@ class TeamsManager
             $team->removePlayer($p_Player);
         }
         $p_team->addPlayer($p_Player);
-        Server::getInstance()->broadcastMessage($p_Player->getName() . " join team " . $p_team->getName());
+        Server::getInstance()->broadcastMessage($p_Player->getName() . " join team " . $p_team->getColoredName());
     }
 
     public function getEmptiestTeam(): ?Team
@@ -156,7 +156,7 @@ class TeamsManager
         foreach ($this->getTeams() as $team) {
             $playerList = " (" . implode(", ", $team->getPlayersNames()) . ")";
             $l_Window->addPart((new Button())
-                ->setText($team->getName() . $playerList)
+                ->setText($team->getColoredName() . $playerList)
                 ->setCallback(function () use (&$p_player, $team) {
                     $this->addInTeam($p_player, $team);
                 })
@@ -177,7 +177,7 @@ class TeamsManager
                 echo "#".$team->getPlayerCount()." >? ".$maxPlayerPerTeam."\n";
                 $playerBinUUID = array_pop($team->m_Players);
                 $newTeam = $this->addInBestTeamByUUID($playerBinUUID);
-                echo "switch ".PlayersManager::getInstance()->getPlayerFromUUID(UUID::fromBinary($playerBinUUID))->getName()." from ".$team->getName()." to ".$newTeam->getName()."\n";
+                echo "switch ".PlayersManager::getInstance()->getPlayerFromUUID(UUID::fromBinary($playerBinUUID))->getName()." from ".$team->getColoredName()." to ".$newTeam->getColoredName()."\n";
             }
         }
 
