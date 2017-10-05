@@ -61,6 +61,8 @@ class Bedwars extends PluginBase implements Listener
     private static $m_Instance;
     private $m_WaitingTimer;
     private $m_PlayTimer;
+    private $m_secondsSinceStart = 0;
+    private $m_timeTier;
 
     private $m_Forges = [];
 
@@ -115,10 +117,6 @@ class Bedwars extends PluginBase implements Listener
                     if (array_key_exists(Bedwars::CONFIG_KEY_FORGES_TEAM, $value)) {
                         $newForge->setTeam($value[Bedwars::CONFIG_KEY_FORGES_TEAM]);
                     }
-
-
-                    if (array_key_exists(Bedwars::CONFIG_KEY_FORGES_POP_AMOUNT, $value))
-                        $newForge->setPopAmount($value[Bedwars::CONFIG_KEY_FORGES_POP_AMOUNT]);
 
                     FatUtils::getInstance()->getLogger()->info("   - " . $key);
                     $this->m_Forges[] = $newForge;
@@ -243,7 +241,7 @@ class Bedwars extends PluginBase implements Listener
         return false;
     }
 
-    public function upgradeGoldForge()
+    public function upgradeGoldForges()
     {
         /** @var Forge $forge */
         foreach ($this->m_Forges as $forge) {
@@ -253,7 +251,7 @@ class Bedwars extends PluginBase implements Listener
         }
     }
 
-    public function upgradeDiamondForge()
+    public function upgradeDiamondForges()
     {
         /** @var Forge $forge */
         foreach ($this->m_Forges as $forge) {
@@ -276,6 +274,7 @@ class Bedwars extends PluginBase implements Listener
             $l_Player->addTitle(TextFormat::GREEN . "GO !");
         }
 
+        $this->m_timeTier = (int)(GameManager::getInstance()->getPlayingTickDuration() / 60);
         $this->m_PlayTimer = (new BossbarTimer(GameManager::getInstance()->getPlayingTickDuration()))
             ->setTitle(new TextFormatter("bossbar.playing.title"))
             ->addStartCallback(function () {
@@ -289,6 +288,12 @@ class Bedwars extends PluginBase implements Listener
                             if ($l_Forge->canPop())
                                 $l_Forge->pop();
                         }
+                    }
+                    $this->m_secondsSinceStart++;
+                    if ($this->m_secondsSinceStart == $this->m_timeTier || $this->m_secondsSinceStart == $this->m_timeTier * 2) {
+                        echo "UP UP UP !\n";
+                        $this->upgradeGoldForges();
+                        $this->upgradeDiamondForges();
                     }
                 }
             })
@@ -380,8 +385,7 @@ class Bedwars extends PluginBase implements Listener
                 $l_Player->sendMessage("Il reste " . TextFormat::YELLOW . PlayersManager::getInstance()->getAlivePlayerLeft() . TextFormat::RESET . " survivants !", "*");
         }
 
-        if(Bedwars::DEBUG && $l_PlayerLeft <= 1)
-        {
+        if (Bedwars::DEBUG && $l_PlayerLeft <= 1) {
             echo "Should be a end game but cancelled cause debug is on\n";
         }
         if ($l_PlayerLeft <= 1)
@@ -414,11 +418,11 @@ class Bedwars extends PluginBase implements Listener
             }
                 break;
             case "gold": {
-                $this->upgradeGoldForge();
+                $this->upgradeGoldForges();
             }
                 break;
             case "diam": {
-                $this->upgradeDiamondForge();
+                $this->upgradeDiamondForges();
             }
                 break;
         }
