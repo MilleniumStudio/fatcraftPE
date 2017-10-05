@@ -50,6 +50,7 @@ class Bedwars extends PluginBase implements Listener
     const CONFIG_KEY_FORGES_POP_DELAY = "popDelay";
     const CONFIG_KEY_FORGES_POP_AMOUNT = "popAmount";
     const CONFIG_KEY_FORGES_TEAM = "team";
+    const CONFIG_KEY_NPC_SHOP = "npcShop";
 
     const PLAYER_DATA_CURRENCY_IRON = "currency.iron";
     const PLAYER_DATA_CURRENCY_GOLD = "currency.gold";
@@ -274,6 +275,14 @@ class Bedwars extends PluginBase implements Listener
             $l_Player->addTitle(TextFormat::GREEN . "GO !");
         }
 
+        //remove team selectors
+        TeamsManager::getInstance()->clearNPCs();
+
+        //load shops
+        foreach (FatUtils::getInstance()->getTemplateConfig()->get(Bedwars::CONFIG_KEY_NPC_SHOP) as $key => $value){
+            new ShopKeeper(WorldUtils::stringToLocation($value));
+        }
+
         $this->m_timeTier = (int)(GameManager::getInstance()->getPlayingTickDuration() / 60);
         $this->m_PlayTimer = (new BossbarTimer(GameManager::getInstance()->getPlayingTickDuration()))
             ->setTitle(new TextFormatter("bossbar.playing.title"))
@@ -451,6 +460,12 @@ class Bedwars extends PluginBase implements Listener
                 TeamsManager::getInstance()->displayTeamSelection($player);
             }
                 break;
+            case "npc":{
+                TeamsManager::getInstance()->addNPC($player->getLocation());
+            }break;
+            case "clear":{
+                TeamsManager::getInstance()->clearNPCs();
+            }break;
         }
         return true;
     }

@@ -13,11 +13,14 @@ use fatutils\FatUtils;
 use fatutils\players\PlayersManager;
 use fatutils\spawns\Spawn;
 use fatutils\spawns\SpawnManager;
+use fatutils\tools\ClickableNPC;
 use fatutils\tools\TextFormatter;
+use fatutils\tools\WorldUtils;
 use fatutils\ui\windows\ButtonWindow;
 use fatutils\ui\windows\parts\Button;
 use pocketmine\block\Wool;
 use pocketmine\item\Dye;
+use pocketmine\level\Location;
 use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\utils\Color;
@@ -30,9 +33,11 @@ class TeamsManager
     const CONFIG_KEY_TEAM_MAX_PLAYERS = "maxPlayer";
     const CONFIG_KEY_TEAM_SPAWN = "spawn";
     const CONFIG_KEY_TEAM_COLOR = "color";
+    const CONFIG_KEY_NPC_TEAM_SELECTOR = "npcTeamSelector";
 
     private static $m_Instance = null;
     private $m_Teams = [];
+    private $m_NPCSelectors = [];
 
     public static function getInstance(): TeamsManager
     {
@@ -55,8 +60,7 @@ class TeamsManager
                 if (is_string($key)) {
                     $newTeam->setName($key);
 
-                    if (gettype($value) === 'array')
-                    {
+                    if (gettype($value) === 'array') {
 //                        if (array_key_exists(TeamsManager::CONFIG_KEY_TEAM_PREFIX, $value))
 //                            $newTeam->setPrefix($value[TeamsManager::CONFIG_KEY_TEAM_PREFIX]);
 
@@ -66,8 +70,7 @@ class TeamsManager
                         if (array_key_exists(TeamsManager::CONFIG_KEY_TEAM_COLOR, $value) && is_string($value[TeamsManager::CONFIG_KEY_TEAM_COLOR]))
                             $newTeam->setColor($value[TeamsManager::CONFIG_KEY_TEAM_COLOR]);
 
-                        if (array_key_exists(TeamsManager::CONFIG_KEY_TEAM_SPAWN, $value))
-                        {
+                        if (array_key_exists(TeamsManager::CONFIG_KEY_TEAM_SPAWN, $value)) {
                             $l_SpawnName = $value[TeamsManager::CONFIG_KEY_TEAM_SPAWN];
                             $l_Spawn = SpawnManager::getInstance()->getSpawnByName($l_SpawnName);
                             if ($l_Spawn instanceof Spawn)
@@ -80,6 +83,10 @@ class TeamsManager
 
                 FatUtils::getInstance()->getLogger()->info("   - " . $newTeam->getColoredName() . " (maxPlayer:" . $newTeam->getMaxPlayer() . ")");
                 $this->addTeam($newTeam);
+            }
+            //load NPCs
+            foreach (FatUtils::getInstance()->getTemplateConfig()->get(TeamsManager::CONFIG_KEY_NPC_TEAM_SELECTOR) as $key => $value){
+                $this->addNPC(WorldUtils::stringToLocation($value));
             }
         }
     }
@@ -110,6 +117,7 @@ class TeamsManager
 //        FatUtils::getInstance()->getLogger()->info($p_Player->getName() . " have been put in " . (isset($l_EmptiestTeam) ? $l_EmptiestTeam->getName() : "no") . " team.");
         return $l_EmptiestTeam;
     }
+
     public function addInBestTeamByUUID(string $p_PlayerBinUUID): ?Team
     {
         return $this->addInBestTeam(PlayersManager::getInstance()->getPlayerFromUUID(UUID::fromBinary($p_PlayerBinUUID)));
@@ -168,19 +176,38 @@ class TeamsManager
     public function balanceTeams()
     {
         // find the ~number of player per teams
-        $maxPlayerPerTeam = ceil((float)(count(PlayersManager::getInstance()->getAlivePlayers()))/(float)(count($this->m_Teams)));
-        echo "max players per team = ".$maxPlayerPerTeam."\n";
+        $maxPlayerPerTeam = ceil((float)(count(PlayersManager::getInstance()->getAlivePlayers())) / (float)(count($this->m_Teams)));
         /** @var Team $team */
         foreach ($this->m_Teams as $team) {
             while($team->getPlayerCount() > $maxPlayerPerTeam)
             {
-                echo "#".$team->getPlayerCount()." >? ".$maxPlayerPerTeam."\n";
                 $playerBinUUID = array_pop($team->m_Players);
                 $newTeam = $this->addInBestTeamByUUID($playerBinUUID);
-                echo "switch ".PlayersManager::getInstance()->getPlayerFromUUID(UUID::fromBinary($playerBinUUID))->getName()." from ".$team->getColoredName()." to ".$newTeam->getColoredName()."\n";
+                echo "switch ".PlayersManager::getInstance()->getPlayerFromUUID(UUID::fromBinary($playerBinUUID))->getName()." from ".$team->getName()." to ".$newTeam->getName()."\n";
             }
         }
-
-
     }
+
+    //-----------------
+    // NPC Selectors
+    //-----------------
+
+    public function addNPC(Location $p_location)
+    {
+        $npc = new ClickableNPC($p_location);
+        $this->m_NPCSelectors[] = $npc;
+        $npc->setOnHitCallback(function ($player) {
+            if ($player instanceof Player)
+                $this->displayTeamSelection($player);
+        });
+    }
+
+    public function clearNPCs(){
+        /** @var ClickableNPC $npc */
+        foreach ($this->m_NPCSelectors as $npc) {
+            $npc->villager->kill();
+        }
+        $this->m_NPCSelectors = [];
+    }
+
 }

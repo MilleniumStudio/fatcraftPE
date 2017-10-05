@@ -2,9 +2,6 @@ minPlayer: 2
 maxPlayer: 18
 waitingSecDuration: 15
 playingSecDuration: 6000
-deathArenaLoc: 0.5/6.1/60.5
-
-isSkywar: false
 
 spawns:
   blueSpawn:
@@ -83,24 +80,19 @@ teams:
 #    color: GREEN
 #    spawn: greenSpawn
 
-chests:
-  1:
-    location: -0.5/8.5/8.5
-    total-item-value: 20
-    max-item-value: 7
-  2:
-    location: 2.5/8.5/8.5
-    total-item-value: 20
-    min-item-value: 7
-  3:
-    location: 0.5/9.5/0.5
-    total-item-value: 20
+npcTeamSelector:
+  1: -2/8.5/-14
+  2: 3/8.5/-14
 
 beds:
-  §1Bleu§r: -3/9/3
-  §cRouge§r: 3.5/9.1/3.5
-#  §aVert§r: 3/9/-3
-#  §eJaune§r: -3/9/-3
+  Blue: -3/9/3
+  Red: 3.5/9.1/3.5
+#  Green: 3/9/-3
+#  Yellow: -3/9/-3
+
+npcShop:
+  1: -2/8.5/-10
+  2: 3/8.5/-10
 
 shop:
   blocks:

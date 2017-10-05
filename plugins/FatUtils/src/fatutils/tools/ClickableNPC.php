@@ -61,7 +61,6 @@ class ClickableNPC implements Listener
     public function onEntityDamageEvent(EntityDamageEvent $event)
     {
         $target = $event->getEntity();
-
         if ($target instanceof Villager && $target === $this->villager) {
             if ($event instanceof EntityDamageByEntityEvent) {
                 $damager = $event->getDamager();
