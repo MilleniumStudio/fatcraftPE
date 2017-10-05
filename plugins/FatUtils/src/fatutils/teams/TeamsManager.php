@@ -61,7 +61,7 @@ class TeamsManager
                             $newTeam->setMaxPlayer($value[TeamsManager::CONFIG_KEY_TEAM_MAX_PLAYERS]);
 
                         if (array_key_exists(TeamsManager::CONFIG_KEY_TEAM_COLOR, $value) && is_string($value[TeamsManager::CONFIG_KEY_TEAM_COLOR]))
-                            $newTeam->setMaxPlayer($value[TeamsManager::CONFIG_KEY_TEAM_COLOR]);
+                            $newTeam->setColor($value[TeamsManager::CONFIG_KEY_TEAM_COLOR]);
 
                         if (array_key_exists(TeamsManager::CONFIG_KEY_TEAM_SPAWN, $value))
                         {
