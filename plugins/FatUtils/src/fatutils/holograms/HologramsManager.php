@@ -32,6 +32,7 @@ class HologramsManager
 
     public function loadConfigs()
     {
+        FatUtils::getInstance()->getLogger()->info("[Holograms] Loading holograms.yml");
         FatUtils::getInstance()->saveResource("holograms.yml");
         $this->config = new Config(FatUtils::getInstance()->getDataFolder() . "holograms.yml");
         if ($this->config == null)
@@ -43,21 +44,25 @@ class HologramsManager
             $name = isset($value['name']) ? $value['name'] : null;
             if ($name == null)
             {
-                throw new Exception("Holograms Error: you need to specify a name");
+                FatUtils::getInstance()->getLogger()->warning("[Holograms] Error: hologram without name");
+                continue;
             }
             $p_RawLocation = isset($value['location']) ? $value['location'] : null;
             if ($p_RawLocation == null)
             {
-                throw new Exception("Holograms Error: you need to specify a location");
+                FatUtils::getInstance()->getLogger()->warning("[Holograms] Error: hologram ". $name . " has no location");
+                continue;
             }
             $l_Location = WorldUtils::stringToLocation($p_RawLocation);
             if ($l_Location->level == null)
             {
-                throw new Exception("Holograms Error: world " . $p_RawLocation . " not found");
+                FatUtils::getInstance()->getLogger()->warning("[Holograms] Error: hologram ". $name . " world " . $p_RawLocation . " not found");
+                continue;
             }
             $title = isset($value['title']) ? $value['title'] : null;
             $text = isset($value['text']) ? $value['text'] : null;
             new Hologram($name, $l_Location, $text, $title);
+            FatUtils::getInstance()->getLogger()->info("[Holograms] hologram ". $name . " spawned on " . $p_RawLocation);
         }
     }
 
@@ -66,10 +71,10 @@ class HologramsManager
         HologramsManager::$instance->holograms[$hologram->name] = $hologram;
     }
 
-    public function newHologram(Location $l_Location, String $p_Name)
+    public function newHologram(Location $l_Location, String $p_Name, string $p_Title = "", string $p_Text = "")
     {
-        $this->add(new Hologram($p_Name, $l_Location, "", ""));
-        FatUtils::getInstance()->getLogger()->info("Hologram " . $p_Name . " created on " . WorldUtils::locationToString($l_Location));
+        $this->add(new Hologram($p_Name, $l_Location, $p_Title, $p_Text));
+        FatUtils::getInstance()->getLogger()->info("[Holograms] Hologram " . $p_Name . " created on " . WorldUtils::locationToString($l_Location));
     }
 
     public function getHologram(string $p_Name): Hologram
