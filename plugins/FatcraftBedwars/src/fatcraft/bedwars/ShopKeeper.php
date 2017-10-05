@@ -11,12 +11,14 @@ namespace fatcraft\bedwars;
 use fatutils\players\PlayersManager;
 use fatutils\teams\TeamsManager;
 use fatutils\tools\ClickableNPC;
+use fatutils\tools\ColorUtils;
 use fatutils\tools\ItemUtils;
 use fatutils\tools\Sidebar;
 use fatutils\tools\TextFormatter;
 use fatutils\ui\windows\ButtonWindow;
 use fatutils\ui\windows\parts\Button;
 use fatutils\ui\windows\Window;
+use pocketmine\block\BlockIds;
 use pocketmine\item\Item;
 use pocketmine\item\ItemIds;
 use pocketmine\level\Location;
@@ -148,8 +150,7 @@ class ShopKeeper extends ClickableNPC
                 Bedwars::getInstance()->modPlayerIron($p_Player, -$ironPrice);
                 return true;
             }
-        }
-        else if (isset($p_ConfigPart["goldPrice"]))
+        } else if (isset($p_ConfigPart["goldPrice"]))
         {
             $goldPrice = $p_ConfigPart["goldPrice"];
             if (Bedwars::getInstance()->getPlayerGold($p_Player) >= $goldPrice)
@@ -157,8 +158,7 @@ class ShopKeeper extends ClickableNPC
                 Bedwars::getInstance()->modPlayerGold($p_Player, -$goldPrice);
                 return true;
             }
-        }
-        else if (isset($p_ConfigPart["diamondPrice"]))
+        } else if (isset($p_ConfigPart["diamondPrice"]))
         {
             $diamondPrice = $p_ConfigPart["diamondPrice"];
             if (Bedwars::getInstance()->getPlayerDiamond($p_Player) >= $diamondPrice)
@@ -171,7 +171,7 @@ class ShopKeeper extends ClickableNPC
         return false;
     }
 
-    private function getPrice(array $p_ConfigPart):string
+    private function getPrice(array $p_ConfigPart): string
     {
         if (isset($p_ConfigPart["ironPrice"]))
             return $p_ConfigPart["ironPrice"] . " §7I§r";
@@ -200,7 +200,7 @@ class ShopKeeper extends ClickableNPC
                     $l_ImageUrl = self::$m_ShopContent[$p_Base][$l_Key]["imageUrl"];
 
                 $l_Window->addPart((new Button())
-                    ->setText((new TextFormatter("bedwars.shop.items.$p_Base." . $l_Key))->asStringForPlayer($p_Player) . " (" . $this->getPrice($l_Item) .")")
+                    ->setText((new TextFormatter("bedwars.shop.items.$p_Base." . $l_Key))->asStringForPlayer($p_Player) . " (" . $this->getPrice($l_Item) . ")")
                     ->setImage($l_ImageUrl)
                     ->setCallback(function () use ($p_Player, $p_Base, $l_Window, $l_Key, $l_Item)
                     {
@@ -208,9 +208,16 @@ class ShopKeeper extends ClickableNPC
                         {
                             $l_Item = ItemUtils::getItemFromRaw(self::$m_ShopContent[$p_Base][$l_Key]["rawItem"]);
 
+                            $l_Color = ColorUtils::WHITE;
+                            $l_Team = TeamsManager::getInstance()->getPlayerTeam($p_Player);
+                            if (!is_null($l_Team))
+                                $l_Color = $l_Team->getColor();
+
+                            $l_Item = ItemUtils::getColoredItemIfColorable($l_Item, $l_Color);
+
                             $p_Player->getInventory()->addItem($l_Item);
                             $p_Player->sendMessage((new TextFormatter("bedwars.shop.bought", ["name" => new TextFormatter("bedwars.shop.items.$p_Base." . $l_Key)]))->asStringForPlayer($p_Player));
-                            echo $p_Player->getName() . " bought ". $l_Key . "\n";
+                            Bedwars::getInstance()->getLogger()->info($p_Player->getName() . " bought " . $l_Key . "\n");
                         }
                         $l_Window->open();
                     })
@@ -244,17 +251,44 @@ class ShopKeeper extends ClickableNPC
                     $l_ImageUrl = self::$m_ShopContent["armors"][$l_Key]["imageUrl"];
 
                 $l_Window->addPart((new Button())
-                    ->setText((new TextFormatter("bedwars.shop.items.armors." . $l_Key))->asStringForPlayer($p_Player) . " (" . $this->getPrice($l_Item) .")")
+                    ->setText((new TextFormatter("bedwars.shop.items.armors." . $l_Key))->asStringForPlayer($p_Player) . " (" . $this->getPrice($l_Item) . ")")
                     ->setImage($l_ImageUrl)
                     ->setCallback(function () use ($p_Player, $l_Window, $l_Key, $l_Item)
                     {
                         if ($this->buy($p_Player, $l_Item))
                         {
-                            $l_Item = ItemUtils::getItemFromRaw(self::$m_ShopContent["armors"][$l_Key]["helmet"]);
+                            $l_Color = ColorUtils::WHITE;
+                            $l_Team = TeamsManager::getInstance()->getPlayerTeam($p_Player);
+                            if (!is_null($l_Team))
+                                $l_Color = $l_Team->getColor();
 
-                            $p_Player->getInventory()->addItem($l_Item);
+                            if (isset(self::$m_ShopContent["armors"][$l_Key]["helmet"]))
+                            {
+                                $l_Item = ItemUtils::getItemFromRaw(self::$m_ShopContent["armors"][$l_Key]["helmet"]);
+                                if (ItemUtils::isHelmet($l_Item->getId()))
+                                    $p_Player->getInventory()->setHelmet(ItemUtils::getColoredItemIfColorable($l_Item, $l_Color));
+                            }
+                            if (isset(self::$m_ShopContent["armors"][$l_Key]["chestplate"]))
+                            {
+                                $l_Item = ItemUtils::getItemFromRaw(self::$m_ShopContent["armors"][$l_Key]["chestplate"]);
+                                if (ItemUtils::isChestplate($l_Item->getId()))
+                                    $p_Player->getInventory()->setChestplate(ItemUtils::getColoredItemIfColorable($l_Item, $l_Color));
+                            }
+                            if (isset(self::$m_ShopContent["armors"][$l_Key]["leggings"]))
+                            {
+                                $l_Item = ItemUtils::getItemFromRaw(self::$m_ShopContent["armors"][$l_Key]["leggings"]);
+                                if (ItemUtils::isLeggings($l_Item->getId()))
+                                    $p_Player->getInventory()->setLeggings(ItemUtils::getColoredItemIfColorable($l_Item, $l_Color));
+                            }
+                            if (isset(self::$m_ShopContent["armors"][$l_Key]["boots"]))
+                            {
+                                $l_Item = ItemUtils::getItemFromRaw(self::$m_ShopContent["armors"][$l_Key]["boots"]);
+                                if (ItemUtils::isBoots($l_Item->getId()))
+                                    $p_Player->getInventory()->setBoots(ItemUtils::getColoredItemIfColorable($l_Item, $l_Color));
+                            }
+
                             $p_Player->sendMessage((new TextFormatter("bedwars.shop.bought", ["name" => new TextFormatter("bedwars.shop.items.armors." . $l_Key)]))->asStringForPlayer($p_Player));
-                            echo $p_Player->getName() . " bought ". $l_Key . "\n";
+                            Bedwars::getInstance()->getLogger()->info($p_Player->getName() . " bought " . $l_Key . "\n");
                         }
                         $l_Window->open();
                     })

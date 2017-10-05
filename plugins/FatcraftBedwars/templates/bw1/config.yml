@@ -126,25 +126,25 @@ shop:
   armors:
     leatherSet:
       helmet: '{"material": "LEATHER_HELMET"}'
-      chestplate: '{"material": "LEATHER_CHESPLATE"}'
+      chestplate: '{"material": "LEATHER_CHESTPLATE"}'
       leggings: '{"material": "LEATHER_LEGGINGS"}'
       boots: '{"material": "LEATHER_BOOTS"}'
       ironPrice: 1
     chainmailSet:
       helmet: '{"material": "CHAINMAIL_HELMET"}'
-      chestplate: '{"material": "CHAINMAIL_CHESPLATE"}'
+      chestplate: '{"material": "CHAINMAIL_CHESTPLATE"}'
       leggings: '{"material": "CHAINMAIL_LEGGINGS"}'
       boots: '{"material": "CHAINMAIL_BOOTS"}'
       ironPrice: 1
     ironSet:
       helmet: '{"material": "IRON_HELMET"}'
-      chestplate: '{"material": "IRON_CHESPLATE"}'
+      chestplate: '{"material": "IRON_CHESTPLATE"}'
       leggings: '{"material": "IRON_LEGGINGS"}'
       boots: '{"material": "IRON_BOOTS"}'
       ironPrice: 1
     diamondSet:
       helmet: '{"material": "DIAMOND_HELMET"}'
-      chestplate: '{"material": "DIAMOND_CHESPLATE"}'
+      chestplate: '{"material": "DIAMOND_CHESTPLATE"}'
       leggings: '{"material": "DIAMOND_LEGGINGS"}'
       boots: '{"material": "DIAMOND_BOOTS"}'
       ironPrice: 1

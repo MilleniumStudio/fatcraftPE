@@ -23,6 +23,7 @@ class TeamsManager
     const CONFIG_KEY_TEAM_PREFIX = "prefix";
     const CONFIG_KEY_TEAM_MAX_PLAYERS = "maxPlayer";
     const CONFIG_KEY_TEAM_SPAWN = "spawn";
+    const CONFIG_KEY_TEAM_COLOR = "color";
 
     private static $m_Instance = null;
     private $m_Teams = [];
@@ -58,6 +59,9 @@ class TeamsManager
 
                         if (array_key_exists(TeamsManager::CONFIG_KEY_TEAM_MAX_PLAYERS, $value) && is_numeric($value[TeamsManager::CONFIG_KEY_TEAM_MAX_PLAYERS]))
                             $newTeam->setMaxPlayer($value[TeamsManager::CONFIG_KEY_TEAM_MAX_PLAYERS]);
+
+                        if (array_key_exists(TeamsManager::CONFIG_KEY_TEAM_COLOR, $value) && is_string($value[TeamsManager::CONFIG_KEY_TEAM_COLOR]))
+                            $newTeam->setMaxPlayer($value[TeamsManager::CONFIG_KEY_TEAM_COLOR]);
 
                         if (array_key_exists(TeamsManager::CONFIG_KEY_TEAM_SPAWN, $value))
                         {

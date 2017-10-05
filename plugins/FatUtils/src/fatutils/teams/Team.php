@@ -12,6 +12,7 @@ namespace fatutils\teams;
 use fatutils\FatUtils;
 use fatutils\players\PlayersManager;
 use fatutils\spawns\Spawn;
+use fatutils\tools\ColorUtils;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 use pocketmine\utils\UUID;
@@ -19,6 +20,7 @@ use pocketmine\utils\UUID;
 class Team
 {
     private $m_Name = "NoName";
+    private $m_Color = ColorUtils::WHITE;
     private $m_Prefix = TextFormat::RESET . TextFormat::GRAY . "◀N▶" . TextFormat::RESET . TextFormat::WHITE;
 
     /* array of Player's uuid as binary */
@@ -108,6 +110,16 @@ class Team
         return $this->m_Name;
     }
 
+    public function getColoredName(): string
+    {
+        return ColorUtils::getTextFormatFromColor($this->getColor()) . $this->getName() . TextFormat::WHITE . TextFormat::RESET;
+    }
+
+    public function getColor(): string
+    {
+        return $this->m_Color;
+    }
+
     public function getPlayerCount():int
     {
         return count($this->m_Players);
@@ -127,6 +139,14 @@ class Team
     public function setMaxPlayer(int $m_MaxPlayer)
     {
         $this->m_MaxPlayer = $m_MaxPlayer;
+    }
+
+    /**
+     * @param string $p_Color /!\ see ColorUtils constants
+     */
+    public function setColor(string $p_Color)
+    {
+        $this->m_Color = $p_Color;
     }
 
     /**

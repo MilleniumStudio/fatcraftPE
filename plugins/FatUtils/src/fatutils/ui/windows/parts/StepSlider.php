@@ -28,4 +28,10 @@ class StepSlider extends UiPart implements FormWindowCompatible
         $this->m_Data["steps"] = $p_Steps;
         return $this;
     }
+
+    public function setDefault(int $p_Default):StepSlider
+    {
+        $this->m_Data["default"] = $p_Default;
+        return $this;
+    }
 }
