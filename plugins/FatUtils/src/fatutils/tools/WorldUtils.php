@@ -15,6 +15,7 @@ use pocketmine\block\BlockFactory;
 use pocketmine\entity\Entity;
 use pocketmine\level\Location;
 use pocketmine\level\Position;
+use pocketmine\level\format\Chunk;
 use pocketmine\math\AxisAlignedBB;
 use pocketmine\network\mcpe\protocol\AddEntityPacket;
 
@@ -120,6 +121,16 @@ class WorldUtils
 	public static function loadChunkAt(Position $p_Pos)
     {
         $p_Pos->getLevel()->loadChunk($p_Pos->getFloorX() >> 4, $p_Pos->getFloorZ() >> 4);
+    }
+
+    public static function isPosInChunk(Location $p_Pos, Chunk $p_Chunk): Boolean
+    {
+        //!\\ no check for level, Chunk not implement getLevel() method.
+        if ($p_Pos->getX() >> 4 == $p_Chunk->getX() && $p_Pos->getZ() >> 4 == $p_Chunk->getZ())
+        {
+            return true;
+        }
+        return false;
     }
 
     public static function addStrike(Location $p_Loc, $height = 0){
