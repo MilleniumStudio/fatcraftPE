@@ -27,6 +27,9 @@ class HungerGameScoreManager extends ScoresManager
     public function registerDeath(Player $p_Player)
     {
         HungerGame::getInstance()->getLogger()->info("Register player DEATH " . $p_Player->getName() . " position " . count($this->m_Positions));
-        $this->m_Positions[] = $p_Player->getName();
+        $data = array();
+        $data['name'] = $p_Player->getName();
+        $data['uuid'] = $p_Player->XUID;
+        $this->m_Positions[] = $data;
     }
 }
