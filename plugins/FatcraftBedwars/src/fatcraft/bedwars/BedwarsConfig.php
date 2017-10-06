@@ -18,10 +18,8 @@ use pocketmine\utils\Config;
 
 class BedwarsConfig
 {
-    const CONFIG_KEY_IS_SKYWARS = "isSkywar";
     const CONFIG_KEY_DEATH_ARENA_LOC = "deathArenaLoc";
 
-	private $m_IsSkyWars = false;
 	private $m_DeathArenaLoc = null;
 	private $m_bedsLocations = [];
 
@@ -31,8 +29,6 @@ class BedwarsConfig
 	 */
 	public function __construct(Config $p_Config)
 	{
-		$this->m_IsSkyWars = $p_Config->get(BedwarsConfig::CONFIG_KEY_IS_SKYWARS, $this->m_IsSkyWars);
-
         if ($p_Config->exists(BedwarsConfig::CONFIG_KEY_DEATH_ARENA_LOC))
             $this->m_DeathArenaLoc = WorldUtils::stringToLocation($p_Config->get(BedwarsConfig::CONFIG_KEY_DEATH_ARENA_LOC, ""));
 		else
@@ -42,14 +38,6 @@ class BedwarsConfig
 		foreach (TeamsManager::getInstance()->getTeams() as $team){
 		    $this->m_bedsLocations[$team->getName()] = WorldUtils::stringToLocation($p_Config->getNested("beds.".$team->getName(), ""));
         }
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function isSkyWars():bool
-	{
-		return $this->m_IsSkyWars;
 	}
 
     /**

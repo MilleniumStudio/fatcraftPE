@@ -24,11 +24,6 @@ use pocketmine\utils\TextFormat;
 
 class EventListener implements Listener
 {
-
-    public function __construct()
-    {
-    }
-
 //	/**
 //	 * @param PlayerDeathEvent $e
 //	 */
@@ -36,12 +31,12 @@ class EventListener implements Listener
 //	{
 //		$p = $e->getEntity();
 //
-//
+
+
 //		PlayersManager::getInstance()->getFatPlayer($p)->setHasLost(true);
 //
 //        WorldUtils::addStrike($p->getLocation());
 //        $l_PlayerLeft = PlayersManager::getInstance()->getAlivePlayerLeft();
-//
 //
 //        foreach (Bedwars::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
 //        {
@@ -76,7 +71,6 @@ class EventListener implements Listener
                         $e->getItem()->kill();
                         break;
                     case ItemIds::GOLD_INGOT:
-//                        FatUtils::getInstance()->getLogger()->info("gold it is");
                         Bedwars::getInstance()->modPlayerGold($p, $e->getItem()->getItem()->getCount());
 
                         $e->setCancelled(true);
@@ -119,12 +113,13 @@ class EventListener implements Listener
                 });
             }
         } else {
-            if (Bedwars::DEBUG) {
+            if (Bedwars::DEBUG)
                 echo "authorized break cause debug is on !\n";
-                return;
-            }
-            if (!$e->getBlock()->hasMetadata("isCustom"))
+            else if (!$e->getBlock()->hasMetadata("isCustom"))
+            {
+//                echo "block break cancelled cause block is not custom\n";
                 $e->setCancelled(true);
+            }
         }
     }
 
@@ -159,6 +154,8 @@ class EventListener implements Listener
             {
             }
         });
+//        if ($e->getBlock()->hasMetadata("isCustom"))
+//            echo "Place block with custom meta\n";
     }
 
 //    /**

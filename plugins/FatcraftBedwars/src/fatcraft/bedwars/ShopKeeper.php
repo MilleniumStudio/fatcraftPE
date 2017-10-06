@@ -45,11 +45,16 @@ class ShopKeeper extends ClickableNPC
         $this->setOnHitCallback(function ($p_Player)
         {
             if ($p_Player instanceof Player)
-                $this->getMainWindow($p_Player)->open();
+                self::openShop($p_Player);
         });
     }
 
-    public function getMainWindow(Player $p_Player): Window
+    public static function openShop(Player $p_Player)
+    {
+        self::getMainWindow($p_Player)->open();
+    }
+
+    public static function getMainWindow(Player $p_Player): Window
     {
         $l_Window = new ButtonWindow($p_Player);
         $l_Window->setTitle((new TextFormatter("bedwars.shop.title"))->asStringForPlayer($p_Player));
@@ -61,7 +66,7 @@ class ShopKeeper extends ClickableNPC
                 ->setImage(ShopKeeper::IMAGE_PLACEHOLDER)
                 ->setCallback(function () use ($p_Player)
                 {
-                    $this->getGenericItemWindow($p_Player, "blocks")->open();
+                    self::getGenericItemWindow($p_Player, "blocks")->open();
                 })
             );
         }
@@ -71,7 +76,7 @@ class ShopKeeper extends ClickableNPC
             ->setImage(ShopKeeper::IMAGE_PLACEHOLDER)
             ->setCallback(function () use ($p_Player)
             {
-                $this->getUpgradesWindow($p_Player)->open();
+                self::getUpgradesWindow($p_Player)->open();
             })
         );
 
@@ -82,7 +87,7 @@ class ShopKeeper extends ClickableNPC
                 ->setImage(ShopKeeper::IMAGE_PLACEHOLDER)
                 ->setCallback(function () use ($p_Player)
                 {
-                    $this->getGenericItemWindow($p_Player, "weapons")->open();
+                    self::getGenericItemWindow($p_Player, "weapons")->open();
                 })
             );
         }
@@ -94,7 +99,7 @@ class ShopKeeper extends ClickableNPC
                 ->setImage(ShopKeeper::IMAGE_PLACEHOLDER)
                 ->setCallback(function () use ($p_Player)
                 {
-                    $this->getArmorsWindow($p_Player)->open();
+                    self::getArmorsWindow($p_Player)->open();
                 })
             );
         }
@@ -106,7 +111,7 @@ class ShopKeeper extends ClickableNPC
                 ->setImage(ShopKeeper::IMAGE_PLACEHOLDER)
                 ->setCallback(function () use ($p_Player)
                 {
-                    $this->getGenericItemWindow($p_Player, "tools")->open();
+                    self::getGenericItemWindow($p_Player, "tools")->open();
                 })
             );
         }
@@ -118,15 +123,15 @@ class ShopKeeper extends ClickableNPC
                 ->setImage(ShopKeeper::IMAGE_PLACEHOLDER)
                 ->setCallback(function () use ($p_Player)
                 {
-                    $this->getGenericItemWindow($p_Player, "others")->open();
+                    self::getGenericItemWindow($p_Player, "others")->open();
                 })
             );
         }
 
-        if ($p_Player->isOp())
+        if (Bedwars::DEBUG && $p_Player->isOp())
         {
             $l_Window->addPart((new Button())
-                ->setText(TextFormat::YELLOW . "★★★ Give me money ★★★")
+                ->setText(TextFormat::GOLD . "★★★ GIVE ME MONEY ★★★")
                 ->setCallback(function () use ($p_Player, $l_Window)
                 {
                     Bedwars::getInstance()->modPlayerIron($p_Player, 50);
@@ -140,7 +145,7 @@ class ShopKeeper extends ClickableNPC
         return $l_Window;
     }
 
-    private function buy(Player $p_Player, array $p_ConfigPart)
+    private static function buy(Player $p_Player, array $p_ConfigPart)
     {
         if (isset($p_ConfigPart["ironPrice"]))
         {
@@ -171,10 +176,10 @@ class ShopKeeper extends ClickableNPC
         return false;
     }
 
-    private function getPrice(array $p_ConfigPart): string
+    private static function getPrice(array $p_ConfigPart): string
     {
         if (isset($p_ConfigPart["ironPrice"]))
-            return $p_ConfigPart["ironPrice"] . " §7I§r";
+            return $p_ConfigPart["ironPrice"] . " I§r";
         if (isset($p_ConfigPart["goldPrice"]))
             return $p_ConfigPart["goldPrice"] . " §6G§r";
         if (isset($p_ConfigPart["diamondPrice"]))
@@ -186,7 +191,7 @@ class ShopKeeper extends ClickableNPC
     // ITEMS
     //----------
     //--> GENERIC
-    public function getGenericItemWindow(Player $p_Player, string $p_Base): Window
+    public static function getGenericItemWindow(Player $p_Player, string $p_Base): Window
     {
         $l_Window = new ButtonWindow($p_Player);
         $l_Window->setTitle((new TextFormatter("bedwars.shop.items.$p_Base.title"))->asStringForPlayer($p_Player));
@@ -200,11 +205,11 @@ class ShopKeeper extends ClickableNPC
                     $l_ImageUrl = self::$m_ShopContent[$p_Base][$l_Key]["imageUrl"];
 
                 $l_Window->addPart((new Button())
-                    ->setText((new TextFormatter("bedwars.shop.items.$p_Base." . $l_Key))->asStringForPlayer($p_Player) . " (" . $this->getPrice($l_Item) . ")")
+                    ->setText((new TextFormatter("bedwars.shop.items.$p_Base." . $l_Key))->asStringForPlayer($p_Player) . " (" . self::getPrice($l_Item) . TextFormat::DARK_GRAY . ")")
                     ->setImage($l_ImageUrl)
                     ->setCallback(function () use ($p_Player, $p_Base, $l_Window, $l_Key, $l_Item)
                     {
-                        if ($this->buy($p_Player, $l_Item))
+                        if (self::buy($p_Player, $l_Item))
                         {
                             $l_Item = ItemUtils::getItemFromRaw(self::$m_ShopContent[$p_Base][$l_Key]["rawItem"]);
 
@@ -229,7 +234,7 @@ class ShopKeeper extends ClickableNPC
             ->setText((new TextFormatter("window.return"))->asStringForPlayer($p_Player))
             ->setCallback(function () use ($p_Player)
             {
-                $this->getMainWindow($p_Player)->open();
+                self::getMainWindow($p_Player)->open();
             })
         );
 
@@ -237,7 +242,7 @@ class ShopKeeper extends ClickableNPC
     }
 
     //--> ARMORS
-    public function getArmorsWindow(Player $p_Player): Window
+    public static function getArmorsWindow(Player $p_Player): Window
     {
         $l_Window = new ButtonWindow($p_Player);
         $l_Window->setTitle((new TextFormatter("bedwars.shop.items.armors.title"))->asStringForPlayer($p_Player));
@@ -251,11 +256,11 @@ class ShopKeeper extends ClickableNPC
                     $l_ImageUrl = self::$m_ShopContent["armors"][$l_Key]["imageUrl"];
 
                 $l_Window->addPart((new Button())
-                    ->setText((new TextFormatter("bedwars.shop.items.armors." . $l_Key))->asStringForPlayer($p_Player) . " (" . $this->getPrice($l_Item) . ")")
+                    ->setText((new TextFormatter("bedwars.shop.items.armors." . $l_Key))->asStringForPlayer($p_Player) . " (" . self::getPrice($l_Item) . TextFormat::BLACK . ")")
                     ->setImage($l_ImageUrl)
                     ->setCallback(function () use ($p_Player, $l_Window, $l_Key, $l_Item)
                     {
-                        if ($this->buy($p_Player, $l_Item))
+                        if (self::buy($p_Player, $l_Item))
                         {
                             $l_Color = ColorUtils::WHITE;
                             $l_Team = TeamsManager::getInstance()->getPlayerTeam($p_Player);
@@ -299,7 +304,7 @@ class ShopKeeper extends ClickableNPC
             ->setText((new TextFormatter("window.return"))->asStringForPlayer($p_Player))
             ->setCallback(function () use ($p_Player)
             {
-                $this->getMainWindow($p_Player)->open();
+                self::getMainWindow($p_Player)->open();
             })
         );
 
@@ -309,7 +314,7 @@ class ShopKeeper extends ClickableNPC
     //-------------
     // UPGRADES
     //-------------
-    public function getUpgradesWindow(Player $p_Player): Window
+    public static function getUpgradesWindow(Player $p_Player): Window
     {
         $l_Window = new ButtonWindow($p_Player);
         $l_Window->setTitle((new TextFormatter("bedwars.shop.upgrades.title"))->asStringForPlayer($p_Player));
@@ -331,7 +336,7 @@ class ShopKeeper extends ClickableNPC
             ->setText((new TextFormatter("window.return"))->asStringForPlayer($p_Player))
             ->setCallback(function () use ($p_Player)
             {
-                $this->getMainWindow($p_Player)->open();
+                self::getMainWindow($p_Player)->open();
             })
         );
 

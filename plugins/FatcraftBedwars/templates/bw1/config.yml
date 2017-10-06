@@ -1,7 +1,8 @@
-minPlayer: 2
+minPlayer: 1
 maxPlayer: 18
 waitingSecDuration: 15
 playingSecDuration: 6000
+deathArenaLoc: 0.5/6.1/60.5
 
 spawns:
   blueSpawn:
@@ -21,7 +22,7 @@ forges:
   i1:
     location: 2.5/8.5/5.5
     itemType: IRON_INGOT
-    team: §1Bleu§r
+    team: Blue
     popDelay:
       - 10
       - 5
@@ -29,7 +30,7 @@ forges:
   i2:
     location: 4.5/8.5/5.5
     itemType: IRON_INGOT
-    team: §cRouge§r
+    team: Red
     popDelay:
       - 10
       - 5
@@ -37,7 +38,7 @@ forges:
 #  i3:
 #    location: 6.5/8.5/5.5
 #    itemType: IRON_INGOT
-#    team: §eJaune§r
+#    team: Yellow
 #    popDelay:
 #      - 10
 #      - 5
@@ -45,7 +46,7 @@ forges:
 #  i4:
 #    location: 8.5/8.5/5.5
 #    itemType: IRON_INGOT
-#    team: §aVert§r
+#    team: Green
 #    popDelay:
 #      - 10
 #      - 5
@@ -84,15 +85,15 @@ npcTeamSelector:
   1: -2/8.5/-14
   2: 3/8.5/-14
 
+npcShop:
+  1: -2/8.5/-10
+  2: 3/8.5/-10
+
 beds:
   Blue: -3/9/3
   Red: 3.5/9.1/3.5
 #  Green: 3/9/-3
 #  Yellow: -3/9/-3
-
-npcShop:
-  1: -2/8.5/-10
-  2: 3/8.5/-10
 
 shop:
   blocks:
@@ -102,7 +103,7 @@ shop:
       ironPrice: 4
     endStone:
       rawItem: '{"material": "END_STONE", "amount": 4}'
-      ironPrice: 3
+      ironPrice: 7
     wood:
       rawItem: '{"material": "WOOD", "amount": 6}'
       goldPrice: 3
@@ -112,58 +113,52 @@ shop:
   weapons:
     stoneSword:
       rawItem: '{"material": "STONE_SWORD"}'
-      ironPrice: 1
+      ironPrice: 10
     ironSword:
       rawItem: '{"material": "IRON_SWORD"}'
-      ironPrice: 1
+      ironPrice: 35
     diamondSword:
       rawItem: '{"material": "DIAMOND_SWORD"}'
-      ironPrice: 1
+      goldPrice: 15
   armors:
-    leatherSet:
-      helmet: '{"material": "LEATHER_HELMET"}'
-      chestplate: '{"material": "LEATHER_CHESTPLATE"}'
-      leggings: '{"material": "LEATHER_LEGGINGS"}'
-      boots: '{"material": "LEATHER_BOOTS"}'
-      ironPrice: 1
     chainmailSet:
       helmet: '{"material": "CHAINMAIL_HELMET"}'
       chestplate: '{"material": "CHAINMAIL_CHESTPLATE"}'
       leggings: '{"material": "CHAINMAIL_LEGGINGS"}'
       boots: '{"material": "CHAINMAIL_BOOTS"}'
-      ironPrice: 1
+      ironPrice: 25
     ironSet:
       helmet: '{"material": "IRON_HELMET"}'
       chestplate: '{"material": "IRON_CHESTPLATE"}'
       leggings: '{"material": "IRON_LEGGINGS"}'
       boots: '{"material": "IRON_BOOTS"}'
-      ironPrice: 1
+      ironPrice: 50
     diamondSet:
       helmet: '{"material": "DIAMOND_HELMET"}'
       chestplate: '{"material": "DIAMOND_CHESTPLATE"}'
       leggings: '{"material": "DIAMOND_LEGGINGS"}'
       boots: '{"material": "DIAMOND_BOOTS"}'
-      ironPrice: 1
+      diamondPrice: 10
   tools:
     stonePickaxe:
       rawItem: '{"material": "STONE_PICKAXE"}'
-      ironPrice: 1
+      ironPrice: 10
     ironPickaxe:
       rawItem: '{"material": "IRON_PICKAXE"}'
-      ironPrice: 1
+      ironPrice: 25
     diamondPickaxe:
       rawItem: '{"material": "DIAMOND_PICKAXE"}'
-      ironPrice: 1
+      diamondPrice: 3
     ironAxe:
       rawItem: '{"material": "IRON_AXE"}'
-      ironPrice: 1
+      ironPrice: 40
   others:
     snowBalls:
       rawItem: '{"material": "SNOWBALL", "amount": 5}'
-      ironPrice: 1
+      ironPrice: 15
     ladders:
       rawItem: '{"material": "LADDER", "amount": 3}'
-      ironPrice: 1
-    spiderWebs:
-      rawItem: '{"material": "COBWEB", "amount": 1}'
-      ironPrice: 1
+      ironPrice: 10
+#    spiderWebs:
+#      rawItem: '{"material": "COBWEB", "amount": 1}'
+#      goldPrice: 2

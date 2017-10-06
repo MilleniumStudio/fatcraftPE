@@ -5,17 +5,8 @@ declare(strict_types=1);
 namespace fatutils\ui;
 
 use fatutils\FatUtils;
-use fatutils\ui\windows\ButtonWindow;
-use fatutils\ui\windows\FormWindow;
-use fatutils\ui\windows\parts\Dropdown;
-use fatutils\ui\windows\parts\Input;
-use fatutils\ui\windows\parts\Label;
-use fatutils\ui\windows\parts\Slider;
-use fatutils\ui\windows\parts\StepSlider;
-use fatutils\ui\windows\parts\Toggle;
 use fatutils\ui\windows\Window;
 use pocketmine\Player;
-use pocketmine\network\mcpe\protocol\ModalFormRequestPacket;
 use pocketmine\event\Listener;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\network\mcpe\protocol\ModalFormResponsePacket;
@@ -45,6 +36,14 @@ class WindowsManager implements Listener
         $this->m_WindowRegistry[$p_Player->getUniqueId()->toBinary()] = $p_Window;
     }
 
+    /**
+     * Use this function if you want to be sure that after a point, no old window will be usable by players
+     */
+    public function clearRegistry()
+    {
+        $this->m_WindowRegistry = [];
+    }
+
     public function onDataPacket(DataPacketReceiveEvent $event): void
     {
         $packet = $event->getPacket();
@@ -66,5 +65,4 @@ class WindowsManager implements Listener
             }
         }
     }
-
 }
