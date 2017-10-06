@@ -2,13 +2,14 @@
 
 namespace fatutils\holograms;
 
-use Exception;
 use pocketmine\level\Location;
 use pocketmine\utils\Config;
+use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\Listener;
 use fatutils\FatUtils;
 use fatutils\tools\WorldUtils;
 
-class HologramsManager
+class HologramsManager implements Listener
 {
 
     private static $instance;
@@ -27,6 +28,7 @@ class HologramsManager
     private function __construct()
     {
         HologramsManager::$instance = $this;
+        FatUtils::getInstance()->getServer()->getPluginManager()->registerEvents($this, FatUtils::getInstance());
         $this->loadConfigs();
     }
 
@@ -61,14 +63,19 @@ class HologramsManager
             }
             $title = isset($value['title']) ? $value['title'] : null;
             $text = isset($value['text']) ? $value['text'] : null;
-            new Hologram($name, $l_Location, $text, $title);
+            $this->add(new Hologram($name, $l_Location, $title, $text));
             FatUtils::getInstance()->getLogger()->info("[Holograms] hologram ". $name . " spawned on " . $p_RawLocation);
         }
     }
 
+    public function saveConfig()
+    {
+        
+    }
+
     public function add(Hologram $hologram)
     {
-        HologramsManager::$instance->holograms[$hologram->name] = $hologram;
+        $this->holograms[$hologram->name] = $hologram;
     }
 
     public function newHologram(Location $l_Location, String $p_Name, string $p_Title = "", string $p_Text = "")
@@ -80,5 +87,13 @@ class HologramsManager
     public function getHologram(string $p_Name): Hologram
     {
         return HologramsManager::$instance->holograms[$p_Name];
+    }
+
+    public function onPlayerJoin(PlayerJoinEvent $p_Event)
+    {
+        foreach ($this->holograms as $value)
+        {
+            $value->sendToPlayer($p_Event->getPlayer());
+        }
     }
 }
