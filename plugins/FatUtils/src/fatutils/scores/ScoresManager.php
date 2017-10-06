@@ -29,21 +29,23 @@ abstract class ScoresManager
             `game` int(11) NOT NULL,
             `player` varchar(36) NOT NULL,
             `position` int(11) NOT NULL,
+            `data` text DEFAULT NULL,
             `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (`id`)
         )");
     }
 
-    public function recordScore(String $p_Player, int $p_Position)
+    public function recordScore(String $p_Player, int $p_Position, $data = array())
     {
         if (GameDataManager::getInstance()->getGameId() != 0)
         {
             FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
                 new DirectQueryMysqlTask(LoadBalancer::getInstance()->getCredentials(),
-                    "INSERT INTO scores (game, player, position) VALUES (?, ?, ?)", [
+                    "INSERT INTO scores (game, player, position, data) VALUES (?, ?, ?, ?)", [
                     ["i", GameDataManager::getInstance()->getGameId()],
                     ["s", $p_Player],
-                    ["i", $p_Position]
+                    ["i", $p_Position],
+                    ["s", json_encode($data)]
                 ]
             ));
         }
@@ -66,7 +68,7 @@ abstract class ScoresManager
     {
         FatUtils::getInstance()->getLogger()->info("Giving rewards :");
         $l_ReversePositions = array_reverse($this->m_Positions);
-        var_dump($l_ReversePositions);
+//        var_dump($l_ReversePositions);
 
         // record ordered players
         GameDataManager::getInstance()->recordBoard($l_ReversePositions);
@@ -80,9 +82,8 @@ abstract class ScoresManager
         // reverse order & iter
         for ($i = 0; $i < count($l_ReversePositions); $i++)
         {
-            $l_PlayerName = $l_ReversePositions[$i];
-
-            $this->recordScore($l_PlayerName, $i);
+            $l_PlayerName = $l_ReversePositions[$i]['name'];
+            $l_UUID = $l_ReversePositions[$i]['uuid'];
 
             // get player instance
             $p_Player = FatUtils::getInstance()->getServer()->getPlayer($l_PlayerName);
@@ -90,6 +91,10 @@ abstract class ScoresManager
             // calculate rewards (based on reverse death order)
             $l_Money = round($l_Rewards["money"] / $l_Divider);
             $l_XP = round($l_Rewards["money"] / $l_Divider);
+            $l_Gain['money'] = $l_Money;
+            $l_Gain['xp'] = $l_XP;
+            $this->recordScore($l_UUID, $i, $l_Gain);
+
             FatUtils::getInstance()->getLogger()->info("Player " . $l_PlayerName . " win " . $l_Money . " money");
             FatUtils::getInstance()->getLogger()->info("Player " . $l_PlayerName . " win " . $l_XP . " XP");
 
