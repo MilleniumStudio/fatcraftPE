@@ -4,9 +4,9 @@ php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
 --make LoadBalancer/ \
 --out LoadBalancer.phar
 
-if [ ! -d "devirion/" ]; then
-    git clone https://github.com/poggit/devirion.git
-fi
+#if [ ! -d "devirion/" ]; then
+#    git clone https://github.com/poggit/devirion.git
+#fi
 
 #php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
 #--make devirion/ \
