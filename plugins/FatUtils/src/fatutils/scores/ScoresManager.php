@@ -46,7 +46,7 @@ class ScoresManager
         )");
     }
 
-    public function recordScore(String $p_Player, int $p_Position, $data = array())
+    private function recordScore(String $p_Player, int $p_Position, $data = array())
     {
         if (GameDataManager::getInstance()->getGameId() != 0)
         {
