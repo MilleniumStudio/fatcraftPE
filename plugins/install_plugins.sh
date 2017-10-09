@@ -8,13 +8,13 @@ if [ ! -d "devirion/" ]; then
     git clone https://github.com/poggit/devirion.git
 fi
 
-php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
---make devirion/ \
---out devirion.phar
+#php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
+#--make devirion/ \
+#--out devirion.phar
 
-php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
---make SimpleAuth/ \
---out SimpleAuth.phar
+#php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
+#--make SimpleAuth/ \
+#--out SimpleAuth.phar
 
 php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
 --make StatsPE/ \
@@ -36,9 +36,9 @@ php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
 --make AllSigns/ \
 --out AllSigns.phar
 
-php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
---make Parkour/ \
---out Parkour.phar
+#php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
+#--make Parkour/ \
+#--out Parkour.phar
 
 php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
 --make FatcraftHungerGames/ \
