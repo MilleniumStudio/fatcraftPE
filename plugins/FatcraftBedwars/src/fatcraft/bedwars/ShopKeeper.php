@@ -153,24 +153,30 @@ class ShopKeeper extends ClickableNPC
             if (Bedwars::getInstance()->getPlayerIron($p_Player) >= $ironPrice)
             {
                 Bedwars::getInstance()->modPlayerIron($p_Player, -$ironPrice);
+                echo $p_Player->getName() . " bought for " . $ironPrice . " iron\n";
                 return true;
-            }
+            } else
+                $p_Player->sendMessage((new TextFormatter("bedwars.shop.notEnoughtMoney"))->asStringForPlayer($p_Player));
         } else if (isset($p_ConfigPart["goldPrice"]))
         {
             $goldPrice = $p_ConfigPart["goldPrice"];
             if (Bedwars::getInstance()->getPlayerGold($p_Player) >= $goldPrice)
             {
                 Bedwars::getInstance()->modPlayerGold($p_Player, -$goldPrice);
+                echo $p_Player->getName() . " bought for " . $goldPrice . " gold\n";
                 return true;
-            }
+            } else
+                $p_Player->sendMessage((new TextFormatter("bedwars.shop.notEnoughtMoney"))->asStringForPlayer($p_Player));
         } else if (isset($p_ConfigPart["diamondPrice"]))
         {
             $diamondPrice = $p_ConfigPart["diamondPrice"];
             if (Bedwars::getInstance()->getPlayerDiamond($p_Player) >= $diamondPrice)
             {
                 Bedwars::getInstance()->modPlayerDiamond($p_Player, -$diamondPrice);
+                echo $p_Player->getName() . " bought for " . $diamondPrice . " diams\n";
                 return true;
-            }
+            } else
+                $p_Player->sendMessage((new TextFormatter("bedwars.shop.notEnoughtMoney"))->asStringForPlayer($p_Player));
         }
 
         return false;
@@ -319,18 +325,46 @@ class ShopKeeper extends ClickableNPC
         $l_Window = new ButtonWindow($p_Player);
         $l_Window->setTitle((new TextFormatter("bedwars.shop.upgrades.title"))->asStringForPlayer($p_Player));
 
-        $l_Window->addPart((new Button())
-            ->setText((new TextFormatter("bedwars.shop.upgrades.forge"))->asStringForPlayer($p_Player))
-            ->setImage("https://fatcraft.com/img/mcpe_assets/bedwars/Iron_Ingot.png")
-            ->setCallback(function () use ($p_Player, $l_Window)
-            {
-//                Bedwars::getInstance()->upgradeIronForge($p_Player->get)
-//                $p_Player->sendMessage((new TextFormatter("bedwars.shop.upgrades.forge.upgraded", ["type", "Iron"]))->asStringForPlayer($p_Player));
-//                echo $p_Player->getName() . " bought a forge upgrade\n";
-                $p_Player->sendMessage("Nothing yet i'm afraid...");
-                $l_Window->open();
-            })
-        );
+        $l_PlayerTeam = TeamsManager::getInstance()->getPlayerTeam($p_Player);
+
+        // FORGE UPGRADE
+        $l_CurrentLvl = Bedwars::getInstance()->getIronForgeLevel($l_PlayerTeam);
+        if ($l_CurrentLvl < 2)
+        {
+            $l_Price = ["ironPrice" => 20];
+            if ($l_CurrentLvl == 1)
+                $l_Price = ["goldPrice" => 10];
+
+            $l_Window->addPart((new Button())
+                ->setText((new TextFormatter("bedwars.shop.upgrades.forge", ["lvl" => $l_CurrentLvl + 1]))->asStringForPlayer($p_Player) . " (" . self::getPrice($l_Price) . ")")
+                ->setImage("https://fatcraft.com/img/mcpe_assets/bedwars/Iron_Ingot.png")
+                ->setCallback(function () use ($p_Player, $l_Window, $l_PlayerTeam)
+                {
+                    if (!is_null($l_PlayerTeam))
+                    {
+                        $l_CurrentLvl = Bedwars::getInstance()->getIronForgeLevel($l_PlayerTeam);
+                        if ($l_CurrentLvl < 2)
+                        {
+                            echo $l_CurrentLvl . "\n";
+                            if (($l_CurrentLvl == 0 && self::buy($p_Player, ["ironPrice" => 20])) ||
+                                ($l_CurrentLvl == 1 && self::buy($p_Player, ["goldPrice" => 10])))
+                            {
+                                if (Bedwars::getInstance()->upgradeIronForge($l_PlayerTeam))
+                                {
+                                    $p_Player->sendMessage((new TextFormatter("bedwars.shop.upgrades.forge.upgraded", ["lvl" => $l_CurrentLvl + 1]))->asStringForPlayer($p_Player));
+                                    echo $p_Player->getName() . " bought a forge upgrade\n";
+                                }
+                            }
+                            self::getUpgradesWindow($p_Player)->open();
+                        } else
+                        {
+                            $p_Player->sendMessage((new TextFormatter("bedwars.shop.upgrades.forge.alreadyUpgraded"))->asStringForPlayer($p_Player));
+                            $l_Window->open();
+                        }
+                    }
+                })
+            );
+        }
 
         $l_Window->addPart((new Button())
             ->setText((new TextFormatter("window.return"))->asStringForPlayer($p_Player))

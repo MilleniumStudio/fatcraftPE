@@ -238,6 +238,18 @@ class Bedwars extends PluginBase implements Listener
             ->getData(Bedwars::PLAYER_DATA_CURRENCY_DIAMOND, 0);
     }
 
+    public function getIronForgeLevel(Team $p_team): int
+    {
+        foreach ($this->m_Forges as $forge)
+        {
+            if ($forge instanceof Forge && $forge->getTeam() != null && $forge->getTeam() == $p_team->getName())
+            {
+                return $forge->getLevel();
+            }
+        }
+        return -1;
+    }
+
     public function upgradeIronForge(Team $p_team): bool
     {
         /** @var Forge $forge */
@@ -329,14 +341,14 @@ class Bedwars extends PluginBase implements Listener
                     $this->endGame();
                 else
                 {
-                    foreach (TeamsManager::getInstance()->getTeams() as $team) {
+                    foreach (TeamsManager::getInstance()->getTeams() as $team)
+                    {
                         $bedLoc = $this->getBedwarsConfig()->getBedLocation($team);
                         $bedLoc->level->setBlockIdAt($bedLoc->getFloorX(), $bedLoc->getFloorY(), $bedLoc->getFloorZ(), BlockIds::AIR);
                     }
                     Sidebar::getInstance()->update();
-                    foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player) {
-                        $l_Player->addTitle(TextFormat::DARK_AQUA . TextFormat::BOLD . "Mort Subite ! ", "Destruction de tout les lits !");
-                    }
+                    foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+                        $l_Player->addTitle((new TextFormatter("bedwars.deathmatch.title"))->asStringForPlayer($l_Player), (new TextFormatter("bedwars.deathmatch.subtitle"))->asStringForPlayer($l_Player));
                 }
             })
             ->start();
