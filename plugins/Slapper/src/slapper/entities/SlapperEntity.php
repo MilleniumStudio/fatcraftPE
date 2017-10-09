@@ -67,8 +67,7 @@ class SlapperEntity extends Entity {
 		$pk = new AddEntityPacket();
 		$pk->entityRuntimeId = $this->getId();
 		$pk->type = static::TYPE_ID;
-		$pk->position = $this->getPosition();
-		$pk->speedX = $pk->speedY = $pk->speedZ = 0.0;
+		$pk->position = $this->asVector3();
 		$pk->yaw = $this->yaw;
 		$pk->pitch = $this->pitch;
 		$pk->metadata = $this->dataProperties;
