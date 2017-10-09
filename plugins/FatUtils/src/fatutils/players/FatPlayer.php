@@ -30,6 +30,8 @@ class FatPlayer
 	private $m_Data = [];
 
 	private $m_Spawn = null;
+    private $m_language = TextFormatter::LANG_ID_DEFAULT;
+    private $m_email = null;
 
 	/**
 	 * FatPlayer constructor.
@@ -38,6 +40,7 @@ class FatPlayer
 	public function __construct(Player $p_Player)
 	{
 		$this->m_Player = $p_Player;
+            $this->initData();
 	}
 
 	public function setPlaying()
@@ -115,12 +118,6 @@ class FatPlayer
         $this->m_Spawn = $p_Spawn;
     }
 
-    public function getLanguage():int
-    {
-        //TODO language info storage
-        return TextFormatter::LANG_ID_DEFAULT;
-    }
-
     public function addScore(string $p_Key, int $p_Value)
     {
         if (!isset($this->m_Scores[$p_Key]))
@@ -180,5 +177,64 @@ class FatPlayer
     public function updateFormattedNameTag()
     {
         $this->getPlayer()->setNameTag($this->getFormattedNameTag());
+    }
+
+    private function initData()
+    {
+        $l_Exist = false;
+        $result = \libasynql\result\MysqlResult::executeQuery(\fatcraft\loadbalancer\LoadBalancer::getInstance()->connectMainThreadMysql(),
+            "SELECT * FROM players WHERE uuid = ?", [
+                ["s", $this->m_Player->getXuid()]
+        ]);
+        if (($result instanceof \libasynql\result\MysqlSelectResult) and count($result->rows) == 1)
+        {
+            if (count($result->rows) == 1)
+            {
+                $this->m_Email = $result->rows[0]["email"];
+                $this->m_Language = $result->rows[0]["lang"];
+                $l_Exist = true;
+            }
+        }
+        if (! $l_Exist)
+        {
+            \fatutils\FatUtils::getInstance()->getLogger()->info("[FatPlayer] " . $this->m_Player->getName() . " not exist in database, creating...");
+            \fatutils\FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
+                new \libasynql\DirectQueryMysqlTask(\fatcraft\loadbalancer\LoadBalancer::getInstance()->getCredentials(),
+                    "INSERT INTO players (name, uuid) VALUES (?, ?)", [
+                    ["s", $this->m_Player->getName()],
+                    ["s", $this->m_Player->getXuid()]
+                ]
+            ));
+            // process first login
+            // ask language
+        }
+    }
+
+    public function getEmail(): string
+    {
+        return $this->m_Email;
+    }
+
+    public function setEmail(string $p_Email)
+    {
+        $this->m_Email = $p_Email;
+        \libasynql\result\MysqlResult::executeQuery(\fatcraft\loadbalancer\LoadBalancer::getInstance()->connectMainThreadMysql(), "UPDATE players SET email = ? WHERE uuid = ?", [
+            ["s", $this->m_Email],
+            ["s", $this->m_Player->getXuid()]
+        ]);
+    }
+
+    public function getLanguage():int
+    {
+        return $this->m_language;
+    }
+
+    public function setLanguage(int $p_Language)
+    {
+        $this->m_Language = $p_Language;
+        \libasynql\result\MysqlResult::executeQuery(\fatcraft\loadbalancer\LoadBalancer::getInstance()->connectMainThreadMysql(), "UPDATE players SET language = ? WHERE uuid = ?", [
+            ["i", $this->m_Language],
+            ["s", $this->m_Player->getXuid()]
+        ]);
     }
 }
