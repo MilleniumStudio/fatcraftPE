@@ -328,26 +328,14 @@ class Bedwars extends PluginBase implements Listener
                     $this->endGame();
                 else
                 {
-                    echo "### na na na ###\n";
                     foreach (TeamsManager::getInstance()->getTeams() as $team) {
                         $bedLoc = $this->getBedwarsConfig()->getBedLocation($team);
                         $bedLoc->level->setBlockIdAt($bedLoc->getFloorX(), $bedLoc->getFloorY(), $bedLoc->getFloorZ(), BlockIds::AIR);
                     }
                     Sidebar::getInstance()->update();
                     foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player) {
-//                        $l_Player->addSubTitle();
                         $l_Player->addTitle(TextFormat::DARK_AQUA . TextFormat::BOLD . "Mort Subite ! ", "Destruction de tout les lits !");
                     }
-
-//                    $l_ArenaLoc = Location::fromObject($this->getBedwarsConfig()->getDeathArenaLoc());
-//
-//                    foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-//                    {
-//                        $l_Player->addSubTitle(TextFormat::DARK_AQUA . TextFormat::BOLD . "Timer terminé, match à mort dans l'arène !");
-//                        $l_Player->teleport(WorldUtils::getRandomizedLocation($l_ArenaLoc, 3, 0, 3));
-//                        $l_Player->sendTip(TextFormat::YELLOW . "Vous êtes invulnérable pendant 5 secondes" . TextFormat::RESET);
-//                        $l_Player->addEffect(Effect::getEffect(Effect::DAMAGE_RESISTANCE)->setAmplifier(10)->setDuration(5 * 20));
-//                    }
                 }
             })
             ->start();
