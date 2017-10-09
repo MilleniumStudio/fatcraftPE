@@ -1,7 +1,7 @@
-minPlayer: 1
+minPlayer: 2
 maxPlayer: 12
 waitingSecDuration: 15
-playingSecDuration: 600
+playingSecDuration: 1200
 deathArenaLoc: 0.5/6.1/60.5
 
 spawns:
@@ -60,7 +60,7 @@ forges:
       - 6
       - 4
   g2:
-    location: -45/116.0/70
+    location: 79/116.0/67
     itemType: GOLD_INGOT
     popDelay:
       - 8
@@ -130,7 +130,7 @@ shop:
     wool:
       rawItem: '{"material": "WOOL", "amount": 4}'
       imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/Wool.png"
-      ironPrice: 4
+      ironPrice: 2
     endStone:
       rawItem: '{"material": "END_STONE", "amount": 4}'
       imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/End_Stone.png"
