@@ -6,6 +6,7 @@ use fatcraft\loadbalancer\LoadBalancer;
 use fatutils\FatUtils;
 use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
+use fatutils\scores\ScoresManager;
 use fatutils\teams\Team;
 use fatutils\teams\TeamsManager;
 use fatutils\tools\bossBarAPI\BossBarAPI;
@@ -324,11 +325,13 @@ class Bedwars extends PluginBase implements Listener
                     {
                         PlayersManager::getInstance()->getFatPlayer($l_Player)->setPlaying();
                         $l_Player->setGamemode(Player::SURVIVAL);
-                        $l_Player->addTitle($l_GoMsgFormatter->asStringForPlayer($l_Player));
+                        $l_Team->getSpawn()->teleport($l_Player, 2);
 
                         $l_Player->getInventory()->setChestplate(ItemUtils::getColoredItemIfColorable(Item::get(ItemIds::LEATHER_CHESTPLATE), $l_Team->getColor()));
                         $l_Player->getInventory()->setLeggings(ItemUtils::getColoredItemIfColorable(Item::get(ItemIds::LEATHER_LEGGINGS), $l_Team->getColor()));
                         $l_Player->getInventory()->addItem(Item::get(ItemIds::WOODEN_SWORD));
+
+                        $l_Player->addTitle($l_GoMsgFormatter->asStringForPlayer($l_Player));
                     }
                 }
 
@@ -384,19 +387,24 @@ class Bedwars extends PluginBase implements Listener
         if ($this->m_PlayTimer instanceof Timer)
             $this->m_PlayTimer->cancel();
 
-        $winners = PlayersManager::getInstance()->getAlivePlayers();
+        $winnerTeams = TeamsManager::getInstance()->getAliveTeams();
         $winnerName = "";
-        if (count($winners) > 0)
+        if (count($winnerTeams) > 0)
         {
-            $winner = $winners[0];
-            if ($winner instanceof FatPlayer)
-                $winnerName = $winner->getPlayer()->getName();
+            $winnerTeam = $winnerTeams[0];
+            if ($winnerTeam instanceof Team)
+                $winnerName = $winnerTeam->getColoredName();
         }
+
         foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+        {
             $l_Player->addTitle(
                 (new TextFormatter("game.end"))->asStringForPlayer($l_Player),
-                (new TextFormatter("game.winner.single"))->addParam("name", $winnerName)->asStringForPlayer($l_Player),
+                (new TextFormatter("game.winner.team.single"))->addParam("name", $winnerName)->asStringForPlayer($l_Player),
                 30, 80, 30);
+        }
+
+//        ScoresManager::getInstance()->giveRewards();
 
         (new BossbarTimer(150))
             ->setTitle(new TextFormatter("bossbar.returnToLobby"))
@@ -438,7 +446,7 @@ class Bedwars extends PluginBase implements Listener
         $team = PlayersManager::getInstance()->getFatPlayer($p)->getTeam();
 
         // Remove player items // TODO exceptions ?
-        $e->setDrops([]);
+//        $e->setDrops([]);
 
         $bedLoc = $this->getBedwarsConfig()->getBedLocation($team);
         if ($bedLoc->getLevel()->getBlockIdAt($bedLoc->getFloorX(), $bedLoc->getFloorY(), $bedLoc->getFloorZ()) == self::BLOCK_ID)
@@ -447,19 +455,16 @@ class Bedwars extends PluginBase implements Listener
             return;
         }
 
-        PlayersManager::getInstance()->getFatPlayer($p)->setHasLost(true);
+        PlayersManager::getInstance()->getFatPlayer($p)->setHasLost();
+        ScoresManager::getInstance()->registerForScoring($p);
 
         WorldUtils::addStrike($p->getLocation());
-        $l_PlayerLeft = PlayersManager::getInstance()->getAlivePlayerLeft();
+        $l_TeamLeft = TeamsManager::getInstance()->getAliveTeamNbr();
 
         foreach (Bedwars::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-        {
-            $l_Player->sendMessage($e->getDeathMessage());
-            if ($l_PlayerLeft > 1)
-                $l_Player->sendMessage("Il reste " . TextFormat::YELLOW . PlayersManager::getInstance()->getAlivePlayerLeft() . TextFormat::RESET . " survivants !", "*");
-        }
+            $l_Player->sendMessage($team->getPrefix() . " " . $e->getDeathMessage());
 
-        if ($l_PlayerLeft <= 1)
+        if ($l_TeamLeft <= 1)
         {
             if (Bedwars::DEBUG)
                 echo "Should be a end game but cancelled cause debug is on\n";
