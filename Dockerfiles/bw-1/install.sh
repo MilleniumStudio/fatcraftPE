@@ -18,5 +18,5 @@ updateConfig install/plugins/SimpleAuth/config.yml
 updateConfig install/plugins/FatcraftBedwars/config.yml
 
 # copy map
-mkdir -p install/worlds/map
-cp -R ../../worlds/mainLobby/* install/worlds/map/
+#mkdir -p install/worlds/map
+#cp -R ../../worlds/mainLobby/* install/worlds/map/

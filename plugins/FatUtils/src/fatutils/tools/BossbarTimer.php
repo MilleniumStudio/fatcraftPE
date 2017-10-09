@@ -24,7 +24,11 @@ class BossbarTimer extends Timer
         $this->m_Players = $p_Players;
     }
 
-    public function setTitle(string $p_Title):BossbarTimer
+    /**
+     * @param string|TextFormatter $p_Title
+     * @return BossbarTimer
+     */
+    public function setTitle($p_Title):BossbarTimer
     {
         $this->m_Title = $p_Title;
         if ($this->m_BossBar instanceof BossBar)
@@ -57,7 +61,13 @@ class BossbarTimer extends Timer
             {
                 $timeFormat = gmdate("H:i:s", $this->getSecondLeft());
 
-                $this->m_BossBar->setTitle($this->m_Title . ": " . $timeFormat);
+                if ($this->m_Title instanceof TextFormatter)
+                {
+                    $this->m_Title->addParam("time", $timeFormat); //ref to param "{time}" in translation lines
+                    $this->m_BossBar->setTitle($this->m_Title);
+                } else
+                    $this->m_BossBar->setTitle($this->m_Title . ": " . $timeFormat);
+
                 $this->m_BossBar->setRatio($this->getTimeSpentRatio());
             }
         }
@@ -81,4 +91,13 @@ class BossbarTimer extends Timer
             $this->m_BossBar->remove();
         parent::_onStop();
     }
+
+    public function cancel()
+    {
+        parent::cancel();
+        if ($this->m_BossBar instanceof BossBar)
+            $this->m_BossBar->remove();
+    }
+
+
 }

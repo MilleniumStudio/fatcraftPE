@@ -87,11 +87,13 @@ class Timer
         return $this->m_Delay;
     }
 
+    /* PLEASE DON'T USE THAT, it's intended for package scope */
     function _modTime(int $p_Modifier)
     {
         $this->m_TimeLeft += $p_Modifier;
     }
 
+    /* PLEASE DON'T USE THAT, it's intended for package scope */
     function _modDelay(int $p_Modifier)
     {
         $this->m_Delay += $p_Modifier;
@@ -179,18 +181,21 @@ class Timer
         return $this;
 	}
 
+    /* PLEASE DON'T USE THAT, it's intended for package scope */
 	public function _onStart()
     {
         if (!is_null($this->getStartCallback()))
             call_user_func($this->getStartCallback());
     }
 
+    /* PLEASE DON'T USE THAT, it's intended for package scope */
     public function _onTick()
     {
         if (!is_null($this->getTickCallback()))
             call_user_func($this->getTickCallback());
     }
 
+    /* PLEASE DON'T USE THAT, it's intended for package scope */
     public function _onStop()
     {
         if (!is_null($this->getStopCallback()))

@@ -1,0 +1,11 @@
+#Holograms config
+
+holograms:
+  - name: "test"
+    location: world/0/75/0
+    title : ""
+    text: ""
+  - name: "test2"
+    location: world/10/75/0
+    title : ""
+    text: ""

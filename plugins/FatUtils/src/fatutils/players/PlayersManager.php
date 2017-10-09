@@ -98,7 +98,7 @@ class PlayersManager
 	public function getPlayerFromUUID(UUID $p_PlayerUUID):?Player
     {
         foreach(FatUtils::getInstance()->getServer()->getOnlinePlayers() as $player){
-            if($player->getUniqueId() === $p_PlayerUUID)
+            if($player->getUniqueId()->equals($p_PlayerUUID))
                 return $player;
         }
 

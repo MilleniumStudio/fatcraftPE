@@ -70,9 +70,9 @@ cd plugins/
 ./install_plugins.sh
 cd ../
 
-cd virions/
-./install_virions.sh
-cd ../
+#cd virions/
+#./install_virions.sh
+#cd ../
 
 cd Dockerfiles/
 
@@ -80,9 +80,9 @@ cd PocketMineMP-php7/
 ./docker_build.sh
 cd ../
 
-cd entry-lb/
-./docker_build.sh
-cd ../
+#cd entry-lb/
+#./docker_build.sh
+#cd ../
 
 cd lobby/
 ./docker_build.sh

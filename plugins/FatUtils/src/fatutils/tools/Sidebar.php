@@ -23,6 +23,8 @@ class Sidebar
     private $m_TaskId;
     private $m_DisplayTickInterval = 20;
 
+    private $m_Enabled = true;
+
     // -1 means no automatic update
     private $m_UpdateTickInterval = -1;
 
@@ -76,10 +78,13 @@ class Sidebar
              */
             public function onRun(int $currentTick)
             {
-                if ($currentTick % $this->m_SidebarInstance->getDisplayTickInterval() == 0)
-                    $this->m_SidebarInstance->_display();
-                if ($this->m_SidebarInstance->getUpdateTickInterval() >= 0 && $currentTick % $this->m_SidebarInstance->getUpdateTickInterval() == 0)
-                    $this->m_SidebarInstance->update();
+                if ($this->m_SidebarInstance->isEnabled())
+                {
+                    if ($currentTick % $this->m_SidebarInstance->getDisplayTickInterval() == 0)
+                        $this->m_SidebarInstance->_display();
+                    if ($this->m_SidebarInstance->getUpdateTickInterval() >= 0 && $currentTick % $this->m_SidebarInstance->getUpdateTickInterval() == 0)
+                        $this->m_SidebarInstance->update();
+                }
             }
         }, 1);
     }
@@ -96,6 +101,12 @@ class Sidebar
     public function addLine(string $p_Line): Sidebar
     {
         $this->m_LineGetters[] = $p_Line;
+        return $this;
+    }
+
+    public function addTranslatedLine(TextFormatter $p_TextFormatter): Sidebar
+    {
+        $this->m_LineGetters[] = $p_TextFormatter;
         return $this;
     }
 
@@ -124,6 +135,17 @@ class Sidebar
         return $this;
     }
 
+    public function enable()
+    {
+        $this->m_Enabled = true;
+    }
+
+    public function disable()
+    {
+        $this->m_Enabled = false;
+    }
+
+    // preferably use disable()
     public function destroy()
     {
         if (isset($this->m_TaskId))
@@ -168,6 +190,11 @@ class Sidebar
             $this->updatePlayerLines($l_Player);
     }
 
+    private function lineSplitter(string $p_line):array
+    {
+        return explode("\n", $p_line);
+    }
+
     private function updatePlayerLines(Player $p_Player)
     {
         $l_Ret = [];
@@ -184,20 +211,32 @@ class Sidebar
                 else if (count($params) == 1)
                     $l_LineGetterRet = $l_LineGetter($p_Player);
 
+                if ($l_LineGetterRet instanceof TextFormatter)
+                    $l_LineGetterRet = $l_LineGetterRet->asStringForPlayer($p_Player);
+
                 switch (gettype($l_LineGetterRet))
                 {
                     case 'array':
                         foreach ($l_LineGetterRet as $l_Line)
+                        {
+                            if ($l_Line instanceof TextFormatter)
+                                $l_Line = $l_Line->asStringForPlayer($p_Player);
+
                             $l_Ret[] = $l_Line;
+                        }
                         break;
                     case 'string':
-                        foreach (explode("\n", $l_LineGetterRet) as $l_Line)
+                        foreach ($this->lineSplitter($l_LineGetterRet) as $l_Line)
                             $l_Ret[] = $l_Line;
                         break;
                 }
             } else if (gettype($l_LineGetter) === 'string')
             {
-                foreach (explode("\n", $l_LineGetter) as $l_Line)
+                foreach ($this->lineSplitter($l_LineGetter) as $l_Line)
+                    $l_Ret[] = $l_Line;
+            } else if ($l_LineGetter instanceof TextFormatter)
+            {
+                foreach ($this->lineSplitter($l_LineGetter->asStringForPlayer($p_Player)) as $l_Line)
                     $l_Ret[] = $l_Line;
             }
         }
@@ -237,6 +276,10 @@ class Sidebar
         return $this->m_DisplayTickInterval;
     }
 
+    public function isEnabled():bool
+    {
+        return (bool)$this->m_Enabled;
+    }
 
     /**
      * @return int

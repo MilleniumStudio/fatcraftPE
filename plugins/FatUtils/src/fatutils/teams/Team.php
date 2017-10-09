@@ -12,6 +12,7 @@ namespace fatutils\teams;
 use fatutils\FatUtils;
 use fatutils\players\PlayersManager;
 use fatutils\spawns\Spawn;
+use fatutils\tools\ColorUtils;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 use pocketmine\utils\UUID;
@@ -19,10 +20,11 @@ use pocketmine\utils\UUID;
 class Team
 {
     private $m_Name = "NoName";
-    private $m_Prefix = TextFormat::RESET . TextFormat::GRAY . "◀N▶" . TextFormat::RESET . TextFormat::WHITE;
+    private $m_Color = ColorUtils::WHITE;
+    private $m_Prefix = "";
 
     /* array of Player's uuid as binary */
-    private $m_Players = [];
+    public $m_Players = [];
     private $m_MaxPlayer = 10;
 
     private $m_Spawn = null;
@@ -34,18 +36,20 @@ class Team
 
     public function addPlayers(array $p_Players)
     {
-        foreach ($p_Players as $l_Player)
-        {
+        foreach ($p_Players as $l_Player) {
             if ($l_Player instanceof Player)
                 $this->addPlayer($l_Player);
         }
     }
 
+    public function removePlayer(Player $p_player){
+        array_splice($this->m_Players, array_search($p_player->getUniqueId()->toBinary(), $this->m_Players), 1);
+    }
+
     public function getAlivePlayerLeft(): int
     {
         $i = 0;
-        foreach ($this->getOnlinePlayers() as $l_Player)
-        {
+        foreach ($this->getOnlinePlayers() as $l_Player) {
             $l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($l_Player);
             if (!$l_FatPlayer->hasLost())
                 $i++;
@@ -57,8 +61,7 @@ class Team
     public function getAlivePlayers(): array
     {
         $l_Ret = [];
-        foreach ($this->getOnlinePlayers() as $l_Player)
-        {
+        foreach ($this->getOnlinePlayers() as $l_Player) {
             $l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($l_Player);
             if (!$l_FatPlayer->hasLost())
                 $l_Ret[] = $l_FatPlayer;
@@ -66,12 +69,25 @@ class Team
         return $l_Ret;
     }
 
+    public function getPlayersNames(): array
+    {
+        $array = [];
+        foreach ($this->m_Players as $playerBinUUID) {
+            $player = PlayersManager::getInstance()->getPlayerFromUUID(UUID::fromBinary($playerBinUUID));
+            if ($player != null && $player instanceof Player)
+                $array[] = $player->getName();
+            else
+                echo "No player for " . $playerBinUUID . " -> " . (UUID::fromBinary($playerBinUUID)) . "\n";
+        }
+        return $array;
+    }
+
     public function isPlayerInTeam(Player $p_Player)
     {
         return in_array($p_Player->getUniqueId()->toBinary(), $this->m_Players);
     }
 
-    public function getPlaceLeft():int
+    public function getPlaceLeft(): int
     {
         return $this->getMaxPlayer() - $this->getPlayerCount();
     }
@@ -90,14 +106,20 @@ class Team
     public function setName(string $m_Name)
     {
         $this->m_Name = $m_Name;
+        $this->updatePrefix();
     }
 
-    /**
-     * @param string $m_Prefix
-     */
-    public function setPrefix(string $m_Prefix)
+//    /**
+//     * @param string $m_Prefix
+//     */
+//    public function setPrefix(string $m_Prefix)
+//    {
+//        $this->m_Prefix = $m_Prefix;
+//    }
+
+    public function updatePrefix()
     {
-        $this->m_Prefix = $m_Prefix;
+        $this->m_Prefix = TextFormat::RESET . ColorUtils::getTextFormatFromColor($this->getColor()) . "◀". ucfirst(substr($this->getName(), 0, 1)) ."▶" . TextFormat::WHITE . TextFormat::RESET;
     }
 
     /**
@@ -106,6 +128,16 @@ class Team
     public function getName(): string
     {
         return $this->m_Name;
+    }
+
+    public function getColoredName(): string
+    {
+        return ColorUtils::getTextFormatFromColor($this->getColor()) . $this->getName() . TextFormat::WHITE . TextFormat::RESET;
+    }
+
+    public function getColor(): string
+    {
+        return $this->m_Color;
     }
 
     public function getPlayerCount():int
@@ -130,6 +162,15 @@ class Team
     }
 
     /**
+     * @param string $p_Color /!\ see ColorUtils constants
+     */
+    public function setColor(string $p_Color)
+    {
+        $this->m_Color = $p_Color;
+        $this->updatePrefix();
+    }
+
+    /**
      * @return string
      */
     public function getPrefix(): string
@@ -144,11 +185,9 @@ class Team
     {
         $l_Players = [];
 
-        foreach ($this->m_Players as $l_PlayerRawUUID)
-        {
+        foreach ($this->m_Players as $l_PlayerRawUUID) {
             $l_PlayerUUID = UUID::fromBinary($l_PlayerRawUUID);
-            if ($l_PlayerUUID instanceof UUID)
-            {
+            if ($l_PlayerUUID instanceof UUID) {
                 $l_Player = PlayersManager::getInstance()->getPlayerFromUUID($l_PlayerUUID);
                 if (!is_null($l_Player))
                     $l_Players[] = $l_Player;
@@ -158,7 +197,7 @@ class Team
         return $l_Players;
     }
 
-    public function getSpawn(): Spawn
+    public function getSpawn(): ?Spawn
     {
         return $this->m_Spawn;
     }

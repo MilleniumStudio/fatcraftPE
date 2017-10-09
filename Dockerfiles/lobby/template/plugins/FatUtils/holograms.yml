@@ -1,0 +1,7 @@
+#Holograms config
+
+holograms:
+  - name: "test"
+    location: map/-7.5347/13/13.7712
+    title : "hologram.lobby.test.title"
+    text: "hologram.lobby.test.text"

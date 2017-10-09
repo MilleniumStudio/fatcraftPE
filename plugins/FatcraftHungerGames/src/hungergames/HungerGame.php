@@ -7,8 +7,10 @@ use fatutils\loot\ChestsManager;
 use fatutils\FatUtils;
 use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
+use fatutils\scores\ScoresManager;
 use fatutils\tools\bossBarAPI\BossBarAPI;
 use fatutils\tools\Sidebar;
+use fatutils\tools\TextFormatter;
 use fatutils\tools\Timer;
 use fatutils\tools\WorldUtils;
 use fatutils\game\GameManager;
@@ -57,25 +59,16 @@ class HungerGame extends PluginBase
         WorldUtils::stopWorldsTime();
 
         if ($this->getHungerGameConfig()->isSkyWars())
-		{
-			Sidebar::getInstance()
-				->addLine(TextFormat::GOLD . TextFormat::BOLD . "SkyWars")
-				->addWhiteSpace()
-				->addMutableLine(function ()
-				{
-					return TextFormat::AQUA . "Joueurs en vie: " . TextFormat::RESET . TextFormat::BOLD . PlayersManager::getInstance()->getAlivePlayerLeft();
-				});
-		}
-		else
-		{
-			Sidebar::getInstance()
-				->addLine(TextFormat::GOLD . TextFormat::BOLD . "HungerGame")
-				->addWhiteSpace()
-				->addMutableLine(function ()
-				{
-					return TextFormat::AQUA . "Joueurs en vie: " . TextFormat::RESET . TextFormat::BOLD . PlayersManager::getInstance()->getAlivePlayerLeft();
-				});
-		}
+            Sidebar::getInstance()->addLine(TextFormat::GOLD . TextFormat::BOLD . "SkyWars");
+        else
+            Sidebar::getInstance()->addLine(TextFormat::GOLD . TextFormat::BOLD . "HungerGame");
+
+        Sidebar::getInstance()->addWhiteSpace()
+            ->addMutableLine(function ()
+            {
+                return TextFormat::AQUA . "Joueurs en vie: " . TextFormat::RESET . TextFormat::BOLD . PlayersManager::getInstance()->getAlivePlayerLeft();
+            });
+
         GameManager::getInstance(); // not sure why this line is here
     }
 
@@ -180,21 +173,26 @@ class HungerGame extends PluginBase
             if ($winner instanceof FatPlayer)
             {
                 $winnerName = $winner->getPlayer()->getName();
-                score\HungerGameScoreManager::getInstance()->registerDeath($winner->getPlayer());
+                ScoresManager::getInstance()->registerForScoring($winner->getPlayer());
             }
         }
         foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-            $l_Player->addTitle(TextFormat::DARK_AQUA . TextFormat::BOLD . "Partie terminée", TextFormat::GREEN . TextFormat::BOLD . "le vainqueur est " . $winnerName, 30, 80, 30);
+        {
+            $l_Player->addTitle(
+                (new TextFormatter("game.end"))->asStringForPlayer($l_Player),
+                (new TextFormatter("game.winner.single"))->addParam("name", $winnerName)->asStringForPlayer($l_Player),
+                30, 80, 30);
+        }
 
         (new BossbarTimer(150))
-            ->setTitle("Retour au lobby")
+            ->setTitle(new TextFormatter("bossbar.returnToLobby"))
             ->addStopCallback(function ()
             {
                 $this->getServer()->shutdown();
             })
             ->start();
 
-        score\HungerGameScoreManager::getInstance()->giveRewards();
+        ScoresManager::getInstance()->giveRewards();
 
         GameManager::getInstance()->endGame();
     }

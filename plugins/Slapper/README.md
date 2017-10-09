@@ -71,13 +71,14 @@ helmet:         /slapper edit <eid> helmet <id>
 chestplate:     /slapper edit <eid> chestplate <id>
 leggings:       /slapper edit <eid> leggings <id>
 boots:          /slapper edit <eid> boots <id>
-skin:           /slapper edit <eid> skin
+skin:           /slapper edit <eid> skin 
 name:           /slapper edit <eid> name <name>
 namevisibility: /slapper edit <eid> namevisibility <never/hover/always>
 addcommand:     /slapper edit <eid> addcommand <command>
 delcommand:     /slapper edit <eid> delcommand <command>
 listcommands:   /slapper edit <eid> listcommands
 blockid:        /slapper edit <eid> block <id[:meta]>
+blockid:        /slapper edit <eid> held <id[:meta]>
 scale:          /slapper edit <eid> scale <size>
 tphere:         /slapper edit <eid> tphere
 tpto:           /slapper edit <eid> tpto

@@ -10,6 +10,7 @@ namespace fatcraft\bedwars;
 
 
 use fatutils\FatUtils;
+use fatutils\teams\Team;
 use pocketmine\entity\Entity;
 use pocketmine\item\Item;
 use pocketmine\item\ItemIds;
@@ -17,13 +18,13 @@ use pocketmine\level\Location;
 
 class Forge
 {
-    private $m_Location;
-
     private $m_ItemType = ItemIds::IRON_INGOT;
-    private $m_PopDelay = 100;
-    private $m_PopAmount = 10;
-
+    private $m_team = null;
+    private $m_Location;
+    private $m_level = 0;
+    private $m_PopDelay = [];
     private $m_LastTickPop;
+
 
     /**
      * Forge constructor.
@@ -32,7 +33,7 @@ class Forge
     public function __construct($p_Location)
     {
         $this->m_Location = $p_Location;
-        $this->m_LastTickPop = FatUtils::getInstance()->getServer()->getTick() - $this->m_PopDelay;
+        $this->m_LastTickPop = FatUtils::getInstance()->getServer()->getTick();
     }
 
     /**
@@ -42,21 +43,26 @@ class Forge
     {
         $this->m_ItemType = $m_ItemType;
     }
+    public function getItemType(){
+        return $this->m_ItemType;
+    }
 
     /**
      * @param mixed $m_PopDelay
      */
-    public function setPopDelay($m_PopDelay)
+    public function setPopDelay($level, $m_PopDelay)
     {
-        $this->m_PopDelay = $m_PopDelay;
+        $this->m_PopDelay[$level] = $m_PopDelay;
     }
 
-    /**
-     * @param mixed $m_AmountOnPop
-     */
-    public function setPopAmount($m_AmountOnPop)
+    public function setTeam($p_team)
     {
-        $this->m_PopAmount = $m_AmountOnPop;
+        $this->m_team = $p_team;
+    }
+
+    public function getTeam(): ?String
+    {
+        return $this->m_team;
     }
 
     /**
@@ -64,32 +70,38 @@ class Forge
      */
     public function getPopDelay(): int
     {
+        return $this->m_PopDelay[$this->m_level];
+    }
+
+    public function getPopDelays(){
         return $this->m_PopDelay;
     }
 
-    /**
-     * @return int
-     */
-    public function getPopAmount(): int
+    public function canPop(): bool
     {
-        return $this->m_PopAmount;
-    }
-
-    public function canPop():bool
-    {
-        if (FatUtils::getInstance()->getServer()->getTick() - $this->m_PopDelay > $this->m_LastTickPop)
-            return true;
-
-        return false;
+        return FatUtils::getInstance()->getServer()->getTick() - $this->m_PopDelay[$this->m_level] > $this->m_LastTickPop;
     }
 
     public function pop()
     {
-        if ($this->m_Location instanceof Location)
-        {
-            FatUtils::getInstance()->getLogger()->info("POP of " . $this->m_ItemType . "x" . $this->m_ItemType);
+        if ($this->m_Location instanceof Location) {
+//            FatUtils::getInstance()->getLogger()->info("POP of " . $this->m_ItemType . "x" . $this->m_ItemType);
             $this->m_Location->getLevel()->dropItem($this->m_Location, Item::get($this->m_ItemType));
             $this->m_LastTickPop = FatUtils::getInstance()->getServer()->getTick();
         }
+    }
+
+    public function upgrade(){
+        if(count($this->m_PopDelay)>$this->m_level) {
+            $this->m_level++;
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public function getLevel():int{
+        return $this->m_level;
     }
 }

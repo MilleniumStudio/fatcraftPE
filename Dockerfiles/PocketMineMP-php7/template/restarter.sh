@@ -62,6 +62,10 @@ fi
 
 start()
 {
+    if [ ! -z "$SERVER_MAP" ]; then
+        echo "Copying map \"$SERVER_MAP\" from repository"
+        cp -r map_repository/$SERVER_MAP/* worlds/map/
+    fi
     echo "Starting server"
     "$PHP_BINARY" $POCKETMINE_FILE $POCKETMINE_ARGS $@
     echo "Server stopped !"

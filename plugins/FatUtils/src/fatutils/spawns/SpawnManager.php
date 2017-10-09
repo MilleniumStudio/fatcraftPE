@@ -9,11 +9,13 @@
 namespace fatutils\spawns;
 
 use fatutils\FatUtils;
+use fatutils\players\FatPlayer;
 use fatutils\tools\ItemUtils;
 use fatutils\tools\WorldUtils;
 use pocketmine\block\Block;
 use pocketmine\block\BlockIds;
 use pocketmine\level\Location;
+use pocketmine\level\Position;
 
 class SpawnManager
 {
