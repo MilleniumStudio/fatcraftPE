@@ -22,6 +22,7 @@ class FatPlayer
     const PLAYER_STATE_PLAYING = 1;
 
 	private $m_Player;
+	private $m_Name;
 	private $m_State = 0;
 	private $m_HasLost = false;
 	private $m_DisplayHealth = null;
@@ -39,9 +40,15 @@ class FatPlayer
 	 */
 	public function __construct(Player $p_Player)
 	{
-		$this->m_Player = $p_Player;
-            $this->initData();
+		$this->setPlayer($p_Player);
+        $this->initData();
 	}
+
+	public function setPlayer(Player $p_Player)
+    {
+        $this->m_Player = $p_Player;
+        $this->m_Name = $p_Player->getName();
+    }
 
 	public function setPlaying()
 	{
@@ -118,6 +125,12 @@ class FatPlayer
         $this->m_Spawn = $p_Spawn;
     }
 
+    public function getLanguage():int
+    {
+        //TODO language info storage
+        return TextFormatter::LANG_ID_DEFAULT;
+    }
+
     public function addScore(string $p_Key, int $p_Value)
     {
         if (!isset($this->m_Scores[$p_Key]))
@@ -133,6 +146,11 @@ class FatPlayer
     public function getScores():array
     {
         return $this->m_Scores;
+    }
+
+    public function getName():string
+    {
+        return $this->m_Name;
     }
 
     /**

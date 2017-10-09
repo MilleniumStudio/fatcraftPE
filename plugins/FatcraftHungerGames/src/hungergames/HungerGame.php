@@ -7,6 +7,7 @@ use fatutils\loot\ChestsManager;
 use fatutils\FatUtils;
 use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
+use fatutils\scores\PlayerScoresManager;
 use fatutils\scores\ScoresManager;
 use fatutils\tools\bossBarAPI\BossBarAPI;
 use fatutils\tools\Sidebar;
@@ -173,7 +174,7 @@ class HungerGame extends PluginBase
             if ($winner instanceof FatPlayer)
             {
                 $winnerName = $winner->getPlayer()->getName();
-                ScoresManager::getInstance()->registerForScoring($winner->getPlayer());
+                PlayerScoresManager::getInstance()->registerPlayer($winner->getPlayer());
             }
         }
         foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
@@ -192,7 +193,7 @@ class HungerGame extends PluginBase
             })
             ->start();
 
-        ScoresManager::getInstance()->giveRewards();
+        PlayerScoresManager::getInstance()->giveRewards();
 
         GameManager::getInstance()->endGame();
     }

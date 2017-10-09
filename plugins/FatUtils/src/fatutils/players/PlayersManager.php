@@ -55,6 +55,7 @@ class PlayersManager
 
 	public function addPlayer(Player $p_Player)
 	{
+	    FatUtils::getInstance()->getLogger()->info("Creating FatPlayer for " . $p_Player->getName());
         $this->m_FatPlayers[$p_Player->getUniqueId()->toBinary()] = new FatPlayer($p_Player);
         GameDataManager::getInstance()->recordJoin($p_Player->getUniqueId(), $p_Player->getAddress());
 	}

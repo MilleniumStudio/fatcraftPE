@@ -7,6 +7,7 @@ use fatutils\FatUtils;
 use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
 use fatutils\scores\ScoresManager;
+use fatutils\scores\TeamScoresManager;
 use fatutils\teams\Team;
 use fatutils\teams\TeamsManager;
 use fatutils\tools\bossBarAPI\BossBarAPI;
@@ -360,7 +361,7 @@ class Bedwars extends PluginBase implements Listener
             ->addTickCallback([$this, "onPlayingTick"])
             ->addStopCallback(function ()
             {
-                if (PlayersManager::getInstance()->getAlivePlayerLeft() <= 1 && !Bedwars::DEBUG)
+                if (TeamsManager::getInstance()->getAliveTeamNbr() <= 1 && !Bedwars::DEBUG)
                     $this->endGame();
                 else
                 {
@@ -413,7 +414,10 @@ class Bedwars extends PluginBase implements Listener
         {
             $winnerTeam = $winnerTeams[0];
             if ($winnerTeam instanceof Team)
+            {
                 $winnerName = $winnerTeam->getColoredName();
+                TeamScoresManager::getInstance()->registerTeam($winnerTeam);
+            }
         }
 
         foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
@@ -476,7 +480,9 @@ class Bedwars extends PluginBase implements Listener
         }
 
         PlayersManager::getInstance()->getFatPlayer($p)->setHasLost();
-        ScoresManager::getInstance()->registerForScoring($p);
+
+        if ($team->getAlivePlayerLeft() == 0)
+            TeamScoresManager::getInstance()->registerTeam($team);
 
         WorldUtils::addStrike($p->getLocation());
         $l_TeamLeft = TeamsManager::getInstance()->getAliveTeamNbr();

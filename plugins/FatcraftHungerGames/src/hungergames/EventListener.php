@@ -4,7 +4,7 @@ namespace hungergames;
 
 use fatutils\game\GameManager;
 use fatutils\players\PlayersManager;
-use fatutils\scores\ScoresManager;
+use fatutils\scores\PlayerScoresManager;
 use fatutils\tools\Sidebar;
 use fatutils\tools\WorldUtils;
 use pocketmine\event\block\BlockBreakEvent;
@@ -26,7 +26,7 @@ class EventListener implements Listener
     public function playerDeathEvent(PlayerDeathEvent $e)
     {
         $p = $e->getEntity();
-        ScoresManager::getInstance()->registerForScoring($p->getPlayer());
+        PlayerScoresManager::getInstance()->registerPlayer($p->getPlayer());
         PlayersManager::getInstance()->getFatPlayer($p)->setHasLost(true);
 
         WorldUtils::addStrike($p->getLocation());
