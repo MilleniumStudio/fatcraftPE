@@ -38,7 +38,7 @@ use pocketmine\event\player\PlayerDeathEvent;
 
 class Bedwars extends PluginBase implements Listener
 {
-    const DEBUG = true;
+    const DEBUG = false;
     const CONFIG_KEY_FORGES_ROOT = "forges";
     const CONFIG_KEY_FORGES_LOCATION = "location";
     const CONFIG_KEY_FORGES_ITEM_TYPE = "itemType";
@@ -55,6 +55,7 @@ class Bedwars extends PluginBase implements Listener
 
     private $m_BedwarsConfig;
     private static $m_Instance;
+    private $m_WaitingTimer;
     private $m_PlayTimer;
     private $m_secondsSinceStart = 0;
     private $m_timeTier;
@@ -171,7 +172,7 @@ class Bedwars extends PluginBase implements Listener
     {
         $l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Player);
 
-        if (GameManager::getInstance()->isWaiting())
+        if (GameManager::getInstance()->isWaiting() && count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMaxPlayer())
         {
             $l_Team = TeamsManager::getInstance()->addInBestTeam($p_Player);
             if (!is_null($l_Team) && !is_null($l_Team->getSpawn()))
@@ -184,8 +185,27 @@ class Bedwars extends PluginBase implements Listener
                     $p_Player->addTitle("", (new TextFormatter("player.team.join", ["teamName" => $l_Team->getColoredName()]))->asStringForPlayer($p_Player));
                 });
 
-                if (count($this->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMinPlayer())
+                if (count($this->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMaxPlayer())
+                {
+                    $this->getLogger()->info("MAX PLAYER REACH !");
+                    if ($this->m_WaitingTimer instanceof Timer)
+                        $this->m_WaitingTimer->cancel();
                     $this->startGame();
+                }
+                else if (count($this->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMinPlayer())
+                {
+                    if (is_null($this->m_WaitingTimer))
+                    {
+                        $this->getLogger()->info("MIN PLAYER REACH !");
+                        $this->m_WaitingTimer = (new BossbarTimer(GameManager::getInstance()->getWaitingTickDuration()))
+                            ->setTitle("Debut dans")
+                            ->addStopCallback(function ()
+                            {
+                                $this->startGame();
+                            })
+                            ->start();
+                    }
+                }
             }
         } else
         {
