@@ -108,6 +108,26 @@ class TeamsManager
         return null;
     }
 
+    public function getAliveTeamNbr():int
+    {
+        return count($this->getAliveTeams());
+    }
+
+    public function getAliveTeams():array
+    {
+        $l_Ret = [];
+        foreach ($this->m_Teams as $l_Team)
+        {
+            if ($l_Team instanceof Team)
+            {
+                $l_TeamAlivePlayers = $l_Team->getAlivePlayers();
+                if (count($l_TeamAlivePlayers) > 0)
+                    $l_Ret[] = $l_Team;
+            }
+        }
+        return $l_Ret;
+    }
+
     public function addInBestTeam(Player $p_Player): ?Team
     {
         $l_EmptiestTeam = $this->getEmptiestTeam();

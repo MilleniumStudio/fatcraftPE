@@ -80,6 +80,7 @@ forges:
       - 10
       - 5
       - 1
+
   d1:
     location: 17/116.0/4
     itemType: DIAMOND
@@ -119,11 +120,11 @@ npcShop:
   3: 115/116.0/10/180/0
   4: 19/116.0/-94/90/0
 
-  beds:
-    Blue: map/14/116.0/89
-    Red: map/16/116.0/-77
-    Yellow: map/98/116.0/7
-    Green: map/-68/116.0/5
+beds:
+  Blue: 14/116.0/89
+  Red: 16/116.0/-77
+  Yellow: 98/116.0/7
+  Green: -68/116.0/5
 
 shop:
   blocks:
