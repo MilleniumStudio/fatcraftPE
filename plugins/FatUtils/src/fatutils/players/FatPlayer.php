@@ -25,6 +25,8 @@ class FatPlayer
 	private $m_State = 0;
 	private $m_HasLost = false;
 	private $m_DisplayHealth = null;
+
+    private $m_Scores = [];
 	private $m_Data = [];
 
 	private $m_Spawn = null;
@@ -88,6 +90,11 @@ class FatPlayer
             return $p_DefaultValue;
     }
 
+    public function getDatas(): array
+    {
+        return $this->m_Data;
+    }
+
     public function getTeam(): ?Team
     {
         return TeamsManager::getInstance()->getPlayerTeam($this->getPlayer());
@@ -112,6 +119,23 @@ class FatPlayer
     {
         //TODO language info storage
         return TextFormatter::LANG_ID_DEFAULT;
+    }
+
+    public function addScore(string $p_Key, int $p_Value)
+    {
+        if (!isset($this->m_Scores[$p_Key]))
+            $this->m_Scores[$p_Key] = $p_Value;
+        else
+        {
+            $l_OldValue = $this->m_Scores[$p_Key];
+            if (is_numeric($l_OldValue))
+                $this->m_Scores[$p_Key] = $l_OldValue + $p_Value;
+        }
+    }
+
+    public function getScores():array
+    {
+        return $this->m_Scores;
     }
 
     /**

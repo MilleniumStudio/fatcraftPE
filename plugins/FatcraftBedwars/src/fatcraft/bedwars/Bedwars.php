@@ -170,16 +170,22 @@ class Bedwars extends PluginBase implements Listener
     {
         $l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Player);
 
-        $l_Team = TeamsManager::getInstance()->addInBestTeam($p_Player);
-        if (GameManager::getInstance()->isWaiting() && !is_null($l_Team) && !is_null($l_Team->getSpawn()))
+        if (GameManager::getInstance()->isWaiting())
         {
-            $l_Team->getSpawn()->teleport($p_Player, 3);
-            $p_Player->setGamemode(Player::ADVENTURE);
-
-            new DelayedExec(5, function () use ($p_Player, $l_Team)
+            $l_Team = TeamsManager::getInstance()->addInBestTeam($p_Player);
+            if (!is_null($l_Team) && !is_null($l_Team->getSpawn()))
             {
-                $p_Player->addTitle("", (new TextFormatter("player.team.join", ["teamName" => $l_Team->getColoredName()]))->asStringForPlayer($p_Player));
-            });
+                $l_Team->getSpawn()->teleport($p_Player, 3);
+                $p_Player->setGamemode(Player::ADVENTURE);
+
+                new DelayedExec(5, function () use ($p_Player, $l_Team)
+                {
+                    $p_Player->addTitle("", (new TextFormatter("player.team.join", ["teamName" => $l_Team->getColoredName()]))->asStringForPlayer($p_Player));
+                });
+
+                if (count($this->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMinPlayer())
+                    $this->startGame();
+            }
         } else
         {
             $p_Player->setGamemode(3);
@@ -188,11 +194,6 @@ class Bedwars extends PluginBase implements Listener
         }
 
         Sidebar::getInstance()->update();
-
-        if (count($this->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMinPlayer())
-        {
-            $this->startGame();
-        }
     }
 
     //---------------------

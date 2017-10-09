@@ -63,7 +63,7 @@ class ShopKeeper extends ClickableNPC
         {
             $l_Window->addPart((new Button())
                 ->setText((new TextFormatter("bedwars.shop.items.blocks.title"))->asStringForPlayer($p_Player))
-                ->setImage(ShopKeeper::IMAGE_PLACEHOLDER)
+                ->setImage("https://fatcraft.com/img/mcpe_assets/bedwars/Wool.png")
                 ->setCallback(function () use ($p_Player)
                 {
                     self::getGenericItemWindow($p_Player, "blocks")->open();
@@ -73,7 +73,7 @@ class ShopKeeper extends ClickableNPC
 
         $l_Window->addPart((new Button())
             ->setText((new TextFormatter("bedwars.shop.upgrades.title"))->asStringForPlayer($p_Player))
-            ->setImage(ShopKeeper::IMAGE_PLACEHOLDER)
+            ->setImage("https://fatcraft.com/img/mcpe_assets/bedwars/Anvil.png")
             ->setCallback(function () use ($p_Player)
             {
                 self::getUpgradesWindow($p_Player)->open();
@@ -84,7 +84,7 @@ class ShopKeeper extends ClickableNPC
         {
             $l_Window->addPart((new Button())
                 ->setText((new TextFormatter("bedwars.shop.items.weapons.title"))->asStringForPlayer($p_Player))
-                ->setImage(ShopKeeper::IMAGE_PLACEHOLDER)
+                ->setImage("https://fatcraft.com/img/mcpe_assets/bedwars/Iron_Sword.png")
                 ->setCallback(function () use ($p_Player)
                 {
                     self::getGenericItemWindow($p_Player, "weapons")->open();
@@ -96,7 +96,7 @@ class ShopKeeper extends ClickableNPC
         {
             $l_Window->addPart((new Button())
                 ->setText((new TextFormatter("bedwars.shop.items.armors.title"))->asStringForPlayer($p_Player))
-                ->setImage(ShopKeeper::IMAGE_PLACEHOLDER)
+                ->setImage("https://fatcraft.com/img/mcpe_assets/bedwars/Diamond_chestplate.png")
                 ->setCallback(function () use ($p_Player)
                 {
                     self::getArmorsWindow($p_Player)->open();
@@ -108,7 +108,7 @@ class ShopKeeper extends ClickableNPC
         {
             $l_Window->addPart((new Button())
                 ->setText((new TextFormatter("bedwars.shop.items.tools.title"))->asStringForPlayer($p_Player))
-                ->setImage(ShopKeeper::IMAGE_PLACEHOLDER)
+                ->setImage("https://fatcraft.com/img/mcpe_assets/bedwars/Iron_Pickaxe.png")
                 ->setCallback(function () use ($p_Player)
                 {
                     self::getGenericItemWindow($p_Player, "tools")->open();
@@ -120,7 +120,7 @@ class ShopKeeper extends ClickableNPC
         {
             $l_Window->addPart((new Button())
                 ->setText((new TextFormatter("bedwars.shop.items.others.title"))->asStringForPlayer($p_Player))
-                ->setImage(ShopKeeper::IMAGE_PLACEHOLDER)
+                ->setImage("https://fatcraft.com/img/mcpe_assets/bedwars/Snow_Ball.png")
                 ->setCallback(function () use ($p_Player)
                 {
                     self::getGenericItemWindow($p_Player, "others")->open();
@@ -321,7 +321,7 @@ class ShopKeeper extends ClickableNPC
 
         $l_Window->addPart((new Button())
             ->setText((new TextFormatter("bedwars.shop.upgrades.forge"))->asStringForPlayer($p_Player))
-            ->setImage(ShopKeeper::IMAGE_PLACEHOLDER)
+            ->setImage("https://fatcraft.com/img/mcpe_assets/bedwars/Iron_Ingot.png")
             ->setCallback(function () use ($p_Player, $l_Window)
             {
 //                Bedwars::getInstance()->upgradeIronForge($p_Player->get)
