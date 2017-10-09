@@ -32,7 +32,7 @@ class FatPlayer
 
 	private $m_Spawn = null;
     private $m_language = TextFormatter::LANG_ID_DEFAULT;
-    private $m_email = null;
+    private $m_Email = null;
 
 	/**
 	 * FatPlayer constructor.
@@ -125,12 +125,6 @@ class FatPlayer
         $this->m_Spawn = $p_Spawn;
     }
 
-    public function getLanguage():int
-    {
-        //TODO language info storage
-        return TextFormatter::LANG_ID_DEFAULT;
-    }
-
     public function addScore(string $p_Key, int $p_Value)
     {
         if (!isset($this->m_Scores[$p_Key]))
@@ -202,7 +196,7 @@ class FatPlayer
         $l_Exist = false;
         $result = \libasynql\result\MysqlResult::executeQuery(\fatcraft\loadbalancer\LoadBalancer::getInstance()->connectMainThreadMysql(),
             "SELECT * FROM players WHERE uuid = ?", [
-                ["s", $this->m_Player->getXuid()]
+                ["s", $this->getPlayer()->getXuid()]
         ]);
         if (($result instanceof \libasynql\result\MysqlSelectResult) and count($result->rows) == 1)
         {
@@ -215,12 +209,12 @@ class FatPlayer
         }
         if (! $l_Exist)
         {
-            \fatutils\FatUtils::getInstance()->getLogger()->info("[FatPlayer] " . $this->m_Player->getName() . " not exist in database, creating...");
+            \fatutils\FatUtils::getInstance()->getLogger()->info("[FatPlayer] " . $this->getPlayer()->getName() . " not exist in database, creating...");
             \fatutils\FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
                 new \libasynql\DirectQueryMysqlTask(\fatcraft\loadbalancer\LoadBalancer::getInstance()->getCredentials(),
                     "INSERT INTO players (name, uuid) VALUES (?, ?)", [
-                    ["s", $this->m_Player->getName()],
-                    ["s", $this->m_Player->getXuid()]
+                    ["s", $this->getPlayer()->getName()],
+                    ["s", $this->getPlayer()->getXuid()]
                 ]
             ));
             // process first login
@@ -238,7 +232,7 @@ class FatPlayer
         $this->m_Email = $p_Email;
         \libasynql\result\MysqlResult::executeQuery(\fatcraft\loadbalancer\LoadBalancer::getInstance()->connectMainThreadMysql(), "UPDATE players SET email = ? WHERE uuid = ?", [
             ["s", $this->m_Email],
-            ["s", $this->m_Player->getXuid()]
+            ["s", $this->getPlayer()->getXuid()]
         ]);
     }
 
@@ -252,7 +246,7 @@ class FatPlayer
         $this->m_Language = $p_Language;
         \libasynql\result\MysqlResult::executeQuery(\fatcraft\loadbalancer\LoadBalancer::getInstance()->connectMainThreadMysql(), "UPDATE players SET language = ? WHERE uuid = ?", [
             ["i", $this->m_Language],
-            ["s", $this->m_Player->getXuid()]
+            ["s", $this->getPlayer()->getXuid()]
         ]);
     }
 }
