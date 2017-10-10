@@ -30,6 +30,7 @@ use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerExhaustEvent;
 use pocketmine\event\player\PlayerQuitEvent;
+use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\item\Item;
 use pocketmine\item\ItemIds;
 use pocketmine\level\Location;
@@ -209,6 +210,12 @@ class Bedwars extends PluginBase implements Listener
                             })
                             ->start();
                     }
+                }
+                else if (count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMinPlayer())
+                {
+                    $l_WaitingFor = PlayersManager::getInstance()->getMinPlayer() - count($this->getServer()->getOnlinePlayers());
+                    foreach ($this->getServer()->getOnlinePlayers() as $l_Player)
+                        $l_Player->sendTip((new TextFormatter("game.waitingForMore", ["amount" => $l_WaitingFor]))->asStringForPlayer($l_Player));
                 }
             }
         } else
@@ -485,9 +492,16 @@ class Bedwars extends PluginBase implements Listener
         $p_Event->setCancelled(true);
     }
 
+    public function onPlayerRespawn(PlayerRespawnEvent $p_Event)
+    {
+        $l_PlayerTeam = TeamsManager::getInstance()->getPlayerTeam($p_Event->getPlayer());
+        if (!is_null($l_PlayerTeam) && !is_null($l_PlayerTeam->getSpawn()))
+            $p_Event->setRespawnPosition($l_PlayerTeam->getSpawn()->getLocation());
+    }
+
     public function onPlayerDamage(EntityDamageEvent $p_Event)
     {
-        if (GameManager::getInstance()->isWaiting() || $p_Event->getCause() === EntityDamageEvent::CAUSE_VOID)
+        if (GameManager::getInstance()->isWaiting() && $p_Event->getCause() !== EntityDamageEvent::CAUSE_VOID)
             $p_Event->setCancelled(true);
     }
 

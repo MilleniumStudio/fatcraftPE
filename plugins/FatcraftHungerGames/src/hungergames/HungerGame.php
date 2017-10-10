@@ -102,6 +102,12 @@ class HungerGame extends PluginBase
                         ->start();
                 }
             }
+            else if (count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMinPlayer())
+            {
+                $l_WaitingFor = PlayersManager::getInstance()->getMinPlayer() - count($this->getServer()->getOnlinePlayers());
+                foreach ($this->getServer()->getOnlinePlayers() as $l_Player)
+                    $l_Player->sendTip((new TextFormatter("game.waitingForMore", ["amount" => $l_WaitingFor]))->asStringForPlayer($l_Player));
+            }
 
         } else
         {
