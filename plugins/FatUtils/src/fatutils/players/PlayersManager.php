@@ -24,7 +24,7 @@ class PlayersManager
 	private $m_MinPlayer = 0;
 	private $m_MaxPlayer = 18;
 
-    private $m_DisplayHealth = false;
+    private $m_OptionDisplayHealth = false;
 
 	public static function getInstance(): PlayersManager
 	{
@@ -170,11 +170,11 @@ class PlayersManager
 
     public function displayHealth(bool $p_Value = true)
     {
-        $this->m_DisplayHealth = $p_Value;
+        $this->m_OptionDisplayHealth = $p_Value;
     }
 
     public function isHealthDisplayed(): bool
     {
-        return $this->m_DisplayHealth;
+        return $this->m_OptionDisplayHealth;
     }
 }
