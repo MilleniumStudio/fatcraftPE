@@ -15,6 +15,10 @@ use fatutils\tools\TextFormatter;
 use pocketmine\level\Position;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
+use fatcraft\loadbalancer\LoadBalancer;
+use fatutils\FatUtils;
+use libasynql\result\MysqlResult;
+use libasynql\DirectQueryMysqlTask;
 
 class FatPlayer
 {
@@ -195,7 +199,7 @@ class FatPlayer
     private function initData()
     {
         $l_Exist = false;
-        $result = \libasynql\result\MysqlResult::executeQuery(\fatcraft\loadbalancer\LoadBalancer::getInstance()->connectMainThreadMysql(),
+        $result = MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(),
             "SELECT * FROM players WHERE uuid = ?", [
                 ["s", $this->m_Player->getUniqueId()]
         ]);
@@ -206,14 +210,14 @@ class FatPlayer
                 $this->m_Email = $result->rows[0]["email"];
                 $this->m_Language = $result->rows[0]["lang"];
                 $l_Exist = true;
-                \fatutils\FatUtils::getInstance()->getLogger()->info("[FatPlayer] " . $this->m_Player->getName() . " exist in database, loading...");
+                FatUtils::getInstance()->getLogger()->info("[FatPlayer] " . $this->m_Player->getName() . " exist in database, loading...");
             }
         }
         if (! $l_Exist)
         {
-            \fatutils\FatUtils::getInstance()->getLogger()->info("[FatPlayer] " . $this->getPlayer()->getName() . " not exist in database, creating...");
-            \fatutils\FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
-                new \libasynql\DirectQueryMysqlTask(\fatcraft\loadbalancer\LoadBalancer::getInstance()->getCredentials(),
+            FatUtils::getInstance()->getLogger()->info("[FatPlayer] " . $this->getPlayer()->getName() . " not exist in database, creating...");
+            FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
+                new DirectQueryMysqlTask(LoadBalancer::getInstance()->getCredentials(),
                     "INSERT INTO players (name, uuid, xuid) VALUES (?, ?, ?)", [
                     ["s", $this->m_Player->getName()],
                     ["s", $this->m_Player->getUniqueId()],
@@ -225,7 +229,7 @@ class FatPlayer
         }
     }
 
-    public function getEmail(): string
+    public function getEmail()
     {
         return $this->m_Email;
     }
@@ -233,10 +237,13 @@ class FatPlayer
     public function setEmail(string $p_Email)
     {
         $this->m_Email = $p_Email;
-        \libasynql\result\MysqlResult::executeQuery(\fatcraft\loadbalancer\LoadBalancer::getInstance()->connectMainThreadMysql(), "UPDATE players SET email = ? WHERE uuid = ?", [
-            ["s", $this->m_Email],
-            ["s", $this->m_Player->getUniqueId()]
-        ]);
+        FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
+            new DirectQueryMysqlTask(LoadBalancer::getInstance()->getCredentials(),
+                "UPDATE players SET email = ? WHERE uuid = ?", [
+                ["s", $this->m_Email],
+                ["s", $this->m_Player->getUniqueId()]
+            ]
+        ));
     }
 
     public function getLanguage():int
@@ -247,13 +254,16 @@ class FatPlayer
     public function setLanguage(int $p_Language)
     {
         $this->m_Language = $p_Language;
-        \libasynql\result\MysqlResult::executeQuery(\fatcraft\loadbalancer\LoadBalancer::getInstance()->connectMainThreadMysql(), "UPDATE players SET language = ? WHERE uuid = ?", [
-            ["i", $this->m_Language],
-            ["s", $this->m_Player->getUniqueId()]
-        ]);
+        FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
+            new DirectQueryMysqlTask(LoadBalancer::getInstance()->getCredentials(),
+                "UPDATE players SET lang = ? WHERE uuid = ?", [
+                ["i", $this->m_Language],
+                ["s", $this->m_Player->getUniqueId()]
+            ]
+        ));
     }
 
-    public function getFSAccount(): string
+    public function getFSAccount()
     {
         return $this->m_FSAccount;
     }
@@ -261,9 +271,12 @@ class FatPlayer
     public function setFSAccount(string $p_FSAccount)
     {
         $this->m_FSAccount = $p_FSAccount;
-        \libasynql\result\MysqlResult::executeQuery(\fatcraft\loadbalancer\LoadBalancer::getInstance()->connectMainThreadMysql(), "UPDATE players SET fsaccount = ? WHERE uuid = ?", [
-            ["s", $this->m_FSAccount],
-            ["s", $this->m_Player->getUniqueId()]
-        ]);
+        FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
+            new DirectQueryMysqlTask(LoadBalancer::getInstance()->getCredentials(),
+                "UPDATE players SET fsaccount = ? WHERE uuid = ?", [
+                ["s", $this->m_FSAccount],
+                ["s", $this->m_Player->getUniqueId()]
+            ]
+        ));
     }
 }

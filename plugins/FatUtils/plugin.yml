@@ -16,3 +16,5 @@ commands:
   firestorm:
     aliases: ["fs"]
     description: "do stuff"
+  lang:
+    description: "do stuff"

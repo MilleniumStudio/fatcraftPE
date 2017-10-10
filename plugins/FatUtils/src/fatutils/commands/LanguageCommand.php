@@ -7,6 +7,7 @@ use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
 use pocketmine\plugin\PluginBase;
 
+use fatutils\ui\impl\LanguageWindow;
 use fatutils\players\PlayersManager;
 
 class LanguageCommand extends PluginBase implements CommandExecutor
@@ -22,15 +23,14 @@ class LanguageCommand extends PluginBase implements CommandExecutor
         {
             if (PlayersManager::getInstance()->fatPlayerExist($sender))
             {
-                if (count($args) == 1)
+                if (count($args) == 0)
                 {
-                    $l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($sender);
-                    
+                    (new LanguageWindow($sender));
                 }
             }
             else
             {
-                $sender->sendMessage("You must enter Firestorm email account.");
+                $sender->sendMessage("An error occured !");
             }
         }
         return true;
