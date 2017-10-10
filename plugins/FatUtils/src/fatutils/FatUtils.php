@@ -35,6 +35,7 @@ class FatUtils extends PluginBase
         $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
         $this->getCommand("gps")->setExecutor(new commands\GPSCommand());
         $this->getCommand("firestorm")->setExecutor(new commands\FirestormCommand());
+        $this->getCommand("lang")->setExecutor(new commands\FirestormCommand());
         WorldUtils::stopWorldsTime();
 //        $this->rpcServer = new \fatutils\tools\control_socket\RPCServer($this);
     }
