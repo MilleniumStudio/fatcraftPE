@@ -29,6 +29,7 @@ use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerExhaustEvent;
+use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\item\Item;
 use pocketmine\item\ItemIds;
 use pocketmine\level\Location;
@@ -469,6 +470,17 @@ class Bedwars extends PluginBase implements Listener
             $p_Event->setCancelled(true);
     }
 
+    public function onPlayerQuit(PlayerQuitEvent $p_Event)
+    {
+        new DelayedExec(1, function () {
+            if (GameManager::getInstance()->isPlaying())
+            {
+                Sidebar::getInstance()->update();
+                $this->checkGameState();
+            }
+        });
+    }
+
     /**
      * @param PlayerDeathEvent $e
      */
@@ -482,10 +494,7 @@ class Bedwars extends PluginBase implements Listener
 
         $bedLoc = $this->getBedwarsConfig()->getBedLocation($team);
         if ($bedLoc->getLevel()->getBlockIdAt($bedLoc->getFloorX(), $bedLoc->getFloorY(), $bedLoc->getFloorZ()) == self::BLOCK_ID)
-        {
-            //bed is still here
             return;
-        }
 
         PlayersManager::getInstance()->getFatPlayer($p)->setHasLost();
 
@@ -493,18 +502,11 @@ class Bedwars extends PluginBase implements Listener
             TeamScoresManager::getInstance()->registerTeam($team);
 
         WorldUtils::addStrike($p->getLocation());
-        $l_TeamLeft = TeamsManager::getInstance()->getAliveTeamNbr();
 
         foreach (Bedwars::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
             $l_Player->sendMessage($team->getPrefix() . " " . $e->getDeathMessage());
 
-        if ($l_TeamLeft <= 1)
-        {
-            if (Bedwars::DEBUG)
-                echo "Should be a end game but cancelled cause debug is on\n";
-            else
-                Bedwars::getInstance()->endGame();
-        }
+        $this->checkGameState();
 
         $e->setDeathMessage("");
         $p->setGamemode(3);
@@ -512,6 +514,17 @@ class Bedwars extends PluginBase implements Listener
         Sidebar::getInstance()->update();
     }
 
+    public function checkGameState(): void
+    {
+        $l_TeamLeft = TeamsManager::getInstance()->getAliveTeamNbr();
+        if ($l_TeamLeft <= 1)
+        {
+            if (Bedwars::DEBUG)
+                echo "Should be a end game but cancelled cause debug is on\n";
+            else
+                Bedwars::getInstance()->endGame();
+        }
+    }
 
     public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args): bool
     {
