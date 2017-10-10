@@ -440,20 +440,22 @@ class LoadBalancer extends PluginBase implements Listener
         $p_Player->sendMessage($p_Message);
         $this->getLogger()->info($p_Message . " " . $p_Player->getName() . " to " . $p_Ip . ":" . $p_Port . "");
 
-        $this->getServer()->getPluginManager()->callEvent($ev = new PlayerTransferEvent($p_Player, $p_Ip, $p_Port, $p_Message));
+        $p_Player->transfer($p_Ip, $p_Port, $p_Message);
 
-
-        if(!$ev->isCancelled())
-        {
-            // TODO insert in Transfert table
-            $pk = new TransferPacket();
-            $pk->address = $ev->getAddress();
-            $pk->port = $ev->getPort();
-            $p_Player->directDataPacket($pk, true);
+//        $this->getServer()->getPluginManager()->callEvent($ev = new PlayerTransferEvent($p_Player, $p_Ip, $p_Port, $p_Message));
+//
+//
+//        if(!$ev->isCancelled())
+//        {
+//            // TODO insert in Transfert table
+//            $pk = new TransferPacket();
+//            $pk->address = $ev->getAddress();
+//            $pk->port = $ev->getPort();
+//            $p_Player->directDataPacket($pk, true);
 //            $p_Player->close("", $ev->getMessage(), false);
-        }
-        else
-            $this->getLogger()->info("transferPlayer: event is canceled  !!!!" . $ev->getAddress() . " " . $ev->getPort());
+//        }
+//        else
+//            $this->getLogger()->info("transferPlayer: event is canceled  !!!!" . $ev->getAddress() . " " . $ev->getPort());
     }
 
     /**
