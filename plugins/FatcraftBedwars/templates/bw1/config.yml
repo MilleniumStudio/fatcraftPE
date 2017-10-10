@@ -4,6 +4,10 @@ waitingSecDuration: 15
 playingSecDuration: 600
 deathArenaLoc: 0.5/6.1/60.5
 
+rewards:
+  xp: 1000
+  money: 100
+
 spawns:
   blueSpawn:
     location: 16/116.0/107

@@ -428,7 +428,7 @@ class Bedwars extends PluginBase implements Listener
                 30, 80, 30);
         }
 
-//        ScoresManager::getInstance()->giveRewards();
+        TeamScoresManager::getInstance()->giveRewards();
 
         (new BossbarTimer(150))
             ->setTitle(new TextFormatter("bossbar.returnToLobby"))
