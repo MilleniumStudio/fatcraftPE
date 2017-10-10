@@ -8,7 +8,6 @@ use fatutils\tools\WorldUtils;
 use fatutils\ui\windows\ButtonWindow;
 use fatutils\ui\windows\FormWindow;
 use fatutils\ui\windows\ModalWindow;
-use hungergames\LootTable;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
@@ -34,6 +33,9 @@ class FatUtils extends PluginBase
     public function onEnable()
     {
         $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
+        $this->getCommand("gps")->setExecutor(new commands\GPSCommand());
+        $this->getCommand("firestorm")->setExecutor(new commands\FirestormCommand());
+        $this->getCommand("lang")->setExecutor(new commands\LanguageCommand());
         WorldUtils::stopWorldsTime();
 //        $this->rpcServer = new \fatutils\tools\control_socket\RPCServer($this);
     }

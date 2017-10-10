@@ -10,7 +10,6 @@ use pocketmine\event\player\PlayerTransferEvent;
 use pocketmine\network\mcpe\protocol\TransferPacket;
 use pocketmine\plugin\PluginBase;
 use pocketmine\Player;
-use pocketmine\utils\Config;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\ConsoleCommandSender;
@@ -20,7 +19,6 @@ use libasynql\result\MysqlResult;
 use libasynql\result\MysqlSelectResult;
 use libasynql\DirectQueryMysqlTask;
 use libasynql\MysqlCredentials;
-use fatcraft\loadbalancer\control_socket\RCON;
 
 class LoadBalancer extends PluginBase implements Listener
 {
@@ -29,7 +27,6 @@ class LoadBalancer extends PluginBase implements Listener
 
     private static $m_Instance;
     public $m_ConsoleCommandSender;
-    private $m_Langs;
     private $m_ServerUUID;
     private $m_ServerType;
     private $m_ServerId;
@@ -48,12 +45,6 @@ class LoadBalancer extends PluginBase implements Listener
     {
         // registering instance
         LoadBalancer::$m_Instance = $this;
-
-        $this->saveResource("commands.txt");
-
-        // Language section
-        $this->saveResource("language.properties");
-        $this->lang = new Config($this->getDataFolder() . "language.properties", Config::PROPERTIES);
     }
 
     public function onEnable()
@@ -105,20 +96,6 @@ class LoadBalancer extends PluginBase implements Listener
                 LoadBalancer::getInstance()->cleanOrphaned();
             }
         }, 0, $this->getConfig()->getNested("timers.cleaner"));
-        $this->getServer()->getScheduler()->scheduleDelayedRepeatingTask(new class($this) extends PluginTask
-        {
-            public function onRun(int $currentTick)
-            {
-                $l_Commands = new Config(LoadBalancer::getInstance()->getDataFolder() . "commands.txt", Config::ENUM);
-                foreach ($l_Commands->getAll() as $l_Command => $l_Value)
-                {
-                    LoadBalancer::getInstance()->getLogger()->info("Executing console command \"" . $l_Command . "\"");
-                    LoadBalancer::getInstance()->getServer()->dispatchCommand(LoadBalancer::getInstance()->m_ConsoleCommandSender, $l_Command);
-                    $l_Commands->remove($l_Command);
-                }
-                $l_Commands->save();
-            }
-        }, 0, 100);
         $this->getLogger()->info("Enabled");
     }
 
@@ -458,19 +435,12 @@ class LoadBalancer extends PluginBase implements Listener
         }
     }
 
-    public function getTranslatedMessage($key, $value = ["%1", "%2"])
-    {
-        if ($this->m_Langs->exists($key)) {
-            return str_replace(["%1", "%2"], [$value[0], $value[1]], $this->m_Langs->get($key));
-        } else {
-            return "Language with key \"$key\" does not exist";
-        }
-    }
-
     public function transferPlayer(Player $p_Player, string $p_Ip, int $p_Port, string $p_Message)
     {
         $p_Player->sendMessage($p_Message);
         $this->getLogger()->info($p_Message . " " . $p_Player->getName() . " to " . $p_Ip . ":" . $p_Port . "");
+
+//        $p_Player->transfer($p_Ip, $p_Port, $p_Message);
 
         $this->getServer()->getPluginManager()->callEvent($ev = new PlayerTransferEvent($p_Player, $p_Ip, $p_Port, $p_Message));
 
@@ -522,25 +492,7 @@ class LoadBalancer extends PluginBase implements Listener
             {
                 try
                 {
-                    // select random server
-                    $server = $this->getBest($this->getConfig()->getNested("redirect.to_type"), "open");
-                    if ($server !== null)
-                    {
-                        // fire event
-                        $this->getServer()->getPluginManager()->callEvent($l_Event = new BalancePlayerEvent($this, $p_Event->getPlayer(), $server["ip"], $server["port"]));
-                        if ($l_Event->getIp() === null or $l_Event->getPort() === null)
-                        {
-                            $p_Event->getPlayer()->kick("%disconnectScreen.serverFull", false);
-                        }
-                        else
-                        {
-                            $this->transferPlayer($p_Event->getPlayer(), $l_Event->getIp(), $l_Event->getPort(), $this->getConfig()->getNested("redirect.message"));
-                        }
-                    }
-                    else
-                    {
-                        $p_Event->getPlayer()->kick("LoadBalancer error, no server route !", false);
-                    }
+                    $this->balancePlayer($p_Event->getPlayer(), $this->getConfig()->getNested("redirect.to_type"));
                 }
                 catch (Exception $ex)
                 {
@@ -552,6 +504,29 @@ class LoadBalancer extends PluginBase implements Listener
                 // TODO check Transfert table
                 $this->insertPlayer($p_Event->getPlayer());
             }
+        }
+    }
+
+    public function balancePlayer(Player $p_Player, string $p_Type)
+    {
+        // select random server
+        $server = $this->getBest($p_Type, "open");
+        if ($server !== null)
+        {
+            // fire event
+            $this->getServer()->getPluginManager()->callEvent($l_Event = new BalancePlayerEvent($this, $p_Player, $server["ip"], $server["port"]));
+            if ($l_Event->getIp() === null or $l_Event->getPort() === null)
+            {
+                $p_Player->kick("%disconnectScreen.serverFull", false);
+            }
+            else
+            {
+                $this->transferPlayer($p_Player, $l_Event->getIp(), $l_Event->getPort(), $this->getConfig()->getNested("redirect.message"));
+            }
+        }
+        else
+        {
+            $p_Player->kick("LoadBalancer error, no server route !", false);
         }
     }
 

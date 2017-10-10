@@ -7,6 +7,7 @@ use fatutils\loot\ChestsManager;
 use fatutils\FatUtils;
 use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
+use fatutils\scores\PlayerScoresManager;
 use fatutils\scores\ScoresManager;
 use fatutils\tools\bossBarAPI\BossBarAPI;
 use fatutils\tools\Sidebar;
@@ -101,6 +102,12 @@ class HungerGame extends PluginBase
                         ->start();
                 }
             }
+            else if (count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMinPlayer())
+            {
+                $l_WaitingFor = PlayersManager::getInstance()->getMinPlayer() - count($this->getServer()->getOnlinePlayers());
+                foreach ($this->getServer()->getOnlinePlayers() as $l_Player)
+                    $l_Player->sendTip((new TextFormatter("game.waitingForMore", ["amount" => $l_WaitingFor]))->asStringForPlayer($l_Player));
+            }
 
         } else
         {
@@ -173,7 +180,7 @@ class HungerGame extends PluginBase
             if ($winner instanceof FatPlayer)
             {
                 $winnerName = $winner->getPlayer()->getName();
-                ScoresManager::getInstance()->registerForScoring($winner->getPlayer());
+                PlayerScoresManager::getInstance()->registerPlayer($winner->getPlayer());
             }
         }
         foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
@@ -184,15 +191,25 @@ class HungerGame extends PluginBase
                 30, 80, 30);
         }
 
+        PlayerScoresManager::getInstance()->giveRewards();
+        
         (new BossbarTimer(150))
             ->setTitle(new TextFormatter("bossbar.returnToLobby"))
+            ->addStopCallback(function ()
+            {
+                foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+                {
+                    LoadBalancer::getInstance()->balancePlayer($l_Player, "lobby");
+                }
+            })
+            ->start();
+
+        (new Timer(200))
             ->addStopCallback(function ()
             {
                 $this->getServer()->shutdown();
             })
             ->start();
-
-        ScoresManager::getInstance()->giveRewards();
 
         GameManager::getInstance()->endGame();
     }

@@ -7,6 +7,7 @@ use fatutils\FatUtils;
 use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
 use fatutils\scores\ScoresManager;
+use fatutils\scores\TeamScoresManager;
 use fatutils\teams\Team;
 use fatutils\teams\TeamsManager;
 use fatutils\tools\bossBarAPI\BossBarAPI;
@@ -24,8 +25,12 @@ use pocketmine\block\BlockIds;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\entity\Effect;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
+use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerExhaustEvent;
+use pocketmine\event\player\PlayerQuitEvent;
+use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\item\Item;
 use pocketmine\item\ItemIds;
 use pocketmine\level\Location;
@@ -206,6 +211,12 @@ class Bedwars extends PluginBase implements Listener
                             ->start();
                     }
                 }
+                else if (count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMinPlayer())
+                {
+                    $l_WaitingFor = PlayersManager::getInstance()->getMinPlayer() - count($this->getServer()->getOnlinePlayers());
+                    foreach ($this->getServer()->getOnlinePlayers() as $l_Player)
+                        $l_Player->sendTip((new TextFormatter("game.waitingForMore", ["amount" => $l_WaitingFor]))->asStringForPlayer($l_Player));
+                }
             }
         } else
         {
@@ -220,6 +231,27 @@ class Bedwars extends PluginBase implements Listener
     //---------------------
     // CURRENCIES
     //---------------------
+    public function setPlayerIron(Player $p_Player, int $p_Value)
+    {
+        PlayersManager::getInstance()->getFatPlayer($p_Player)
+            ->setData(Bedwars::PLAYER_DATA_CURRENCY_IRON, $p_Value);
+        Sidebar::getInstance()->updatePlayer($p_Player);
+    }
+
+    public function setPlayerGold(Player $p_Player, int $p_Value)
+    {
+        PlayersManager::getInstance()->getFatPlayer($p_Player)
+            ->setData(Bedwars::PLAYER_DATA_CURRENCY_GOLD, $p_Value);
+        Sidebar::getInstance()->updatePlayer($p_Player);
+    }
+
+    public function setPlayerDiamond(Player $p_Player, int $p_Value)
+    {
+        PlayersManager::getInstance()->getFatPlayer($p_Player)
+            ->setData(Bedwars::PLAYER_DATA_CURRENCY_DIAMOND, $p_Value);
+        Sidebar::getInstance()->updatePlayer($p_Player);
+    }
+
     public function modPlayerIron(Player $p_Player, int $p_Value)
     {
         PlayersManager::getInstance()->getFatPlayer($p_Player)
@@ -360,7 +392,7 @@ class Bedwars extends PluginBase implements Listener
             ->addTickCallback([$this, "onPlayingTick"])
             ->addStopCallback(function ()
             {
-                if (PlayersManager::getInstance()->getAlivePlayerLeft() <= 1 && !Bedwars::DEBUG)
+                if (TeamsManager::getInstance()->getAliveTeamNbr() <= 1 && !Bedwars::DEBUG)
                     $this->endGame();
                 else
                 {
@@ -413,7 +445,10 @@ class Bedwars extends PluginBase implements Listener
         {
             $winnerTeam = $winnerTeams[0];
             if ($winnerTeam instanceof Team)
+            {
                 $winnerName = $winnerTeam->getColoredName();
+                TeamScoresManager::getInstance()->registerTeam($winnerTeam);
+            }
         }
 
         foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
@@ -424,10 +459,20 @@ class Bedwars extends PluginBase implements Listener
                 30, 80, 30);
         }
 
-//        ScoresManager::getInstance()->giveRewards();
+        TeamScoresManager::getInstance()->giveRewards();
 
         (new BossbarTimer(150))
             ->setTitle(new TextFormatter("bossbar.returnToLobby"))
+            ->addStopCallback(function ()
+            {
+                foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+                {
+                    LoadBalancer::getInstance()->balancePlayer($l_Player, "lobby");
+                }
+            })
+            ->start();
+
+        (new Timer(200))
             ->addStopCallback(function ()
             {
                 $this->getServer()->shutdown();
@@ -457,6 +502,49 @@ class Bedwars extends PluginBase implements Listener
         $p_Event->setCancelled(true);
     }
 
+    public function onPlayerRespawn(PlayerRespawnEvent $p_Event)
+    {
+        $l_PlayerTeam = TeamsManager::getInstance()->getPlayerTeam($p_Event->getPlayer());
+        if (!is_null($l_PlayerTeam) && !is_null($l_PlayerTeam->getSpawn()))
+            $p_Event->setRespawnPosition($l_PlayerTeam->getSpawn()->getLocation());
+    }
+
+    public function onPlayerDamage(EntityDamageEvent $p_Event)
+    {
+        if (GameManager::getInstance()->isWaiting() && $p_Event->getCause() !== EntityDamageEvent::CAUSE_VOID)
+            $p_Event->setCancelled(true);
+    }
+
+    public function onPlayerQuit(PlayerQuitEvent $p_Event)
+    {
+        new DelayedExec(1, function () {
+            if (GameManager::getInstance()->isPlaying())
+            {
+                Sidebar::getInstance()->update();
+                $this->checkGameState();
+            }
+        });
+    }
+
+    public function dropPlayerMoney(Player $p_Player)
+    {
+        if ($this->getPlayerIron($p_Player) > 0)
+        {
+            $p_Player->getLevel()->dropItem($p_Player, Item::get(ItemIds::IRON_INGOT, 0, $this->getPlayerIron($p_Player)));
+            $this->setPlayerIron($p_Player, 0);
+        }
+        if ($this->getPlayerGold($p_Player) > 0)
+        {
+            $p_Player->getLevel()->dropItem($p_Player, Item::get(ItemIds::GOLD_INGOT, 0, $this->getPlayerGold($p_Player)));
+            $this->setPlayerGold($p_Player, 0);
+        }
+        if ($this->getPlayerDiamond($p_Player) > 0)
+        {
+            $p_Player->getLevel()->dropItem($p_Player, Item::get(ItemIds::DIAMOND, 0, $this->getPlayerDiamond($p_Player)));
+            $this->setPlayerDiamond($p_Player, 0);
+        }
+    }
+
     /**
      * @param PlayerDeathEvent $e
      */
@@ -465,32 +553,28 @@ class Bedwars extends PluginBase implements Listener
         $p = $e->getEntity();
         $team = PlayersManager::getInstance()->getFatPlayer($p)->getTeam();
 
+        $e->setKeepInventory(false);
+
         // Remove player items // TODO exceptions ?
 //        $e->setDrops([]);
 
+        $this->dropPlayerMoney($p);
+
         $bedLoc = $this->getBedwarsConfig()->getBedLocation($team);
         if ($bedLoc->getLevel()->getBlockIdAt($bedLoc->getFloorX(), $bedLoc->getFloorY(), $bedLoc->getFloorZ()) == self::BLOCK_ID)
-        {
-            //bed is still here
             return;
-        }
 
         PlayersManager::getInstance()->getFatPlayer($p)->setHasLost();
-        ScoresManager::getInstance()->registerForScoring($p);
+
+        if ($team->getAlivePlayerLeft() == 0)
+            TeamScoresManager::getInstance()->registerTeam($team);
 
         WorldUtils::addStrike($p->getLocation());
-        $l_TeamLeft = TeamsManager::getInstance()->getAliveTeamNbr();
 
         foreach (Bedwars::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
             $l_Player->sendMessage($team->getPrefix() . " " . $e->getDeathMessage());
 
-        if ($l_TeamLeft <= 1)
-        {
-            if (Bedwars::DEBUG)
-                echo "Should be a end game but cancelled cause debug is on\n";
-            else
-                Bedwars::getInstance()->endGame();
-        }
+        $this->checkGameState();
 
         $e->setDeathMessage("");
         $p->setGamemode(3);
@@ -498,6 +582,17 @@ class Bedwars extends PluginBase implements Listener
         Sidebar::getInstance()->update();
     }
 
+    public function checkGameState(): void
+    {
+        $l_TeamLeft = TeamsManager::getInstance()->getAliveTeamNbr();
+        if ($l_TeamLeft <= 1)
+        {
+            if (Bedwars::DEBUG)
+                echo "Should be a end game but cancelled cause debug is on\n";
+            else
+                Bedwars::getInstance()->endGame();
+        }
+    }
 
     public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args): bool
     {

@@ -4,19 +4,19 @@ waitingSecDuration: 15
 playingSecDuration: 600
 deathArenaLoc: 0.5/6.1/60.5
 
+rewards:
+  xp: 1000
+  money: 100
+
 spawns:
   blueSpawn:
     location: 16/116.0/107
-    blockType: AIR
   redSpawn:
     location: 14/116.0/-93
-    blockType: AIR
   greenSpawn:
     location: -85/116.0/7
-    blockType: AIR
   yellowSpawn:
     location: 116/116.0/5
-    blockType: AIR
 
 forges:
   i1:
@@ -130,7 +130,7 @@ shop:
     wool:
       rawItem: '{"material": "WOOL", "amount": 4}'
       imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/Wool.png"
-      ironPrice: 4
+      ironPrice: 2
     endStone:
       rawItem: '{"material": "END_STONE", "amount": 4}'
       imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/End_Stone.png"
