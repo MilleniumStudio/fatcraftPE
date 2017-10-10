@@ -51,10 +51,22 @@ class PlayersManager
             FatUtils::getInstance()->getLogger()->info("  - minPlayers: " . $this->getMinPlayer());
             FatUtils::getInstance()->getLogger()->info("  - maxPlayers: " . $this->getMaxPlayer());
         }
+        \fatcraft\loadbalancer\LoadBalancer::getInstance()->connectMainThreadMysql()->query("CREATE TABLE IF NOT EXISTS `players` (
+            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `uuid` varchar(36) NOT NULL,
+            `xuid` varchar(36) NOT NULL,
+            `name` varchar(50) NOT NULL,
+            `email` varchar(50) DEFAULT NULL,
+            `fsaccount` varchar(50) DEFAULT NULL,
+            `lang` int(3) NOT NULL DEFAULT '0' COMMENT '0 en, 1 fr, 2 es',
+            `join_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`)
+        )");
     }
 
 	public function addPlayer(Player $p_Player)
 	{
+	    FatUtils::getInstance()->getLogger()->info("Creating FatPlayer for " . $p_Player->getName());
         $this->m_FatPlayers[$p_Player->getUniqueId()->toBinary()] = new FatPlayer($p_Player);
         GameDataManager::getInstance()->recordJoin($p_Player->getUniqueId(), $p_Player->getAddress());
 	}

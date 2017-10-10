@@ -19,13 +19,19 @@ class EventListener implements Listener
      * @param PlayerJoinEvent $e
      * @priority LOWEST
      */
-    public function onSpawn(PlayerJoinEvent $e)
+    public function onJoin(PlayerJoinEvent $e)
     {
         $p = $e->getPlayer();
         $p->getInventory()->clearAll();
 
-        if (PlayersManager::getInstance()->fatPlayerExist($p))
+        if (!PlayersManager::getInstance()->fatPlayerExist($p))
             PlayersManager::getInstance()->addPlayer($p);
+        else
+        {
+            FatUtils::getInstance()->getLogger("Reapplying player to FatPlayer");
+            PlayersManager::getInstance()->getFatPlayer($p)->setPlayer($p);
+        }
+
         new DelayedExec(1, function () use ($p)
         {
             PlayersManager::getInstance()->getFatPlayer($p)->updateFormattedNameTag();

@@ -10,3 +10,11 @@ commands:
     description: "do stuff"
     usage: "/fu"
     aliases: ["fu"]
+  gps:
+    description: "do stuff"
+    permission: command.gps
+  firestorm:
+    aliases: ["fs"]
+    description: "do stuff"
+  lang:
+    description: "do stuff"

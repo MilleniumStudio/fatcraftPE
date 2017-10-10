@@ -197,6 +197,16 @@ class Team
         return $l_Players;
     }
 
+    public function getPlayerUUIDs(): array
+    {
+        $l_PlayerUUIDs = [];
+
+        foreach ($this->m_Players as $l_PlayerRawUUID)
+            $l_PlayerUUIDs[] = UUID::fromBinary($l_PlayerRawUUID);
+
+        return $l_PlayerUUIDs;
+    }
+
     public function getSpawn(): ?Spawn
     {
         return $this->m_Spawn;

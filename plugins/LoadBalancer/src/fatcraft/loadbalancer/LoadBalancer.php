@@ -10,7 +10,6 @@ use pocketmine\event\player\PlayerTransferEvent;
 use pocketmine\network\mcpe\protocol\TransferPacket;
 use pocketmine\plugin\PluginBase;
 use pocketmine\Player;
-use pocketmine\utils\Config;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\ConsoleCommandSender;
@@ -20,7 +19,6 @@ use libasynql\result\MysqlResult;
 use libasynql\result\MysqlSelectResult;
 use libasynql\DirectQueryMysqlTask;
 use libasynql\MysqlCredentials;
-use fatcraft\loadbalancer\control_socket\RCON;
 
 class LoadBalancer extends PluginBase implements Listener
 {
@@ -29,7 +27,6 @@ class LoadBalancer extends PluginBase implements Listener
 
     private static $m_Instance;
     public $m_ConsoleCommandSender;
-    private $m_Langs;
     private $m_ServerUUID;
     private $m_ServerType;
     private $m_ServerId;
@@ -48,12 +45,6 @@ class LoadBalancer extends PluginBase implements Listener
     {
         // registering instance
         LoadBalancer::$m_Instance = $this;
-
-        $this->saveResource("commands.txt");
-
-        // Language section
-        $this->saveResource("language.properties");
-        $this->lang = new Config($this->getDataFolder() . "language.properties", Config::PROPERTIES);
     }
 
     public function onEnable()
@@ -105,20 +96,6 @@ class LoadBalancer extends PluginBase implements Listener
                 LoadBalancer::getInstance()->cleanOrphaned();
             }
         }, 0, $this->getConfig()->getNested("timers.cleaner"));
-        $this->getServer()->getScheduler()->scheduleDelayedRepeatingTask(new class($this) extends PluginTask
-        {
-            public function onRun(int $currentTick)
-            {
-                $l_Commands = new Config(LoadBalancer::getInstance()->getDataFolder() . "commands.txt", Config::ENUM);
-                foreach ($l_Commands->getAll() as $l_Command => $l_Value)
-                {
-                    LoadBalancer::getInstance()->getLogger()->info("Executing console command \"" . $l_Command . "\"");
-                    LoadBalancer::getInstance()->getServer()->dispatchCommand(LoadBalancer::getInstance()->m_ConsoleCommandSender, $l_Command);
-                    $l_Commands->remove($l_Command);
-                }
-                $l_Commands->save();
-            }
-        }, 0, 100);
         $this->getLogger()->info("Enabled");
     }
 
@@ -455,15 +432,6 @@ class LoadBalancer extends PluginBase implements Listener
                 ]
                 );
             }
-        }
-    }
-
-    public function getTranslatedMessage($key, $value = ["%1", "%2"])
-    {
-        if ($this->m_Langs->exists($key)) {
-            return str_replace(["%1", "%2"], [$value[0], $value[1]], $this->m_Langs->get($key));
-        } else {
-            return "Language with key \"$key\" does not exist";
         }
     }
 

@@ -27,6 +27,16 @@ class ButtonWindow extends Window
         return $this;
     }
 
+    public function addButton(string $p_Text = ""): Button
+    {
+        $l_Button = new Button();
+        $l_Button->setText($p_Text);
+
+        $this->_addPart($l_Button);
+
+        return $l_Button;
+    }
+
     public function setContent(string $p_Content): ButtonWindow
     {
         $this->m_Data["content"] = $p_Content;
