@@ -40,7 +40,7 @@ class FirestormCommand extends PluginBase implements CommandExecutor
                 }
                 else
                 {
-                    $sender->sendMessage("You must enter Firestorm email account.");
+                    $sender->sendMessage("The email is not valid.");
                 }
             }
             else
