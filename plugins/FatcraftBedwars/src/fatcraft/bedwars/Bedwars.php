@@ -224,6 +224,27 @@ class Bedwars extends PluginBase implements Listener
     //---------------------
     // CURRENCIES
     //---------------------
+    public function setPlayerIron(Player $p_Player, int $p_Value)
+    {
+        PlayersManager::getInstance()->getFatPlayer($p_Player)
+            ->setData(Bedwars::PLAYER_DATA_CURRENCY_IRON, $p_Value);
+        Sidebar::getInstance()->updatePlayer($p_Player);
+    }
+
+    public function setPlayerGold(Player $p_Player, int $p_Value)
+    {
+        PlayersManager::getInstance()->getFatPlayer($p_Player)
+            ->setData(Bedwars::PLAYER_DATA_CURRENCY_GOLD, $p_Value);
+        Sidebar::getInstance()->updatePlayer($p_Player);
+    }
+
+    public function setPlayerDiamond(Player $p_Player, int $p_Value)
+    {
+        PlayersManager::getInstance()->getFatPlayer($p_Player)
+            ->setData(Bedwars::PLAYER_DATA_CURRENCY_DIAMOND, $p_Value);
+        Sidebar::getInstance()->updatePlayer($p_Player);
+    }
+
     public function modPlayerIron(Player $p_Player, int $p_Value)
     {
         PlayersManager::getInstance()->getFatPlayer($p_Player)
@@ -481,6 +502,25 @@ class Bedwars extends PluginBase implements Listener
         });
     }
 
+    public function dropPlayerMoney(Player $p_Player)
+    {
+        if ($this->getPlayerIron($p_Player) > 0)
+        {
+            $p_Player->getLevel()->dropItem($p_Player, Item::get(ItemIds::IRON_INGOT, 0, $this->getPlayerIron($p_Player)));
+            $this->setPlayerIron($p_Player, 0);
+        }
+        if ($this->getPlayerGold($p_Player) > 0)
+        {
+            $p_Player->getLevel()->dropItem($p_Player, Item::get(ItemIds::GOLD_INGOT, 0, $this->getPlayerGold($p_Player)));
+            $this->setPlayerGold($p_Player, 0);
+        }
+        if ($this->getPlayerDiamond($p_Player) > 0)
+        {
+            $p_Player->getLevel()->dropItem($p_Player, Item::get(ItemIds::DIAMOND, 0, $this->getPlayerDiamond($p_Player)));
+            $this->setPlayerDiamond($p_Player, 0);
+        }
+    }
+
     /**
      * @param PlayerDeathEvent $e
      */
@@ -489,8 +529,12 @@ class Bedwars extends PluginBase implements Listener
         $p = $e->getEntity();
         $team = PlayersManager::getInstance()->getFatPlayer($p)->getTeam();
 
+        $e->setKeepInventory(false);
+
         // Remove player items // TODO exceptions ?
 //        $e->setDrops([]);
+
+        $this->dropPlayerMoney($p);
 
         $bedLoc = $this->getBedwarsConfig()->getBedLocation($team);
         if ($bedLoc->getLevel()->getBlockIdAt($bedLoc->getFloorX(), $bedLoc->getFloorY(), $bedLoc->getFloorZ()) == self::BLOCK_ID)
