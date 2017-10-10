@@ -191,15 +191,25 @@ class HungerGame extends PluginBase
                 30, 80, 30);
         }
 
+        PlayerScoresManager::getInstance()->giveRewards();
+        
         (new BossbarTimer(150))
             ->setTitle(new TextFormatter("bossbar.returnToLobby"))
+            ->addStopCallback(function ()
+            {
+                foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+                {
+                    LoadBalancer::getInstance()->balancePlayer($l_Player, "lobby");
+                }
+            })
+            ->start();
+
+        (new Timer(200))
             ->addStopCallback(function ()
             {
                 $this->getServer()->shutdown();
             })
             ->start();
-
-        PlayerScoresManager::getInstance()->giveRewards();
 
         GameManager::getInstance()->endGame();
     }
