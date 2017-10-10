@@ -32,6 +32,7 @@ start_docker lobby 2 19133 fatcraft/pocketmine:lobby mainLobby
 start_docker hg 1 19134 fatcraft/pocketmine:hg-1 hg/HGMapSpaceship
 start_docker pk 1 19135 fatcraft/pocketmine:pk-1 parkour/giantHouse
 start_docker sw 1 19136 fatcraft/pocketmine:sw-1 sw/sw-end
+start_docker sw 1 19136 fatcraft/pocketmine:sw-2 sw/sw-alien
 start_docker bw 1 19137 fatcraft/pocketmine:bw-1 bw/map1-4x3
 
 
