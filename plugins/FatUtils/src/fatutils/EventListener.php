@@ -28,7 +28,7 @@ class EventListener implements Listener
             PlayersManager::getInstance()->addPlayer($p);
         else
         {
-            FatUtils::getInstance()->getLogger("Reapplying player to FatPlayer");
+            FatUtils::getInstance()->getLogger()->info("Reapplying player to FatPlayer");
             PlayersManager::getInstance()->getFatPlayer($p)->setPlayer($p);
         }
 
@@ -83,17 +83,12 @@ class EventListener implements Listener
     public function playerDeathEvent(PlayerDeathEvent $p_Event)
     {
         $l_Player = $p_Event->getEntity();
-        $l_Killer = null;
-        if ($l_Player->getLastDamageCause()->getEntity() instanceof Player)
-        {
-            $l_Killer = $l_Player->getLastDamageCause()->getEntity();
+        $l_Killer = (!is_null($l_Player->getLastDamageCause()) ? $l_Player->getLastDamageCause()->getEntity() : null);
+        if ($l_Killer instanceof Player)
             GameDataManager::getInstance()->recordKill($l_Killer->getUniqueId(), $l_Player->getName());
-        }
         else
-        {
-            // see pocketmine\event\entity\EntityDamageEvent for details
-            $l_Killer = $l_Player->getLastDamageCause()->getCause();
-        }
+            $l_Killer = $l_Player->getLastDamageCause()->getCause(); // see pocketmine\event\entity\EntityDamageEvent for details
+
         GameDataManager::getInstance()->recordDeath($l_Player->getUniqueId(), $l_Killer);
     }
 }
