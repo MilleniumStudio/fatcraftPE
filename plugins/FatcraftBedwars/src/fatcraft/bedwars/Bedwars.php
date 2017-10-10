@@ -25,6 +25,8 @@ use pocketmine\block\BlockIds;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\entity\Effect;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
+use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerExhaustEvent;
 use pocketmine\item\Item;
@@ -459,6 +461,12 @@ class Bedwars extends PluginBase implements Listener
     public function onPlayerExhaust(PlayerExhaustEvent $p_Event)
     {
         $p_Event->setCancelled(true);
+    }
+
+    public function onPlayerDamage(EntityDamageEvent $p_Event)
+    {
+        if (GameManager::getInstance()->isWaiting() || $p_Event->getCause() === EntityDamageEvent::CAUSE_VOID)
+            $p_Event->setCancelled(true);
     }
 
     /**
