@@ -12,8 +12,10 @@ use fatutils\spawns\Spawn;
 use fatutils\teams\Team;
 use fatutils\teams\TeamsManager;
 use fatutils\tools\TextFormatter;
+use fatutils\ui\impl\LanguageWindow;
 use pocketmine\level\Position;
 use pocketmine\Player;
+use pocketmine\scheduler\PluginTask;
 use pocketmine\utils\TextFormat;
 use fatcraft\loadbalancer\LoadBalancer;
 use fatutils\FatUtils;
@@ -225,7 +227,14 @@ class FatPlayer
                 ]
             ));
             // process first login
-            // ask language
+//            $player = $this->m_Player;
+//            FatUtils::getInstance()->getServer()->getScheduler()->scheduleDelayedTask(new class(FatUtils::getInstance()) extends PluginTask
+//            {
+//                public function onRun(int $currentTick)
+//                {
+//                    new LanguageWindow($player);
+//                }
+//            }, 5);
         }
     }
 
