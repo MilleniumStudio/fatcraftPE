@@ -5,11 +5,9 @@ namespace fatcraft\lobby\commands;
 use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
-use pocketmine\plugin\PluginBase;
 use fatcraft\lobby\Lobby;
-use fatutils\ui\WindowsManager;
 
-class MenuCommand extends PluginBase implements CommandExecutor
+class MenuCommand implements CommandExecutor
 {
 
     public function __construct(Lobby $plugin)

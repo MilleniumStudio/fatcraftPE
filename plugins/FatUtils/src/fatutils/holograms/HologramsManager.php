@@ -96,4 +96,12 @@ class HologramsManager implements Listener
             $value->sendToPlayer($p_Event->getPlayer());
         }
     }
+
+    public function onPlayerUpdateLanguage(\fatutils\events\LanguageUpdatedEvent $p_Event)
+    {
+        foreach ($this->holograms as $value)
+        {
+            $value->sendToPlayer($p_Event->getPlayer());
+        }
+    }
 }

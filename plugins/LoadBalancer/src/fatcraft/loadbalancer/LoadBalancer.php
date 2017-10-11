@@ -440,22 +440,22 @@ class LoadBalancer extends PluginBase implements Listener
         $p_Player->sendMessage($p_Message);
         $this->getLogger()->info($p_Message . " " . $p_Player->getName() . " to " . $p_Ip . ":" . $p_Port . "");
 
-        $p_Player->transfer($p_Ip, $p_Port, $p_Message);
+//        $p_Player->transfer($p_Ip, $p_Port, $p_Message);
 
-//        $this->getServer()->getPluginManager()->callEvent($ev = new PlayerTransferEvent($p_Player, $p_Ip, $p_Port, $p_Message));
-//
-//
-//        if(!$ev->isCancelled())
-//        {
-//            // TODO insert in Transfert table
-//            $pk = new TransferPacket();
-//            $pk->address = $ev->getAddress();
-//            $pk->port = $ev->getPort();
-//            $p_Player->directDataPacket($pk, true);
+        $this->getServer()->getPluginManager()->callEvent($ev = new PlayerTransferEvent($p_Player, $p_Ip, $p_Port, $p_Message));
+
+
+        if(!$ev->isCancelled())
+        {
+            // TODO insert in Transfert table
+            $pk = new TransferPacket();
+            $pk->address = $ev->getAddress();
+            $pk->port = $ev->getPort();
+            $p_Player->directDataPacket($pk, true);
 //            $p_Player->close("", $ev->getMessage(), false);
-//        }
-//        else
-//            $this->getLogger()->info("transferPlayer: event is canceled  !!!!" . $ev->getAddress() . " " . $ev->getPort());
+        }
+        else
+            $this->getLogger()->info("transferPlayer: event is canceled  !!!!" . $ev->getAddress() . " " . $ev->getPort());
     }
 
     /**
@@ -492,25 +492,7 @@ class LoadBalancer extends PluginBase implements Listener
             {
                 try
                 {
-                    // select random server
-                    $server = $this->getBest($this->getConfig()->getNested("redirect.to_type"), "open");
-                    if ($server !== null)
-                    {
-                        // fire event
-                        $this->getServer()->getPluginManager()->callEvent($l_Event = new BalancePlayerEvent($this, $p_Event->getPlayer(), $server["ip"], $server["port"]));
-                        if ($l_Event->getIp() === null or $l_Event->getPort() === null)
-                        {
-                            $p_Event->getPlayer()->kick("%disconnectScreen.serverFull", false);
-                        }
-                        else
-                        {
-                            $this->transferPlayer($p_Event->getPlayer(), $l_Event->getIp(), $l_Event->getPort(), $this->getConfig()->getNested("redirect.message"));
-                        }
-                    }
-                    else
-                    {
-                        $p_Event->getPlayer()->kick("LoadBalancer error, no server route !", false);
-                    }
+                    $this->balancePlayer($p_Event->getPlayer(), $this->getConfig()->getNested("redirect.to_type"));
                 }
                 catch (Exception $ex)
                 {
@@ -522,6 +504,29 @@ class LoadBalancer extends PluginBase implements Listener
                 // TODO check Transfert table
                 $this->insertPlayer($p_Event->getPlayer());
             }
+        }
+    }
+
+    public function balancePlayer(Player $p_Player, string $p_Type)
+    {
+        // select random server
+        $server = $this->getBest($p_Type, "open");
+        if ($server !== null)
+        {
+            // fire event
+            $this->getServer()->getPluginManager()->callEvent($l_Event = new BalancePlayerEvent($this, $p_Player, $server["ip"], $server["port"]));
+            if ($l_Event->getIp() === null or $l_Event->getPort() === null)
+            {
+                $p_Player->kick("%disconnectScreen.serverFull", false);
+            }
+            else
+            {
+                $this->transferPlayer($p_Player, $l_Event->getIp(), $l_Event->getPort(), $this->getConfig()->getNested("redirect.message"));
+            }
+        }
+        else
+        {
+            $p_Player->kick("LoadBalancer error, no server route !", false);
         }
     }
 
