@@ -4,6 +4,7 @@ namespace fatutils;
 
 use fatcraft\bedwars\ShopKeeper;
 use fatutils\loot\ChestsManager;
+use fatutils\permission\PermissionManager;
 use fatutils\tools\WorldUtils;
 use fatutils\ui\windows\ButtonWindow;
 use fatutils\ui\windows\FormWindow;
@@ -38,6 +39,9 @@ class FatUtils extends PluginBase
         $this->getCommand("lang")->setExecutor(new commands\LanguageCommand());
         WorldUtils::stopWorldsTime();
 //        $this->rpcServer = new \fatutils\tools\control_socket\RPCServer($this);
+
+        //init perms
+        PermissionManager::getInstance();
     }
 
     public function onDisable()

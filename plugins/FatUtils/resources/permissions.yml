@@ -1,0 +1,34 @@
+default:
+  allow:
+    - chat.sendMessageTest
+
+VIP:
+  extends: default
+  prefix: VIP
+  allow:
+    - truc.machin
+
+Modo:
+  extends: VIP
+  prefix: modo
+  allow:
+    - chat.mute
+    - op.kick
+    - op.ban
+
+Admin:
+  extends: Modo
+  prefix: admin
+  allow:
+    - server.stop
+    - op.kick.modo
+    - op.ban.modo
+    - perm.setGroup
+    - perm.removeGroup
+    
+Test:
+   extends: Admin
+   prefix: test
+   deny:
+     - perm.setGroup
+     - perm.removeGroup

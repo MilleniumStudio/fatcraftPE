@@ -8,6 +8,7 @@
 
 namespace fatutils\players;
 
+use fatutils\permission\PermissionManager;
 use fatutils\spawns\Spawn;
 use fatutils\teams\Team;
 use fatutils\teams\TeamsManager;
@@ -39,6 +40,7 @@ class FatPlayer
 	private $m_Spawn = null;
     private $m_language = TextFormatter::LANG_ID_DEFAULT;
     private $m_Email = null;
+    private $m_permissionGroup = "default";
     private $m_FSAccount = null;
 
 	/**
@@ -211,6 +213,9 @@ class FatPlayer
             {
                 $this->m_Email = $result->rows[0]["email"];
                 $this->m_Language = $result->rows[0]["lang"];
+                $this->m_permissionGroup = $result->rows[0]["permission_group"];
+                if($this->m_permissionGroup == null || $this->m_permissionGroup == "")
+                    $this->m_permissionGroup = "default";
                 $l_Exist = true;
                 FatUtils::getInstance()->getLogger()->info("[FatPlayer] " . $this->m_Player->getName() . " exist in database, loading...");
             }
@@ -236,6 +241,8 @@ class FatPlayer
 //                }
 //            }, 5);
         }
+
+        PermissionManager::getInstance()->updatePermissions($this);
     }
 
     public function getEmail()
@@ -272,6 +279,18 @@ class FatPlayer
         ));
     }
 
+    public function getPermissionGroup(){
+	    return $this->m_permissionGroup;
+    }
+
+    public function setPermissionGroup(string $p_groupName){
+        $this->m_permissionGroup = $p_groupName;
+        MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(), "UPDATE players SET permission_group = ? WHERE uuid = ?", [
+            ["s", $this->m_permissionGroup],
+            ["s", $this->getPlayer()->getUniqueId()]
+        ]);
+    }
+
     public function getFSAccount()
     {
         return $this->m_FSAccount;
@@ -283,9 +302,9 @@ class FatPlayer
         FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
             new DirectQueryMysqlTask(LoadBalancer::getInstance()->getCredentials(),
                 "UPDATE players SET fsaccount = ? WHERE uuid = ?", [
-                ["s", $this->m_FSAccount],
-                ["s", $this->m_Player->getUniqueId()]
-            ]
-        ));
+                    ["s", $this->m_FSAccount],
+                    ["s", $this->m_Player->getUniqueId()]
+                ]
+            ));
     }
 }
