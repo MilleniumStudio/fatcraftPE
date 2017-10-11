@@ -1,4 +1,4 @@
-minPlayer: 1
+minPlayer: 2
 maxPlayer: 12
 waitingSecDuration: 15
 playingSecDuration: 600
@@ -24,76 +24,76 @@ forges:
     itemType: IRON_INGOT
     team: Blue
     popDelay:
-      - 10
-      - 5
+      - 3
+      - 2
       - 1
   i2:
     location: 7/116.0/-91
     itemType: IRON_INGOT
     team: Red
     popDelay:
-      - 10
-      - 5
+      - 3
+      - 2
       - 1
   i3:
     location: 112/116.0/-2
     itemType: IRON_INGOT
     team: Yellow
     popDelay:
-      - 10
-      - 5
+      - 3
+      - 2
       - 1
   i4:
     location: -82/116.0/14
     itemType: IRON_INGOT
     team: Green
     popDelay:
-      - 10
-      - 5
+      - 3
+      - 2
       - 1
 
   g1:
     location: -45/116.0/70
     itemType: GOLD_INGOT
     popDelay:
-      - 10
-      - 5
-      - 1
+      - 8
+      - 6
+      - 4
   g2:
     location: -45/116.0/70
     itemType: GOLD_INGOT
     popDelay:
-      - 10
-      - 5
-      - 1
+      - 8
+      - 6
+      - 4
   g3:
     location: 76/116.0/-58
     itemType: GOLD_INGOT
     popDelay:
-      - 10
-      - 5
-      - 1
+      - 8
+      - 6
+      - 4
   g4:
     location: -49/116.0/-55
     itemType: GOLD_INGOT
     popDelay:
-      - 10
-      - 5
-      - 1
+      - 8
+      - 6
+      - 4
   d1:
     location: 17/116.0/4
     itemType: DIAMOND
     popDelay:
+      - 12
       - 10
-      - 5
-      - 1
+      - 8
   d2:
     location: 13/116.0/8
     itemType: DIAMOND
     popDelay:
+      - 12
       - 10
-      - 5
-      - 1
+      - 8
 
 teams:
   Blue:
@@ -110,14 +110,14 @@ teams:
     spawn: greenSpawn
 
 npcTeamSelector:
-  1: -2/8.5/-14
-  2: 3/8.5/-14
+  1: 17/116.0/4
+  2: 13/116.0/8
 
 npcShop:
   1: -85/116.0/2
-  2: 11/116.0/106/270/0
+  2: 11.5/116.0/106.5/270/0
   3: 115/116.0/10/180/0
-  4: 19/116.0/-94/90/0
+  4: 19.5/116.0/-93.5/90/0
 
 beds:
   Blue: 14/116.0/89

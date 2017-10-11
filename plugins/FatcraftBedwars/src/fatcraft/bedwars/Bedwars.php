@@ -182,7 +182,7 @@ class Bedwars extends PluginBase implements Listener
             $l_Team = TeamsManager::getInstance()->addInBestTeam($p_Player);
             if (!is_null($l_Team) && !is_null($l_Team->getSpawn()))
             {
-                $l_Team->getSpawn()->teleport($p_Player, 3);
+//                $l_Team->getSpawn()->teleport($p_Player, 3);
                 $p_Player->setGamemode(Player::ADVENTURE);
 
                 new DelayedExec(5, function () use ($p_Player, $l_Team)

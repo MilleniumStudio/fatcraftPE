@@ -125,6 +125,10 @@ class EventListener implements Listener
 
     public function onBlockPlace(BlockPlaceEvent $e)
     {
+        new DelayedExec(1, function () {
+            Sidebar::getInstance()->update(); //todo remove (debug)
+        });
+
         $e->getBlock()->setMetadata("isCustom", new class(Bedwars::getInstance()) extends MetadataValue
         {
             /**
