@@ -86,12 +86,17 @@ class PlayersManager
 
 	public function getFatPlayerByName(string $p_PlayerName):?FatPlayer
 	{
-		foreach ($this->m_FatPlayers as $l_Player)
+		foreach ($this->m_FatPlayers as $l_FatPlayer)
         {
-            if ($l_Player instanceof FatPlayer && strcmp($l_Player->getPlayer()->getName(), $p_PlayerName) === 0)
-                return $l_Player;
+            if ($l_FatPlayer instanceof FatPlayer && strcmp($l_FatPlayer->getPlayer()->getName(), $p_PlayerName) === 0)
+                return $l_FatPlayer;
         }
         return null;
+	}
+
+	public function getFatPlayers():array
+	{
+		return $this->m_FatPlayers;
 	}
 
 	public function getFatPlayer(Player $p_Player):FatPlayer

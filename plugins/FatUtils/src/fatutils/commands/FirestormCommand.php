@@ -2,27 +2,24 @@
 
 namespace fatutils\commands;
 
+use fatutils\tools\StringUtils;
 use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
+use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 
 use fatutils\players\PlayersManager;
 
-class FirestormCommand extends PluginBase implements CommandExecutor
+class FirestormCommand implements CommandExecutor
 {
-
-    public function __construct()
-    {
-    }
-
     public function onCommand(CommandSender $sender, Command $cmd, $label, array $args): bool
     {
-        if ($sender instanceof \pocketmine\Player)
+        if ($sender instanceof Player)
         {
             if (count($args) == 1)
             {
-                if (\fatutils\tools\StringUtils::isEmailValid($args[0]))
+                if (StringUtils::isEmailValid($args[0]))
                 {
                     if (PlayersManager::getInstance()->fatPlayerExist($sender))
                     {

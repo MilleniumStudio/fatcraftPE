@@ -140,7 +140,7 @@ class TeamsManager
 
     public function addInBestTeamByUUID(string $p_PlayerBinUUID): ?Team
     {
-        return $this->addInBestTeam(PlayersManager::getInstance()->getPlayerFromUUID(UUID::fromBinary($p_PlayerBinUUID)));
+        return $this->addInBestTeam(PlayersManager::getInstance()->getPlayerFromUUID(UUID::fromString($p_PlayerBinUUID)));
     }
 
     public function addInTeam(Player $p_Player, Team $p_team)
@@ -203,7 +203,7 @@ class TeamsManager
             {
                 $playerBinUUID = array_pop($team->m_Players);
                 $newTeam = $this->addInBestTeamByUUID($playerBinUUID);
-                echo "switch ".PlayersManager::getInstance()->getPlayerFromUUID(UUID::fromBinary($playerBinUUID))->getName()." from ".$team->getName()." to ".$newTeam->getName()."\n";
+                echo "switch ".PlayersManager::getInstance()->getPlayerFromUUID(UUID::fromString($playerBinUUID))->getName()." from ".$team->getName()." to ".$newTeam->getName()."\n";
             }
         }
     }

@@ -50,7 +50,6 @@ class Ban
 
     public function isStillValid(): bool
     {
-        var_dump($this, time());
         return is_null($this->m_ExpirationTimestamp) || $this->m_ExpirationTimestamp > time();
     }
 

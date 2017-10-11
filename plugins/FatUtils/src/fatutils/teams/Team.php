@@ -73,11 +73,9 @@ class Team
     {
         $array = [];
         foreach ($this->m_Players as $playerBinUUID) {
-            $player = PlayersManager::getInstance()->getPlayerFromUUID(UUID::fromBinary($playerBinUUID));
+            $player = PlayersManager::getInstance()->getPlayerFromUUID(UUID::fromString($playerBinUUID));
             if ($player != null && $player instanceof Player)
                 $array[] = $player->getName();
-            else
-                echo "No player for " . $playerBinUUID . " -> " . (UUID::fromBinary($playerBinUUID)) . "\n";
         }
         return $array;
     }
@@ -186,7 +184,7 @@ class Team
         $l_Players = [];
 
         foreach ($this->m_Players as $l_PlayerRawUUID) {
-            $l_PlayerUUID = UUID::fromBinary($l_PlayerRawUUID);
+            $l_PlayerUUID = UUID::fromString($l_PlayerRawUUID);
             if ($l_PlayerUUID instanceof UUID) {
                 $l_Player = PlayersManager::getInstance()->getPlayerFromUUID($l_PlayerUUID);
                 if (!is_null($l_Player))
@@ -202,7 +200,7 @@ class Team
         $l_PlayerUUIDs = [];
 
         foreach ($this->m_Players as $l_PlayerRawUUID)
-            $l_PlayerUUIDs[] = UUID::fromBinary($l_PlayerRawUUID);
+            $l_PlayerUUIDs[] = UUID::fromString($l_PlayerRawUUID);
 
         return $l_PlayerUUIDs;
     }

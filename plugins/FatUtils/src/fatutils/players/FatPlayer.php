@@ -205,11 +205,13 @@ class FatPlayer
 
     private function initData()
     {
+    	$l_StartMillisec = microtime(true);
         $l_Exist = false;
         $result = MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(),
             "SELECT * FROM players WHERE uuid = ?", [
                 ["s", $this->getPlayer()->getUniqueId()]
         ]);
+		$l_EndMillisec = microtime(true);
         if (($result instanceof \libasynql\result\MysqlSelectResult) and count($result->rows) == 1)
         {
             if (count($result->rows) == 1)
@@ -220,7 +222,7 @@ class FatPlayer
                 if($this->m_permissionGroup == null || $this->m_permissionGroup == "")
                     $this->m_permissionGroup = "default";
                 $l_Exist = true;
-                FatUtils::getInstance()->getLogger()->info("[FatPlayer] " . $this->getPlayer()->getName() . " exist in database, loading...");
+                FatUtils::getInstance()->getLogger()->info("[FatPlayer] " . $this->getPlayer()->getName() . " exist in database, loading took " . (($l_EndMillisec - $l_StartMillisec) * 1000) . "ms");
             }
         }
         if (! $l_Exist)

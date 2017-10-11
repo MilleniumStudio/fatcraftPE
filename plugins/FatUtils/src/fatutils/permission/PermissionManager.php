@@ -2,7 +2,6 @@
 
 namespace fatutils\permission;
 
-use fatutils\EventListener;
 use fatutils\FatUtils;
 use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
@@ -10,7 +9,7 @@ use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\Player;
 use pocketmine\utils\Config;
 
-class PermissionManager extends EventListener
+class PermissionManager
 {
     private static $m_Instance = null;
     private $m_permissions = [];
@@ -27,7 +26,6 @@ class PermissionManager extends EventListener
 
     private function __construct()
     {
-        FatUtils::getInstance()->getServer()->getPluginManager()->registerEvents($this, FatUtils::getInstance());
         FatUtils::getInstance()->getCommand("perms")->setExecutor(new PermCommands());
         $this->loadFromConfig();
     }

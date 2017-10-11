@@ -21,3 +21,7 @@ commands:
   perms:
     permission: perms
     description: "permissions commands"
+  ban:
+    description: "Ban player"
+    usage: "/ban <playerName> [<duration> month|days|hours|minutes]"
+    aliases: ["banip", "banreload"]

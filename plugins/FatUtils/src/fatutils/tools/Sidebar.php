@@ -10,6 +10,8 @@ namespace fatutils\tools;
 
 
 use fatutils\FatUtils;
+use fatutils\players\FatPlayer;
+use fatutils\players\PlayersManager;
 use pocketmine\Player;
 use pocketmine\plugin\Plugin;
 use pocketmine\scheduler\PluginTask;
@@ -186,8 +188,11 @@ class Sidebar
 
     private function updatePlayersLines()
     {
-        foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-            $this->updatePlayerLines($l_Player);
+        foreach (PlayersManager::getInstance()->getFatPlayers() as $l_FatPlayer)
+		{
+			if ($l_FatPlayer instanceof FatPlayer)
+            	$this->updatePlayerLines($l_FatPlayer->getPlayer());
+		}
     }
 
     private function lineSplitter(string $p_line):array
@@ -247,8 +252,11 @@ class Sidebar
 
     public function _display()
     {
-        foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-            $this->_displayForPlayer($l_Player);
+        foreach (PlayersManager::getInstance()->getFatPlayers() as $l_FatPlayer)
+		{
+			if ($l_FatPlayer instanceof FatPlayer)
+            	$this->_displayForPlayer($l_FatPlayer->getPlayer());
+		}
     }
 
     public function _displayForPlayer(Player $p_Player)

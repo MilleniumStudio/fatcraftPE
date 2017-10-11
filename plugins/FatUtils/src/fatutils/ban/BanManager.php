@@ -46,6 +46,7 @@ class BanManager
               `player_ip` varchar(15) DEFAULT NULL,
               `expiration_date` timestamp NULL DEFAULT NULL,
               `creation_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+              `reason` varchar(255) NULL,
               PRIMARY KEY (`id`),
               KEY `idx_expiration_date` (`expiration_date`)
             ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
@@ -73,6 +74,13 @@ class BanManager
                 }
             }
         }
+
+        // Ban address
+//		foreach ($this->m_IpBans as $l_IpBan)
+//		{
+//			if ($l_IpBan instanceof Ban)
+//        		FatUtils::getInstance()->getServer()->getNetwork()->blockAddress($l_IpBan->getIp());
+//		}
     }
 
     public function banIp(string $p_Ip, int $p_ExpireSecondFromNow = null)
@@ -125,11 +133,7 @@ class BanManager
         if ($l_Result instanceof MysqlSuccessResult)
         {
             if ($l_Result->insertId > 0)
-            {
-                var_dump("BanCreate", $l_Result->insertId);
                 $this->m_UuidBans[$p_Uuid->toString()] = Ban::createUuidBan($l_Result->insertId, $p_Uuid, $l_ExpireTimestamp);
-            } else
-                var_dump($l_Result);
         }
     }
 
@@ -144,6 +148,7 @@ class BanManager
                     "UPDATE bans SET expiration_date = NOW() WHERE id = ?;", [
                         ["i", $l_Ban->getId()]
                     ]);
+				//FatUtils::getInstance()->getServer()->getNetwork()->unblockAddress($l_Ban->getIp());
                 unset($this->m_IpBans[$p_Ip]);
             }
             return true;
