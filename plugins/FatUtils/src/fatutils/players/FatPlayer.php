@@ -20,6 +20,8 @@ use pocketmine\scheduler\PluginTask;
 use pocketmine\utils\TextFormat;
 use fatcraft\loadbalancer\LoadBalancer;
 use fatutils\FatUtils;
+use fatutils\tools\Timer;
+use fatutils\events\LanguageUpdatedEvent;
 use libasynql\result\MysqlResult;
 use libasynql\DirectQueryMysqlTask;
 
@@ -38,7 +40,7 @@ class FatPlayer
 	private $m_Data = [];
 
 	private $m_Spawn = null;
-    private $m_language = TextFormatter::LANG_ID_DEFAULT;
+    private $m_Language = TextFormatter::LANG_ID_DEFAULT;
     private $m_Email = null;
     private $m_permissionGroup = "default";
     private $m_FSAccount = null;
@@ -205,7 +207,7 @@ class FatPlayer
         $l_Exist = false;
         $result = MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(),
             "SELECT * FROM players WHERE uuid = ?", [
-                ["s", $this->m_Player->getUniqueId()]
+                ["s", $this->getPlayer()->getUniqueId()]
         ]);
         if (($result instanceof \libasynql\result\MysqlSelectResult) and count($result->rows) == 1)
         {
@@ -217,7 +219,7 @@ class FatPlayer
                 if($this->m_permissionGroup == null || $this->m_permissionGroup == "")
                     $this->m_permissionGroup = "default";
                 $l_Exist = true;
-                FatUtils::getInstance()->getLogger()->info("[FatPlayer] " . $this->m_Player->getName() . " exist in database, loading...");
+                FatUtils::getInstance()->getLogger()->info("[FatPlayer] " . $this->getPlayer()->getName() . " exist in database, loading...");
             }
         }
         if (! $l_Exist)
@@ -226,20 +228,18 @@ class FatPlayer
             FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
                 new DirectQueryMysqlTask(LoadBalancer::getInstance()->getCredentials(),
                     "INSERT INTO players (name, uuid, xuid) VALUES (?, ?, ?)", [
-                    ["s", $this->m_Player->getName()],
-                    ["s", $this->m_Player->getUniqueId()],
-                    ["s", $this->m_Player->getXuid()]
+                    ["s", $this->getPlayer()->getName()],
+                    ["s", $this->getPlayer()->getUniqueId()],
+                    ["s", $this->getPlayer()->getXuid()]
                 ]
             ));
             // process first login
-//            $player = $this->m_Player;
-//            FatUtils::getInstance()->getServer()->getScheduler()->scheduleDelayedTask(new class(FatUtils::getInstance()) extends PluginTask
-//            {
-//                public function onRun(int $currentTick)
-//                {
-//                    new LanguageWindow($player);
-//                }
-//            }, 5);
+            (new Timer(40))
+            ->addStopCallback(function ()
+            {
+                new LanguageWindow($this->getPlayer());
+            })
+            ->start();
         }
 
         PermissionManager::getInstance()->updatePermissions($this);
@@ -257,26 +257,32 @@ class FatPlayer
             new DirectQueryMysqlTask(LoadBalancer::getInstance()->getCredentials(),
                 "UPDATE players SET email = ? WHERE uuid = ?", [
                 ["s", $this->m_Email],
-                ["s", $this->m_Player->getUniqueId()]
+                ["s", $this->getPlayer()->getUniqueId()]
             ]
         ));
     }
 
     public function getLanguage():int
     {
-        return $this->m_language;
+        return $this->m_Language;
     }
 
-    public function setLanguage(int $p_Language)
+    public function setLanguage(int $p_Language): bool
     {
-        $this->m_Language = $p_Language;
-        FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
-            new DirectQueryMysqlTask(LoadBalancer::getInstance()->getCredentials(),
-                "UPDATE players SET lang = ? WHERE uuid = ?", [
-                ["i", $this->m_Language],
-                ["s", $this->m_Player->getUniqueId()]
-            ]
-        ));
+        if ($this->m_Language != $p_Language)
+        {
+            $this->m_Language = $p_Language;
+            FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
+                new DirectQueryMysqlTask(LoadBalancer::getInstance()->getCredentials(),
+                    "UPDATE players SET lang = ? WHERE uuid = ?", [
+                    ["i", $this->m_Language],
+                    ["s", $this->getPlayer()->getUniqueId()]
+                ]
+            ));
+            FatUtils::getInstance()->getServer()->getPluginManager()->callEvent(new LanguageUpdatedEvent($this->getPlayer(), $this->m_Language));
+            return true;
+        }
+        return false;
     }
 
     public function getPermissionGroup(){
@@ -302,9 +308,9 @@ class FatPlayer
         FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
             new DirectQueryMysqlTask(LoadBalancer::getInstance()->getCredentials(),
                 "UPDATE players SET fsaccount = ? WHERE uuid = ?", [
-                    ["s", $this->m_FSAccount],
-                    ["s", $this->m_Player->getUniqueId()]
-                ]
-            ));
+                ["s", $this->m_FSAccount],
+                ["s", $this->getPlayer()->getUniqueId()]
+            ]
+        ));
     }
 }
