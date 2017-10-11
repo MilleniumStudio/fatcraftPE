@@ -23,12 +23,11 @@ Admin:
     - server.stop
     - op.kick.modo
     - op.ban.modo
-    - perm.setGroup
-    - perm.removeGroup
+    - perms
+    - command.gps
     
 Test:
    extends: Admin
    prefix: test
    deny:
-     - perm.setGroup
-     - perm.removeGroup
+     - perms

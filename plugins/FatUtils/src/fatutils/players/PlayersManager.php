@@ -84,13 +84,14 @@ class PlayersManager
         return isset($this->m_FatPlayers[$p_Player->getUniqueId()->toBinary()]);
     }
 
-	public function getFatPlayerByName(string $p_PlayerName):FatPlayer
+	public function getFatPlayerByName(string $p_PlayerName):?FatPlayer
 	{
 		foreach ($this->m_FatPlayers as $l_Player)
         {
             if ($l_Player instanceof FatPlayer && strcmp($l_Player->getPlayer()->getName(), $p_PlayerName) === 0)
                 return $l_Player;
         }
+        return null;
 	}
 
 	public function getFatPlayer(Player $p_Player):FatPlayer

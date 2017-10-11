@@ -16,6 +16,7 @@ class PermissionManager extends EventListener
     private $m_permissions = [];
     private $m_processedPerms = [];
     private $m_prefix = [];
+    private $m_activePerms = [];
 
     public static function getInstance(): PermissionManager
     {
@@ -27,10 +28,11 @@ class PermissionManager extends EventListener
     private function __construct()
     {
         FatUtils::getInstance()->getServer()->getPluginManager()->registerEvents($this, FatUtils::getInstance());
+        FatUtils::getInstance()->getCommand("perms")->setExecutor(new PermCommands());
         $this->loadFromConfig();
     }
 
-    private function loadFromConfig()
+    public function loadFromConfig()
     {
         $config = new Config(FatUtils::getInstance()->getDataFolder() . "permissions.yml", Config::YAML);
         $this->m_permissions = $config->getAll();
@@ -59,19 +61,39 @@ class PermissionManager extends EventListener
 
     public function updatePermissions(FatPlayer $p_player)
     {
-        $p = $p_player->getPlayer();
-        $groupName = $p_player->getPermissionGroup();
-        if (array_key_exists($groupName, $this->m_processedPerms)) {
-            $attachement = $p->addAttachment(FatUtils::getInstance());
-            $attachement->clearPermissions();
-            foreach ($this->m_processedPerms[$groupName] as $permName => $value) {
-                $attachement->setPermission($permName, $value);
+        if ($p_player instanceof FatPlayer) {
+            $p = $p_player->getPlayer();
+            $groupName = $p_player->getPermissionGroup();
+            if (array_key_exists($groupName, $this->m_processedPerms)) {
+                $attachement = null;
+                if (!array_key_exists($p->getUniqueId()->toString(), $this->m_activePerms)) {
+                    $attachement = $p->addAttachment(FatUtils::getInstance());
+                    $this->m_activePerms[$p->getUniqueId()->toString()] = $attachement;
+                }
+                $attachement = $this->m_activePerms[$p->getUniqueId()->toString()];
+                $attachement->clearPermissions();
+                $attachement->setPermissions($this->m_processedPerms[$groupName]);
+            } else {
+                echo "Unknown permissionGroup " . $groupName . "\n";
             }
-        } else {
-            echo "Unknown permissionGroup " . $groupName . "\n";
+            // add prefix to display name
+            if (array_key_exists($groupName, $this->m_prefix))
+                $p->setDisplayName("[" . $this->m_prefix[$groupName] . "]" . $p->getName());
         }
+    }
 
-        // affichage prefix head
-        // and in chat
+    public function listPerms(string $groupName): string
+    {
+        if (array_key_exists($groupName, $this->m_processedPerms)) {
+            return print_r($this->m_processedPerms[$groupName], true);
+        } else {
+            return "This group doesn't exists";
+        }
+    }
+
+    public function clearPerms(FatPlayer $fatPlayer){
+        if (!array_key_exists($fatPlayer->getUniqueId()->toString(), $this->m_activePerms)) {
+            array_splice($this->m_activePerms, $fatPlayer->getUniqueId()->toString(), 1);
+        }
     }
 }
