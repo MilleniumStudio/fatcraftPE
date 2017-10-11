@@ -3,6 +3,7 @@
 namespace fatutils;
 
 use fatcraft\bedwars\ShopKeeper;
+use fatutils\ban\BanManager;
 use fatutils\loot\ChestsManager;
 use fatutils\permission\PermissionManager;
 use fatutils\tools\WorldUtils;
@@ -39,7 +40,10 @@ class FatUtils extends PluginBase
         $this->getCommand("firestorm")->setExecutor(new commands\FirestormCommand());
         $this->getCommand("lang")->setExecutor(new commands\LanguageCommand());
         WorldUtils::stopWorldsTime();
-        TextFormatter::loadLanguages();
+//        $this->rpcServer = new \fatutils\tools\control_socket\RPCServer($this);
+
+		BanManager::getInstance(); // BanManager initialization
+		TextFormatter::loadLanguages();
     }
 
     public function onDisable()

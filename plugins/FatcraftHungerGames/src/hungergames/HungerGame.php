@@ -10,6 +10,7 @@ use fatutils\players\PlayersManager;
 use fatutils\scores\PlayerScoresManager;
 use fatutils\scores\ScoresManager;
 use fatutils\tools\bossBarAPI\BossBarAPI;
+use fatutils\tools\DelayedExec;
 use fatutils\tools\Sidebar;
 use fatutils\tools\TextFormatter;
 use fatutils\tools\Timer;
@@ -17,8 +18,10 @@ use fatutils\tools\WorldUtils;
 use fatutils\game\GameManager;
 use fatutils\spawns\SpawnManager;
 use fatutils\tools\MathUtils;
-use fatutils\tools\BossbarTimer;
+use fatutils\tools\TipsTimer;
 use pocketmine\entity\Effect;
+use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
 use pocketmine\level\Location;
@@ -26,7 +29,7 @@ use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat;
 
-class HungerGame extends PluginBase
+class HungerGame extends PluginBase implements Listener
 {
     private $m_HungerGameConfig;
     private static $m_Instance;
@@ -46,6 +49,7 @@ class HungerGame extends PluginBase
     public function onEnable()
     {
         $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
+        $this->getServer()->getPluginManager()->registerEvents($this, $this);
 
         FatUtils::getInstance()->setTemplateConfig($this->getConfig());
         $this->m_HungerGameConfig = new HungerGameConfig($this->getConfig());
@@ -93,8 +97,8 @@ class HungerGame extends PluginBase
                 if (is_null($this->m_WaitingTimer))
                 {
                     $this->getLogger()->info("MIN PLAYER REACH !");
-                    $this->m_WaitingTimer = (new BossbarTimer(GameManager::getInstance()->getWaitingTickDuration()))
-                        ->setTitle("Debut dans")
+                    $this->m_WaitingTimer = (new TipsTimer(GameManager::getInstance()->getWaitingTickDuration()))
+                        ->setTitle(new TextFormatter("timer.waiting.title"))
                         ->addStopCallback(function ()
                         {
                             $this->startGame();
@@ -143,8 +147,8 @@ class HungerGame extends PluginBase
             $l_Player->addTitle(TextFormat::GREEN . "GO !");
         }
 
-        $this->m_PlayTimer = (new BossbarTimer(GameManager::getInstance()->getPlayingTickDuration()))
-            ->setTitle("Fin de la partie dans")
+        $this->m_PlayTimer = (new TipsTimer(GameManager::getInstance()->getPlayingTickDuration()))
+            ->setTitle(new TextFormatter("timer.playing.title"))
             ->addStopCallback(function () {
                 if (PlayersManager::getInstance()->getAlivePlayerLeft() <= 1)
                     $this->endGame();
@@ -154,9 +158,9 @@ class HungerGame extends PluginBase
 
                     foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
                     {
-                        $l_Player->addSubTitle(TextFormat::DARK_AQUA . TextFormat::BOLD . "Timer terminé, match à mort dans l'arène !");
+                        $l_Player->addTitle("", (new TextFormatter("hungergame.deathMatch"))->asStringForPlayer($l_Player));
                         $l_Player->teleport(WorldUtils::getRandomizedLocation($l_ArenaLoc, 3, 0, 3));
-                        $l_Player->sendTip("Vous êtes invulnérable pendant 5 secondes");
+                        $l_Player->sendTip((new TextFormatter("hungergame.invulnerable", ["timesec" => 5]))->asStringForPlayer($l_Player));
                         $l_Player->addEffect(Effect::getEffect(Effect::DAMAGE_RESISTANCE)->setAmplifier(10)->setDuration(5 * 20));
                     }
                 }
@@ -193,25 +197,42 @@ class HungerGame extends PluginBase
 
         PlayerScoresManager::getInstance()->giveRewards();
         
-        (new BossbarTimer(150))
-            ->setTitle(new TextFormatter("bossbar.returnToLobby"))
+        (new TipsTimer(150))
+            ->setTitle(new TextFormatter("timer.returnToLobby"))
             ->addStopCallback(function ()
             {
                 foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-                {
                     LoadBalancer::getInstance()->balancePlayer($l_Player, "lobby");
-                }
-            })
-            ->start();
 
-        (new Timer(200))
-            ->addStopCallback(function ()
-            {
-                $this->getServer()->shutdown();
+                new DelayedExec(100, function () {
+                    $this->getServer()->shutdown();
+                });
             })
             ->start();
 
         GameManager::getInstance()->endGame();
+    }
+
+    //---------------------
+    // EVENTS
+    //---------------------
+    public function playerQuitEvent(PlayerQuitEvent $e)
+    {
+        new DelayedExec(1, function () {
+            if (GameManager::getInstance()->isWaiting())
+            {
+                if ($this->m_WaitingTimer instanceof Timer && $this->m_WaitingTimer->getTickLeft() > 0 &&
+                    (count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMinPlayer()))
+                {
+                    $this->m_WaitingTimer->cancel();
+                    $this->m_WaitingTimer = null;
+                }
+            } else if (GameManager::getInstance()->isPlaying())
+            {
+                if (count($this->getServer()->getOnlinePlayers()) == 0)
+                    $this->getServer()->shutdown();
+            }
+        });
     }
 
     //---------------------

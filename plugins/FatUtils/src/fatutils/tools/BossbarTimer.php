@@ -55,7 +55,7 @@ class BossbarTimer extends Timer
     public function _onTick()
     {
         parent::_onTick();
-        if ($this->getTimeLeft() % 2)
+        if ($this->getTickLeft() % 2)
         {
             if ($this->m_BossBar instanceof BossBar)
             {

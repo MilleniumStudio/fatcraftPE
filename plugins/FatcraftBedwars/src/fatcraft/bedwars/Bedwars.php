@@ -19,7 +19,7 @@ use fatutils\tools\Timer;
 use fatutils\tools\WorldUtils;
 use fatutils\game\GameManager;
 use fatutils\spawns\SpawnManager;
-use fatutils\tools\BossbarTimer;
+use fatutils\tools\TipsTimer;
 use fatutils\ui\WindowsManager;
 use pocketmine\block\BlockIds;
 use pocketmine\command\Command;
@@ -202,8 +202,8 @@ class Bedwars extends PluginBase implements Listener
                     if (is_null($this->m_WaitingTimer))
                     {
                         $this->getLogger()->info("MIN PLAYER REACH !");
-                        $this->m_WaitingTimer = (new BossbarTimer(GameManager::getInstance()->getWaitingTickDuration()))
-                            ->setTitle("Debut dans")
+                        $this->m_WaitingTimer = (new TipsTimer(GameManager::getInstance()->getWaitingTickDuration()))
+                            ->setTitle(new TextFormatter("timer.waiting.title"))
                             ->addStopCallback(function ()
                             {
                                 $this->startGame();
@@ -358,8 +358,8 @@ class Bedwars extends PluginBase implements Listener
             new ShopKeeper(WorldUtils::stringToLocation($value));
 
         $this->m_timeTier = (int)(GameManager::getInstance()->getPlayingTickDuration() / 60);
-        $this->m_PlayTimer = (new BossbarTimer(GameManager::getInstance()->getPlayingTickDuration()))
-            ->setTitle(new TextFormatter("bossbar.playing.title"))
+        $this->m_PlayTimer = (new TipsTimer(GameManager::getInstance()->getPlayingTickDuration()))
+            ->setTitle(new TextFormatter("timer.playing.title"))
             ->addStartCallback(function ()
             {
                 FatUtils::getInstance()->getLogger()->info("Game end timer starts !");
@@ -461,21 +461,16 @@ class Bedwars extends PluginBase implements Listener
 
         TeamScoresManager::getInstance()->giveRewards();
 
-        (new BossbarTimer(150))
-            ->setTitle(new TextFormatter("bossbar.returnToLobby"))
+        (new TipsTimer(150))
+            ->setTitle(new TextFormatter("timer.returnToLobby"))
             ->addStopCallback(function ()
             {
                 foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-                {
                     LoadBalancer::getInstance()->balancePlayer($l_Player, "lobby");
-                }
-            })
-            ->start();
 
-        (new Timer(200))
-            ->addStopCallback(function ()
-            {
-                $this->getServer()->shutdown();
+                new DelayedExec(100, function () {
+                    $this->getServer()->shutdown();
+                });
             })
             ->start();
 
@@ -517,9 +512,25 @@ class Bedwars extends PluginBase implements Listener
 
     public function onPlayerQuit(PlayerQuitEvent $p_Event)
     {
-        new DelayedExec(1, function () {
-            if (GameManager::getInstance()->isPlaying())
+        new DelayedExec(1, function () use ($p_Event) {
+            if (GameManager::getInstance()->isWaiting())
             {
+                $l_Team = TeamsManager::getInstance()->getPlayerTeam($p_Event->getPlayer());
+                if ($l_Team instanceof Team)
+                    $l_Team->removePlayer($p_Event->getPlayer());
+
+                if ($this->m_WaitingTimer instanceof Timer && $this->m_WaitingTimer->getTickLeft() > 0 &&
+                    (count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMinPlayer()))
+                {
+                    $this->m_WaitingTimer->cancel();
+                    $this->m_WaitingTimer = null;
+                }
+            }
+            else if (GameManager::getInstance()->isPlaying())
+            {
+                if (count($this->getServer()->getOnlinePlayers()) == 0)
+                    $this->getServer()->shutdown();
+
                 Sidebar::getInstance()->update();
                 $this->checkGameState();
             }

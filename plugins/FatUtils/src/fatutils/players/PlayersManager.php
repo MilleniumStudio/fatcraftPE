@@ -66,14 +66,14 @@ class PlayersManager
 
 	public function addPlayer(Player $p_Player)
 	{
-	    FatUtils::getInstance()->getLogger()->info("Creating FatPlayer for " . $p_Player->getName());
-        $this->m_FatPlayers[$p_Player->getUniqueId()->toBinary()] = new FatPlayer($p_Player);
+	    FatUtils::getInstance()->getLogger()->info("Creating FatPlayer for " . $p_Player->getName() . "(" . $p_Player->getUniqueId()->toString() . ")");
+        $this->m_FatPlayers[$p_Player->getUniqueId()->toString()] = new FatPlayer($p_Player);
         GameDataManager::getInstance()->recordJoin($p_Player->getUniqueId(), $p_Player->getAddress());
 	}
 
 	public function removePlayer(Player $p_Player)
 	{
-        $key = $p_Player->getUniqueId()->toBinary();
+        $key = $p_Player->getUniqueId()->toString();
 		if (isset($this->m_FatPlayers[$key]))
 			unset($this->m_FatPlayers[$key]);
         GameDataManager::getInstance()->recordLeave($p_Player->getUniqueId());
@@ -81,7 +81,7 @@ class PlayersManager
 
     public function fatPlayerExist(Player $p_Player)
     {
-        return isset($this->m_FatPlayers[$p_Player->getUniqueId()->toBinary()]);
+        return isset($this->m_FatPlayers[$p_Player->getUniqueId()->toString()]);
     }
 
 	public function getFatPlayerByName(string $p_PlayerName):?FatPlayer
@@ -96,7 +96,7 @@ class PlayersManager
 
 	public function getFatPlayer(Player $p_Player):FatPlayer
 	{
-	    $key = $p_Player->getUniqueId()->toBinary();
+	    $key = $p_Player->getUniqueId()->toString();
 	    if (!isset($this->m_FatPlayers[$key]))
             $this->addPlayer($p_Player);
 
@@ -105,7 +105,7 @@ class PlayersManager
 
 	public function getFatPlayerByUUID(UUID $p_UUID):?FatPlayer
 	{
-		return $this->m_FatPlayers[$p_UUID->toBinary()];
+		return $this->m_FatPlayers[$p_UUID->toString()];
 	}
 
 	public function getPlayerFromUUID(UUID $p_PlayerUUID):?Player

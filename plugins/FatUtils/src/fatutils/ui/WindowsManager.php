@@ -33,7 +33,7 @@ class WindowsManager implements Listener
 
     public function registerPlayerWindow(Player $p_Player, Window $p_Window)
     {
-        $this->m_WindowRegistry[$p_Player->getUniqueId()->toBinary()] = $p_Window;
+        $this->m_WindowRegistry[$p_Player->getUniqueId()->toString()] = $p_Window;
     }
 
     /**
@@ -49,7 +49,7 @@ class WindowsManager implements Listener
         $packet = $event->getPacket();
         if ($packet instanceof ModalFormResponsePacket)
         {
-            $l_PlayerIndex = $event->getPlayer()->getUniqueId()->toBinary();
+            $l_PlayerIndex = $event->getPlayer()->getUniqueId()->toString();
             if (isset($this->m_WindowRegistry[$l_PlayerIndex]))
             {
                 $l_ResponseData = json_decode($packet->formData, true);

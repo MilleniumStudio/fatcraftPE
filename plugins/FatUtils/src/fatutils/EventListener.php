@@ -2,11 +2,14 @@
 
 namespace fatutils;
 
+use fatutils\ban\BanManager;
+use fatutils\game\GameManager;
 use fatutils\players\PlayersManager;
 use fatutils\tools\DelayedExec;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityRegainHealthEvent;
 use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerLoginEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\Player;
@@ -15,6 +18,21 @@ use fatutils\gamedata\GameDataManager;
 
 class EventListener implements Listener
 {
+    public function onLogin(PlayerLoginEvent $e)
+    {
+        if (BanManager::getInstance()->isBanned($e->getPlayer()))
+        {
+            $l_ExpirationTimestamp = BanManager::getInstance()->getPlayerBan($e->getPlayer())->getExpirationTimestamp();
+            if (!is_null($l_ExpirationTimestamp))
+                $e->setKickMessage("You're banned from this server until " . date("D M j G:i:s Y", $l_ExpirationTimestamp) . ".");
+            else
+                $e->setKickMessage("You're definitely banned from this server.");
+            $e->setCancelled(true);
+        }
+
+        FatUtils::getInstance()->getLogger()->info("[LOGIN EVENT] from " . $e->getPlayer()->getName() . "(" . $e->getPlayer()->getUniqueId()->toString() . ") => " . ($e->isCancelled() ? "CANCELLED" : "ACCEPTED"));
+    }
+
     /**
      * @param PlayerJoinEvent $e
      * @priority LOWEST
@@ -41,7 +59,8 @@ class EventListener implements Listener
     public function onQuit(PlayerQuitEvent $e)
     {
         $p = $e->getPlayer();
-        PlayersManager::getInstance()->removePlayer($p);
+        if (GameManager::getInstance()->isWaiting())
+            PlayersManager::getInstance()->removePlayer($p);
     }
 
     /**

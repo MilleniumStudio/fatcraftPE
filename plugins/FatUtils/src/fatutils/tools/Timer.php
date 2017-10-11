@@ -72,7 +72,7 @@ class Timer
 	/**
 	 * @return int
 	 */
-	public function getTimeLeft(): int
+	public function getTickLeft(): int
 	{
 		return $this->m_TimeLeft;
 	}
@@ -162,7 +162,7 @@ class Timer
 //			    echo "ticking " . $this->m_TimerInstance->getDelayLeft() . " " . $this->m_TimerInstance->getTimeLeft() . " " . $this->m_Started . "\n";
                 if ($this->m_TimerInstance->getDelayLeft() > 0)
                     $this->m_TimerInstance->_modDelay(-1);
-                else if ($this->m_TimerInstance->getTimeLeft() > 0)
+                else if ($this->m_TimerInstance->getTickLeft() > 0)
                 {
                     if (!$this->m_Started)
                     {

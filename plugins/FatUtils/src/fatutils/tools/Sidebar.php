@@ -242,7 +242,7 @@ class Sidebar
         }
 
         $l_Ret = $this->addSpaces($l_Ret);
-        $this->m_LineCache[$p_Player->getUniqueId()->toBinary()] = implode("\n", $l_Ret);
+        $this->m_LineCache[$p_Player->getUniqueId()->toString()] = implode("\n", $l_Ret);
     }
 
     public function _display()
@@ -253,10 +253,10 @@ class Sidebar
 
     public function _displayForPlayer(Player $p_Player)
     {
-        if (!isset($this->m_LineCache[$p_Player->getUniqueId()->toBinary()]))
+        if (!isset($this->m_LineCache[$p_Player->getUniqueId()->toString()]))
             $this->updatePlayerLines($p_Player);
 
-        $p_Content = $this->m_LineCache[$p_Player->getUniqueId()->toBinary()];
+        $p_Content = $this->m_LineCache[$p_Player->getUniqueId()->toString()];
         $p_Player->sendPopup($p_Content, "");
     }
 

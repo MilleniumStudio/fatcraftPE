@@ -31,7 +31,7 @@ class Team
 
     public function addPlayer(Player $p_Player)
     {
-        $this->m_Players[] = $p_Player->getUniqueId()->toBinary();
+        $this->m_Players[] = $p_Player->getUniqueId()->toString();
     }
 
     public function addPlayers(array $p_Players)
@@ -43,7 +43,7 @@ class Team
     }
 
     public function removePlayer(Player $p_player){
-        array_splice($this->m_Players, array_search($p_player->getUniqueId()->toBinary(), $this->m_Players), 1);
+        array_splice($this->m_Players, array_search($p_player->getUniqueId()->toString(), $this->m_Players), 1);
     }
 
     public function getAlivePlayerLeft(): int
@@ -84,7 +84,7 @@ class Team
 
     public function isPlayerInTeam(Player $p_Player)
     {
-        return in_array($p_Player->getUniqueId()->toBinary(), $this->m_Players);
+        return in_array($p_Player->getUniqueId()->toString(), $this->m_Players);
     }
 
     public function getPlaceLeft(): int
