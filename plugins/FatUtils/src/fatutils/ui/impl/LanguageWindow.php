@@ -15,7 +15,7 @@ class LanguageWindow
     public function __construct(Player $p_Player)
     {
         $l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Player);
-        $l_ActualLanguage = (new TextFormatter("form.language.button." . strtolower(TextFormatter::$m_AvailableLanguages[$this->m_FatPlayer->getLanguage()])))->asStringForPlayer($p_Player);
+        $l_ActualLanguage = (new TextFormatter("form.language.button." . strtolower(TextFormatter::$m_AvailableLanguages[$l_FatPlayer->getLanguage()])))->asStringForPlayer($p_Player);
         $l_Window = new ButtonWindow($p_Player);
         $l_Window->setTitle((new TextFormatter("form.language.title"))->asStringForPlayer($p_Player));
         $l_Window->setContent((new TextFormatter("form.language.content"))->addParam("language", $l_ActualLanguage)->asStringForPlayer($p_Player));

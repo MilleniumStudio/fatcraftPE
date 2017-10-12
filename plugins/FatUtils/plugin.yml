@@ -23,5 +23,9 @@ commands:
     description: "permissions commands"
   ban:
     description: "Ban player"
-    usage: "/ban <playerName> [<duration> month|days|hours|minutes]"
-    aliases: ["banip", "banreload"]
+    usage: "/ban <playerName> [for <duration> d|h|m] [cause <text>]"
+    aliases: ["ban-ip", "banreload"]
+  mute:
+    description: "Mute player"
+    usage: "/mute <playerName> [for <duration> d|h|m]"
+    aliases: ["unmute"]

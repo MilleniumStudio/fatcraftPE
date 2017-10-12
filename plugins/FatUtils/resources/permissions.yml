@@ -12,7 +12,11 @@ Modo:
   extends: VIP
   prefix: modo
   allow:
+    - ban.uuid
+    - ban.ip
+    - ban.reload
     - chat.mute
+    - chat.unmute
     - op.kick
     - op.ban
 

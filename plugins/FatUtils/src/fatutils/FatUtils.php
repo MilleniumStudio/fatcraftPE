@@ -5,6 +5,7 @@ namespace fatutils;
 use fatcraft\bedwars\ShopKeeper;
 use fatutils\ban\BanManager;
 use fatutils\commands\BanCommand;
+use fatutils\commands\MuteCommand;
 use fatutils\loot\ChestsManager;
 use fatutils\permission\PermissionManager;
 use fatutils\players\PlayersManager;
@@ -42,7 +43,8 @@ class FatUtils extends PluginBase
         $this->getCommand("firestorm")->setExecutor(new commands\FirestormCommand());
         $this->getCommand("lang")->setExecutor(new commands\LanguageCommand());
 
-//        $this->getCommand("ban")->setExecutor(new BanCommand());
+        $this->getCommand("ban")->setExecutor(new BanCommand());
+        $this->getCommand("mute")->setExecutor(new MuteCommand());
         WorldUtils::stopWorldsTime();
 //        $this->rpcServer = new \fatutils\tools\control_socket\RPCServer($this);
 
@@ -115,7 +117,7 @@ class FatUtils extends PluginBase
     /**
      * @return mixed
      */
-    public function getTemplateConfig(): Config
+    public function getTemplateConfig(): ?Config
     {
         return $this->m_TemplateConfig;
     }

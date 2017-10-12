@@ -56,6 +56,9 @@ class BanManager
         $result = MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(),
             "SELECT * FROM bans WHERE expiration_date IS NULL OR expiration_date > NOW()", []);
 
+		$this->m_UuidBans = [];
+		$this->m_IpBans = [];
+
         if ($result instanceof MysqlSelectResult)
         {
             foreach ($result->rows as $l_Row)
@@ -83,58 +86,76 @@ class BanManager
 //		}
     }
 
-    public function banIp(string $p_Ip, int $p_ExpireSecondFromNow = null)
+    public function reload()
+	{
+		$this->init();
+	}
+
+    public function banIp(string $p_Ip, int $p_ExpireSecondFromNow = null, string $p_Reason = ""): ?Ban
     {
         $l_Result = null;
         $l_ExpireTimestamp = (is_null($p_ExpireSecondFromNow) ? null : time() + $p_ExpireSecondFromNow);
         if (!is_null($p_ExpireSecondFromNow))
         {
             $l_Result = MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(),
-                "INSERT INTO bans (player_ip, expiration_date) VALUE (?, FROM_UNIXTIME(?));", [
+                "INSERT INTO bans (player_ip, expiration_date, reason) VALUE (?, FROM_UNIXTIME(?), ?);", [
                     ["s", $p_Ip],
-                    ["i", time() + $p_ExpireSecondFromNow]
+                    ["i", time() + $p_ExpireSecondFromNow],
+					["s", $p_Reason]
                 ]);
         } else
         {
             $l_Result = MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(),
-                "INSERT INTO bans (player_ip) VALUE (?);", [
+                "INSERT INTO bans (player_ip, reason) VALUE (?, ?);", [
                     ["s", $p_Ip],
+					["s", $p_Reason]
                 ]);
         }
 
         if ($l_Result instanceof MysqlSuccessResult)
         {
             if ($l_Result->insertId > 0)
-            {
-                $this->m_IpBans[$p_Ip] = Ban::createIpBan($l_Result->insertId, $p_Ip, $l_ExpireTimestamp);
-            }
+			{
+				$l_Ban = Ban::createIpBan($l_Result->insertId, $p_Ip, $l_ExpireTimestamp);
+                $this->m_IpBans[$p_Ip] = $l_Ban;
+				return $l_Ban;
+			}
         }
+
+        return null;
     }
 
-    public function banUuid(UUID $p_Uuid, int $p_ExpireSecondFromNow = null)
+    public function banUuid(UUID $p_Uuid, int $p_ExpireSecondFromNow = null, string $p_Reason = ""):?Ban
     {
         $l_Result = null;
         $l_ExpireTimestamp = (is_null($p_ExpireSecondFromNow) ? null : time() + $p_ExpireSecondFromNow);
         if (!is_null($l_ExpireTimestamp))
         {
             $l_Result = MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(),
-                "INSERT INTO bans (player_uuid, expiration_date) VALUE (?, FROM_UNIXTIME(?));", [
+                "INSERT INTO bans (player_uuid, expiration_date, reason) VALUE (?, FROM_UNIXTIME(?), ?);", [
                     ["s", $p_Uuid->toString()],
-                    ["i", $l_ExpireTimestamp]
+                    ["i", $l_ExpireTimestamp],
+					["s", $p_Reason]
                 ]);
         } else
         {
             $l_Result = MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(),
-                "INSERT INTO bans (player_uuid) VALUE (?);", [
+                "INSERT INTO bans (player_uuid, reason) VALUE (?, ?);", [
                     ["s", $p_Uuid->toString()],
+					["s", $p_Reason]
                 ]);
         }
 
         if ($l_Result instanceof MysqlSuccessResult)
         {
             if ($l_Result->insertId > 0)
-                $this->m_UuidBans[$p_Uuid->toString()] = Ban::createUuidBan($l_Result->insertId, $p_Uuid, $l_ExpireTimestamp);
+			{
+				$l_Ban = Ban::createUuidBan($l_Result->insertId, $p_Uuid, $l_ExpireTimestamp);
+                $this->m_UuidBans[$p_Uuid->toString()] = $l_Ban;
+                return $l_Ban;
+			}
         }
+        return null;
     }
 
     public function unbanIp(string $p_Ip):bool

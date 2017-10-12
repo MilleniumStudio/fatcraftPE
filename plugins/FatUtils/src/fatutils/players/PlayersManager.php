@@ -15,8 +15,8 @@ use fatutils\gamedata\GameDataManager;
 
 class PlayersManager
 {
-    const CONFIG_KEY_MAX_PLAYER = "maxPlayer";
-    const CONFIG_KEY_MIN_PLAYER = "minPlayer";
+	const CONFIG_KEY_MAX_PLAYER = "maxPlayer";
+	const CONFIG_KEY_MIN_PLAYER = "minPlayer";
 
 	private static $m_Instance = null;
 	private $m_FatPlayers = [];
@@ -24,7 +24,7 @@ class PlayersManager
 	private $m_MinPlayer = 0;
 	private $m_MaxPlayer = 18;
 
-    private $m_OptionDisplayHealth = false;
+	private $m_OptionDisplayHealth = false;
 
 	public static function getInstance(): PlayersManager
 	{
@@ -38,72 +38,73 @@ class PlayersManager
 	 */
 	private function __construct()
 	{
-	    $this->initialize();
+		$this->initialize();
 	}
 
-    public function initialize()
-    {
-        if (!is_null(FatUtils::getInstance()->getTemplateConfig()))
-        {
-            $this->setMinPlayer(FatUtils::getInstance()->getTemplateConfig()->get(PlayersManager::CONFIG_KEY_MIN_PLAYER));
-            $this->setMaxPlayer(FatUtils::getInstance()->getTemplateConfig()->get(PlayersManager::CONFIG_KEY_MAX_PLAYER));
-            FatUtils::getInstance()->getLogger()->info("Initializing PlayersManager");
-            FatUtils::getInstance()->getLogger()->info("  - minPlayers: " . $this->getMinPlayer());
-            FatUtils::getInstance()->getLogger()->info("  - maxPlayers: " . $this->getMaxPlayer());
-        }
-        \fatcraft\loadbalancer\LoadBalancer::getInstance()->connectMainThreadMysql()->query("CREATE TABLE IF NOT EXISTS `players` (
-            `id` int(11) NOT NULL AUTO_INCREMENT,
-            `uuid` varchar(36) NOT NULL,
-            `xuid` varchar(36) NOT NULL,
-            `name` varchar(50) NOT NULL,
-            `email` varchar(50) DEFAULT NULL,
-            `fsaccount` varchar(50) DEFAULT NULL,
-            `lang` int(3) NOT NULL DEFAULT '0' COMMENT '0 en, 1 fr, 2 es',
-            `join_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY (`id`)
-        )");
-    }
+	public function initialize()
+	{
+		if (!is_null(FatUtils::getInstance()->getTemplateConfig()))
+		{
+			$this->setMinPlayer(FatUtils::getInstance()->getTemplateConfig()->get(PlayersManager::CONFIG_KEY_MIN_PLAYER));
+			$this->setMaxPlayer(FatUtils::getInstance()->getTemplateConfig()->get(PlayersManager::CONFIG_KEY_MAX_PLAYER));
+			FatUtils::getInstance()->getLogger()->info("Initializing PlayersManager");
+			FatUtils::getInstance()->getLogger()->info("  - minPlayers: " . $this->getMinPlayer());
+			FatUtils::getInstance()->getLogger()->info("  - maxPlayers: " . $this->getMaxPlayer());
+		}
+		\fatcraft\loadbalancer\LoadBalancer::getInstance()->connectMainThreadMysql()->query("CREATE TABLE IF NOT EXISTS `players` (
+            `id` INT(11) NOT NULL AUTO_INCREMENT,
+            `uuid` VARCHAR(36) NOT NULL,
+            `xuid` VARCHAR(36) NOT NULL,
+            `name` VARCHAR(50) NOT NULL,
+            `email` VARCHAR(50) DEFAULT NULL,
+            `fsaccount` VARCHAR(50) DEFAULT NULL,
+            `lang` INT(3) NOT NULL DEFAULT '0' COMMENT '0 en, 1 fr, 2 es',
+            `join_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            `muted` TIMESTAMP DEFAULT NULL,
+            PRIMARY KEY (`id`));
+       	");
+	}
 
 	public function addPlayer(Player $p_Player)
 	{
-	    FatUtils::getInstance()->getLogger()->info("Creating FatPlayer for " . $p_Player->getName() . "(" . $p_Player->getUniqueId()->toString() . ")");
-        $this->m_FatPlayers[$p_Player->getUniqueId()->toString()] = new FatPlayer($p_Player);
-        GameDataManager::getInstance()->recordJoin($p_Player->getUniqueId(), $p_Player->getAddress());
+		FatUtils::getInstance()->getLogger()->info("Creating FatPlayer for " . $p_Player->getName() . "(" . $p_Player->getUniqueId()->toString() . ")");
+		$this->m_FatPlayers[$p_Player->getUniqueId()->toString()] = new FatPlayer($p_Player);
+		GameDataManager::getInstance()->recordJoin($p_Player->getUniqueId(), $p_Player->getAddress());
 	}
 
 	public function removePlayer(Player $p_Player)
 	{
-        $key = $p_Player->getUniqueId()->toString();
+		$key = $p_Player->getUniqueId()->toString();
 		if (isset($this->m_FatPlayers[$key]))
 			unset($this->m_FatPlayers[$key]);
-        GameDataManager::getInstance()->recordLeave($p_Player->getUniqueId());
+		GameDataManager::getInstance()->recordLeave($p_Player->getUniqueId());
 	}
 
-    public function fatPlayerExist(Player $p_Player)
-    {
-        return isset($this->m_FatPlayers[$p_Player->getUniqueId()->toString()]);
-    }
+	public function fatPlayerExist(Player $p_Player)
+	{
+		return isset($this->m_FatPlayers[$p_Player->getUniqueId()->toString()]);
+	}
 
 	public function getFatPlayerByName(string $p_PlayerName):?FatPlayer
 	{
 		foreach ($this->m_FatPlayers as $l_FatPlayer)
-        {
-            if ($l_FatPlayer instanceof FatPlayer && strcmp($l_FatPlayer->getPlayer()->getName(), $p_PlayerName) === 0)
-                return $l_FatPlayer;
-        }
-        return null;
+		{
+			if ($l_FatPlayer instanceof FatPlayer && strcmp($l_FatPlayer->getPlayer()->getName(), $p_PlayerName) === 0)
+				return $l_FatPlayer;
+		}
+		return null;
 	}
 
-	public function getFatPlayers():array
+	public function getFatPlayers(): array
 	{
 		return $this->m_FatPlayers;
 	}
 
-	public function getFatPlayer(Player $p_Player):FatPlayer
+	public function getFatPlayer(Player $p_Player): FatPlayer
 	{
-	    $key = $p_Player->getUniqueId()->toString();
-	    if (!isset($this->m_FatPlayers[$key]))
-            $this->addPlayer($p_Player);
+		$key = $p_Player->getUniqueId()->toString();
+		if (!isset($this->m_FatPlayers[$key]))
+			$this->addPlayer($p_Player);
 
 		return $this->m_FatPlayers[$key];
 	}
@@ -114,36 +115,37 @@ class PlayersManager
 	}
 
 	public function getPlayerFromUUID(UUID $p_PlayerUUID):?Player
-    {
-        foreach(FatUtils::getInstance()->getServer()->getOnlinePlayers() as $player){
-            if($player->getUniqueId()->equals($p_PlayerUUID))
-                return $player;
-        }
+	{
+		foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $player)
+		{
+			if ($player->getUniqueId()->equals($p_PlayerUUID))
+				return $player;
+		}
 
-        return null;
-    }
+		return null;
+	}
 
 	public function getAlivePlayerLeft(): int
-    {
-        $i = 0;
-        foreach ($this->m_FatPlayers as $l_FatPlayer)
-        {
-            if ($l_FatPlayer instanceof FatPlayer && !$l_FatPlayer->hasLost())
-                $i++;
-        }
-        return $i;
-    }
+	{
+		$i = 0;
+		foreach ($this->m_FatPlayers as $l_FatPlayer)
+		{
+			if ($l_FatPlayer instanceof FatPlayer && !$l_FatPlayer->hasLost())
+				$i++;
+		}
+		return $i;
+	}
 
-    public function getAlivePlayers(): array
-    {
-        $l_Ret = [];
-        foreach ($this->m_FatPlayers as $l_FatPlayer)
-        {
-            if ($l_FatPlayer instanceof FatPlayer && !$l_FatPlayer->hasLost())
-                $l_Ret[] = $l_FatPlayer;
-        }
-        return $l_Ret;
-    }
+	public function getAlivePlayers(): array
+	{
+		$l_Ret = [];
+		foreach ($this->m_FatPlayers as $l_FatPlayer)
+		{
+			if ($l_FatPlayer instanceof FatPlayer && !$l_FatPlayer->hasLost())
+				$l_Ret[] = $l_FatPlayer;
+		}
+		return $l_Ret;
+	}
 
 	//----------------
 	// GETTERS
@@ -174,13 +176,13 @@ class PlayersManager
 		$this->m_MaxPlayer = $p_MaxPlayer;
 	}
 
-    public function displayHealth(bool $p_Value = true)
-    {
-        $this->m_OptionDisplayHealth = $p_Value;
-    }
+	public function displayHealth(bool $p_Value = true)
+	{
+		$this->m_OptionDisplayHealth = $p_Value;
+	}
 
-    public function isHealthDisplayed(): bool
-    {
-        return $this->m_OptionDisplayHealth;
-    }
+	public function isHealthDisplayed(): bool
+	{
+		return $this->m_OptionDisplayHealth;
+	}
 }

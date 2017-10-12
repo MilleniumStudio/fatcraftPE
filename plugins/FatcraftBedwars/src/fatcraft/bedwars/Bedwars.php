@@ -177,7 +177,7 @@ class Bedwars extends PluginBase implements Listener
     {
         $l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Player);
 
-        if (GameManager::getInstance()->isWaiting() && count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMaxPlayer())
+        if (GameManager::getInstance()->isWaiting())
         {
             $l_Team = TeamsManager::getInstance()->addInBestTeam($p_Player);
             if (!is_null($l_Team) && !is_null($l_Team->getSpawn()))
@@ -346,6 +346,7 @@ class Bedwars extends PluginBase implements Listener
     public function startGame()
     {
         LoadBalancer::getInstance()->setServerState(LoadBalancer::SERVER_STATE_CLOSED);
+		GameManager::getInstance()->startGame();
 
         //remove team selectors
         TeamsManager::getInstance()->clearNPCs();
@@ -408,7 +409,6 @@ class Bedwars extends PluginBase implements Listener
             })
             ->start();
 
-        GameManager::getInstance()->startGame();
         SpawnManager::getInstance()->unblockSpawns();
     }
 

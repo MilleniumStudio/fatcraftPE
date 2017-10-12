@@ -46,6 +46,8 @@ class FatPlayer
 	private $m_permissionGroup = "default";
     private $m_FSAccount = null;
 
+	private $m_MutedTimestamp = 0;
+
 	/**
 	 * FatPlayer constructor.
 	 * @param Player $p_Player
@@ -221,6 +223,7 @@ class FatPlayer
                 $this->m_permissionGroup = $result->rows[0]["permission_group"];
                 if($this->m_permissionGroup == null || $this->m_permissionGroup == "")
                     $this->m_permissionGroup = "default";
+                $this->m_MutedTimestamp = $result->rows[0]["muted"];
                 $l_Exist = true;
                 FatUtils::getInstance()->getLogger()->info("[FatPlayer] " . $this->getPlayer()->getName() . " exist in database, loading took " . (($l_EndMillisec - $l_StartMillisec) * 1000) . "ms");
             }
@@ -315,4 +318,29 @@ class FatPlayer
             ]
         ));
     }
+
+    //--> MUTE
+	/**
+	 * @param int|null $p_ExpireSecondFromNow if null is given, player is mute for one month
+	 */
+	public function setMuted(int $p_ExpireSecondFromNow = null)
+	{
+		$l_ExpirationTimestamp = time() + (is_null($p_ExpireSecondFromNow) ? 30 * 24 * 60 * 60 : $p_ExpireSecondFromNow);
+		$l_Result = MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(),
+			"UPDATE players SET muted = FROM_UNIXTIME(?) WHERE uuid = ?", [
+				["i", $l_ExpirationTimestamp],
+				["s", $this->getPlayer()->getUniqueId()]
+			]);
+		$this->m_MutedTimestamp = $l_ExpirationTimestamp;
+	}
+
+	public function isMuted():bool
+	{
+		return $this->m_MutedTimestamp > time();
+	}
+
+	public function getMutedExpiration():int
+	{
+		return $this->m_MutedTimestamp;
+	}
 }

@@ -9,12 +9,14 @@ use fatutils\tools\DelayedExec;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityRegainHealthEvent;
 use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerLoginEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\Player;
 use pocketmine\event\player\PlayerDeathEvent;
 use fatutils\gamedata\GameDataManager;
+use pocketmine\utils\TextFormat;
 
 class EventListener implements Listener
 {
@@ -62,6 +64,20 @@ class EventListener implements Listener
         if (GameManager::getInstance()->isWaiting())
             PlayersManager::getInstance()->removePlayer($p);
     }
+
+	public function onPlayerChat(PlayerChatEvent $e)
+	{
+//		echo "PlayerChatEvent " . $e->getMessage() . "\n";
+		if (PlayersManager::getInstance()->fatPlayerExist($e->getPlayer()))
+		{
+			$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($e->getPlayer());
+			if ($l_FatPlayer->isMuted())
+			{
+				$e->getPlayer()->sendMessage(TextFormat::RED . "You've been muted until " . date("Y-m-d H:i:s", $l_FatPlayer->getMutedExpiration()));
+				$e->setCancelled(true);
+			}
+		}
+	}
 
     /**
      * @priority MONITOR
