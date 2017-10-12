@@ -46,7 +46,7 @@ class SpawnManager
             FatUtils::getInstance()->getLogger()->info("SpawnManager loading...");
             foreach (FatUtils::getInstance()->getTemplateConfig()->get(SpawnManager::CONFIG_KEY_SPAWN_ROOT) as $l_SpawnName => $l_SpawnConf)
             {
-                if (array_key_exists(SpawnManager::CONFIG_KEY_SPAWN_LOCATION, $l_SpawnConf))
+                if (is_array($l_SpawnConf) && array_key_exists(SpawnManager::CONFIG_KEY_SPAWN_LOCATION, $l_SpawnConf))
                 {
                     $l_NewSpawn = new Spawn(WorldUtils::stringToLocation($l_SpawnConf[SpawnManager::CONFIG_KEY_SPAWN_LOCATION]));
                     $l_NewSpawn->setName($l_SpawnName);

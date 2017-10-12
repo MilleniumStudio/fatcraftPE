@@ -1,0 +1,10 @@
+name: Murder
+version: Build#16
+main: fatcraft\murder\Murder
+description: "Murder"
+depend: [FatUtils]
+api: [3.0.0-ALPHA9]
+load: POSTWORLD
+commands:
+ murder:
+  description: murder commands
