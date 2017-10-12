@@ -45,6 +45,7 @@ class FatUtils extends PluginBase
 
         $this->getCommand("ban")->setExecutor(new BanCommand());
         $this->getCommand("mute")->setExecutor(new MuteCommand());
+
         WorldUtils::stopWorldsTime();
 //        $this->rpcServer = new \fatutils\tools\control_socket\RPCServer($this);
 

@@ -46,7 +46,8 @@ class TextFormatter
     public static $m_AvailableLanguages = [
         TextFormatter::LANG_ID_EN => "EN",
         TextFormatter::LANG_ID_FR => "FR",
-        TextFormatter::LANG_ID_ES => "ES"
+        TextFormatter::LANG_ID_ES => "ES",
+//		TextFormatter::LANG_ID_ES => "RU"
     ];
 
     private static $m_LangsLines = null;
@@ -71,10 +72,45 @@ class TextFormatter
             $l_File = "lang" . $l_LangName . ".properties";
             FatUtils::getInstance()->saveResource($l_File);
             $l_Config = new Config(FatUtils::getInstance()->getDataFolder() . $l_File);
-            self::$m_LangsLines[$l_Index] = $l_Config;
+
+			foreach ($l_Config->getAll(true) as $l_Key)
+			{
+				if (strlen($l_Key) > 0)
+            		self::$m_LangsLines[$l_Index][$l_Key] = $l_Config->get($l_Key);
+			}
+
             FatUtils::getInstance()->getLogger()->info("   - Loaded" . $l_LangName . " with " . count($l_Config->getAll()) . " entries");
         }
+
+		self::checkLanguageKeys();
     }
+
+    public static function checkLanguageKeys()
+	{
+		$l_Languages = array_diff(array_keys(self::$m_AvailableLanguages), [TextFormatter::LANG_ID_DEFAULT]);
+
+		FatUtils::getInstance()->getLogger()->info("TextFormatter languages check");
+
+		$l_Res = [];
+		foreach ($l_Languages as $l_Language)
+		{
+			$l_Res[self::$m_AvailableLanguages[$l_Language]] = [];
+
+			foreach (self::$m_LangsLines[TextFormatter::LANG_ID_DEFAULT] as $l_Key => $l_Value)
+			{
+				if (!isset(self::$m_LangsLines[$l_Language][$l_Key]))
+					$l_Res[self::$m_AvailableLanguages[$l_Language]][] = $l_Key . "=" . $l_Value;
+			}
+
+
+			if (count($l_Res[self::$m_AvailableLanguages[$l_Language]]) > 0)
+			{
+				FatUtils::getInstance()->getLogger()->warning("Language " . self::$m_AvailableLanguages[$l_Language] . " is missing some keys: ");
+				foreach ($l_Res[self::$m_AvailableLanguages[$l_Language]] as $l_MissingKey)
+					FatUtils::getInstance()->getLogger()->warning("   - " . $l_MissingKey);
+			}
+		}
+	}
 
     public static function getFormattedText(string $p_Key, array $p_Params = [], int $p_LangId = TextFormatter::LANG_ID_DEFAULT):string
     {
@@ -85,24 +121,23 @@ class TextFormatter
         if (isset(self::$m_LangsLines[$p_LangId]))
         {
             $l_LangLines = self::$m_LangsLines[$p_LangId];
-            if ($l_LangLines instanceof Config && $l_LangLines->exists($p_Key))
-            {
-                $l_Ret = $l_LangLines->get($p_Key);
-                $l_Ret = str_replace("\\n", "\n", $l_Ret); // cause Config escape backslash when reading them
+			if (!isset($p_Key, $l_LangLines))
+				$l_LangLines = self::$m_LangsLines[TextFormatter::LANG_ID_DEFAULT];
 
-                foreach ($p_Params as $l_Index => $l_Param)
-                {
-                    if ($l_Param instanceof TextFormatter)
-                        $l_Ret = str_replace("{".$l_Index."}", $l_Param->asString($p_LangId), $l_Ret);
-                    else
-                        $l_Ret = str_replace("{".$l_Index."}", $l_Param, $l_Ret);
-                }
-            }
-            else
-            {
-                FatUtils::getInstance()->getLogger()->warning("Lang" . self::$m_AvailableLanguages[$p_LangId] . " \"" . $p_Key . "\" key is missing");
-                //TODO add key to config ?
-            }
+			if (isset($p_Key, $l_LangLines))
+			{
+				$l_Ret = $l_LangLines[$p_Key];
+				$l_Ret = str_replace("\\n", "\n", $l_Ret); // cause Config escape backslash when reading them
+
+				foreach ($p_Params as $l_Index => $l_Param)
+				{
+					if ($l_Param instanceof TextFormatter)
+						$l_Ret = str_replace("{" . $l_Index . "}", $l_Param->asString($p_LangId), $l_Ret);
+					else
+						$l_Ret = str_replace("{" . $l_Index . "}", $l_Param, $l_Ret);
+				}
+			} else
+				FatUtils::getInstance()->getLogger()->warning("[TextFormatter] Key \"" . $p_Key . "\" is unknown");
         }
 
         return $l_Ret;

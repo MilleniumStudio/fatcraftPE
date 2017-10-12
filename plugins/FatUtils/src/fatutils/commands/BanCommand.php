@@ -8,11 +8,6 @@ use fatutils\tools\ArrayUtils;
 use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
-use pocketmine\Player;
-use pocketmine\plugin\PluginBase;
-
-use fatutils\ui\impl\LanguageWindow;
-use fatutils\players\PlayersManager;
 
 /**
  * Class BanCommand

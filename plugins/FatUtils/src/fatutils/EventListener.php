@@ -67,7 +67,6 @@ class EventListener implements Listener
 
 	public function onPlayerChat(PlayerChatEvent $e)
 	{
-//		echo "PlayerChatEvent " . $e->getMessage() . "\n";
 		if (PlayersManager::getInstance()->fatPlayerExist($e->getPlayer()))
 		{
 			$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($e->getPlayer());

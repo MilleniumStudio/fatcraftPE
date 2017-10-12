@@ -9,6 +9,7 @@
 namespace fatcraft\lobby;
 
 use fatutils\FatUtils;
+use fatutils\tools\TextFormatter;
 use fatutils\tools\WorldUtils;
 use fatutils\tools\DelayedExec;
 use pocketmine\event\entity\EntityDamageEvent;
@@ -54,8 +55,10 @@ class Lobby extends PluginBase implements Listener
     public function onPlayerJoin(PlayerJoinEvent $e)
     {
         new DelayedExec(5, function () use ($e) {
-            $e->getPlayer()->addTitle($this->getConfig()->get(Lobby::CONFIG_KEY_WELCOME_TITLE, ""));
-            $e->getPlayer()->addSubTitle($this->getConfig()->get(Lobby::CONFIG_KEY_WELCOME_SUBTITLE, ""));
+            $e->getPlayer()->addTitle(
+            	(new TextFormatter("lobby.welcome.title"))->asStringForPlayer($e->getPlayer()),
+				(new TextFormatter("lobby.welcome.subtitle", ["name" => $e->getPlayer()->getName()]))->asStringForPlayer($e->getPlayer())
+			);
         });
         // Items in player bar
 //        $e->getPlayer()->getInventory()->setHeldItemIndex(4);
