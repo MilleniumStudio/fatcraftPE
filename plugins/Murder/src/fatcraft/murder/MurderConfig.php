@@ -14,7 +14,10 @@ use pocketmine\utils\Config;
 class MurderConfig
 {
 
-    private $spawns = [];
+    const KEY_SPAWNS = "spawns";
+    const KEY_GUN_PART_LOC = "gunPartsLoc";
+
+    public $gunPartsLocs = [];
 
 	/**
 	 * MurderConfig constructor.
@@ -22,12 +25,20 @@ class MurderConfig
 	 */
 	public function __construct(Config $p_Config)
 	{
-	    if($p_Config->exists("spawns")){
-            foreach ($p_Config->getNested("spawns") as $spawn) {
+	    if($p_Config->exists(MurderConfig::KEY_SPAWNS)){
+            foreach ($p_Config->getNested(MurderConfig::KEY_SPAWNS) as $spawn) {
                 SpawnManager::getInstance()->addSpawn(new Spawn(WorldUtils::stringToLocation($spawn)));
 	        }
         }else{
 	        echo "pas de spawns ?\n";
+        }
+
+        if($p_Config->exists(MurderConfig::KEY_GUN_PART_LOC)){
+            foreach ($p_Config->getNested(MurderConfig::KEY_GUN_PART_LOC) as $loc) {
+                $this->gunPartsLocs[] = WorldUtils::stringToLocation($loc);
+            }
+        }else{
+            echo "pas de spawns de guns' parts ?\n";
         }
 	}
 }

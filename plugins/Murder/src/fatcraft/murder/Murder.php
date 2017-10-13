@@ -20,11 +20,13 @@ use fatutils\tools\ItemUtils;
 use fatutils\tools\Sidebar;
 use fatutils\tools\TextFormatter;
 use fatutils\tools\Timer;
+use fatutils\tools\TipsTimer;
 use fatutils\tools\WorldUtils;
 use fatutils\game\GameManager;
 use fatutils\spawns\SpawnManager;
 use fatutils\tools\BossbarTimer;
 use fatutils\ui\WindowsManager;
+use MSpawns\Commands\SetAlias;
 use MSpawns\Commands\Spawn;
 use pocketmine\block\BlockIds;
 use pocketmine\command\Command;
@@ -34,6 +36,8 @@ use pocketmine\entity\Villager;
 use pocketmine\event\entity\EntityDamageByChildEntityEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
+use pocketmine\event\entity\ProjectileHitEvent;
+use pocketmine\event\inventory\InventoryPickupItemEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerExhaustEvent;
 use pocketmine\event\player\PlayerJoinEvent;
@@ -56,12 +60,13 @@ use pocketmine\event\player\PlayerDeathEvent;
 class Murder extends PluginBase implements Listener
 {
     const DEBUG = false;
-    private $m_MurderConfig;
     private static $m_Instance;
+    private $m_MurderConfig;
     private $m_WaitingTimer;
     private $m_PlayTimer;
 
     private $m_murdererUUID;
+    private $m_playersKilled = 0;
 
 
     public static function getInstance(): Murder
@@ -76,7 +81,6 @@ class Murder extends PluginBase implements Listener
 
     public function onEnable()
     {
-        echo "### MURDER ###\n";
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
 
         $this->getCommand("murder")->setExecutor(self::$m_Instance);
@@ -151,21 +155,33 @@ class Murder extends PluginBase implements Listener
             SpawnManager::getInstance()->getRandomEmptySpawn()->teleport($player);
         }
 
-        $this->m_PlayTimer = (new BossbarTimer(GameManager::getInstance()->getPlayingTickDuration()))
+        $this->m_PlayTimer = (new TipsTimer(GameManager::getInstance()->getPlayingTickDuration()))
             ->setTitle(new TextFormatter("bossbar.playing.title"))
             ->addStartCallback(function () {
                 FatUtils::getInstance()->getLogger()->info("Game end timer starts !");
 
-                $l_GoMsgFormatter = new TextFormatter("game.start");
-                foreach ($this->getServer()->getOnlinePlayers() as $l_Player) {
-                    $l_Team = TeamsManager::getInstance()->getPlayerTeam($l_Player);
+                foreach (Server::getInstance()->getOnlinePlayers() as $player) {
+                    $player->getInventory()->setHeldItemIndex(2);
+                }
 
-                    if ($l_Team instanceof Team) {
-                        PlayersManager::getInstance()->getFatPlayer($l_Player)->setPlaying();
-                        $l_Player->setGamemode(Player::SURVIVAL);
-                        $l_Team->getSpawn()->teleport($l_Player, 2);
-                        $l_Player->addTitle($l_GoMsgFormatter->asStringForPlayer($l_Player));
-                    }
+                // random murderer
+                /** @var Player $murderer */
+                $murderer = Server::getInstance()->getOnlinePlayers()[array_rand(Server::getInstance()->getOnlinePlayers())];
+                print_r($murderer);
+                $this->m_murdererUUID = $murderer->getUniqueId();
+                $murderer->getInventory()->addItem(Item::get(ItemIds::IRON_SWORD));
+                $murderer->sendMessage("You are the MURDERER !");
+
+                //random cop
+                if (count(Server::getInstance()->getOnlinePlayers()) > 1) {
+                    $cop = null;
+                    do {
+                        /** @var Player $cop */
+                        $cop = Server::getInstance()->getOnlinePlayers()[array_rand(Server::getInstance()->getOnlinePlayers())];
+                    } while ($cop->getUniqueId()->equals($murderer->getUniqueId()));
+
+                    $cop->getInventory()->addItem(Item::get(ItemIds::BOW));
+                    $cop->sendMessage("You got a gun !");
                 }
 
                 Sidebar::getInstance()->update();
@@ -182,6 +198,34 @@ class Murder extends PluginBase implements Listener
 
     public function onPlayingTick()
     {
+        if (Server::getInstance()->getTick() % 80 == 0) {
+            /** @var FatPlayer $fPlayer */
+            foreach (PlayersManager::getInstance()->getAlivePlayers() as $fPlayer) {
+                $hasBow = false;
+                $hasArrow = false;
+                if (!$fPlayer->getPlayer()->isConnected())
+                    continue;
+                foreach ($fPlayer->getPlayer()->getInventory()->getContents() as $item) {
+                    if ($item->getId() == ItemIds::ARROW) {
+                        $hasArrow = true;
+                        break;
+                    } else if ($item->getId() == ItemIds::BOW) {
+                        $hasBow = true;
+                    }
+                }
+                if ($hasBow && !$hasArrow) {
+                    $fPlayer->getPlayer()->getInventory()->addItem(Item::get(ItemIds::ARROW));
+                }
+            }
+        }
+        if (Server::getInstance()->getTick() % 200 == 0) {
+            if (rand(0, 100) > 50) {
+                /** @var Location $loc */
+                $loc = $this->getMurderConfig()->gunPartsLocs[array_rand($this->getMurderConfig()->gunPartsLocs)];
+                $loc->level->dropItem($loc->asVector3(), Item::get(ItemIds::IRON_INGOT));
+                echo "DROP !\n";
+            }
+        }
     }
 
     public function endGameMurderer()
@@ -192,14 +236,13 @@ class Murder extends PluginBase implements Listener
                 (new TextFormatter("murder.murderWin.named"))->addParam("name", PlayersManager::getInstance()->getFatPlayerByUUID($this->m_murdererUUID)->getName())->asStringForPlayer($l_Player),
                 30, 80, 30);
         }
-        //reward murderer
-        $this->giveReward(PlayersManager::getInstance()->getFatPlayerByUUID($this->m_murdererUUID), 100, 10);
+        //rewards
         foreach (Server::getInstance()->getOnlinePlayers() as $player) {
-
-            //todo restart here !
-            $this->giveReward(PlayersManager::getInstance()->getFatPlayerByUUID($this->m_murdererUUID), 100, 10);
+            if ($player->getUniqueId()->equals($this->m_murdererUUID))
+                $this->giveReward(PlayersManager::getInstance()->getFatPlayerByUUID($this->m_murdererUUID), 100, 10);
+            else
+                $this->giveReward(PlayersManager::getInstance()->getFatPlayerByUUID($player->getUniqueId()), 30, 3);
         }
-
 
         $this->endGame();
     }
@@ -212,6 +255,17 @@ class Murder extends PluginBase implements Listener
                 (new TextFormatter("murder.lambdasWin.named"))->addParam("name", $killer->getName())->asStringForPlayer($l_Player),
                 30, 80, 30);
         }
+        //rewards
+        foreach (Server::getInstance()->getOnlinePlayers() as $player) {
+            if ($player->getUniqueId()->equals($this->m_murdererUUID)) {
+                $this->giveReward(PlayersManager::getInstance()->getFatPlayerByUUID($this->m_murdererUUID), 30 + ($this->m_playersKilled * 10), 3 + $this->m_playersKilled);
+            } else if ($player->getUniqueId()->equals($killer->getUniqueId()))
+                $this->giveReward(PlayersManager::getInstance()->getFatPlayerByUUID($player->getUniqueId()), 150, 15);
+            else if ($player->getGamemode() == Player::SPECTATOR)
+                $this->giveReward(PlayersManager::getInstance()->getFatPlayerByUUID($player->getUniqueId()), 50, 5);
+            else
+                $this->giveReward(PlayersManager::getInstance()->getFatPlayerByUUID($player->getUniqueId()), 100, 10);
+        }
 
         $this->endGame();
     }
@@ -220,9 +274,6 @@ class Murder extends PluginBase implements Listener
     {
         if ($this->m_PlayTimer instanceof Timer)
             $this->m_PlayTimer->cancel();
-
-
-        TeamScoresManager::getInstance()->giveRewards();
 
         (new BossbarTimer(150))
             ->setTitle(new TextFormatter("bossbar.returnToLobby"))
@@ -257,8 +308,8 @@ class Murder extends PluginBase implements Listener
         \SalmonDE\StatsPE\CustomEntries::getInstance()->modIntEntry($l_ServerType . "_XP", $l_Player, $p_xp);
         \SalmonDE\StatsPE\CustomEntries::getInstance()->modIntEntry($l_ServerType . "_played", $l_Player, 1);
 
-        $datas = ["xp"=>$p_xp, "money"=>$p_money];
-        if($l_Player->getUniqueId()->equals($this->m_murdererUUID))
+        $datas = ["xp" => $p_xp, "money" => $p_money];
+        if ($l_Player->getUniqueId()->equals($this->m_murdererUUID))
             $datas["isMurderer"] = true;
         PlayerScoresManager::getInstance()->recordScore($l_Player->getUniqueId(), 0, $datas);
     }
@@ -285,6 +336,7 @@ class Murder extends PluginBase implements Listener
 
     public function onPlayerRespawn(PlayerRespawnEvent $p_Event)
     {
+
     }
 
     public function onPlayerDamage(EntityDamageEvent $p_event)
@@ -320,40 +372,83 @@ class Murder extends PluginBase implements Listener
      */
     public function playerDeathEvent(PlayerDeathEvent $e)
     {
-        //todo test if it's the murderer or a player
-
         $p = $e->getEntity();
         PlayersManager::getInstance()->getFatPlayer($p)->setHasLost();
 
         $customDeathMessage = "";
 
+        $killer = null;
+        $lastDamageEvent = $p->getLastDamageCause();
+        if ($lastDamageEvent instanceof EntityDamageByEntityEvent) {
+            /** @var Player $killer */
+            $killer = $lastDamageEvent->getDamager();
+        }
+
         //if it's the murderer
         if ($p->getUniqueId()->equals($this->m_murdererUUID)) {
-            $killer = null;
-            $lastDamageEvent = $p->getLastDamageCause();
-            if ($lastDamageEvent instanceof EntityDamageByEntityEvent)
-                $killer = $lastDamageEvent->getDamager();
-            if ($killer instanceof Player)
-                $customDeathMessage = $p->getName() . " était le meurtrier et a été tué par " . $killer->getName();
-            else
-                $customDeathMessage = $p->getName() . " était le meurtrier et est mort";
-
+            $customDeathMessage = $p->getName() . " était le meurtrier et a été tué par " . $killer->getName();
             // endGame, lambdas win
             $this->endGameLambdas($killer);
-
         } else {
             $customDeathMessage = $p->getName() . " a été tué";
             if (PlayersManager::getInstance()->getAlivePlayerLeft() <= 1) {
+                $this->m_playersKilled++;
                 // endgame, murderer wins
                 $this->endGameMurderer();
-            } else {
+            } else if ($killer->getUniqueId()->equals($this->m_murdererUUID)) {
                 // else heu... the game continue ^^
+                $this->m_playersKilled++;
+            } else {
+                $killer->sendMessage("You kill an innocent !");
+                $killer->kill();
             }
         }
         $e->setDeathMessage($customDeathMessage);
 
         $p->setGamemode(3);
         Sidebar::getInstance()->update();
+    }
+
+    public function onArrowHit(ProjectileHitEvent $p_event)
+    {
+        $p_event->getEntity()->kill();
+    }
+
+    public function onLoot(InventoryPickupItemEvent $p_event)
+    {
+        $holder = $p_event->getInventory()->getHolder();
+        if ($holder instanceof Player) {
+            if (!$holder->getUniqueId()->equals($this->m_murdererUUID)) {
+                if ($p_event->getItem()->getItem()->getId() == ItemIds::IRON_INGOT) {
+
+                    new DelayedExec(1, function () use ($p_event) { //delayed to allow the loot of the ingot before making this computation
+                        $nbIngots = 0;
+                        foreach ($p_event->getInventory()->getContents() as $content) {
+                            if ($content->getId() == ItemIds::IRON_INGOT)
+                                $nbIngots += $content->getCount();
+                        }
+                        if ($nbIngots >= 6) {
+                            $nbRemove = 6;
+                            foreach ($p_event->getInventory()->getContents() as $content) {
+                                if ($content->getId() == ItemIds::IRON_INGOT) {
+                                    if ($content->getCount() >= $nbRemove) {
+                                        $content->setCount($content->getCount() - $nbRemove);
+                                        break;
+                                    } else {
+                                        $nbRemove -= $content->getCount();
+                                        $content->setCount(0);
+                                    }
+                                }
+                            }
+                            $p_event->getInventory()->addItem(Item::get(ItemIds::BOW));
+                            $p_event->getInventory()->sendContents($p_event->getInventory()->getHolder());
+                        }
+                    });
+                }
+            } else {
+                $p_event->setCancelled(true);
+            }
+        }
     }
 
     public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args): bool

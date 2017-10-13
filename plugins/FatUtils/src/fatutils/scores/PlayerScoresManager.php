@@ -41,6 +41,7 @@ class PlayerScoresManager extends ScoresManager
     // 8 => 12%
     // 9 => 11%
     // 10 => 10%
+    // n => 1/n %
     public function giveRewards()
     {
         FatUtils::getInstance()->getLogger()->info("Giving rewards :");
