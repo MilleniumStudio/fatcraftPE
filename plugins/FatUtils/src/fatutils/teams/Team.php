@@ -115,11 +115,6 @@ class Team
 //        $this->m_Prefix = $m_Prefix;
 //    }
 
-    public function updatePrefix()
-    {
-        $this->m_Prefix = TextFormat::RESET . ColorUtils::getTextFormatFromColor($this->getColor()) . "◀". ucfirst(substr($this->getName(), 0, 1)) ."▶" . TextFormat::WHITE . TextFormat::RESET;
-    }
-
     /**
      * @return string
      */
@@ -176,7 +171,12 @@ class Team
         return $this->m_Prefix;
     }
 
-    /**
+	public function updatePrefix()
+	{
+		$this->m_Prefix = TextFormat::RESET . ColorUtils::getTextFormatFromColor($this->getColor()) . "◀". ucfirst(substr($this->getName(), 0, 1)) ."▶" . TextFormat::WHITE . TextFormat::RESET;
+	}
+
+	/**
      * @return array
      */
     public function getOnlinePlayers(): array

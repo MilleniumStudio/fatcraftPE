@@ -4,13 +4,13 @@ default:
 
 VIP:
   extends: default
-  prefix: VIP
+  prefix: §dVIP
   allow:
     - truc.machin
 
 Modo:
   extends: VIP
-  prefix: modo
+  prefix: §1modo
   allow:
     - ban.uuid
     - ban.ip
@@ -22,7 +22,7 @@ Modo:
 
 Admin:
   extends: Modo
-  prefix: admin
+  prefix: §4admin
   allow:
     - server.stop
     - op.kick.modo

@@ -4,6 +4,7 @@ namespace fatutils;
 
 use fatutils\ban\BanManager;
 use fatutils\game\GameManager;
+use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
 use fatutils\tools\DelayedExec;
 use pocketmine\event\entity\EntityDamageEvent;
@@ -54,7 +55,7 @@ class EventListener implements Listener
 
         new DelayedExec(1, function () use ($p)
         {
-            PlayersManager::getInstance()->getFatPlayer($p)->updateFormattedNameTag();
+            PlayersManager::getInstance()->getFatPlayer($p)->updatePlayerNames();
         });
     }
 
@@ -74,6 +75,14 @@ class EventListener implements Listener
 			{
 				$e->getPlayer()->sendMessage(TextFormat::RED . "You've been muted until " . date("Y-m-d H:i:s", $l_FatPlayer->getMutedExpiration()));
 				$e->setCancelled(true);
+			} else
+			{
+				if ($l_FatPlayer->getPermissionGroup() === "VIP")
+					$e->setMessage(TextFormat::WHITE . $e->getMessage() . TextFormat::RESET);
+				else if ($l_FatPlayer->getPermissionGroup() === "Admin")
+					$e->setMessage(TextFormat::GOLD . $e->getMessage() . TextFormat::RESET);
+				else
+					$e->setMessage(TextFormat::GRAY . $e->getMessage() . TextFormat::RESET);
 			}
 		}
 	}
@@ -86,11 +95,11 @@ class EventListener implements Listener
         $p = $e->getEntity();
         if ($p instanceof Player)
         {
-            if (PlayersManager::getInstance()->getFatPlayer($p)->isHealthDisplayed())
+            if (FatPlayer::$m_OptionDisplayHealth)
             {
                 new DelayedExec(1, function () use ($p)
                 {
-                    PlayersManager::getInstance()->getFatPlayer($p)->updateFormattedNameTag();
+                    PlayersManager::getInstance()->getFatPlayer($p)->updatePlayerNames();
                 });
             }
         }
@@ -104,11 +113,11 @@ class EventListener implements Listener
         $p = $e->getEntity();
         if ($p instanceof Player)
         {
-            if (PlayersManager::getInstance()->getFatPlayer($p)->isHealthDisplayed())
+            if (FatPlayer::$m_OptionDisplayHealth)
             {
                 new DelayedExec(1, function () use ($p)
                 {
-                    PlayersManager::getInstance()->getFatPlayer($p)->updateFormattedNameTag();
+                    PlayersManager::getInstance()->getFatPlayer($p)->updatePlayerNames();
                 });
             }
         }

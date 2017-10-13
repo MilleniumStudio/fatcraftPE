@@ -14,7 +14,7 @@ class HologramsManager implements Listener
 
     private static $instance;
     public $config;
-    public $holograms;
+    public $holograms = [];
 
     public static function getInstance(): HologramsManager
     {

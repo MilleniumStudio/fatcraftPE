@@ -107,7 +107,7 @@ class TextFormatter
 			{
 				FatUtils::getInstance()->getLogger()->warning("Language " . self::$m_AvailableLanguages[$l_Language] . " is missing some keys: ");
 				foreach ($l_Res[self::$m_AvailableLanguages[$l_Language]] as $l_MissingKey)
-					FatUtils::getInstance()->getLogger()->warning("   - " . $l_MissingKey);
+					echo "   - " . $l_MissingKey . "\n";
 			}
 		}
 	}

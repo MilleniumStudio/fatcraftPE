@@ -74,11 +74,20 @@ class PermissionManager
             } else {
                 echo "Unknown permissionGroup " . $groupName . "\n";
             }
-            // add prefix to display name
-            if (array_key_exists($groupName, $this->m_prefix))
-                $p->setDisplayName("[" . $this->m_prefix[$groupName] . "]" . $p->getName());
+
+            // update player names
+            $p_player->updatePlayerNames();
         }
     }
+
+	public function getFatPlayerGroupPrefix(FatPlayer $p_player)
+	{
+		$groupName = $p_player->getPermissionGroup();
+		if (array_key_exists($groupName, $this->m_prefix))
+			return $this->m_prefix[$groupName];
+
+		return "";
+	}
 
     public function listPerms(string $groupName): string
     {

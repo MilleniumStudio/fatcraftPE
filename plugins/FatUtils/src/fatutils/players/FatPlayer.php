@@ -31,6 +31,10 @@ class FatPlayer
 	const PLAYER_STATE_WAITING = 0;
 	const PLAYER_STATE_PLAYING = 1;
 
+	public static $m_OptionDisplayHealth = true;
+	public static $m_OptionDisplayGroupPrefix = true;
+	public static $m_OptionDisplayTeamPrefix = true;
+
 	private $m_Player;
 	private $m_Name;
 	private $m_State = 0;
@@ -162,37 +166,6 @@ class FatPlayer
 	}
 
 	/**
-	 * @return bool
-	 */
-	public function isHealthDisplayed(): bool
-	{
-		return $this->m_DisplayHealth ?? false || PlayersManager::getInstance()->isHealthDisplayed();
-	}
-
-	public function getFormattedNameTag(): string
-	{
-		$healthBar = "";
-		if ($this->isHealthDisplayed())
-		{
-			$healthBar = "[";
-			$playerHealth = $this->getPlayer()->getHealth() * 10 / $this->getPlayer()->getMaxHealth();
-			for ($i = 0; $i < 10; $i++)
-			{
-				if ($playerHealth > 0)
-				{
-					$healthBar .= TextFormat::RED . "█";
-					$playerHealth--;
-				} else
-					$healthBar .= " ";
-			}
-			$healthBar .= TextFormat::RESET . "]";
-		}
-
-		$l_Team = TeamsManager::getInstance()->getPlayerTeam($this->getPlayer());
-		return (isset($l_Team) ? $l_Team->getPrefix() : "") . $this->getPlayer()->getName() . "\n" . $healthBar;
-	}
-
-	/**
 	 * @return Player
 	 */
 	public function getPlayer(): Player
@@ -200,9 +173,47 @@ class FatPlayer
 		return $this->m_Player;
 	}
 
-	public function updateFormattedNameTag()
+	public function updatePlayerNames()
 	{
-		$this->getPlayer()->setNameTag($this->getFormattedNameTag());
+		$l_Ret = "";
+
+		// TEAM PREFIX
+		$l_Team = TeamsManager::getInstance()->getPlayerTeam($this->getPlayer());
+		if (self::$m_OptionDisplayTeamPrefix && isset($l_Team))
+			$l_Ret .= $l_Team->getPrefix() . TextFormat::WHITE . TextFormat::RESET;
+
+		// GROUP PREFIX
+		if (self::$m_OptionDisplayGroupPrefix)
+		{
+			$l_GroupPrefix = PermissionManager::getInstance()->getFatPlayerGroupPrefix($this);
+			if (strlen($l_GroupPrefix) > 0)
+				$l_Ret .= TextFormat::RESET . TextFormat::GRAY . "[" . TextFormat::WHITE . $l_GroupPrefix . TextFormat::RESET . TextFormat::GRAY . "]";
+		}
+
+		$l_Ret .= TextFormat::WHITE . $this->getPlayer()->getName() . TextFormat::RESET . TextFormat::WHITE;
+
+		$this->getPlayer()->setDisplayName($l_Ret);
+
+		// HEALTH BAR
+		if (self::$m_OptionDisplayHealth)
+		{
+			$l_HealthBar = "\n[" . TextFormat::RED;
+			$l_PlayerHealth = $this->getPlayer()->getHealth() * 10 / $this->getPlayer()->getMaxHealth();
+			for ($i = 0; $i < 10; $i++)
+			{
+				if ($l_PlayerHealth > 0)
+				{
+					$l_HealthBar .= "█";
+					$l_PlayerHealth--;
+				} else
+					$l_HealthBar .= " ";
+			}
+			$l_HealthBar .= TextFormat::RESET . "]";
+
+			$l_Ret .= $l_HealthBar;
+		}
+
+		$this->getPlayer()->setNameTag($l_Ret);
 	}
 
     private function initData()

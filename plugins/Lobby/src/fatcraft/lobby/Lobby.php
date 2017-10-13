@@ -9,18 +9,24 @@
 namespace fatcraft\lobby;
 
 use fatutils\FatUtils;
+use fatutils\players\FatPlayer;
 use fatutils\tools\TextFormatter;
 use fatutils\tools\WorldUtils;
 use fatutils\tools\DelayedExec;
+use fatutils\ui\impl\GamesWindow;
+use fatutils\ui\impl\LobbiesWindow;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\inventory\InventoryPickupItemEvent;
 use pocketmine\event\inventory\InventoryPickupArrowEvent;
 use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\player\PlayerDropItemEvent;
+use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerItemHeldEvent;
 use pocketmine\event\player\PlayerExhaustEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\item\Item;
+use pocketmine\item\ItemIds;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use fatcraft\lobby\commands\MenuCommand;
@@ -28,9 +34,6 @@ use fatutils\holograms\HologramsManager;
 
 class Lobby extends PluginBase implements Listener
 {
-    const CONFIG_KEY_WELCOME_TITLE = "welcomeTitle";
-    const CONFIG_KEY_WELCOME_SUBTITLE = "welcomeSubtitle";
-
     private static $m_Instance;
 
     public static function getInstance(): Lobby
@@ -50,6 +53,7 @@ class Lobby extends PluginBase implements Listener
         WorldUtils::stopWorldsTime();
 //        $this->getCommand("menu")->setExecutor(new MenuCommand($this));
         HologramsManager::getInstance();
+        FatPlayer::$m_OptionDisplayHealth = false;
     }
 
     public function onPlayerJoin(PlayerJoinEvent $e)
@@ -60,34 +64,29 @@ class Lobby extends PluginBase implements Listener
 				(new TextFormatter("lobby.welcome.subtitle", ["name" => $e->getPlayer()->getName()]))->asStringForPlayer($e->getPlayer())
 			);
         });
+
         // Items in player bar
-//        $e->getPlayer()->getInventory()->setHeldItemIndex(4);
-//        $l_Item1 = \pocketmine\item\Item::get(\pocketmine\item\Item::COMPASS);
-//        $e->getPlayer()->getInventory()->setItem(2, $l_Item1);
-//        $l_Item2 = \pocketmine\item\Item::get(\pocketmine\item\Item::NETHERSTAR);
-//        $e->getPlayer()->getInventory()->setItem(6, $l_Item2);
-//        $e->getPlayer()->getInventory()->sendContents($e->getPlayer());
+        $e->getPlayer()->getInventory()->setHeldItemIndex(4);
+        $l_Item1 = Item::get(ItemIds::COMPASS);
+        $e->getPlayer()->getInventory()->setItem(2, $l_Item1);
+        $l_Item2 = Item::get(ItemIds::NETHERSTAR);
+        $e->getPlayer()->getInventory()->setItem(6, $l_Item2);
+        $e->getPlayer()->getInventory()->sendContents($e->getPlayer());
     }
 
     // actions on item select / touch
-    public function onPlayerItemHeld(PlayerItemHeldEvent $p_Event)
+    public function onPlayerUseItem(PlayerInteractEvent $p_Event)
     {
-//        if ($p_Event->getItem()->getId() == \pocketmine\item\Item::COMPASS)
-//        {
-//            WindowsManager::getInstance()->sendMenu($p_Event->getPlayer(), WindowsManager::WINDOW_BUTTON_MENU);
-//            $p_Event->getPlayer()->getInventory()->setHeldItemIndex(4);
-//        }
-//        elseif ($p_Event->getItem()->getId() == \pocketmine\item\Item::NETHERSTAR)
-//        {
-//            WindowsManager::getInstance()->sendMenu($p_Event->getPlayer(), WindowsManager::WINDOW_INPUT_MENU);
-//            $p_Event->getPlayer()->getInventory()->setHeldItemIndex(4);
-//        }
+        if ($p_Event->getItem()->getId() == ItemIds::COMPASS)
+            new GamesWindow($p_Event->getPlayer());
+        elseif ($p_Event->getItem()->getId() == ItemIds::NETHERSTAR)
+			new LobbiesWindow($p_Event->getPlayer());
     }
 
     // disable all inventory items move
     public function onInventoryTransaction(InventoryTransactionEvent $p_Event)
     {
-        $p_Event->setCancelled(TRUE);
+        $p_Event->setCancelled(true);
     }
 
     public function onItemPickup(InventoryPickupItemEvent $p_Event)

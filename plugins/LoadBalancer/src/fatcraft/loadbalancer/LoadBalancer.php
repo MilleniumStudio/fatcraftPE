@@ -25,6 +25,12 @@ class LoadBalancer extends PluginBase implements Listener
     const SERVER_STATE_OPEN = "open";
     const SERVER_STATE_CLOSED = "closed";
 
+    const TEMPLATE_TYPE_LOBBY = "lobby";
+    const TEMPLATE_TYPE_PARKOUR = "pk";
+    const TEMPLATE_TYPE_HUNGER_GAME = "hg";
+    const TEMPLATE_TYPE_SKYWAR = "sw";
+    const TEMPLATE_TYPE_BEDWAR = "bw";
+
     private static $m_Instance;
     public $m_ConsoleCommandSender;
     private $m_ServerUUID;
@@ -282,7 +288,7 @@ class LoadBalancer extends PluginBase implements Listener
     }
 
     // get best online
-    public function getBest($type = "lobby", $p_State = LoadBalancer::SERVER_STATE_OPEN)
+    public function getBest($type = LoadBalancer::TEMPLATE_TYPE_LOBBY, $p_State = LoadBalancer::SERVER_STATE_OPEN):?array
     {
         $result = MysqlResult::executeQuery($this->connectMainThreadMysql(),
             "SELECT *, (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) AS diff  FROM servers WHERE UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston) < 5 AND sid != ? AND `max` > `online` AND `type` = ? AND `status` = ? ORDER BY `max` DESC LIMIT 1", [
@@ -306,6 +312,40 @@ class LoadBalancer extends PluginBase implements Listener
         }
         return null;
     }
+
+    public function getRandomNonEmptyServer(array $p_TemplatesNames = null):array
+	{
+		if ($p_TemplatesNames === null)
+		{
+			$p_TemplatesNames = [
+				LoadBalancer::TEMPLATE_TYPE_BEDWAR,
+				LoadBalancer::TEMPLATE_TYPE_HUNGER_GAME,
+				LoadBalancer::TEMPLATE_TYPE_SKYWAR,
+				LoadBalancer::TEMPLATE_TYPE_PARKOUR
+			];
+		}
+
+		$l_ChoosedServer = null;
+
+		for ($i = 0, $l = count($p_TemplatesNames); $i < $l; $i++)
+		{
+			$l_AvailableServerIndex = count($p_TemplatesNames) - 1;
+			$l_Servers = LoadBalancer::getInstance()->getServers($p_TemplatesNames[rand(0, $l_AvailableServerIndex)]);
+			foreach ($l_Servers as $l_Server)
+			{
+				if ($l_Server["online"] < $l_Server["max"])
+				{
+					$l_ChoosedServer = $l_Server;
+					break;
+				}
+			}
+
+			if (!is_null($l_ChoosedServer))
+				break;
+		}
+
+		return $l_ChoosedServer;
+	}
 
     // get online servers list
     public function getOthers()
@@ -338,7 +378,7 @@ class LoadBalancer extends PluginBase implements Listener
         $this->m_TotalPlayers = $l_TotalPlayers;
     }
 
-    public function getServersByType($type = "lobby")
+    public function getServersByType($type = LoadBalancer::TEMPLATE_TYPE_LOBBY)
     {
         $result = MysqlResult::executeQuery($this->connectMainThreadMysql(),
             "SELECT *, (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) AS diff FROM servers WHERE `type` = ?", [
@@ -357,7 +397,7 @@ class LoadBalancer extends PluginBase implements Listener
         return null;
     }
 
-    public function getServers($type = "lobby", $p_State = LoadBalancer::SERVER_STATE_OPEN)
+    public function getServers($type = LoadBalancer::TEMPLATE_TYPE_LOBBY, $p_State = LoadBalancer::SERVER_STATE_OPEN)
     {
         $result = MysqlResult::executeQuery($this->connectMainThreadMysql(),
             "SELECT *, (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) AS diff FROM servers WHERE `type` = ? AND `status` = ?", [
@@ -385,7 +425,7 @@ class LoadBalancer extends PluginBase implements Listener
         return null;
     }
 
-    public function getNetworkServer($type = "lobby", $id = -1)
+    public function getNetworkServer($type = LoadBalancer::TEMPLATE_TYPE_LOBBY, $id = -1)
     {
         $result = MysqlResult::executeQuery($this->connectMainThreadMysql(),
             "SELECT *, (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) AS diff FROM servers WHERE `type` = ? AND `id` = ? LIMIT 1", [
@@ -507,7 +547,7 @@ class LoadBalancer extends PluginBase implements Listener
         }
     }
 
-    public function balancePlayer(Player $p_Player, string $p_Type)
+    public function balancePlayer(Player $p_Player, string $p_Type):bool
     {
         // select random server
         $server = $this->getBest($p_Type, "open");
@@ -518,15 +558,18 @@ class LoadBalancer extends PluginBase implements Listener
             if ($l_Event->getIp() === null or $l_Event->getPort() === null)
             {
                 $p_Player->kick("%disconnectScreen.serverFull", false);
+				return false;
             }
             else
             {
                 $this->transferPlayer($p_Player, $l_Event->getIp(), $l_Event->getPort(), $this->getConfig()->getNested("redirect.message"));
             }
+			return true;
         }
         else
         {
             $p_Player->kick("LoadBalancer error, no server route !", false);
+            return false;
         }
     }
 
@@ -654,7 +697,7 @@ class LoadBalancer extends PluginBase implements Listener
                 }
             }
         }
-        else if ($cmd->getName() === "hub" or $cmd->getName() === "lobby") //   /lobby ...
+        else if ($cmd->getName() === "hub" or $cmd->getName() === LoadBalancer::TEMPLATE_TYPE_LOBBY) //   /lobby ...
         {
             if (count($p_Param) == 0)// /lobby
             {
@@ -674,9 +717,9 @@ class LoadBalancer extends PluginBase implements Listener
             }
             else if (count($p_Param) == 1)//    /lobby list/<id>
             {
-                if (isset($this->m_Servers["lobby"]))
+                if (isset($this->m_Servers[LoadBalancer::TEMPLATE_TYPE_LOBBY]))
                 {
-                    $l_Lobbies = $this->m_Servers["lobby"];
+                    $l_Lobbies = $this->m_Servers[LoadBalancer::TEMPLATE_TYPE_LOBBY];
                     if ($p_Param[0] == "list")
                     {
                         if ($l_Lobbies !== null and count($l_Lobbies) > 0)
