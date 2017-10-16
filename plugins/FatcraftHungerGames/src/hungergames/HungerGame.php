@@ -62,15 +62,16 @@ class HungerGame extends PluginBase implements Listener
         LoadBalancer::getInstance()->setServerState(LoadBalancer::SERVER_STATE_OPEN);
         WorldUtils::stopWorldsTime();
 
-        if ($this->getHungerGameConfig()->isSkyWars())
-            Sidebar::getInstance()->addLine(TextFormat::GOLD . TextFormat::BOLD . "SkyWars");
-        else
-            Sidebar::getInstance()->addLine(TextFormat::GOLD . TextFormat::BOLD . "HungerGame");
+		if ($this->getHungerGameConfig()->isSkyWars())
+			Sidebar::getInstance()->addTranslatedLine(new TextFormatter("template.sw"));
+		else
+			Sidebar::getInstance()->addTranslatedLine(new TextFormatter("template.hg"));
 
-        Sidebar::getInstance()->addWhiteSpace()
+		Sidebar::getInstance()
+			->addWhiteSpace()
             ->addMutableLine(function ()
             {
-                return TextFormat::AQUA . "Joueurs en vie: " . TextFormat::RESET . TextFormat::BOLD . PlayersManager::getInstance()->getAlivePlayerLeft();
+                return new TextFormatter("hungergame.alivePlayer", ["nbr" => PlayersManager::getInstance()->getAlivePlayerLeft()]);
             });
 
         GameManager::getInstance(); // not sure why this line is here

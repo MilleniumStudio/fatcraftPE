@@ -91,10 +91,8 @@ class Bedwars extends PluginBase implements Listener
 
     private function initialize()
     {
-        //        SpawnManager::getInstance()->blockSpawns();
         LoadBalancer::getInstance()->setServerState(LoadBalancer::SERVER_STATE_OPEN);
         WorldUtils::stopWorldsTime();
-
 
         // FORGE CONFIG LOADING
         if ($this->getConfig()->exists(TeamsManager::CONFIG_KEY_TEAM_ROOT))
