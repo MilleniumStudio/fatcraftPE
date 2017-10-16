@@ -130,6 +130,6 @@ class EventListener implements Listener
         if ($l_Killer instanceof Player)
             GameDataManager::getInstance()->recordKill($l_Killer->getUniqueId(), $l_Player->getName());
 
-        GameDataManager::getInstance()->recordDeath($l_Player->getUniqueId(), $l_Killer);
+        GameDataManager::getInstance()->recordDeath($l_Player->getUniqueId(), $l_Killer==null?"":$l_Killer->getName());
     }
 }

@@ -100,10 +100,10 @@ class Murder extends PluginBase implements Listener
             ->addTranslatedLine(new TextFormatter("murder.sidebar.title"))
             ->addWhiteSpace()
             ->addMutableLine(function (Player $player) {
-                return (new TextFormatter("murder.nbAlivedPlayers"))->addParam("nb", PlayersManager::getInstance()->getAlivePlayerLeft()-1)->asStringForPlayer($player);
+                return (new TextFormatter("murder.nbAlivedPlayers"))->addParam("nb", PlayersManager::getInstance()->getAlivePlayerLeft() - 1)->asStringForPlayer($player);
             })
             ->addMutableLine(function (Player $player) {
-                return ($this->m_murdererUUID != null && $this->m_murdererUUID->equals($player->getUniqueId())) ? (new TextFormatter("murder.youarethemurderer"))->addParam("nb", PlayersManager::getInstance()->getAlivePlayerLeft())->asStringForPlayer($player):"";
+                return ($this->m_murdererUUID != null && $this->m_murdererUUID->equals($player->getUniqueId())) ? (new TextFormatter("murder.youarethemurderer"))->addParam("nb", PlayersManager::getInstance()->getAlivePlayerLeft())->asStringForPlayer($player) : "";
             });
     }
 
@@ -347,8 +347,21 @@ class Murder extends PluginBase implements Listener
             $damager = $p_event->getDamager();
             if ($damager instanceof Player) {
                 $item = $damager->getInventory()->getItemInHand();
-                if ($item->getId() == ItemIds::IRON_SWORD || ($item->getId() == ItemIds::BOW && $p_event instanceof EntityDamageByChildEntityEvent)) {
+                if ($item->getId() == ItemIds::IRON_SWORD) {
+                    $p_event->setDamage(2000);
+                    return;
+                } else if ($item->getId() == ItemIds::BOW && $p_event instanceof EntityDamageByChildEntityEvent) {
                     // someone was killed by a gunner
+                    $target = $p_event->getEntity();
+                    if ($target instanceof Player) {
+                        if (!$target->getUniqueId()->equals($this->m_murdererUUID)) {
+                            // gunner killed a citizen
+                            $p_event->setCancelled(true);
+                            $damager->sendMessage((new TextFormatter("murder.killInnocent"))->asStringForPlayer($damager));
+                            $damager->kill();
+                            return;
+                        }
+                    }
                     $p_event->setDamage(2000);
                     return;
                 }
