@@ -60,7 +60,6 @@ class HungerGame extends PluginBase implements Listener
     {
         SpawnManager::getInstance()->blockSpawns();
         LoadBalancer::getInstance()->setServerState(LoadBalancer::SERVER_STATE_OPEN);
-        PlayersManager::getInstance()->displayHealth();
         WorldUtils::stopWorldsTime();
 
         if ($this->getHungerGameConfig()->isSkyWars())

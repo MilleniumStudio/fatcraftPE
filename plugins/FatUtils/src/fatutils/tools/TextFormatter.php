@@ -118,13 +118,13 @@ class TextFormatter
             self::loadLanguages();
 
         $l_Ret = $p_Key;
-        if (isset(self::$m_LangsLines[$p_LangId]))
+        if (array_key_exists($p_LangId, self::$m_LangsLines))
         {
             $l_LangLines = self::$m_LangsLines[$p_LangId];
-			if (!isset($p_Key, $l_LangLines))
+			if (!array_key_exists($p_Key, $l_LangLines))
 				$l_LangLines = self::$m_LangsLines[TextFormatter::LANG_ID_DEFAULT];
 
-			if (isset($p_Key, $l_LangLines))
+			if (array_key_exists($p_Key, $l_LangLines))
 			{
 				$l_Ret = $l_LangLines[$p_Key];
 				$l_Ret = str_replace("\\n", "\n", $l_Ret); // cause Config escape backslash when reading them

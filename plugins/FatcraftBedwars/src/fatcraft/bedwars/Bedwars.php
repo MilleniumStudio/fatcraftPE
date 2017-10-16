@@ -93,7 +93,6 @@ class Bedwars extends PluginBase implements Listener
     {
         //        SpawnManager::getInstance()->blockSpawns();
         LoadBalancer::getInstance()->setServerState(LoadBalancer::SERVER_STATE_OPEN);
-        PlayersManager::getInstance()->displayHealth();
         WorldUtils::stopWorldsTime();
 
 
@@ -408,8 +407,6 @@ class Bedwars extends PluginBase implements Listener
                 }
             })
             ->start();
-
-        SpawnManager::getInstance()->unblockSpawns();
     }
 
     public function onPlayingTick()
