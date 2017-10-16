@@ -38,4 +38,7 @@ RUN apt-get -y update && \
 
 ADD install /home/minecraft
 
+RUN ./compile.sh -j 8
+RUN bin/php7/bin/php bin/composer.phar install
+
 CMD ./restarter.sh
