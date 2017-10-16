@@ -93,16 +93,17 @@ class Murder extends PluginBase implements Listener
     private function initialize()
     {
         LoadBalancer::getInstance()->setServerState(LoadBalancer::SERVER_STATE_OPEN);
-        PlayersManager::getInstance()->displayHealth();
+//        PlayersManager::getInstance()->displayHealth();
         WorldUtils::stopWorldsTime();
 
         Sidebar::getInstance()
             ->addTranslatedLine(new TextFormatter("murder.sidebar.title"))
             ->addWhiteSpace()
-            ->addMutableLine(function (Player $p_Player) {
-                return [
-                    1, 2, 3
-                ];
+            ->addMutableLine(function (Player $player) {
+                return (new TextFormatter("murder.nbAlivedPlayers"))->addParam("nb", PlayersManager::getInstance()->getAlivePlayerLeft()-1)->asStringForPlayer($player);
+            })
+            ->addMutableLine(function (Player $player) {
+                return ($this->m_murdererUUID != null && $this->m_murdererUUID->equals($player->getUniqueId())) ? (new TextFormatter("murder.youarethemurderer"))->addParam("nb", PlayersManager::getInstance()->getAlivePlayerLeft())->asStringForPlayer($player):"";
             });
     }
 
@@ -156,7 +157,7 @@ class Murder extends PluginBase implements Listener
         }
 
         $this->m_PlayTimer = (new TipsTimer(GameManager::getInstance()->getPlayingTickDuration()))
-            ->setTitle(new TextFormatter("bossbar.playing.title"))
+            ->setTitle(new TextFormatter("timer.playing.title"))
             ->addStartCallback(function () {
                 FatUtils::getInstance()->getLogger()->info("Game end timer starts !");
 
@@ -193,7 +194,6 @@ class Murder extends PluginBase implements Listener
             ->start();
 
         GameManager::getInstance()->startGame();
-        SpawnManager::getInstance()->unblockSpawns();
     }
 
     public function onPlayingTick()
@@ -233,7 +233,7 @@ class Murder extends PluginBase implements Listener
         foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player) {
             $l_Player->addTitle(
                 (new TextFormatter("murder.murderWin"))->asStringForPlayer($l_Player),
-                (new TextFormatter("murder.murderWin.named"))->addParam("name", PlayersManager::getInstance()->getFatPlayerByUUID($this->m_murdererUUID)->getName())->asStringForPlayer($l_Player),
+                (new TextFormatter("game.winner.single"))->addParam("name", PlayersManager::getInstance()->getFatPlayerByUUID($this->m_murdererUUID)->getName())->asStringForPlayer($l_Player),
                 30, 80, 30);
         }
         //rewards
@@ -275,8 +275,8 @@ class Murder extends PluginBase implements Listener
         if ($this->m_PlayTimer instanceof Timer)
             $this->m_PlayTimer->cancel();
 
-        (new BossbarTimer(150))
-            ->setTitle(new TextFormatter("bossbar.returnToLobby"))
+        (new TipsTimer(150))
+            ->setTitle(new TextFormatter("timer.returnToLobby"))
             ->addStopCallback(function () {
                 foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player) {
                     LoadBalancer::getInstance()->balancePlayer($l_Player, "lobby");
@@ -395,7 +395,7 @@ class Murder extends PluginBase implements Listener
                 $this->m_playersKilled++;
                 // endgame, murderer wins
                 $this->endGameMurderer();
-            } else if ($killer->getUniqueId()->equals($this->m_murdererUUID)) {
+            } else if ($killer == null || $killer->getUniqueId()->equals($this->m_murdererUUID)) {
                 // else heu... the game continue ^^
                 $this->m_playersKilled++;
             } else {

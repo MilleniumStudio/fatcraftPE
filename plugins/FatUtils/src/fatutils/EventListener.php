@@ -129,8 +129,6 @@ class EventListener implements Listener
         $l_Killer = (!is_null($l_Player->getLastDamageCause()) ? $l_Player->getLastDamageCause()->getEntity() : null);
         if ($l_Killer instanceof Player)
             GameDataManager::getInstance()->recordKill($l_Killer->getUniqueId(), $l_Player->getName());
-        else
-            $l_Killer = $l_Player->getLastDamageCause()->getCause(); // see pocketmine\event\entity\EntityDamageEvent for details
 
         GameDataManager::getInstance()->recordDeath($l_Player->getUniqueId(), $l_Killer);
     }
