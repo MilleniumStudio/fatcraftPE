@@ -29,3 +29,5 @@ commands:
     description: "Mute player"
     usage: "/mute <playerName> [for <duration> d|h|m]"
     aliases: ["unmute"]
+  pet:
+      description: "debug commands for pets"

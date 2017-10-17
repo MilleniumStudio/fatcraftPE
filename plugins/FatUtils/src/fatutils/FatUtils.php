@@ -8,6 +8,7 @@ use fatutils\commands\BanCommand;
 use fatutils\commands\MuteCommand;
 use fatutils\loot\ChestsManager;
 use fatutils\permission\PermissionManager;
+use fatutils\pets\PetsManager;
 use fatutils\players\PlayersManager;
 use fatutils\tools\animations\CircleAnimation;
 use fatutils\tools\WorldUtils;
@@ -50,6 +51,8 @@ class FatUtils extends PluginBase
 
         $this->getCommand("ban")->setExecutor(new BanCommand());
         $this->getCommand("mute")->setExecutor(new MuteCommand());
+        $this->getCommand("pet")->setExecutor(PetsManager::getInstance());
+
 
         WorldUtils::stopWorldsTime();
 //        $this->rpcServer = new \fatutils\tools\control_socket\RPCServer($this);
