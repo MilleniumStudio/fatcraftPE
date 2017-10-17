@@ -52,6 +52,8 @@ class FatPlayer
 
 	private $m_MutedTimestamp = 0;
 
+	private $m_slots = [];
+
 	/**
 	 * FatPlayer constructor.
 	 * @param Player $p_Player
@@ -354,4 +356,18 @@ class FatPlayer
 	{
 		return $this->m_MutedTimestamp;
 	}
+
+	public function getSlot(string $slotName){
+        if (array_key_exists($slotName, $this->m_slots))
+            return $this->m_slots[$slotName];
+        return null;
+    }
+
+    public function setSlot(string $slotName, $p_value) //todo set type (something like ShopItem ?)
+    {
+        if (array_key_exists($slotName, $this->m_slots)){
+            //todo call the "deactivate" of the previous item
+        }
+        $this->m_slots[$slotName] = $p_value;
+    }
 }
