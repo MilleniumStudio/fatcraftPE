@@ -1,0 +1,12 @@
+content:
+  pets:
+    - name: "shop.pet.1"
+      class: "fatutils\\shop\\particles\\ParticleItem"
+      data1: "salut"
+    - name: "shop.pet.2"
+      class: "fatutils\\shop\\particles\\ParticleItem"
+      data1: "salut de la terre"
+  particles:
+    - name: "shop.particle.2"
+      class: "fatutils\\shop\\particles\\ParticleItem"
+      data1: "plop"

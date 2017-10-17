@@ -10,12 +10,14 @@ use fatutils\loot\ChestsManager;
 use fatutils\permission\PermissionManager;
 use fatutils\pets\PetsManager;
 use fatutils\players\PlayersManager;
+use fatutils\shop\ShopManager;
 use fatutils\tools\animations\CircleAnimation;
 use fatutils\tools\WorldUtils;
 use fatutils\ui\windows\ButtonWindow;
 use fatutils\ui\windows\FormWindow;
 use fatutils\ui\windows\ModalWindow;
 use fatutils\tools\TextFormatter;
+use fatutils\shop\ParticleItem;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\level\Location;
@@ -60,6 +62,8 @@ class FatUtils extends PluginBase
 		PermissionManager::getInstance();
 		BanManager::getInstance(); // BanManager initialization
 		TextFormatter::loadLanguages();
+
+		ShopManager::getInstance();
     }
 
     public function onDisable()
@@ -91,27 +95,28 @@ class FatUtils extends PluginBase
                 case "atest":
                     if ($sender instanceof Player)
                     {
-						$l_Level = $sender->getLevel();
-						(new CircleAnimation())
-							->setEntity($sender)
-							->setNbPoint(100)
-							->setNbSubDivision(1)
-							->setRadius(4)
-							->setTickDuration(20 * 30)
-							->setCallback(function($data) use ($l_Level)
-							{
-								if (gettype($data) === "array")
-								{
-									foreach ($data as $l_Location)
-									{
-										if ($l_Location instanceof Vector3)
-										{
-											$l_Level->addParticle(new RedstoneParticle($l_Location));
-										}
-									}
-								}
-							})
-						->play();
+                    	ShopManager::getInstance()->getShopMenu($sender)->open();
+//						$l_Level = $sender->getLevel();
+//						(new CircleAnimation())
+//							->setEntity($sender)
+//							->setNbPoint(100000)
+//							->setNbSubDivision(1000)
+//							->setRadius(5)
+//							->setTickDuration(20 * 30)
+//							->setCallback(function($data) use ($l_Level)
+//							{
+//								if (gettype($data) === "array")
+//								{
+//									foreach ($data as $l_Location)
+//									{
+//										if ($l_Location instanceof Vector3)
+//										{
+//											$l_Level->addParticle(new RedstoneParticle($l_Location));
+//										}
+//									}
+//								}
+//							})
+//						->play();
                     }
                     break;
                 case "fillchests":

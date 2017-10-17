@@ -83,7 +83,6 @@ class CircleAnimation extends Animation
 			->addTickCallback(function () use (&$particleOffset)
 			{
 				$l_locationList = [];
-				echo $particleOffset . "\n";
 				$particleOffset = ($particleOffset + ($this->m_ClockLike ? 1 : -1)) % $this->m_NbPoint;
 				for ($i = 0; $i < $this->m_NbSubDivision; $i++)
 				{
