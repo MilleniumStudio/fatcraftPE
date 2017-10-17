@@ -6,7 +6,7 @@
  * Time: 14:11
  */
 
-namespace plugins\FatUtils\src\fatutils\shop;
+namespace fatutils\shop;
 
 
 abstract class ShopItem
