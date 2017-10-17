@@ -9,6 +9,7 @@ use fatutils\commands\MuteCommand;
 use fatutils\loot\ChestsManager;
 use fatutils\permission\PermissionManager;
 use fatutils\players\PlayersManager;
+use fatutils\tools\animations\CircleAnimation;
 use fatutils\tools\WorldUtils;
 use fatutils\ui\windows\ButtonWindow;
 use fatutils\ui\windows\FormWindow;
@@ -16,6 +17,10 @@ use fatutils\ui\windows\ModalWindow;
 use fatutils\tools\TextFormatter;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
+use pocketmine\level\Location;
+use pocketmine\level\particle\RedstoneParticle;
+use pocketmine\level\Position;
+use pocketmine\math\Vector3;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
@@ -83,21 +88,28 @@ class FatUtils extends PluginBase
                 case "atest":
                     if ($sender instanceof Player)
                     {
-                        echo "====================\n";
-                        new ShopKeeper($sender->getLocation());
+						$l_Level = $sender->getLevel();
+						(new CircleAnimation())
+							->setEntity($sender)
+							->setNbPoint(100)
+							->setNbSubDivision(1)
+							->setRadius(4)
+							->setTickDuration(20 * 30)
+							->setCallback(function($data) use ($l_Level)
+							{
+								if (gettype($data) === "array")
+								{
+									foreach ($data as $l_Location)
+									{
+										if ($l_Location instanceof Vector3)
+										{
+											$l_Level->addParticle(new RedstoneParticle($l_Location));
+										}
+									}
+								}
+							})
+						->play();
                     }
-                    break;
-                case "test1":
-                    if ($sender instanceof Player)
-                        ButtonWindow::openTestWindow($sender);
-                    break;
-                case "test2":
-                    if ($sender instanceof Player)
-                        FormWindow::openTestWindow($sender);
-                    break;
-                case "test3":
-                    if ($sender instanceof Player)
-                        ModalWindow::openTestWindow($sender);
                     break;
                 case "fillchests":
                     ChestsManager::getInstance()->fillChests();

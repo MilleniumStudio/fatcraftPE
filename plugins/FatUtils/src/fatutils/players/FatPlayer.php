@@ -39,9 +39,7 @@ class FatPlayer
 	private $m_Name;
 	private $m_State = 0;
 	private $m_HasLost = false;
-	private $m_DisplayHealth = null;
 
-	private $m_Scores = [];
 	private $m_Data = [];
 
 	private $m_Spawn = null;
@@ -93,11 +91,6 @@ class FatPlayer
 	public function setHasLost(bool $p_HasLost = true)
 	{
 		$this->m_HasLost = $p_HasLost;
-	}
-
-	public function displayHealth(bool $p_Value = true)
-	{
-		$this->m_DisplayHealth = $p_Value;
 	}
 
 	public function addData(string $p_Key, $value)
@@ -155,11 +148,6 @@ class FatPlayer
 			if (is_numeric($l_OldValue))
 				$this->m_Scores[$p_Key] = $l_OldValue + $p_Value;
 		}
-	}
-
-	public function getScores(): array
-	{
-		return $this->m_Scores;
 	}
 
 	public function getName(): string

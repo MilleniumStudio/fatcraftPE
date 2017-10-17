@@ -19,6 +19,8 @@ class Timer
     private $m_Delay = 0;
 	private $m_TimeLeft = 0;
 
+	private $m_Paused = false;
+
 	private $m_StartCallback;
 	private $m_StopCallback;
 	private $m_TickCallback;
@@ -126,6 +128,16 @@ class Timer
 		return $this->m_StopCallback;
 	}
 
+	public function isPaused():bool
+	{
+		return $this->m_Paused;
+	}
+
+	public function pause()
+	{
+		$this->m_Paused = true;
+	}
+
 	public function cancel()
     {
         if ($this->m_Task instanceof TaskHandler)
@@ -134,49 +146,58 @@ class Timer
 
 	public function start():Timer
 	{
-        $this->m_Task = FatUtils::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new class(FatUtils::getInstance(), $this) extends PluginTask
+		if (!is_null($this->m_Task) && $this->isPaused())
+			$this->m_Paused = false;
+		else
 		{
-			private $m_TimerInstance = null;
-			private $m_Started = false;
-
-			/**
-			 *  constructor.
-			 * @param Plugin $p_Owner
-			 * @param Timer $p_Instance
-			 */
-			public function __construct(Plugin $p_Owner, Timer $p_Instance)
+			$this->m_Task = FatUtils::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new class(FatUtils::getInstance(), $this) extends PluginTask
 			{
-				parent::__construct($p_Owner);
-				$this->m_TimerInstance = $p_Instance;
-			}
+				private $m_TimerInstance = null;
+				private $m_Started = false;
 
-			/**
-			 * Actions to execute when run
-			 *
-			 * @param int $currentTick
-			 *
-			 * @return void
-			 */
-			public function onRun(int $currentTick)
-			{
+				/**
+				 *  constructor.
+				 * @param Plugin $p_Owner
+				 * @param Timer $p_Instance
+				 */
+				public function __construct(Plugin $p_Owner, Timer $p_Instance)
+				{
+					parent::__construct($p_Owner);
+					$this->m_TimerInstance = $p_Instance;
+				}
+
+				/**
+				 * Actions to execute when run
+				 *
+				 * @param int $currentTick
+				 *
+				 * @return void
+				 */
+				public function onRun(int $currentTick)
+				{
 //			    echo "ticking " . $this->m_TimerInstance->getDelayLeft() . " " . $this->m_TimerInstance->getTimeLeft() . " " . $this->m_Started . "\n";
-                if ($this->m_TimerInstance->getDelayLeft() > 0)
-                    $this->m_TimerInstance->_modDelay(-1);
-                else if ($this->m_TimerInstance->getTickLeft() > 0)
-                {
-                    if (!$this->m_Started)
-                    {
-                        $this->m_TimerInstance->_onStart();
-                        $this->m_Started = true;
-                    }
-                    $this->m_TimerInstance->_onTick();
-                    $this->m_TimerInstance->_modTime(-1);
-                } else {
-                    FatUtils::getInstance()->getServer()->getScheduler()->cancelTask($this->getTaskId());
-                    $this->m_TimerInstance->_onStop();
-                }
-			}
-		}, 1);
+					if ($this->m_TimerInstance->getDelayLeft() > 0)
+						$this->m_TimerInstance->_modDelay(-1);
+					else if ($this->m_TimerInstance->getTickLeft() > 0)
+					{
+						if (!$this->m_TimerInstance->isPaused())
+						{
+							if (!$this->m_Started)
+							{
+								$this->m_TimerInstance->_onStart();
+								$this->m_Started = true;
+							}
+							$this->m_TimerInstance->_onTick();
+							$this->m_TimerInstance->_modTime(-1);
+						}
+					} else
+					{
+						FatUtils::getInstance()->getServer()->getScheduler()->cancelTask($this->getTaskId());
+						$this->m_TimerInstance->_onStop();
+					}
+				}
+			}, 1);
+		}
 
         return $this;
 	}
@@ -200,5 +221,7 @@ class Timer
     {
         if (!is_null($this->getStopCallback()))
             call_user_func($this->getStopCallback());
+
+        $this->m_Task = null;
     }
 }
