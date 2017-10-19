@@ -1,6 +1,10 @@
 #! /bin/bash
 
 php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
+--make DataDigger/ \
+--out DataDigger.phar
+
+php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
 --make LoadBalancer/ \
 --out LoadBalancer.phar
 
@@ -23,6 +27,10 @@ php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
 php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
 --make MSpawns/ \
 --out MSpawns.phar
+
+php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
+--make MagicWE/ \
+--out MagicWE.phar
 
 php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
 --make Slapper/ \
