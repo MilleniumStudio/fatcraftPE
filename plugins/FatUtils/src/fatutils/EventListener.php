@@ -143,4 +143,9 @@ class EventListener implements Listener
 
         GameDataManager::getInstance()->recordDeath($l_Player->getUniqueId(), $l_Killer==null?"":$l_Killer->getName());
     }
+
+    public function onPlayerTransfert(\pocketmine\event\player\PlayerTransferEvent $p_Event)
+    {
+        \SalmonDE\StatsPE\Base::getInstance()->getDataProvider()->savePlayer($p_Event->getPlayer());
+    }
 }
