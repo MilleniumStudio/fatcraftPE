@@ -44,7 +44,7 @@ if [ "$UPDATE_POCKETMINE_CORE" == "yes" ]; then
 fi
 
 if [ "$BUILD_POCKETMINE_CORE" == "yes" ]; then
-    rm -rf core/PocketMine-MP.phar
+    rm cores/PocketMine-MP.phar
 fi
 
 if [ "$COMPILE_BIN" == "yes" ]; then
@@ -54,11 +54,9 @@ if [ "$COMPILE_BIN" == "yes" ]; then
 fi
 
 # Build server core
-if [ "$BUILD_POCKETMINE_DOCKER" == "yes" ]; then
-    cd cores/
-    ./install_cores.sh
-    cd ../
-fi
+cd cores/
+./install_cores.sh
+cd ../
 
 cd plugins/
 ./install_plugins.sh
@@ -66,9 +64,12 @@ cd ../
 
 cd Dockerfiles/
 
-#cd PocketMineMP-php7/
-#./docker_build.sh
-#cd ../
+if [ "$BUILD_POCKETMINE_DOCKER" == "yes" ]; then
+    cd PocketMineMP-php7/
+    ./docker_build.sh
+    cd ../
+fi
+
 
 #cd entry-lb/
 #./docker_build.sh
