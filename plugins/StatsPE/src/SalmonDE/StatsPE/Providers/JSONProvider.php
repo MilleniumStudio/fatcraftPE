@@ -140,4 +140,8 @@ class JSONProvider implements DataProvider
     public function saveAll(){
         $this->dataConfig->save();
     }
+
+    public function savePlayer(string $player)
+    {
+    }
 }

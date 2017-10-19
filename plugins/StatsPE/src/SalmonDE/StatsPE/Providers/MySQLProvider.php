@@ -330,6 +330,69 @@ class MySQLProvider implements DataProvider
         $this->changes['data'] = [];
     }
 
+    public function savePlayer(string $player)
+    {
+        Base::getInstance()->getLogger()->info('Saving stats for : "' . $player . '"');
+
+        $query = '';
+        if (isset($this->changes['data'][$player]))
+        {
+            $changedData = $this->changes['data'][$player];
+            foreach ($changedData as $entryName => $data)
+            {
+                if ($data['isIncrement'])
+                {
+                    $query .= 'UPDATE StatsPE SET ' . $entryName . ' = ' . $entryName . ' + ' . $data['value'] . ' WHERE Username=' . "'" . $player . "'" . '; ';
+                }
+                else
+                {
+                    $data['value'] = Utils::convertValueSave($this->getEntry($entryName), $data['value']);
+                    $query .= 'UPDATE StatsPE SET ' . $entryName . ' = ' . (is_string($data['value']) ? "'" . $this->db->real_escape_string($data['value']) . "'" : $data['value']) . ' WHERE Username=' . "'" . $player . "'" . '; ';
+                }
+            }
+        }
+        
+        echo "Query " . $query . "\n";
+
+        if ($query != '')
+        {
+            @$statement = $this->db->prepare($query);
+
+            if ($statement === false)
+            {
+                if (!@$this->db->ping())
+                {
+                    if (!$this->initialize(Base::getInstance()->getConfig()->get('MySQL')))
+                    {
+                        Base::getInstance()->getServer()->getPluginManager()->disablePlugin(Base::getInstance());
+                    }
+                    else
+                    {
+                        $statement = $this->db->prepare($query);
+                    }
+                }
+                else
+                {
+                    Base::getInstance()->getLogger()->error('Syntax error in query to database: "' . $query . '"');
+                }
+            }
+
+            if ($statement->execute())
+            {
+                Base::getInstance()->getLogger()->info('Player : "' . $player . '" saved !');
+                $this->changes['amount']--;
+                $this->changes['data'][$player] = [];
+                $statement->close();
+            }
+            else
+            {
+                Base::getInstance()->getLogger()->debug('Query: "' . $query . '"');
+                Base::getInstance()->getLogger()->error('Query to the database failed: (' . $this->db->errno . ')');
+                Base::getInstance()->getLogger()->error($this->db->error);
+            }
+        }
+    }
+
     public function queryDb(string $query, array $values)
     { // reconnecting?
         $valueTypes = '';

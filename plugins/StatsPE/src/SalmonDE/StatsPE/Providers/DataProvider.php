@@ -29,4 +29,6 @@ interface DataProvider
     public function countDataRecords() : int;
 
     public function saveAll();
+
+    public function savePlayer(string $player);
 }
