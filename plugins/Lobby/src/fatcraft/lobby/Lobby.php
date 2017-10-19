@@ -10,7 +10,9 @@ namespace fatcraft\lobby;
 
 use fatutils\FatUtils;
 use fatutils\players\FatPlayer;
+use fatutils\players\PlayersManager;
 use fatutils\shop\ShopManager;
+use fatutils\tools\Sidebar;
 use fatutils\tools\TextFormatter;
 use fatutils\tools\WorldUtils;
 use fatutils\tools\DelayedExec;
@@ -56,6 +58,18 @@ class Lobby extends PluginBase implements Listener
         HologramsManager::getInstance();
 
         FatPlayer::$m_OptionDisplayHealth = false;
+
+        Sidebar::getInstance()
+			->addTranslatedLine(new TextFormatter("lobby.sidebar.header"))
+			->addWhiteSpace()
+			->addMutableLine(function (Player $p_Player) {
+				$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Player);
+				return [
+					$l_FatPlayer->getFatcoin() . " " . (new TextFormatter("currency.fatcoin.short"))->asStringForFatPlayer($l_FatPlayer),
+					$l_FatPlayer->getFatbill() . " " . (new TextFormatter("currency.fatbill.short"))->asStringForFatPlayer($l_FatPlayer)
+				];
+			});
+
     }
 
     public function onPlayerJoin(PlayerJoinEvent $e)

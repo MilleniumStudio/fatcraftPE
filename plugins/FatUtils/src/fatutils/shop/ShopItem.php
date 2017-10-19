@@ -71,14 +71,14 @@ abstract class ShopItem
 		return $this->getDataValue("img", "");
 	}
 
-	public function getFatcoinPrice(): ?int
+	public function getFatcoinPrice(): int
 	{
-		return $this->getDataValue("priceFC");
+		return $this->getDataValue("priceFC", -1);
 	}
 
-	public function getFatbillPrice(): ?int
+	public function getFatbillPrice(): int
 	{
-		return $this->getDataValue("priceFB");
+		return $this->getDataValue("priceFB", -1);
 	}
 
 	public abstract function getSlotName(): string;

@@ -4,6 +4,13 @@ content:
       name: "shop.items.particles.circle"
       img: "https://icon-icons.com/icons2/365/PNG/256/kitten-icon_36975.png"
       class: "fatutils\\shop\\particles\\ParticleItem"
+      priceFC: 15
+      priceFB: 5
     circle2:
       name: "shop.items.particles.circle2"
       class: "fatutils\\shop\\particles\\ParticleItem"
+      priceFC: 25
+    circle3:
+      name: "shop.items.particles.circle2"
+      class: "fatutils\\shop\\particles\\ParticleItem"
+      priceFC: 16

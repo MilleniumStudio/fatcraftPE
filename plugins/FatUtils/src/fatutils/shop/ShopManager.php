@@ -10,6 +10,7 @@ namespace fatutils\shop;
 
 use fatutils\FatUtils;
 use fatutils\players\PlayersManager;
+use fatutils\tools\Sidebar;
 use fatutils\tools\TextFormatter;
 use fatutils\ui\windows\ButtonWindow;
 use fatutils\ui\windows\parts\Button;
@@ -70,7 +71,7 @@ class ShopManager
 		if (array_key_exists("particles", $l_ShopContent))
 		{
 			$l_Ret->addPart((new Button())
-				->setText((new TextFormatter("shop.cat.particle.title"))->asStringForPlayer($p_Player))
+				->setText((new TextFormatter("shop.cat.particles.title"))->asStringForPlayer($p_Player))
 				->setCallback(function () use ($p_Player)
 				{
 					$this->getGenericCategory("particles", $p_Player)->open();
@@ -84,6 +85,20 @@ class ShopManager
 				->setCallback(function () use ($p_Player)
 				{
 					$this->getGenericCategory("pets", $p_Player)->open();
+				})
+			);
+		}
+
+		if ($p_Player->isOp())
+		{
+			$l_Ret->addPart((new Button())
+				->setText(TextFormat::GOLD . "★★★ GIVE ME MONEY ★★★")
+				->setCallback(function () use ($p_Player, $l_Ret)
+				{
+					$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Player);
+					$l_FatPlayer->addFatcoin(50);
+					$l_FatPlayer->addFatbill(50);
+					$l_Ret->open();
 				})
 			);
 		}
@@ -135,14 +150,32 @@ class ShopManager
 
 		if (!$l_FatPlayer->isBought($p_ShopItem))
 		{
-			$l_Ret->addPart((new Button())
-				->setText((new TextFormatter("shop.buy"))->asStringForFatPlayer($l_FatPlayer))
-				->setCallback(function () use ($p_CategoryName, $p_ShopItem, $l_FatPlayer)
-				{
-					$l_FatPlayer->addBoughtShopItem($p_ShopItem);
-					$this->getShopItemMenu($p_CategoryName, $p_ShopItem)->open();
-				})
-			);
+			if ($p_ShopItem->getFatcoinPrice() > -1)
+			{
+				$l_Ret->addPart((new Button())
+					->setText((new TextFormatter("shop.buy"))->asStringForFatPlayer($l_FatPlayer) . " (" . $p_ShopItem->getFatcoinPrice() . " " . (new TextFormatter("currency.fatcoin.short"))->asStringForFatPlayer($l_FatPlayer) . TextFormat::DARK_GRAY . TextFormat::RESET . ")")
+					->setCallback(function () use ($p_CategoryName, $p_ShopItem, $l_FatPlayer)
+					{
+						$l_FatPlayer->addFatcoin(-$p_ShopItem->getFatcoinPrice());
+						$l_FatPlayer->addBoughtShopItem($p_ShopItem);
+						$this->getShopItemMenu($p_CategoryName, $p_ShopItem)->open();
+						Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());
+					})
+				);
+			}
+			if ($p_ShopItem->getFatbillPrice() > -1)
+			{
+				$l_Ret->addPart((new Button())
+					->setText((new TextFormatter("shop.buy"))->asStringForFatPlayer($l_FatPlayer) . " (" . $p_ShopItem->getFatbillPrice() . " " . (new TextFormatter("currency.fatbill.short"))->asStringForFatPlayer($l_FatPlayer) . TextFormat::DARK_GRAY . TextFormat::RESET . ")")
+					->setCallback(function () use ($p_CategoryName, $p_ShopItem, $l_FatPlayer)
+					{
+						$l_FatPlayer->addFatbill(-$p_ShopItem->getFatbillPrice());
+						$l_FatPlayer->addBoughtShopItem($p_ShopItem);
+						$this->getShopItemMenu($p_CategoryName, $p_ShopItem)->open();
+						Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());
+					})
+				);
+			}
 		} else
 		{
 			if (!$l_FatPlayer->isEquipped($p_ShopItem))
@@ -183,14 +216,12 @@ class ShopManager
 
 	public function equipShopItem(Player $p_Player, ShopItem $p_ShopItem)
 	{
-		echo "equipping " . $p_ShopItem->getKey() . "\n";
 		$p_ShopItem->equip();
 		PlayersManager::getInstance()->getFatPlayer($p_Player)->setSlot($p_ShopItem->getSlotName(), $p_ShopItem);
 	}
 
 	public function unequipShopItem(Player $p_Player, ShopItem $p_ShopItem)
 	{
-		echo "unequipping " . $p_ShopItem->getKey() . "\n";
 		$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Player);
 
 		$l_CurrentSlotItem = $l_FatPlayer->getSlot($p_ShopItem->getSlotName());
