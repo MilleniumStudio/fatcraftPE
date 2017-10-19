@@ -36,22 +36,27 @@ class PetsManager implements Listener, CommandExecutor
         FatUtils::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new OnTick(FatUtils::getInstance()), 2);
     }
 
-    public function updatePets(){
+    public function updatePets()
+    {
         /** @var FatPlayer $player */
         foreach (PlayersManager::getInstance()->getFatPlayers() as $player) {
             $pet = $player->getSlot(ShopItem::SLOT_PET);
-            if($pet != null && $pet instanceof Pet){
+            if ($pet != null && $pet instanceof Pet) {
                 $pet->updatePosition();
             }
         }
     }
 
-    public function spawnPet(Player $player, $petTypes): ShopItem
+    public function spawnPet(Player $player, $petTypes): ?ShopItem
     {
-        $fatPlayer = PlayersManager::getInstance()->getFatPlayer($player);
-        $pet = new Pet($fatPlayer, $petTypes);
-        $fatPlayer->setSlot(ShopItem::SLOT_PET, $pet);
-        return $pet;
+        if(array_key_exists($petTypes, PetTypes::ENTITIES)) {
+            $fatPlayer = PlayersManager::getInstance()->getFatPlayer($player);
+            $pet = new Pet($fatPlayer, $petTypes);
+            $fatPlayer->setSlot(ShopItem::SLOT_PET, $pet);
+            return $pet;
+        }
+        echo "Unknown petType ! \n";
+        return null;
     }
 
     /**
@@ -67,8 +72,7 @@ class PetsManager implements Listener, CommandExecutor
         if ($sender instanceof \pocketmine\Player) {
             switch ($args[0]) {
                 case "spawn": {
-                    $this->spawnPet($sender, PetTypes::PIG)->equip();
-                    echo "pet spawn\n";
+                    $this->spawnPet($sender, $args[1])->equip();
                 }
                     break;
                 case "kill": {
@@ -76,6 +80,24 @@ class PetsManager implements Listener, CommandExecutor
                     echo "pet killed\n";
                 }
                     break;
+                case "pos": {
+                    /** @var Pet $pet */
+                    $pet = PlayersManager::getInstance()->getFatPlayer($sender)->getSlot(ShopItem::SLOT_PET);
+                    echo "->" . $pet->getEntity()->getLocation() . "\n";
+                }
+                    break;
+                case "list":{
+                    $nList = [];
+                    $list2 = [];
+                    foreach (PetTypes::ENTITIES as $k => $v) {
+                        $nList[$v[0]] = $k;
+                    }
+                    ksort($nList);
+                    foreach ($nList as $k => $v) {
+                        $list2[] = "\"".$v."\" => [\"id\" => ".PetTypes::ENTITIES[$v][0].", \"height\" => ".PetTypes::ENTITIES[$v][2].", \"width\" => ".PetTypes::ENTITIES[$v][1]."]";
+                    }
+                    print_r($list2);
+                }
             }
         } else {
             echo "Commands only available as a player\n";

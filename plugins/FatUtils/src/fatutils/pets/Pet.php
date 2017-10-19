@@ -4,6 +4,7 @@ namespace fatutils\pets;
 
 use fatutils\players\FatPlayer;
 use fatutils\shop\ShopItem;
+use pocketmine\block\BlockIds;
 use pocketmine\entity\Entity;
 use pocketmine\entity\Squid;
 use pocketmine\entity\Villager;
@@ -31,7 +32,7 @@ class Pet extends ShopItem
 
     /** @var Location $m_nextPosition */
     private $m_nextPosition = null;
-    /** @var  Entity $m_entity */
+    /** @var  CustomPet $m_entity */
     private $m_entity;
 
 
@@ -50,8 +51,6 @@ class Pet extends ShopItem
 
     public function equip()
     {
-//        $class = new \ReflectionClass($this->m_petTypes);
-
         $tag = new CompoundTag("", [
                 "Pos" => new ListTag("Pos", [
                     new DoubleTag("", $this->m_fatPlayer->getPlayer()->getLocation()->getX()),
@@ -65,25 +64,11 @@ class Pet extends ShopItem
                 ]),
                 "Rotation" => new ListTag("Rotation", [
                     new FloatTag("", 90),
-                    new FloatTag("",  0)
+                    new FloatTag("", 0)
                 ])
             ]
         );
 
-//        switch ($this->m_petTypes) {
-//            case PetTypes::VILLAGER: {
-//                $this->m_entity = new Villager($this->m_fatPlayer->getPlayer()->getLevel(), $tag);
-//            }
-//                break;
-//            case PetTypes::ZOMBIE: {
-//                $this->m_entity = new Zombie($this->m_fatPlayer->getPlayer()->getLevel(), $tag);
-//            }
-//                break;
-//            case PetTypes::SQUID: {
-//                $this->m_entity = new Squid($this->m_fatPlayer->getPlayer()->getLevel(), $tag);
-//            }
-//                break;
-//        }
         $this->m_entity = new CustomPet($this->m_fatPlayer->getPlayer()->getLevel(), $tag, $this->m_petTypes);
 
         $this->m_entity->setDataProperty(Entity::DATA_FLAG_NO_AI, Entity::DATA_TYPE_BYTE, 1, true);
@@ -105,21 +90,41 @@ class Pet extends ShopItem
 
     public function updatePosition()
     {
-        if($this->m_entity == null){
+        if ($this->m_entity == null) {
             echo "entity is null \n";
         }
 
         $dist = $this->m_entity->getLocation()->distance($this->m_fatPlayer->getPlayer()->getLocation()->asVector3());
-        echo $dist."\n";
-        if ($dist > 2) {
+        if ($dist > 15) {
+            $this->m_entity->teleport($this->m_fatPlayer->getPlayer());
+            $this->m_entity->spawnToAll();
+        } elseif ($dist > 3 + $this->m_entity->m_distOffset) {
             $playerPos = $this->m_fatPlayer->getPlayer()->getLocation();
             $petPos = $this->m_entity->getLocation();
+            // calculate move vector
             $vec = new Vector3($playerPos->getX() - $petPos->getX(), $playerPos->getY() - $petPos->getY(), $playerPos->getZ() - $petPos->getZ());
-            $vec = $vec->normalize()->multiply(0.3 * 2);
+            $vec = $vec->normalize()->multiply($this->m_entity->m_speed * 2);
+            // check if it needs to jump to climb a block
+            $frontPosVec = $this->m_entity->getLocation()->asVector3()->add($this->m_entity->getDirectionVector()->asVector3()->multiply(0.3 + $this->m_entity->width / 2))->add(0, 0, 0);
+            $frontBlockId = $this->m_entity->level->getBlock($frontPosVec)->getId();
+            if($this->m_entity->isOnGround()) {
+                if ($frontBlockId != BlockIds::AIR && $frontBlockId != BlockIds::WATER) {
+                    $vec->y = 0.9;
+                } else if ($this->m_entity->m_isJumper) {// if the mob is a jumper
+                    $vec->y = 0.3;
+                }
+            }
+            // calculate yaw
             $vecOr = new Vector3(0, 0, 1);
             $yaw = rad2deg(atan2($vec->getZ(), $vec->getX()) - atan2($vecOr->getZ(), $vecOr->getX())) % 360;
+            // apply everything
             $this->m_entity->setRotation($yaw, 0);
             $this->m_entity->setMotion($vec);
+        } elseif (!$this->m_entity->m_hasGravity) {
+            //to slowdown flyers, and avoid that they turn around the player for nothing
+            $this->m_entity->motionX *= 0.5;
+            $this->m_entity->motionY *= 0.5;
+            $this->m_entity->motionZ *= 0.5;
         }
     }
 }
