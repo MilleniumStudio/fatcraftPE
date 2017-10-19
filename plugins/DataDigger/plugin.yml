@@ -1,0 +1,10 @@
+name: DataDigger
+main: fatcraft\digger\DataDigger
+description: The fatcraftPE PocketMine-MP test plugin
+version: 1.0
+api: [3.0.0-ALPHA9]
+authors:
+- BaguetteJambon
+commands:
+ test:
+  description: test command
