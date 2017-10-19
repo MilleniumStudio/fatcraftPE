@@ -10,6 +10,7 @@ namespace fatutils\players;
 
 use fatutils\permission\PermissionManager;
 use fatutils\shop\ShopItem;
+use fatutils\shop\ShopManager;
 use fatutils\spawns\Spawn;
 use fatutils\teams\Team;
 use fatutils\teams\TeamsManager;
@@ -51,7 +52,11 @@ class FatPlayer
 
     private $m_MutedTimestamp = 0;
 
+    private $m_Fatcoin = 0;
+	private $m_Fatbill = 0;
+
     private $m_slots = [];
+	private $m_BoughtShopItems = [];
 
     /**
      * FatPlayer constructor.
@@ -219,7 +224,18 @@ class FatPlayer
                 if ($this->m_permissionGroup == null || $this->m_permissionGroup == "")
                     $this->m_permissionGroup = "default";
                 $this->m_MutedTimestamp = $result->rows[0]["muted"];
-                $l_Exist = true;
+
+				$this->m_Fatcoin = $result->rows[0]["fatcoin"];
+				$this->m_Fatbill = $result->rows[0]["fatbill"];
+
+				$l_RawBoughtShopItem = $result->rows[0]["shop_possessed"];
+				if (is_string($l_RawBoughtShopItem) && strlen($l_RawBoughtShopItem) > 2)
+					$this->m_BoughtShopItems = json_decode($result->rows[0]["shop_possessed"]);
+
+				$l_RawEquippedItem = $result->rows[0]["shop_equipped"];
+				$this->reequipRawShopItems($l_RawEquippedItem);
+
+				$l_Exist = true;
                 FatUtils::getInstance()->getLogger()->info("[FatPlayer] " . $this->getPlayer()->getName() . " exist in database, loading took " . (($l_EndMillisec - $l_StartMillisec) * 1000) . "ms");
             }
         }
@@ -314,7 +330,6 @@ class FatPlayer
     }
 
     //--> MUTE
-
     /**
      * @param int|null $p_ExpireSecondFromNow if null is given, player is mute for one month
      */
@@ -339,6 +354,14 @@ class FatPlayer
         return $this->m_MutedTimestamp;
     }
 
+
+    //--> Shop & Slots
+    public function isEquipped(ShopItem $p_ShopItem)
+	{
+		$l_ActualItemAtSlot = $this->getSlot($p_ShopItem->getSlotName());
+		return $l_ActualItemAtSlot instanceof ShopItem && strcmp($l_ActualItemAtSlot->getKey(), $p_ShopItem->getKey()) == 0;
+	}
+
     public function getSlot(string $slotName): ?ShopItem
     {
         if (array_key_exists($slotName, $this->m_slots))
@@ -346,11 +369,115 @@ class FatPlayer
         return null;
     }
 
+	public function getSlots(): array
+	{
+		return $this->m_slots;
+	}
+
+	public function addBoughtShopItem(ShopItem $p_ShopItem)
+	{
+		$this->m_BoughtShopItems[] = $p_ShopItem->getKey();
+
+		MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(),
+			"UPDATE players SET shop_possessed = ? WHERE uuid = ?", [
+				["s", json_encode($this->m_BoughtShopItems)],
+				["s", $this->getPlayer()->getUniqueId()]
+			]);
+	}
+
+	public function isBought(ShopItem $p_ShopItem)
+	{
+		return array_search($p_ShopItem->getKey(), $this->m_BoughtShopItems) !== false;
+	}
+
+	private function updateSqlEquippedSlot()
+	{
+		$l_EquippedItemKeys = [];
+
+		foreach ($this->m_slots as $l_ShopItem)
+		{
+			if ($l_ShopItem instanceof ShopItem)
+				$l_EquippedItemKeys[] = $l_ShopItem->getKey();
+		}
+
+		MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(),
+			"UPDATE players SET shop_equipped = ? WHERE uuid = ?", [
+				["s", json_encode($l_EquippedItemKeys)],
+				["s", $this->getPlayer()->getUniqueId()]
+			]);
+	}
+
+	public function emptySlot(string $slotName)
+	{
+		if (array_key_exists($slotName, $this->m_slots))
+		{
+			unset($this->m_slots[$slotName]);
+			$this->updateSqlEquippedSlot();
+		}
+	}
+
     public function setSlot(string $slotName, ShopItem $p_value)
     {
-        if (array_key_exists($slotName, $this->m_slots)) {
-            $this->m_slots[$slotName]->unequip();
-        }
-        $this->m_slots[$slotName] = $p_value;
+    	if ($p_value == null)
+    		$this->emptySlot($slotName);
+    	else
+		{
+			if (array_key_exists($slotName, $this->m_slots)) {
+				$this->m_slots[$slotName]->unequip();
+			}
+			$this->m_slots[$slotName] = $p_value;
+			$this->updateSqlEquippedSlot();
+		}
     }
+
+	private function reequipRawShopItems(?string $l_RawEquippedItem): void
+	{
+		if (is_string($l_RawEquippedItem) && strlen($l_RawEquippedItem) > 2)
+		{
+			$l_EquippedItemKeys = json_decode($l_RawEquippedItem);
+			if (is_array($l_EquippedItemKeys))
+			{
+				foreach ($l_EquippedItemKeys as $l_Key)
+				{
+					$l_ShopItem = ShopManager::getInstance()->getShopItemByKey($this->getPlayer(), $l_Key);
+					if (!is_null($l_ShopItem))
+					{
+						$l_ShopItem->equip();
+						$this->m_slots[$l_ShopItem->getSlotName()] = $l_ShopItem;
+					}
+				}
+			}
+		}
+	}
+
+    //--> FatCoins & FatBills
+	public function getFatcoin(): int
+	{
+		return $this->m_Fatcoin;
+	}
+
+	public function getFatbill(): int
+	{
+		return $this->m_Fatbill;
+	}
+
+	public function addFatcoin(int $p_Modifier)
+	{
+		$this->m_Fatcoin += $p_Modifier;
+		MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(),
+			"UPDATE players SET fatcoin = ? WHERE uuid = ?", [
+				["i", $this->m_Fatcoin],
+				["s", $this->getPlayer()->getUniqueId()]
+			]);
+	}
+
+	public function addFatbill(int $p_Modifier)
+	{
+		$this->m_Fatbill += $p_Modifier;
+		MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(),
+			"UPDATE players SET fatbill = ? WHERE uuid = ?", [
+				["i", $this->m_Fatbill],
+				["s", $this->getPlayer()->getUniqueId()]
+			]);
+	}
 }

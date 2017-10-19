@@ -6,6 +6,7 @@ use fatutils\ban\BanManager;
 use fatutils\game\GameManager;
 use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
+use fatutils\shop\ShopItem;
 use fatutils\tools\DelayedExec;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityRegainHealthEvent;
@@ -62,6 +63,16 @@ class EventListener implements Listener
     public function onQuit(PlayerQuitEvent $e)
     {
         $p = $e->getPlayer();
+
+		$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p);
+		foreach ($l_FatPlayer->getSlots() as $l_ShopItem)
+		{
+			if ($l_ShopItem instanceof ShopItem)
+			{
+				$l_ShopItem->unequip();
+			}
+		}
+
         if (GameManager::getInstance()->isWaiting())
             PlayersManager::getInstance()->removePlayer($p);
     }

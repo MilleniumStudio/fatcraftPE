@@ -10,6 +10,7 @@ namespace fatcraft\lobby;
 
 use fatutils\FatUtils;
 use fatutils\players\FatPlayer;
+use fatutils\shop\ShopManager;
 use fatutils\tools\TextFormatter;
 use fatutils\tools\WorldUtils;
 use fatutils\tools\DelayedExec;
@@ -68,10 +69,19 @@ class Lobby extends PluginBase implements Listener
 
         // Items in player bar
         $e->getPlayer()->getInventory()->setHeldItemIndex(4);
-        $l_Item1 = Item::get(ItemIds::COMPASS);
-        $e->getPlayer()->getInventory()->setItem(2, $l_Item1);
-        $l_Item2 = Item::get(ItemIds::NETHERSTAR);
-        $e->getPlayer()->getInventory()->setItem(6, $l_Item2);
+
+        $l_Shop = Item::get(ItemIds::EMERALD);
+        $l_Shop->setCustomName((new TextFormatter("shop.title"))->asStringForPlayer($e->getPlayer()));
+        $e->getPlayer()->getInventory()->setItem(1, $l_Shop);
+
+        $l_MainMenu = Item::get(ItemIds::COMPASS);
+		$l_MainMenu->setCustomName((new TextFormatter("lobby.hotbar.mainMenu"))->asStringForPlayer($e->getPlayer()));
+        $e->getPlayer()->getInventory()->setItem(2, $l_MainMenu);
+
+		$l_LobbyChooser = Item::get(ItemIds::NETHERSTAR);
+		$l_LobbyChooser->setCustomName((new TextFormatter("lobby.hotbar.lobbyChooser"))->asStringForPlayer($e->getPlayer()));
+		$e->getPlayer()->getInventory()->setItem(6, $l_LobbyChooser);
+
         $e->getPlayer()->getInventory()->sendContents($e->getPlayer());
     }
 
@@ -82,6 +92,8 @@ class Lobby extends PluginBase implements Listener
             new GamesWindow($p_Event->getPlayer());
         elseif ($p_Event->getItem()->getId() == ItemIds::NETHERSTAR)
 			new LobbiesWindow($p_Event->getPlayer());
+		if ($p_Event->getItem()->getId() == ItemIds::EMERALD)
+			ShopManager::getInstance()->getShopMenu($p_Event->getPlayer())->open();
     }
 
     // disable all inventory items move

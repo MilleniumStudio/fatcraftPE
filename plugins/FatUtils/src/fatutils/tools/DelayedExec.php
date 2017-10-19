@@ -12,9 +12,11 @@ namespace fatutils\tools;
 use fatutils\FatUtils;
 use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\PluginTask;
+use pocketmine\scheduler\TaskHandler;
 
 class DelayedExec
 {
+	private $m_Task = null;
 
     /**
      * DelayedExec constructor.
@@ -47,4 +49,13 @@ class DelayedExec
             }
         }, $p_Delay);
     }
+
+    public function cancel()
+	{
+		if ($this->m_Task instanceof TaskHandler)
+		{
+			$this->m_Task->cancel();
+			$this->m_Task = null;
+		}
+	}
 }

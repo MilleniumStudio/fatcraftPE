@@ -1,12 +1,9 @@
 content:
-  pets:
-    - name: "shop.pet.1"
-      class: "fatutils\\shop\\particles\\ParticleItem"
-      data1: "salut"
-    - name: "shop.pet.2"
-      class: "fatutils\\shop\\particles\\ParticleItem"
-      data1: "salut de la terre"
   particles:
-    - name: "shop.particle.2"
+    circle:
+      name: "shop.items.particles.circle"
+      img: "https://icon-icons.com/icons2/365/PNG/256/kitten-icon_36975.png"
       class: "fatutils\\shop\\particles\\ParticleItem"
-      data1: "plop"
+    circle2:
+      name: "shop.items.particles.circle2"
+      class: "fatutils\\shop\\particles\\ParticleItem"

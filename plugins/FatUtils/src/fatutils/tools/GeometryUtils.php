@@ -27,14 +27,12 @@ class GeometryUtils
         $v2->x = $v1->x * cos(deg2rad($p_Yaw)) - $v1->z * sin(deg2rad($p_Yaw));
         $v2->z = $v1->x * sin(deg2rad($p_Yaw)) + $v1->z * cos(deg2rad($p_Yaw));
 
+//        $base1 = new Vector3();
+//        $base1->z = $v2->y * sin(deg2rad(0)) + $v2->z * cos(deg2rad(0));
+//        $base1->y = $v2->y * cos(deg2rad(0)) - $v2->z * sin(deg2rad(0));
+//        $base1->x = $v2->x;
 
-        $base1 = new Vector3();
-        $base1->z = $v2->y * sin(deg2rad(0)) + $v2->z * cos(deg2rad(0));
-        $base1->y = $v2->y * cos(deg2rad(0)) - $v2->z * sin(deg2rad(0));
-        $base1->x = $v2->x;
-
-        $base1->multiply($p_Distance);
-        return Position::fromObject($p_Location)->add($base1->getX(), $base1->getY(), $base1->getZ());
-
+        $v2->multiply($p_Distance);
+        return Position::fromObject($p_Location)->add($v2->getX(), $v2->getY(), $v2->getZ());
 	}
 }

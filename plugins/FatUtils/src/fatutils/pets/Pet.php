@@ -43,7 +43,7 @@ class Pet extends ShopItem
 
     public function getSlotName(): string
     {
-        return ShopItem::FAT_PLAYER_SHOP_SLOT_PET;
+        return ShopItem::SLOT_PET;
     }
 
     public function equip()

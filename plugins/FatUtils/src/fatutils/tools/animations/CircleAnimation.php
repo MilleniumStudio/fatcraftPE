@@ -78,8 +78,11 @@ class CircleAnimation extends Animation
 	{
 		$particleOffset = 1;
 
-		$m_Timer = new Timer($this->m_TickRemaining);
-		$m_Timer
+		if ($this->m_Timer instanceof Timer)
+			$this->m_Timer->cancel();
+
+		$this->m_Timer = new Timer($this->m_TickRemaining);
+		$this->m_Timer
 			->addTickCallback(function () use (&$particleOffset)
 			{
 				$l_locationList = [];
@@ -111,5 +114,10 @@ class CircleAnimation extends Animation
 	{
 		if ($this->m_Timer instanceof Timer)
 			$this->m_Timer->cancel();
+	}
+
+	public function isRunning()
+	{
+		return $this->m_Timer instanceof Timer && $this->m_Timer->getTickLeft() > 0;
 	}
 }

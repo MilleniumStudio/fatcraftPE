@@ -39,7 +39,7 @@ class PetsManager implements Listener, CommandExecutor
     public function updatePets(){
         /** @var FatPlayer $player */
         foreach (PlayersManager::getInstance()->getFatPlayers() as $player) {
-            $pet = $player->getSlot(ShopItem::FAT_PLAYER_SHOP_SLOT_PET);
+            $pet = $player->getSlot(ShopItem::SLOT_PET);
             if($pet != null && $pet instanceof Pet){
                 $pet->updatePosition();
             }
@@ -50,7 +50,7 @@ class PetsManager implements Listener, CommandExecutor
     {
         $fatPlayer = PlayersManager::getInstance()->getFatPlayer($player);
         $pet = new Pet($fatPlayer, $petTypes);
-        $fatPlayer->setSlot(ShopItem::FAT_PLAYER_SHOP_SLOT_PET, $pet);
+        $fatPlayer->setSlot(ShopItem::SLOT_PET, $pet);
         return $pet;
     }
 
@@ -72,7 +72,7 @@ class PetsManager implements Listener, CommandExecutor
                 }
                     break;
                 case "kill": {
-                    PlayersManager::getInstance()->getFatPlayer($sender)->getSlot(ShopItem::FAT_PLAYER_SHOP_SLOT_PET)->unequip();
+                    PlayersManager::getInstance()->getFatPlayer($sender)->getSlot(ShopItem::SLOT_PET)->unequip();
                     echo "pet killed\n";
                 }
                     break;

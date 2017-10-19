@@ -16,9 +16,11 @@ use fatutils\ui\windows\parts\Button;
 use fatutils\ui\windows\Window;
 use pocketmine\Player;
 use pocketmine\utils\Config;
+use pocketmine\utils\TextFormat;
 
 class ShopManager
 {
+	private $m_Config = null;
 	private $m_ShopItems = [];
 	private static $m_Instance = null;
 
@@ -36,10 +38,22 @@ class ShopManager
 
 	private function init()
 	{
-		$l_Config = new Config(FatUtils::getInstance()->getDataFolder() . "shop.yml");
+		$this->m_Config = new Config(FatUtils::getInstance()->getDataFolder() . "shop.yml");
 
-		if ($l_Config->exists("content"))
-			$this->m_ShopItems = $l_Config->getNested("content");
+		if ($this->m_Config->exists("content"))
+			$this->m_ShopItems = $this->m_Config->getNested("content");
+	}
+
+	public function getShopItemByKey(Player $p_Player, string $p_Key): ?ShopItem
+	{
+		if ($this->m_Config instanceof Config)
+		{
+			$l_Data = $this->m_Config->getNested("content." . $p_Key);
+			if (is_array($l_Data))
+				return ShopItem::createShopItem($p_Player, $p_Key, $l_Data);
+		}
+
+		return null;
 	}
 
 	public function getShopContent(): array
@@ -56,8 +70,9 @@ class ShopManager
 		if (array_key_exists("particles", $l_ShopContent))
 		{
 			$l_Ret->addPart((new Button())
-				->setText("shop.particles")
-				->setCallback(function () use ($p_Player) {
+				->setText((new TextFormatter("shop.cat.particle.title"))->asStringForPlayer($p_Player))
+				->setCallback(function () use ($p_Player)
+				{
 					$this->getGenericCategory("particles", $p_Player)->open();
 				})
 			);
@@ -65,8 +80,9 @@ class ShopManager
 		if (array_key_exists("pets", $l_ShopContent))
 		{
 			$l_Ret->addPart((new Button())
-				->setText("shop.pets")
-				->setCallback(function () use ($p_Player) {
+				->setText((new TextFormatter("shop.cat.pets.title"))->asStringForPlayer($p_Player))
+				->setCallback(function () use ($p_Player)
+				{
 					$this->getGenericCategory("pets", $p_Player)->open();
 				})
 			);
@@ -75,59 +91,113 @@ class ShopManager
 		return $l_Ret;
 	}
 
-	public function getGenericCategory(string $p_CategoryName, Player $p_Player):Window
+	public function getGenericCategory(string $p_CategoryName, Player $p_Player): Window
 	{
 		$l_Ret = new ButtonWindow($p_Player);
-		$l_Ret->setTitle($p_CategoryName);
+		$l_Ret->setTitle((new TextFormatter("shop.cat." . $p_CategoryName . ".title"))->asStringForPlayer($p_Player));
+		$l_Ret->setContent((new TextFormatter("shop.cat." . $p_CategoryName . ".desc"))->asStringForPlayer($p_Player));
+		$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Player);
 
 		foreach ($this->getShopContent()[$p_CategoryName] as $l_Key => $l_Pet)
 		{
-			$l_ShopItem = ShopItem::instanciateShopitem($p_Player, $this->getShopContent()[$p_CategoryName][$l_Key]);
+			$l_ShopItem = ShopItem::createShopItem($p_Player, $p_CategoryName . "." . $l_Key, $this->getShopContent()[$p_CategoryName][$l_Key]);
 			$l_Ret->addPart((new Button())
-				->setText((new TextFormatter($l_ShopItem->getName()))->asStringForPlayer($p_Player))
-				->setCallback(function () use ($l_ShopItem) {
-					$l_ShopItem->equip();
-					PlayersManager::getInstance()->getFatPlayer($l_ShopItem->getPlayer())->setSlot($l_ShopItem->getSlotName(), $l_ShopItem);
+				->setText(($l_FatPlayer->isBought($l_ShopItem) ? TextFormat::GREEN . "✔ " . TextFormat::DARK_GRAY . TextFormat::RESET : "") . (new TextFormatter($l_ShopItem->getName()))->asStringForPlayer($p_Player))
+				->setImage($l_ShopItem->getImage())
+				->setCallback(function () use ($p_CategoryName, $l_ShopItem)
+				{
+					$this->getShopItemMenu($p_CategoryName, $l_ShopItem)->open();
 				})
 			);
 		}
 
+		$l_Ret->addPart((new Button())
+			->setText((new TextFormatter("window.return"))->asStringForFatPlayer($l_FatPlayer))
+			->setCallback(function () use ($p_Player)
+			{
+				$this->getShopMenu($p_Player)->open();
+			})
+		);
+
 		return $l_Ret;
 	}
 
-	public function getShopItemMenu(ShopItem $p_ShopItem):Window
+	public function getShopItemMenu(string $p_CategoryName, ShopItem $p_ShopItem): Window
 	{
 		$l_Player = $p_ShopItem->getPlayer();
+		$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_ShopItem->getPlayer());
 
 		$l_Ret = new ButtonWindow($l_Player);
 		$l_Ret->setTitle($p_ShopItem->getName());
 
-		$l_Ret->setContent("Description....\nover multiple\nlines");
+		if ($p_ShopItem->getDescription() != null)
+			$l_Ret->setContent($p_ShopItem->getDescription());
 
-		$l_Ret->addPart((new Button())
-			->setText("Equip")
-			->setCallback(function () use ($p_ShopItem, $l_Player) {
-				$p_ShopItem->equip();
-				PlayersManager::getInstance()->getFatPlayer($l_Player)->setSlot($p_ShopItem->getSlotName(), $p_ShopItem);
-			})
-		);
-
-		$l_Ret->addPart((new Button())
-			->setText("Unequip")
-			->setCallback(function () use ($p_ShopItem, $l_Player) {
-				$p_ShopItem->unequip();
-				PlayersManager::getInstance()->getFatPlayer($l_Player)->setSlot($p_ShopItem->getSlotName(), null);
-			})
-		);
+		if (!$l_FatPlayer->isBought($p_ShopItem))
+		{
+			$l_Ret->addPart((new Button())
+				->setText((new TextFormatter("shop.buy"))->asStringForFatPlayer($l_FatPlayer))
+				->setCallback(function () use ($p_CategoryName, $p_ShopItem, $l_FatPlayer)
+				{
+					$l_FatPlayer->addBoughtShopItem($p_ShopItem);
+					$this->getShopItemMenu($p_CategoryName, $p_ShopItem)->open();
+				})
+			);
+		} else
+		{
+			if (!$l_FatPlayer->isEquipped($p_ShopItem))
+			{
+				$l_Ret->addPart((new Button())
+					->setText((new TextFormatter("shop.equip"))->asStringForFatPlayer($l_FatPlayer))
+					->setImage($p_ShopItem->getImage())
+					->setCallback(function () use ($p_ShopItem, $l_Player)
+					{
+						$this->equipShopItem($l_Player, $p_ShopItem);
+					})
+				);
+			} else
+			{
+				$l_Ret->addPart((new Button())
+					->setText((new TextFormatter("shop.unequip"))->asStringForFatPlayer($l_FatPlayer))
+					->setImage($p_ShopItem->getImage())
+					->setCallback(function () use ($p_ShopItem, $l_Player)
+					{
+						$l_SlotItem = PlayersManager::getInstance()->getFatPlayer($l_Player)->getSlot($p_ShopItem->getSlotName());
+						if ($l_SlotItem instanceof ShopItem)
+							$this->unequipShopItem($l_Player, $p_ShopItem);
+					})
+				);
+			}
+		}
 
 		$l_Ret->addPart((new Button())
 			->setText((new TextFormatter("window.return"))->asStringForPlayer($l_Player))
-			->setCallback(function () use ($l_Player)
+			->setCallback(function () use ($p_CategoryName, $l_Player)
 			{
-				$this->getShopMenu($l_Player)->open();
+				$this->getGenericCategory($p_CategoryName, $l_Player)->open();
 			})
 		);
 
 		return $l_Ret;
+	}
+
+	public function equipShopItem(Player $p_Player, ShopItem $p_ShopItem)
+	{
+		echo "equipping " . $p_ShopItem->getKey() . "\n";
+		$p_ShopItem->equip();
+		PlayersManager::getInstance()->getFatPlayer($p_Player)->setSlot($p_ShopItem->getSlotName(), $p_ShopItem);
+	}
+
+	public function unequipShopItem(Player $p_Player, ShopItem $p_ShopItem)
+	{
+		echo "unequipping " . $p_ShopItem->getKey() . "\n";
+		$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Player);
+
+		$l_CurrentSlotItem = $l_FatPlayer->getSlot($p_ShopItem->getSlotName());
+		if ($l_CurrentSlotItem instanceof ShopItem && strcmp($l_CurrentSlotItem->getKey(), $p_ShopItem->getKey()) == 0)
+		{
+			$l_CurrentSlotItem->unequip();
+			$l_FatPlayer->emptySlot($p_ShopItem->getSlotName());
+		}
 	}
 }
