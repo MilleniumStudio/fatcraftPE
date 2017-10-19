@@ -1,5 +1,6 @@
 <?php
 namespace fatutils\pets;
+
 use pocketmine\entity\Squid;
 use pocketmine\entity\Villager;
 use pocketmine\entity\Zombie;
@@ -13,7 +14,15 @@ use pocketmine\entity\Zombie;
 
 class PetTypes
 {
-    const SQUID = Squid::class;
+    const SQUID = "Squid";
     const VILLAGER = "Villager";
-    const ZOMBIE = Zombie::class;
+    const ZOMBIE = "Zombie";
+    const PIG = "Pig";
+
+    const ENTITIES = [
+        "Squid" => 17,
+        "Villager" => 15,
+        "Zombie" => 32,
+        "Pig" => 12
+    ];
 }

@@ -33,7 +33,7 @@ class PetsManager implements Listener, CommandExecutor
     private function __construct()
     {
         FatUtils::getInstance()->getServer()->getPluginManager()->registerEvents($this, FatUtils::getInstance());
-        FatUtils::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new OnTick(FatUtils::getInstance()), 5);
+        FatUtils::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new OnTick(FatUtils::getInstance()), 2);
     }
 
     public function updatePets(){
@@ -67,7 +67,7 @@ class PetsManager implements Listener, CommandExecutor
         if ($sender instanceof \pocketmine\Player) {
             switch ($args[0]) {
                 case "spawn": {
-                    $this->spawnPet($sender, PetTypes::VILLAGER)->equip();
+                    $this->spawnPet($sender, PetTypes::PIG)->equip();
                     echo "pet spawn\n";
                 }
                     break;
