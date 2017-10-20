@@ -3,14 +3,21 @@ content:
     circle:
       name: "shop.items.particles.circle"
       img: "https://icon-icons.com/icons2/365/PNG/256/kitten-icon_36975.png"
-      class: "fatutils\\shop\\particles\\ParticleItem"
+      class: "fatutils\\shop\\particles\\CirclesParticle"
       priceFC: 15
       priceFB: 5
-    circle2:
-      name: "shop.items.particles.circle2"
-      class: "fatutils\\shop\\particles\\ParticleItem"
+    crown:
+      name: "shop.items.particles.crown"
+      class: "fatutils\\shop\\particles\\CrownParticle"
       priceFC: 25
-    circle3:
-      name: "shop.items.particles.circle2"
-      class: "fatutils\\shop\\particles\\ParticleItem"
+    barrier:
+      name: "shop.items.particles.barrier"
+      class: "fatutils\\shop\\particles\\BarrierParticle"
+      priceFC: 25
+    cape:
+      name: "shop.items.particles.cape"
+      class: "fatutils\\shop\\particles\\CapeParticle"
       priceFC: 16
+      rColor: 255
+      gColor: 50
+      bColor: 50

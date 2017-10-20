@@ -15,7 +15,7 @@ use pocketmine\math\Vector3;
 
 class GeometryUtils
 {
-	public static function relativeToPosition(Position $p_Location, float $p_Pitch, float $p_Yaw, float $p_Distance)
+	public static function relativeToLocation(Location $p_Location, float $p_Pitch, float $p_Yaw, float $p_Distance)
 	{
 		$base = new Vector3(0, 0, 1);
 
@@ -27,12 +27,11 @@ class GeometryUtils
         $v2->x = $v1->x * cos(deg2rad($p_Yaw)) - $v1->z * sin(deg2rad($p_Yaw));
         $v2->z = $v1->x * sin(deg2rad($p_Yaw)) + $v1->z * cos(deg2rad($p_Yaw));
 
-//        $base1 = new Vector3();
-//        $base1->z = $v2->y * sin(deg2rad(0)) + $v2->z * cos(deg2rad(0));
-//        $base1->y = $v2->y * cos(deg2rad(0)) - $v2->z * sin(deg2rad(0));
-//        $base1->x = $v2->x;
+		$base11 = $v2->asVector3();
+        $base11->x = $v2->x * cos(deg2rad($p_Location->getYaw())) - $v2->z * sin(deg2rad($p_Location->getYaw()));
+        $base11->z = $v2->x * sin(deg2rad($p_Location->getYaw())) + $v2->z * cos(deg2rad($p_Location->getYaw()));
 
-        $v2->multiply($p_Distance);
-        return Position::fromObject($p_Location)->add($v2->getX(), $v2->getY(), $v2->getZ());
+        $base11 = $base11->normalize()->multiply($p_Distance);
+        return Position::fromObject($p_Location)->add($base11->getX(), $base11->getY(), $base11->getZ());
 	}
 }

@@ -143,7 +143,7 @@ class ShopManager
 		$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_ShopItem->getPlayer());
 
 		$l_Ret = new ButtonWindow($l_Player);
-		$l_Ret->setTitle($p_ShopItem->getName());
+		$l_Ret->setTitle((new TextFormatter($p_ShopItem->getName()))->asStringForFatPlayer($l_FatPlayer));
 
 		if ($p_ShopItem->getDescription() != null)
 			$l_Ret->setContent($p_ShopItem->getDescription());
@@ -156,10 +156,16 @@ class ShopManager
 					->setText((new TextFormatter("shop.buy"))->asStringForFatPlayer($l_FatPlayer) . " (" . $p_ShopItem->getFatcoinPrice() . " " . (new TextFormatter("currency.fatcoin.short"))->asStringForFatPlayer($l_FatPlayer) . TextFormat::DARK_GRAY . TextFormat::RESET . ")")
 					->setCallback(function () use ($p_CategoryName, $p_ShopItem, $l_FatPlayer)
 					{
-						$l_FatPlayer->addFatcoin(-$p_ShopItem->getFatcoinPrice());
-						$l_FatPlayer->addBoughtShopItem($p_ShopItem);
+						if ($l_FatPlayer->getFatcoin() - $p_ShopItem->getFatcoinPrice() >= 0)
+						{
+							$l_FatPlayer->addFatcoin(-$p_ShopItem->getFatcoinPrice());
+							$l_FatPlayer->addBoughtShopItem($p_ShopItem);
+							$l_FatPlayer->getPlayer()->sendMessage((new TextFormatter("shop.bought", ["name" => new TextFormatter($p_ShopItem->getName())]))->asStringForFatPlayer($l_FatPlayer));
+							Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());
+						} else
+							$l_FatPlayer->getPlayer()->sendMessage((new TextFormatter("shop.notEnoughtMoney", ["name" => new TextFormatter($p_ShopItem->getName())]))->asStringForFatPlayer($l_FatPlayer));
+
 						$this->getShopItemMenu($p_CategoryName, $p_ShopItem)->open();
-						Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());
 					})
 				);
 			}
@@ -169,10 +175,17 @@ class ShopManager
 					->setText((new TextFormatter("shop.buy"))->asStringForFatPlayer($l_FatPlayer) . " (" . $p_ShopItem->getFatbillPrice() . " " . (new TextFormatter("currency.fatbill.short"))->asStringForFatPlayer($l_FatPlayer) . TextFormat::DARK_GRAY . TextFormat::RESET . ")")
 					->setCallback(function () use ($p_CategoryName, $p_ShopItem, $l_FatPlayer)
 					{
-						$l_FatPlayer->addFatbill(-$p_ShopItem->getFatbillPrice());
-						$l_FatPlayer->addBoughtShopItem($p_ShopItem);
+						if ($l_FatPlayer->getFatbill() - $p_ShopItem->getFatbillPrice() >= 0)
+						{
+							$l_FatPlayer->addFatbill(-$p_ShopItem->getFatbillPrice());
+							$l_FatPlayer->addBoughtShopItem($p_ShopItem);
+							Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());
+							$l_FatPlayer->getPlayer()->sendMessage((new TextFormatter("shop.bought", ["name" => new TextFormatter($p_ShopItem->getName())]))->asStringForFatPlayer($l_FatPlayer));
+							Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());
+						} else
+							$l_FatPlayer->getPlayer()->sendMessage((new TextFormatter("shop.notEnoughtMoney", ["name" => new TextFormatter($p_ShopItem->getName())]))->asStringForFatPlayer($l_FatPlayer));
+
 						$this->getShopItemMenu($p_CategoryName, $p_ShopItem)->open();
-						Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());
 					})
 				);
 			}

@@ -92,6 +92,10 @@ class FatUtils extends PluginBase
                     if ($sender instanceof Player)
                         $sender->sendMessage("CurrentLocation: " . WorldUtils::locationToString($sender->getLocation()));
                     break;
+				case "mainShop":
+					if ($sender instanceof Player)
+						ShopManager::getInstance()->getShopMenu($sender)->open();
+					break;
                 case "atest":
                     if ($sender instanceof Player)
                     {

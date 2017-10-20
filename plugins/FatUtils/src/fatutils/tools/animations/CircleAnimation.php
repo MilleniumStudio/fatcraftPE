@@ -12,6 +12,7 @@ namespace fatutils\tools\animations;
 use fatutils\tools\GeometryUtils;
 use fatutils\tools\Timer;
 use pocketmine\entity\Entity;
+use pocketmine\level\Location;
 use pocketmine\level\Position;
 
 class CircleAnimation extends Animation
@@ -90,10 +91,10 @@ class CircleAnimation extends Animation
 				for ($i = 0; $i < $this->m_NbSubDivision; $i++)
 				{
 					$l_location = null;
-					if ($this->m_Entity != null)
-						$l_location = GeometryUtils::relativeToPosition($this->m_Entity, (float)0, (((float)360 / (float)$this->m_NbPoint) * (float)$particleOffset) + (((float)360 / (float)$this->m_NbSubDivision) * (float)$i), $this->m_Radius);
-					if ($this->m_Position != null)
-						$l_location = GeometryUtils::relativeToPosition($this->m_Position, (float)0, (((float)360 / (float)$this->m_NbPoint) * (float)$particleOffset) + (((float)360 / (float)$this->m_NbSubDivision) * (float)$i), $this->m_Radius);
+					if ($this->m_Entity instanceof Entity)
+						$l_location = GeometryUtils::relativeToLocation($this->m_Entity->asLocation(), (float)0, (((float)360 / (float)$this->m_NbPoint) * (float)$particleOffset) + (((float)360 / (float)$this->m_NbSubDivision) * (float)$i), (float)$this->m_Radius);
+					if ($this->m_Position instanceof Position)
+						$l_location = GeometryUtils::relativeToLocation(Location::fromObject($this->m_Position), (float)0, (((float)360 / (float)$this->m_NbPoint) * (float)$particleOffset) + (((float)360 / (float)$this->m_NbSubDivision) * (float)$i), (float)$this->m_Radius);
 
 					$l_locationList[] = $l_location;
 				}

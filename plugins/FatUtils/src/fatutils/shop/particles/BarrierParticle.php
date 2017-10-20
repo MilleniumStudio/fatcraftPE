@@ -12,10 +12,13 @@ use fatutils\shop\ShopItem;
 use fatutils\tools\animations\CircleAnimation;
 use fatutils\tools\LoopedExec;
 use fatutils\tools\Timer;
+use pocketmine\level\particle\BlockForceFieldParticle;
+use pocketmine\level\particle\CriticalParticle;
+use pocketmine\level\particle\DustParticle;
 use pocketmine\level\particle\RedstoneParticle;
 use pocketmine\math\Vector3;
 
-class ParticleItem extends ShopItem
+class BarrierParticle extends ShopItem
 {
 	private $m_MainLoop = null;
 	private $m_Circle = null;
@@ -32,22 +35,28 @@ class ParticleItem extends ShopItem
 			if (!($this->m_Circle instanceof CircleAnimation) || !$this->m_Circle->isRunning())
 			{
 				$l_Level = $this->getPlayer()->getLevel();
+				$i = 0;
+				$rVar = 0;
+				$gVar = 0;
+				$bVar = 0;
 				$this->m_Circle = new CircleAnimation();
 				$this->m_Circle
 					->setEntity($this->getPlayer())
-					->setNbPoint(500)
-					->setNbSubDivision(5)
-					->setRadius(2)
-					->setTickDuration(100)
-					->setCallback(function ($data) use ($l_Level)
+					->setNbPoint(200)
+					->setNbSubDivision(6)
+					->setRadius(0.8)
+					->setTickDuration(40)
+					->setCallback(function ($data) use ($l_Level, &$i, &$rVar, &$gVar, &$bVar)
 					{
 						if (gettype($data) === "array")
 						{
+							$l_Var = sin($i);
+							$i += 0.1;
 							foreach ($data as $l_Location)
 							{
 								if ($l_Location instanceof Vector3)
 								{
-									$l_Level->addParticle(new RedstoneParticle($l_Location->add(0, 1.90, 0)));
+									$l_Level->addParticle(new DustParticle($l_Location->add(0, 1.95 + (0.1 * $l_Var), 0), 255, 255 * $l_Var, 255 * $l_Var));
 								}
 							}
 						}

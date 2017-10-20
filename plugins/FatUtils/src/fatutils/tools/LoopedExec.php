@@ -20,7 +20,7 @@ class LoopedExec
 
 	public function __construct(callable $p_Callback, int $p_TickPeriod = 1)
 	{
-		FatUtils::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new class(FatUtils::getInstance(), $p_Callback) extends PluginTask {
+		$this->m_Task = FatUtils::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new class(FatUtils::getInstance(), $p_Callback) extends PluginTask {
 			private $m_Callback;
 
 			public function __construct(PluginBase $p_Plugin, callable $p_Callback)

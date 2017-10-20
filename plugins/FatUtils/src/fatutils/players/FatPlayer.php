@@ -232,8 +232,14 @@ class FatPlayer
 				if (is_string($l_RawBoughtShopItem) && strlen($l_RawBoughtShopItem) > 2)
 					$this->m_BoughtShopItems = json_decode($result->rows[0]["shop_possessed"]);
 
-				$l_RawEquippedItem = $result->rows[0]["shop_equipped"];
-				$this->reequipRawShopItems($l_RawEquippedItem);
+//				if (strcmp(LoadBalancer::getInstance()->getServerType(), LoadBalancer::TEMPLATE_TYPE_LOBBY) == 0)
+//				{
+					$l_RawEquippedItem = $result->rows[0]["shop_equipped"];
+					new DelayedExec(5, function () use ($l_RawEquippedItem)
+					{
+						$this->reequipRawShopItems($l_RawEquippedItem);
+					});
+//				}
 
 				$l_Exist = true;
                 FatUtils::getInstance()->getLogger()->info("[FatPlayer] " . $this->getPlayer()->getName() . " exist in database, loading took " . (($l_EndMillisec - $l_StartMillisec) * 1000) . "ms");

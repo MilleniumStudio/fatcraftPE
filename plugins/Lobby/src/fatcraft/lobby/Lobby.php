@@ -62,6 +62,7 @@ class Lobby extends PluginBase implements Listener
         Sidebar::getInstance()
 			->addTranslatedLine(new TextFormatter("lobby.sidebar.header"))
 			->addWhiteSpace()
+			->addTranslatedLine(new TextFormatter("lobby.sidebar.money"))
 			->addMutableLine(function (Player $p_Player) {
 				$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Player);
 				return [
