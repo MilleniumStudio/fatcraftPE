@@ -35,6 +35,8 @@ class ShopKeeper extends ClickableNPC
     {
         parent::__construct($p_location);
 
+        $this->villager->setNameTag("Shop");
+
         if (is_null(self::$m_ShopContent))
         {
             Bedwars::getInstance()->getLogger()->info("Loading Shop content...");

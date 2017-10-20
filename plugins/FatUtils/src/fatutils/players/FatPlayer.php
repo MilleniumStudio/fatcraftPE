@@ -235,10 +235,10 @@ class FatPlayer
 //				if (strcmp(LoadBalancer::getInstance()->getServerType(), LoadBalancer::TEMPLATE_TYPE_LOBBY) == 0)
 //				{
 					$l_RawEquippedItem = $result->rows[0]["shop_equipped"];
-					new DelayedExec(5, function () use ($l_RawEquippedItem)
+					new DelayedExec(function () use ($l_RawEquippedItem)
 					{
 						$this->reequipRawShopItems($l_RawEquippedItem);
-					});
+					}, 5);
 //				}
 
 				$l_Exist = true;
@@ -257,9 +257,10 @@ class FatPlayer
                 ));
 
             // process first login
-            new DelayedExec(40, function () {
-                new LanguageWindow($this->getPlayer());
-            });
+            new DelayedExec(function ()
+			{
+				new LanguageWindow($this->getPlayer());
+			}, 40);
         }
 
         PermissionManager::getInstance()->updatePermissions($this);

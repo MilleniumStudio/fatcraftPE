@@ -182,10 +182,11 @@ class Bedwars extends PluginBase implements Listener
 //                $l_Team->getSpawn()->teleport($p_Player, 3);
                 $p_Player->setGamemode(Player::ADVENTURE);
 
-                new DelayedExec(5, function () use ($p_Player, $l_Team)
-                {
-                    $p_Player->addTitle("", (new TextFormatter("player.team.join", ["teamName" => $l_Team->getColoredName()]))->asStringForPlayer($p_Player));
-                });
+                new DelayedExec(function () use ($p_Player, $l_Team)
+				{
+					$p_Player->addTitle("", (new TextFormatter("player.team.join", ["teamName" => $l_Team->getColoredName()]))->asStringForPlayer($p_Player));
+					$p_Player->sendMessage((new TextFormatter("bedwars.team.cooseYourTeam"))->asStringForPlayer($p_Player));
+				}, 2);
 
                 if (count($this->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMaxPlayer())
                 {
@@ -212,7 +213,7 @@ class Bedwars extends PluginBase implements Listener
                 {
                     $l_WaitingFor = PlayersManager::getInstance()->getMinPlayer() - count($this->getServer()->getOnlinePlayers());
                     foreach ($this->getServer()->getOnlinePlayers() as $l_Player)
-                        $l_Player->sendTip((new TextFormatter("game.waitingForMore", ["amount" => $l_WaitingFor]))->asStringForPlayer($l_Player));
+                        $l_Player->addTitle("", (new TextFormatter("game.waitingForMore", ["amount" => $l_WaitingFor]))->asStringForPlayer($l_Player), 1, 60, 1);
                 }
             }
         } else
@@ -463,9 +464,10 @@ class Bedwars extends PluginBase implements Listener
                 foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
                     LoadBalancer::getInstance()->balancePlayer($l_Player, "lobby");
 
-                new DelayedExec(100, function () {
-                    $this->getServer()->shutdown();
-                });
+                new DelayedExec(function ()
+				{
+					$this->getServer()->shutdown();
+				}, 100);
             })
             ->start();
 
@@ -507,29 +509,29 @@ class Bedwars extends PluginBase implements Listener
 
     public function onPlayerQuit(PlayerQuitEvent $p_Event)
     {
-        new DelayedExec(1, function () use ($p_Event) {
-            if (GameManager::getInstance()->isWaiting())
-            {
-                $l_Team = TeamsManager::getInstance()->getPlayerTeam($p_Event->getPlayer());
-                if ($l_Team instanceof Team)
-                    $l_Team->removePlayer($p_Event->getPlayer());
+        new DelayedExec(function () use ($p_Event)
+		{
+			if (GameManager::getInstance()->isWaiting())
+			{
+				$l_Team = TeamsManager::getInstance()->getPlayerTeam($p_Event->getPlayer());
+				if ($l_Team instanceof Team)
+					$l_Team->removePlayer($p_Event->getPlayer());
 
-                if ($this->m_WaitingTimer instanceof Timer && $this->m_WaitingTimer->getTickLeft() > 0 &&
-                    (count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMinPlayer()))
-                {
-                    $this->m_WaitingTimer->cancel();
-                    $this->m_WaitingTimer = null;
-                }
-            }
-            else if (GameManager::getInstance()->isPlaying())
-            {
-                if (count($this->getServer()->getOnlinePlayers()) == 0)
-                    $this->getServer()->shutdown();
+				if ($this->m_WaitingTimer instanceof Timer && $this->m_WaitingTimer->getTickLeft() > 0 &&
+					(count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMinPlayer()))
+				{
+					$this->m_WaitingTimer->cancel();
+					$this->m_WaitingTimer = null;
+				}
+			} else if (GameManager::getInstance()->isPlaying())
+			{
+				if (count($this->getServer()->getOnlinePlayers()) == 0)
+					$this->getServer()->shutdown();
 
-                Sidebar::getInstance()->update();
-                $this->checkGameState();
-            }
-        });
+				Sidebar::getInstance()->update();
+				$this->checkGameState();
+			}
+		}, 1);
     }
 
     public function dropPlayerMoney(Player $p_Player)

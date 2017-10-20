@@ -54,10 +54,10 @@ class EventListener implements Listener
             PlayersManager::getInstance()->getFatPlayer($p)->setPlayer($p);
         }
 
-        new DelayedExec(1, function () use ($p)
-        {
-            PlayersManager::getInstance()->getFatPlayer($p)->updatePlayerNames();
-        });
+        new DelayedExec(function () use ($p)
+		{
+			PlayersManager::getInstance()->getFatPlayer($p)->updatePlayerNames();
+		}, 1);
     }
 
     public function onQuit(PlayerQuitEvent $e)
@@ -108,10 +108,10 @@ class EventListener implements Listener
         {
             if (FatPlayer::$m_OptionDisplayHealth)
             {
-                new DelayedExec(1, function () use ($p)
-                {
-                    PlayersManager::getInstance()->getFatPlayer($p)->updatePlayerNames();
-                });
+                new DelayedExec(function () use ($p)
+				{
+					PlayersManager::getInstance()->getFatPlayer($p)->updatePlayerNames();
+				}, 1);
             }
         }
     }
@@ -126,10 +126,10 @@ class EventListener implements Listener
         {
             if (FatPlayer::$m_OptionDisplayHealth)
             {
-                new DelayedExec(1, function () use ($p)
-                {
-                    PlayersManager::getInstance()->getFatPlayer($p)->updatePlayerNames();
-                });
+                new DelayedExec(function () use ($p)
+				{
+					PlayersManager::getInstance()->getFatPlayer($p)->updatePlayerNames();
+				}, 1);
             }
         }
     }

@@ -75,12 +75,13 @@ class Lobby extends PluginBase implements Listener
 
     public function onPlayerJoin(PlayerJoinEvent $e)
     {
-        new DelayedExec(5, function () use ($e) {
-            $e->getPlayer()->addTitle(
-            	(new TextFormatter("lobby.welcome.title"))->asStringForPlayer($e->getPlayer()),
+        new DelayedExec(function () use ($e)
+		{
+			$e->getPlayer()->addTitle(
+				(new TextFormatter("lobby.welcome.title"))->asStringForPlayer($e->getPlayer()),
 				(new TextFormatter("lobby.welcome.subtitle", ["name" => $e->getPlayer()->getName()]))->asStringForPlayer($e->getPlayer())
 			);
-        });
+		}, 5);
 
         // Items in player bar
         $e->getPlayer()->getInventory()->setHeldItemIndex(4);

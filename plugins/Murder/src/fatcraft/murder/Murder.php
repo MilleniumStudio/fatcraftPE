@@ -134,7 +134,7 @@ class Murder extends PluginBase implements Listener
             } else if (count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMinPlayer()) {
                 $l_WaitingFor = PlayersManager::getInstance()->getMinPlayer() - count($this->getServer()->getOnlinePlayers());
                 foreach ($this->getServer()->getOnlinePlayers() as $l_Player)
-                    $l_Player->sendTip((new TextFormatter("game.waitingForMore", ["amount" => $l_WaitingFor]))->asStringForPlayer($l_Player));
+					$l_Player->addTitle("", (new TextFormatter("game.waitingForMore", ["amount" => $l_WaitingFor]))->asStringForPlayer($l_Player), 1, 60, 1);
             }
         }
 
@@ -373,11 +373,13 @@ class Murder extends PluginBase implements Listener
 
     public function onPlayerQuit(PlayerQuitEvent $p_Event)
     {
-        new DelayedExec(1, function () {
-            if (GameManager::getInstance()->isPlaying()) {
-                Sidebar::getInstance()->update();
-            }
-        });
+        new DelayedExec(function ()
+		{
+			if (GameManager::getInstance()->isPlaying())
+			{
+				Sidebar::getInstance()->update();
+			}
+		}, 1);
     }
 
     /**
@@ -434,29 +436,36 @@ class Murder extends PluginBase implements Listener
             if (!$holder->getUniqueId()->equals($this->m_murdererUUID)) {
                 if ($p_event->getItem()->getItem()->getId() == ItemIds::IRON_INGOT) {
 
-                    new DelayedExec(1, function () use ($p_event) { //delayed to allow the loot of the ingot before making this computation
-                        $nbIngots = 0;
-                        foreach ($p_event->getInventory()->getContents() as $content) {
-                            if ($content->getId() == ItemIds::IRON_INGOT)
-                                $nbIngots += $content->getCount();
-                        }
-                        if ($nbIngots >= 6) {
-                            $nbRemove = 6;
-                            foreach ($p_event->getInventory()->getContents() as $content) {
-                                if ($content->getId() == ItemIds::IRON_INGOT) {
-                                    if ($content->getCount() >= $nbRemove) {
-                                        $content->setCount($content->getCount() - $nbRemove);
-                                        break;
-                                    } else {
-                                        $nbRemove -= $content->getCount();
-                                        $content->setCount(0);
-                                    }
-                                }
-                            }
-                            $p_event->getInventory()->addItem(Item::get(ItemIds::BOW));
-                            $p_event->getInventory()->sendContents($p_event->getInventory()->getHolder());
-                        }
-                    });
+                    new DelayedExec(function () use ($p_event)
+					{ //delayed to allow the loot of the ingot before making this computation
+						$nbIngots = 0;
+						foreach ($p_event->getInventory()->getContents() as $content)
+						{
+							if ($content->getId() == ItemIds::IRON_INGOT)
+								$nbIngots += $content->getCount();
+						}
+						if ($nbIngots >= 6)
+						{
+							$nbRemove = 6;
+							foreach ($p_event->getInventory()->getContents() as $content)
+							{
+								if ($content->getId() == ItemIds::IRON_INGOT)
+								{
+									if ($content->getCount() >= $nbRemove)
+									{
+										$content->setCount($content->getCount() - $nbRemove);
+										break;
+									} else
+									{
+										$nbRemove -= $content->getCount();
+										$content->setCount(0);
+									}
+								}
+							}
+							$p_event->getInventory()->addItem(Item::get(ItemIds::BOW));
+							$p_event->getInventory()->sendContents($p_event->getInventory()->getHolder());
+						}
+					}, 1);
                 }
             } else {
                 $p_event->setCancelled(true);

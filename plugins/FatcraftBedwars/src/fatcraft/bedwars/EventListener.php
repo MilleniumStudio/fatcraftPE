@@ -108,9 +108,10 @@ class EventListener implements Listener
             } else {
                 FatUtils::getInstance()->getLogger()->info("Bed destroyed !");
 
-                new DelayedExec(1, function () {
-                    Sidebar::getInstance()->update();
-                });
+                new DelayedExec(function ()
+				{
+					Sidebar::getInstance()->update();
+				}, 1);
             }
         } else {
             if (Bedwars::DEBUG)
@@ -125,9 +126,10 @@ class EventListener implements Listener
 
     public function onBlockPlace(BlockPlaceEvent $e)
     {
-        new DelayedExec(1, function () {
-            Sidebar::getInstance()->update(); //todo remove (debug)
-        });
+        new DelayedExec(function ()
+		{
+			Sidebar::getInstance()->update(); //todo remove (debug)
+		}, 1);
 
         $e->getBlock()->setMetadata("isCustom", new class(Bedwars::getInstance()) extends MetadataValue
         {

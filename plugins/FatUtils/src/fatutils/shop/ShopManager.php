@@ -193,12 +193,17 @@ class ShopManager
 
 			$l_Ret->addPart((new Button())
 				->setText((new TextFormatter("shop.preview"))->asStringForFatPlayer($l_FatPlayer))
-				->setCallback(function () use ($p_ShopItem, $l_FatPlayer)
+				->setCallback(function () use ($p_CategoryName, $p_ShopItem, $l_FatPlayer)
 				{
 					$p_ShopItem->equip();
-					new DelayedExec(5 * 20, function () use ($p_ShopItem) {
-						$p_ShopItem->unequip();
-					});
+					new DelayedExec(function () use ($p_CategoryName, $p_ShopItem)
+					{
+						if ($p_ShopItem->getPlayer()->isOnline())
+						{
+							$p_ShopItem->unequip();
+							$this->getShopItemMenu($p_CategoryName, $p_ShopItem)->open();
+						}
+					}, 5 * 20);
 				})
 			);
 		} else

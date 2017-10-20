@@ -110,7 +110,7 @@ class HungerGame extends PluginBase implements Listener
             {
                 $l_WaitingFor = PlayersManager::getInstance()->getMinPlayer() - count($this->getServer()->getOnlinePlayers());
                 foreach ($this->getServer()->getOnlinePlayers() as $l_Player)
-                    $l_Player->sendTip((new TextFormatter("game.waitingForMore", ["amount" => $l_WaitingFor]))->asStringForPlayer($l_Player));
+					$l_Player->addTitle("", (new TextFormatter("game.waitingForMore", ["amount" => $l_WaitingFor]))->asStringForPlayer($l_Player), 1, 60, 1);
             }
 
         } else
@@ -204,9 +204,10 @@ class HungerGame extends PluginBase implements Listener
                 foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
                     LoadBalancer::getInstance()->balancePlayer($l_Player, "lobby");
 
-                new DelayedExec(100, function () {
-                    $this->getServer()->shutdown();
-                });
+                new DelayedExec(function ()
+				{
+					$this->getServer()->shutdown();
+				}, 100);
             })
             ->start();
 
@@ -218,21 +219,22 @@ class HungerGame extends PluginBase implements Listener
     //---------------------
     public function playerQuitEvent(PlayerQuitEvent $e)
     {
-        new DelayedExec(1, function () {
-            if (GameManager::getInstance()->isWaiting())
-            {
-                if ($this->m_WaitingTimer instanceof Timer && $this->m_WaitingTimer->getTickLeft() > 0 &&
-                    (count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMinPlayer()))
-                {
-                    $this->m_WaitingTimer->cancel();
-                    $this->m_WaitingTimer = null;
-                }
-            } else if (GameManager::getInstance()->isPlaying())
-            {
-                if (count($this->getServer()->getOnlinePlayers()) == 0)
-                    $this->getServer()->shutdown();
-            }
-        });
+        new DelayedExec(function ()
+		{
+			if (GameManager::getInstance()->isWaiting())
+			{
+				if ($this->m_WaitingTimer instanceof Timer && $this->m_WaitingTimer->getTickLeft() > 0 &&
+					(count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMinPlayer()))
+				{
+					$this->m_WaitingTimer->cancel();
+					$this->m_WaitingTimer = null;
+				}
+			} else if (GameManager::getInstance()->isPlaying())
+			{
+				if (count($this->getServer()->getOnlinePlayers()) == 0)
+					$this->getServer()->shutdown();
+			}
+		}, 1);
     }
 
     //---------------------

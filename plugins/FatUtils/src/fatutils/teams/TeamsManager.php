@@ -216,7 +216,7 @@ class TeamsManager
     {
         $npc = new ClickableNPC($p_location);
         $this->m_NPCSelectors[] = $npc;
-        $npc->setVisibleName("Team");
+        $npc->setVisibleName((new TextFormatter("team.choice"))->asString());
         $npc->setOnHitCallback(function ($player) {
             if ($player instanceof Player)
                 $this->displayTeamSelection($player);
