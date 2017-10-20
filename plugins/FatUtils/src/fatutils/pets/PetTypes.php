@@ -29,7 +29,7 @@ class PetTypes
         "Mooshroom" => ["id" => 16, "height" => 1.4, "width" => 0.9],
         "Squid" => ["id" => 17, "height" => 0.8, "width" => 0.8, "jump" => true],
         "Bunny" => ["id" => 18, "height" => 0.5, "width" => 0.4, "jump" => true],
-        "Bat" => ["id" => 19, "height" => 0.9, "width" => 0.5, "fly" => true],
+        "Bat" => ["id" => 19, "height" => 0.8, "width" => 0.5, "fly" => true, "offsetY" => 1.2],
         "IronGolem" => ["id" => 20, "height" => 2.7, "width" => 1.4],
         "Snowman" => ["id" => 21, "height" => 1.9, "width" => 0.7],
         "Ocelot" => ["id" => 22, "height" => 0.7, "width" => 0.6],
@@ -40,7 +40,7 @@ class PetTypes
         "ZombieHorse" => ["id" => 27, "height" => 1.6, "width" => 1.4],
         "PolarBear" => ["id" => 28, "height" => 1.4, "width" => 1.3],
         "Llama" => ["id" => 29, "height" => 1.87, "width" => 0.9],
-        "Parrot" => ["id" => 30, "height" => 1, "width" => 1, "fly" => true],
+        "Parrot" => ["id" => 30, "height" => 0.8, "width" => 0.5, "fly" => true, "offsetY" => 1.2],
 
         "Zombie" => ["id" => 32, "height" => 1.95, "width" => 0.6, "speed" => 0.1],
         "Creeper" => ["id" => 33, "height" => 1.7, "width" => 0.6],
@@ -51,7 +51,7 @@ class PetTypes
         "Enderman" => ["id" => 38, "height" => 2.9, "width" => 0.6],
         "Silverfish" => ["id" => 39, "height" => 0.3, "width" => 0.4],
         "CaveSpider" => ["id" => 40, "height" => 0.5, "width" => 0.7],
-        "Ghast" => ["id" => 41, "height" => 4, "width" => 4, "fly" => true, "distOffset" => 4],
+        "Ghast" => ["id" => 41, "height" => 4, "width" => 4, "fly" => true, "distOffset" => 0.5, "offsetY" => 1.2, "scale" => 0.1],
         "MagmaCube" => ["id" => 42, "height" => 0.51, "width" => 0.51, "jump" => true],
         "Blaze" => ["id" => 43, "height" => 1.8, "width" => 0.6, "fly" => true],
         "ZombieVillager" => ["id" => 44, "height" => 1.95, "width" => 0.6],
@@ -68,10 +68,20 @@ class PetTypes
         "Vindicator" => ["id" => 57, "height" => 1.95, "width" => 0.6],
 
         "Potion" => ["id" => 101, "height" => 0.4, "width" => 0.4],
-        "Smoker" => ["id" => 102, "height" => 1, "width" => 1],
+        "Smoker" => ["id" => 102, "height" => 1, "width" => 1, "fly" => true],
 
         "Evoker" => ["id" => 104, "height" => 1.95, "width" => 0.6],
-        "Vex" => ["id" => 105, "height" => 0.8, "width" => 0.4, "fly" => true],
+        "Vex" => ["id" => 105, "height" => 0.8, "width" => 0.4, "fly" => true, "offsetY" => 1.2],
+
+        //LôL
+        "BigSilverfish" => ["id" => 39, "height" => 0.3, "width" => 0.4, "scale" => 50, "distOffset" => 25],
+        "BigVex" => ["id" => 105, "height" => 0.8, "width" => 0.4, "fly" => true, "offsetY" => -20, "scale" => 50, "distOffset" => 25],
+
+        //test color
+        "cat" => ["id" => 22, "height" => 0.7, "width" => 0.6, "fly" => true, "speed" => 0, "color" => 2], //0->3
+        "truc" => ["id" => 30, "height" => 0.8, "width" => 0.5, "fly" => true, "offsetY" => 1.2, "speed" => 0],
+        "z" => ["id" => 32, "height" => 1.95, "width" => 0.6, "speed" => 0, "fly" => true],
+
     ];
 
 //    const ENTITIES = [

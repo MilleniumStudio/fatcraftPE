@@ -3,19 +3,16 @@
 namespace fatutils\pets;
 
 use fatutils\players\FatPlayer;
+use fatutils\players\PlayersManager;
 use fatutils\shop\ShopItem;
 use pocketmine\block\BlockIds;
 use pocketmine\entity\Entity;
-use pocketmine\entity\Squid;
-use pocketmine\entity\Villager;
-use pocketmine\entity\Zombie;
 use pocketmine\level\Location;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\DoubleTag;
 use pocketmine\nbt\tag\FloatTag;
 use pocketmine\nbt\tag\ListTag;
-use pocketmine\Player;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,14 +32,8 @@ class Pet extends ShopItem
     /** @var  CustomPet $m_entity */
     private $m_entity;
 
-
-    public function __construct(FatPlayer $player, $petTypes)
-    {
-        $this->m_fatPlayer = $player;
-        $this->m_petTypes = $petTypes;
-        $this->m_nextPosition = $player->getPlayer()->getLocation();
-    }
-
+    //todo debug
+    static $nbCat = 0;
 
     public function getSlotName(): string
     {
@@ -51,11 +42,25 @@ class Pet extends ShopItem
 
     public function equip()
     {
+        $this->m_fatPlayer = PlayersManager::getInstance()->getFatPlayer($this->getPlayer());
+        $this->m_petTypes = $this->getDataValue("type", "Parrot");
+        $this->m_nextPosition = $this->m_fatPlayer->getPlayer()->getLocation();
+
+        //todo remove, just for testing
+//        $oX = (((CustomPet::$test * 1000) + CustomPet::$test2) % 25)*2;
+//        $oY = floor(((CustomPet::$test * 1000) + CustomPet::$test2) / 25)*2;
+//        $oX = (CustomPet::$test % 25)*2;
+//        $oY = floor(CustomPet::$test/25)*2;
+        Pet::$nbCat++;
+        $oX = (Pet::$nbCat%25)*2;
+        $oY = (Pet::$nbCat/25)*2;
+
+
         $tag = new CompoundTag("", [
                 "Pos" => new ListTag("Pos", [
-                    new DoubleTag("", $this->m_fatPlayer->getPlayer()->getLocation()->getX()),
+                    new DoubleTag("", $this->m_fatPlayer->getPlayer()->getLocation()->getX() + $oX),
                     new DoubleTag("", $this->m_fatPlayer->getPlayer()->getLocation()->getY()),
-                    new DoubleTag("", $this->m_fatPlayer->getPlayer()->getLocation()->getZ())
+                    new DoubleTag("", $this->m_fatPlayer->getPlayer()->getLocation()->getZ() + $oY)
                 ]),
                 "Motion" => new ListTag("Motion", [
                     new DoubleTag("", 0),
@@ -79,7 +84,7 @@ class Pet extends ShopItem
 
     public function unequip()
     {
-        $this->m_entity->kill();
+//        $this->m_entity->kill();//todo re set this after tags tests
 //        $this->m_fatPlayer->setSlot(ShopItem::FAT_PLAYER_SHOP_SLOT_PET, null);
     }
 
@@ -92,22 +97,23 @@ class Pet extends ShopItem
     {
         if ($this->m_entity == null) {
             echo "entity is null \n";
+            return;
         }
 
-        $dist = $this->m_entity->getLocation()->distance($this->m_fatPlayer->getPlayer()->getLocation()->asVector3());
+        $playerPos = $this->m_fatPlayer->getPlayer()->getLocation()->add(0, $this->m_entity->m_offsetY, 0);
+        $petPos = $this->m_entity->getLocation();
+        $dist = $petPos->distance($playerPos->asVector3());
         if ($dist > 15) {
             $this->m_entity->teleport($this->m_fatPlayer->getPlayer());
             $this->m_entity->spawnToAll();
         } elseif ($dist > 3 + $this->m_entity->m_distOffset) {
-            $playerPos = $this->m_fatPlayer->getPlayer()->getLocation();
-            $petPos = $this->m_entity->getLocation();
             // calculate move vector
             $vec = new Vector3($playerPos->getX() - $petPos->getX(), $playerPos->getY() - $petPos->getY(), $playerPos->getZ() - $petPos->getZ());
             $vec = $vec->normalize()->multiply($this->m_entity->m_speed * 2);
             // check if it needs to jump to climb a block
             $frontPosVec = $this->m_entity->getLocation()->asVector3()->add($this->m_entity->getDirectionVector()->asVector3()->multiply(0.3 + $this->m_entity->width / 2))->add(0, 0, 0);
             $frontBlockId = $this->m_entity->level->getBlock($frontPosVec)->getId();
-            if($this->m_entity->isOnGround()) {
+            if ($this->m_entity->isOnGround() || $this->m_entity->m_climb || !$this->m_entity->m_hasGravity) {
                 if ($frontBlockId != BlockIds::AIR && $frontBlockId != BlockIds::WATER) {
                     $vec->y = 0.9;
                 } else if ($this->m_entity->m_isJumper) {// if the mob is a jumper

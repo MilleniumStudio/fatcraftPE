@@ -21,3 +21,9 @@ content:
       rColor: 255
       gColor: 50
       bColor: 50
+  pets:
+    qqChose:
+      name: ""
+      class: "fatutils\\pets\\Pet"
+      priceFC: 0
+      type: "Parrot"

@@ -11,7 +11,9 @@ use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
 use pocketmine\event\Listener;
 use pocketmine\Player;
+use pocketmine\plugin\Plugin;
 use pocketmine\scheduler\PluginTask;
+use pocketmine\scheduler\TaskHandler;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,6 +24,9 @@ use pocketmine\scheduler\PluginTask;
 class PetsManager implements Listener, CommandExecutor
 {
     private static $m_Instance = null;
+    /** @var TaskHandler $testTask */
+    private $testTask = null;
+    private $caaaaatsss = [];
 
     public static function getInstance(): PetsManager
     {
@@ -47,11 +52,12 @@ class PetsManager implements Listener, CommandExecutor
         }
     }
 
-    public function spawnPet(Player $player, $petTypes): ?ShopItem
+    public function spawnPet(Player $player, $petType): ?ShopItem
     {
-        if(array_key_exists($petTypes, PetTypes::ENTITIES)) {
+        if (array_key_exists($petType, PetTypes::ENTITIES)) {
             $fatPlayer = PlayersManager::getInstance()->getFatPlayer($player);
-            $pet = new Pet($fatPlayer, $petTypes);
+            $pet = new Pet($player, "pets.qqChose", ["type" => $petType, "class" => Pet::class]);
+//            $pet = ShopItem::createShopItem($player, "pet.qqChose", ["type" => $petType, "class" => Pet::class]);
             $fatPlayer->setSlot(ShopItem::SLOT_PET, $pet);
             return $pet;
         }
@@ -86,7 +92,7 @@ class PetsManager implements Listener, CommandExecutor
                     echo "->" . $pet->getEntity()->getLocation() . "\n";
                 }
                     break;
-                case "list":{
+                case "list": {
                     $nList = [];
                     $list2 = [];
                     foreach (PetTypes::ENTITIES as $k => $v) {
@@ -94,9 +100,46 @@ class PetsManager implements Listener, CommandExecutor
                     }
                     ksort($nList);
                     foreach ($nList as $k => $v) {
-                        $list2[] = "\"".$v."\" => [\"id\" => ".PetTypes::ENTITIES[$v][0].", \"height\" => ".PetTypes::ENTITIES[$v][2].", \"width\" => ".PetTypes::ENTITIES[$v][1]."]";
+                        $list2[] = "\"" . $v . "\" => [\"id\" => " . PetTypes::ENTITIES[$v][0] . ", \"height\" => " . PetTypes::ENTITIES[$v][2] . ", \"width\" => " . PetTypes::ENTITIES[$v][1] . "]";
                     }
                     print_r($list2);
+                }
+                    break;
+                case"test": {
+                    $this->testTask = FatUtils::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new class(FatUtils::getInstance(), $sender, $args[1]) extends PluginTask
+                    {
+                        public $sender;
+                        public $type;
+
+                        public function __construct(Plugin $owner, $sender, $type)
+                        {
+                            parent::__construct($owner);
+                            $this->sender = $sender;
+                            $this->type = $type;
+                        }
+
+                        public function onRun(int $currentTick)
+                        {
+                            PetsManager::getInstance()->spawnPet($this->sender, $this->type)->equip();
+                        }
+                    }, 10);
+                }
+                    break;
+                case "stop": {
+                    $this->testTask->cancel();
+                }
+                    break;
+                case "test2": {
+                    for ($i = 0; $i < 4; $i++)
+                        $this->caaaaatsss[] = $this->spawnPet($sender, $args[1])->equip();
+                }
+                    break;
+                case "clear":{
+                    foreach ($this->caaaaatsss as $cat) {
+                        /** @var Pet $cat */
+                        $cat->getEntity()->kill();
+                    }
+                    $this->caaaaatsss = [];
                 }
             }
         } else {
