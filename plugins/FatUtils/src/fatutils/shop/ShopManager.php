@@ -100,6 +100,7 @@ class ShopManager
 					$l_FatPlayer->addFatcoin(50);
 					$l_FatPlayer->addFatbill(50);
 					$l_Ret->open();
+					Sidebar::getInstance()->updatePlayer($p_Player);
 				})
 			);
 		}
