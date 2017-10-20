@@ -10,6 +10,7 @@ namespace fatutils\shop;
 
 use fatutils\FatUtils;
 use fatutils\players\PlayersManager;
+use fatutils\tools\DelayedExec;
 use fatutils\tools\Sidebar;
 use fatutils\tools\TextFormatter;
 use fatutils\ui\windows\ButtonWindow;
@@ -189,6 +190,17 @@ class ShopManager
 					})
 				);
 			}
+
+			$l_Ret->addPart((new Button())
+				->setText((new TextFormatter("shop.preview"))->asStringForFatPlayer($l_FatPlayer))
+				->setCallback(function () use ($p_ShopItem, $l_FatPlayer)
+				{
+					$p_ShopItem->equip();
+					new DelayedExec(5 * 20, function () use ($p_ShopItem) {
+						$p_ShopItem->unequip();
+					});
+				})
+			);
 		} else
 		{
 			if (!$l_FatPlayer->isEquipped($p_ShopItem))

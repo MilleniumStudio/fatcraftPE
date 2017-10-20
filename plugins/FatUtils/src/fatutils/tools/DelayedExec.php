@@ -23,7 +23,7 @@ class DelayedExec
      * @param int $p_Delay in tick
      * @param callable $p_Callback
      */
-    public function __construct(int $p_Delay, callable $p_Callback)
+    public function __construct(int $p_Delay = 1, callable $p_Callback)
     {
         FatUtils::getInstance()->getServer()->getScheduler()->scheduleDelayedTask(new class(FatUtils::getInstance(), $p_Callback) extends PluginTask {
             private $m_Callback;

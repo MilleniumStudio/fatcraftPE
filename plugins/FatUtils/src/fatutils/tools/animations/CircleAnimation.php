@@ -22,8 +22,8 @@ class CircleAnimation extends Animation
 	private $m_Position = null;
 	private $m_TickRemaining = 60;
 	private $m_Radius = 2;
-	private $m_NbPoint = 10;
-	private $m_NbSubDivision = 10;
+	private $m_NbPoint = null;
+	private $m_NbSubDivision = 1;
 	private $m_ClockLike = true;
 	private $m_Callback = null;
 
@@ -82,6 +82,9 @@ class CircleAnimation extends Animation
 		if ($this->m_Timer instanceof Timer)
 			$this->m_Timer->cancel();
 
+		if (is_null($this->m_NbPoint))
+			$this->m_NbPoint = $this->m_TickRemaining * $this->m_NbSubDivision;
+
 		$this->m_Timer = new Timer($this->m_TickRemaining);
 		$this->m_Timer
 			->addTickCallback(function () use (&$particleOffset)
@@ -90,13 +93,10 @@ class CircleAnimation extends Animation
 				$particleOffset = ($particleOffset + ($this->m_ClockLike ? 1 : -1)) % $this->m_NbPoint;
 				for ($i = 0; $i < $this->m_NbSubDivision; $i++)
 				{
-					$l_location = null;
 					if ($this->m_Entity instanceof Entity)
-						$l_location = GeometryUtils::relativeToLocation($this->m_Entity->asLocation(), (float)0, (((float)360 / (float)$this->m_NbPoint) * (float)$particleOffset) + (((float)360 / (float)$this->m_NbSubDivision) * (float)$i), (float)$this->m_Radius);
-					if ($this->m_Position instanceof Position)
-						$l_location = GeometryUtils::relativeToLocation(Location::fromObject($this->m_Position), (float)0, (((float)360 / (float)$this->m_NbPoint) * (float)$particleOffset) + (((float)360 / (float)$this->m_NbSubDivision) * (float)$i), (float)$this->m_Radius);
-
-					$l_locationList[] = $l_location;
+						$l_locationList[] = GeometryUtils::relativeToLocation($this->m_Entity->asLocation(), (float)0, (((float)360 / (float)$this->m_NbPoint) * (float)$particleOffset) + (((float)360 / (float)$this->m_NbSubDivision) * (float)$i), (float)$this->m_Radius);
+					else if ($this->m_Position instanceof Position)
+						$l_locationList[] = GeometryUtils::relativeToLocation(Location::fromObject($this->m_Position), (float)0, (((float)360 / (float)$this->m_NbPoint) * (float)$particleOffset) + (((float)360 / (float)$this->m_NbSubDivision) * (float)$i), (float)$this->m_Radius);
 				}
 
 				if (is_callable($this->m_Callback))

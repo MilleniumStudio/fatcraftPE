@@ -8,19 +8,11 @@
 
 namespace fatutils\shop\particles;
 
-use fatutils\players\PlayersManager;
 use fatutils\shop\ShopItem;
-use fatutils\tools\animations\CircleAnimation;
 use fatutils\tools\GeometryUtils;
 use fatutils\tools\LoopedExec;
-use fatutils\tools\Timer;
 use pocketmine\level\Location;
-use pocketmine\level\particle\BlockForceFieldParticle;
-use pocketmine\level\particle\CriticalParticle;
 use pocketmine\level\particle\DustParticle;
-use pocketmine\level\particle\FlameParticle;
-use pocketmine\level\particle\RedstoneParticle;
-use pocketmine\level\Position;
 use pocketmine\math\Vector3;
 
 /**
@@ -55,10 +47,12 @@ class CapeParticle extends ShopItem
 		{
 			$l_PlayerPosition = $this->getPlayer()->getLocation();
 
+			$l_PlayerSpeed = $this->getPlayer()->getSpeedVector()->length();
+
 			$l_Positions = [];
 
 			$l_Angle = 180;
-			$l_Center = GeometryUtils::relativeToLocation($l_PlayerPosition, 0, 0, 0.5);
+			$l_Center = GeometryUtils::relativeToLocation($l_PlayerPosition, 0, 0, 0.5 + ($l_PlayerSpeed * 2));
 			$l_base = GeometryUtils::relativeToLocation(Location::fromObject($l_Center, $this->getPlayer()->getLocation()->getLevel(), $this->getPlayer()->getLocation()->getYaw()), 0, $l_Angle, 0.8);
 
 			$l_Positions[] = $l_base;
@@ -80,7 +74,7 @@ class CapeParticle extends ShopItem
 			foreach ($l_Positions as $l_Pos)
 			{
 				if ($l_Pos instanceof Vector3)
-					$l_Level->addParticle(new DustParticle($l_Pos->add(0, ($this->getPlayer()->isSneaking() ? 1.35 : 1.55), 0), $this->rColor, $this->gColor, $this->bColor));
+					$l_Level->addParticle(new DustParticle($l_Pos->add(0, ($this->getPlayer()->isSneaking() ? 1.30 : 1.50)), $this->rColor, $this->gColor, $this->bColor));
 			}
 		}, 2);
 	}
