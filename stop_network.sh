@@ -7,3 +7,4 @@ docker stop -t 0 pk-1
 docker stop -t 0 sw-1
 docker stop -t 0 sw-2
 docker stop -t 0 bw-1
+docker stop -t 0 bw-2
