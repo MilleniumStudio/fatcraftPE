@@ -175,6 +175,18 @@ class TeamsManager
         return $this->m_Teams;
     }
 
+	public function getTeamByName(string $p_Name): ?Team
+	{
+		foreach ($this->m_Teams as $l_Team)
+		{
+			if ($l_Team instanceof Team)
+			{
+				if ($l_Team->getName() === $p_Name)
+					return $l_Team;
+			}
+		}
+		return null;
+	}
 
     public function displayTeamSelection(Player $p_player)
     {

@@ -10,6 +10,9 @@ use fatutils\loot\ChestsManager;
 use fatutils\permission\PermissionManager;
 use fatutils\pets\PetsManager;
 use fatutils\players\PlayersManager;
+use fatutils\scores\PlayerScoreboard;
+use fatutils\scores\ScoreboardContainer;
+use fatutils\scores\ScoresManager;
 use fatutils\shop\ShopManager;
 use fatutils\tools\animations\CircleAnimation;
 use fatutils\tools\WorldUtils;
@@ -27,6 +30,7 @@ use pocketmine\math\Vector3;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
+use pocketmine\utils\UUID;
 
 class FatUtils extends PluginBase
 {
@@ -92,7 +96,7 @@ class FatUtils extends PluginBase
                     if ($sender instanceof Player)
                         $sender->sendMessage("CurrentLocation: " . WorldUtils::locationToString($sender->getLocation()));
                     break;
-				case "mainShop":
+				case "mainshop":
 					if ($sender instanceof Player)
 						ShopManager::getInstance()->getShopMenu($sender)->open();
 					break;

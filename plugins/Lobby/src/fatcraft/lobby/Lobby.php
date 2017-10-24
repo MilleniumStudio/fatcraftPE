@@ -11,6 +11,8 @@ namespace fatcraft\lobby;
 use fatutils\FatUtils;
 use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
+use fatutils\scores\PlayerScoreboard;
+use fatutils\scores\ScoresManager;
 use fatutils\shop\ShopManager;
 use fatutils\tools\Sidebar;
 use fatutils\tools\TextFormatter;
@@ -34,6 +36,7 @@ use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use fatcraft\lobby\commands\MenuCommand;
 use fatutils\holograms\HologramsManager;
+use pocketmine\utils\UUID;
 
 class Lobby extends PluginBase implements Listener
 {
@@ -58,6 +61,7 @@ class Lobby extends PluginBase implements Listener
         HologramsManager::getInstance();
 
         FatPlayer::$m_OptionDisplayHealth = false;
+        ShopManager::$m_OptionAutoEquipSavedItems = true;
 
         Sidebar::getInstance()
 			->addTranslatedLine(new TextFormatter("lobby.sidebar.header"))
@@ -66,11 +70,36 @@ class Lobby extends PluginBase implements Listener
 			->addMutableLine(function (Player $p_Player) {
 				$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Player);
 				return [
-					$l_FatPlayer->getFatcoin() . " " . (new TextFormatter("currency.fatcoin.short"))->asStringForFatPlayer($l_FatPlayer),
-					$l_FatPlayer->getFatbill() . " " . (new TextFormatter("currency.fatbill.short"))->asStringForFatPlayer($l_FatPlayer)
+					$l_FatPlayer->getFatsilver() . " " . (new TextFormatter("currency.fatcoin.short"))->asStringForFatPlayer($l_FatPlayer),
+					$l_FatPlayer->getFatgold() . " " . (new TextFormatter("currency.fatbill.short"))->asStringForFatPlayer($l_FatPlayer)
 				];
 			});
 
+
+		$p1 = UUID::fromRandom();
+		$p2 = UUID::fromRandom();
+		$p3 = UUID::fromRandom();
+
+		$sb1 = new PlayerScoreboard();
+		$sb1->addUuidScore($p1, 10);
+		$sb1->addUuidScore($p2, 50);
+		$sb1->addUuidScore($p3, 150);
+
+		$sb2 = new PlayerScoreboard();
+		$sb2->addUuidScore($p1, 0);
+		$sb2->addUuidScore($p2, 0);
+		$sb2->addUuidScore($p3, 0);
+
+		ScoresManager::getInstance()
+			->addScoreboard($sb1)
+			->addScoreboard($sb2, 2);
+
+		$l_MergedScore = ScoresManager::getInstance()->getMergedPlayersScore();
+		var_dump($l_MergedScore, $l_MergedScore->getBest()->toString(), $l_MergedScore->getRatios());
+
+		ScoresManager::getInstance()->giveRewardToPlayer($p1, 0.5);
+
+		ScoresManager::getInstance()->giveRewardToPlayers($l_MergedScore->getRatios());
     }
 
     public function onPlayerJoin(PlayerJoinEvent $e)

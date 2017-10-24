@@ -58,7 +58,11 @@ class PlayersManager
             `fsaccount` VARCHAR(50) DEFAULT NULL,
             `lang` INT(3) NOT NULL DEFAULT '0' COMMENT '0 en, 1 fr, 2 es',
             `join_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            `fatsilver` INT(11) DEFAULT 0,
+            `fatgold` INT(11) DEFAULT 0,
             `muted` TIMESTAMP DEFAULT NULL,
+            `shop_possessed` TEXT DEFAULT NULL,
+            `shop_equipped` TEXT DEFAULT NULL,
             PRIMARY KEY (`id`));
        	");
 	}
@@ -109,7 +113,10 @@ class PlayersManager
 
 	public function getFatPlayerByUUID(UUID $p_UUID):?FatPlayer
 	{
-		return $this->m_FatPlayers[$p_UUID->toString()];
+		if (array_key_exists($p_UUID->toString(), $this->m_FatPlayers))
+			return $this->m_FatPlayers[$p_UUID->toString()];
+		else
+			return null;
 	}
 
 	public function getPlayerFromUUID(UUID $p_PlayerUUID):?Player

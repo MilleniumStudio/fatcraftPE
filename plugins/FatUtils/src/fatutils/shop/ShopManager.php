@@ -26,6 +26,8 @@ class ShopManager
 	private $m_ShopItems = [];
 	private static $m_Instance = null;
 
+	public static $m_OptionAutoEquipSavedItems = false;
+
 	public static function getInstance()
 	{
 		if (self::$m_Instance == null)
@@ -63,6 +65,20 @@ class ShopManager
 		return $this->m_ShopItems;
 	}
 
+	public function equipItems(Player $p_Player, array $p_ItemsId)
+	{
+		$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Player);
+		foreach ($p_ItemsId as $l_Key)
+		{
+			$l_ShopItem = ShopManager::getInstance()->getShopItemByKey($p_Player, $l_Key);
+			if (!is_null($l_ShopItem))
+			{
+				$l_ShopItem->equip();
+				$l_FatPlayer->setSlot($l_ShopItem->getSlotName(), $l_ShopItem, false);
+			}
+		}
+	}
+
 	public function getShopMenu(Player $p_Player): Window
 	{
 		$l_Ret = new ButtonWindow($p_Player);
@@ -97,8 +113,8 @@ class ShopManager
 				->setCallback(function () use ($p_Player, $l_Ret)
 				{
 					$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Player);
-					$l_FatPlayer->addFatcoin(50);
-					$l_FatPlayer->addFatbill(50);
+					$l_FatPlayer->addFatsilver(50);
+					$l_FatPlayer->addFatgold(50);
 					$l_Ret->open();
 					Sidebar::getInstance()->updatePlayer($p_Player);
 				})
@@ -152,15 +168,15 @@ class ShopManager
 
 		if (!$l_FatPlayer->isBought($p_ShopItem))
 		{
-			if ($p_ShopItem->getFatcoinPrice() > -1)
+			if ($p_ShopItem->getFatsilverPrice() > -1)
 			{
 				$l_Ret->addPart((new Button())
-					->setText((new TextFormatter("shop.buy"))->asStringForFatPlayer($l_FatPlayer) . " (" . $p_ShopItem->getFatcoinPrice() . " " . (new TextFormatter("currency.fatcoin.short"))->asStringForFatPlayer($l_FatPlayer) . TextFormat::DARK_GRAY . TextFormat::RESET . ")")
+					->setText((new TextFormatter("shop.buy"))->asStringForFatPlayer($l_FatPlayer) . " (" . $p_ShopItem->getFatsilverPrice() . " " . (new TextFormatter("currency.fatsilver.short"))->asStringForFatPlayer($l_FatPlayer) . TextFormat::DARK_GRAY . TextFormat::RESET . ")")
 					->setCallback(function () use ($p_CategoryName, $p_ShopItem, $l_FatPlayer)
 					{
-						if ($l_FatPlayer->getFatcoin() - $p_ShopItem->getFatcoinPrice() >= 0)
+						if ($l_FatPlayer->getFatsilver() - $p_ShopItem->getFatsilverPrice() >= 0)
 						{
-							$l_FatPlayer->addFatcoin(-$p_ShopItem->getFatcoinPrice());
+							$l_FatPlayer->addFatsilver(-$p_ShopItem->getFatsilverPrice());
 							$l_FatPlayer->addBoughtShopItem($p_ShopItem);
 							$l_FatPlayer->getPlayer()->sendMessage((new TextFormatter("shop.bought", ["name" => new TextFormatter($p_ShopItem->getName())]))->asStringForFatPlayer($l_FatPlayer));
 							Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());
@@ -171,15 +187,15 @@ class ShopManager
 					})
 				);
 			}
-			if ($p_ShopItem->getFatbillPrice() > -1)
+			if ($p_ShopItem->getFatgoldPrice() > -1)
 			{
 				$l_Ret->addPart((new Button())
-					->setText((new TextFormatter("shop.buy"))->asStringForFatPlayer($l_FatPlayer) . " (" . $p_ShopItem->getFatbillPrice() . " " . (new TextFormatter("currency.fatbill.short"))->asStringForFatPlayer($l_FatPlayer) . TextFormat::DARK_GRAY . TextFormat::RESET . ")")
+					->setText((new TextFormatter("shop.buy"))->asStringForFatPlayer($l_FatPlayer) . " (" . $p_ShopItem->getFatgoldPrice() . " " . (new TextFormatter("currency.fatgold.short"))->asStringForFatPlayer($l_FatPlayer) . TextFormat::DARK_GRAY . TextFormat::RESET . ")")
 					->setCallback(function () use ($p_CategoryName, $p_ShopItem, $l_FatPlayer)
 					{
-						if ($l_FatPlayer->getFatbill() - $p_ShopItem->getFatbillPrice() >= 0)
+						if ($l_FatPlayer->getFatgold() - $p_ShopItem->getFatgoldPrice() >= 0)
 						{
-							$l_FatPlayer->addFatbill(-$p_ShopItem->getFatbillPrice());
+							$l_FatPlayer->addFatgold(-$p_ShopItem->getFatgoldPrice());
 							$l_FatPlayer->addBoughtShopItem($p_ShopItem);
 							Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());
 							$l_FatPlayer->getPlayer()->sendMessage((new TextFormatter("shop.bought", ["name" => new TextFormatter($p_ShopItem->getName())]))->asStringForFatPlayer($l_FatPlayer));
