@@ -79,6 +79,7 @@ class PetTypes
 
         //test color
         "cat" => ["id" => 22, "height" => 0.7, "width" => 0.6, "fly" => true, "speed" => 0, "color" => 2], //0->3
+        "cat1" => ["id" => 22, "height" => 0.7, "width" => 0.6, "fly" => true, "speed" => 0], //0->3
         "truc" => ["id" => 30, "height" => 0.8, "width" => 0.5, "fly" => true, "offsetY" => 1.2, "speed" => 0],
         "z" => ["id" => 32, "height" => 1.95, "width" => 0.6, "speed" => 0, "fly" => true],
 

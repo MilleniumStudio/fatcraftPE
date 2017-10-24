@@ -140,7 +140,16 @@ class PetsManager implements Listener, CommandExecutor
                         $cat->getEntity()->kill();
                     }
                     $this->caaaaatsss = [];
-                }
+                }break;
+                case "var":{
+                    /** @var Pet $pet */
+                    $pet = PlayersManager::getInstance()->getFatPlayer($sender)->getSlot(ShopItem::SLOT_PET);
+                    $pet->getEntity()->testVar($args[1]);
+                }break;
+                case "shop":{
+
+                }break;
+
             }
         } else {
             echo "Commands only available as a player\n";

@@ -25,6 +25,7 @@ class Pet extends ShopItem
     /** @var  FatPlayer $m_fatPlayer */
     private $m_fatPlayer;
     private $m_petTypes;
+    private $m_options;
 
 
     /** @var Location $m_nextPosition */
@@ -44,23 +45,15 @@ class Pet extends ShopItem
     {
         $this->m_fatPlayer = PlayersManager::getInstance()->getFatPlayer($this->getPlayer());
         $this->m_petTypes = $this->getDataValue("type", "Parrot");
+        $this->m_options = $this->getDataValue("options", []);
         $this->m_nextPosition = $this->m_fatPlayer->getPlayer()->getLocation();
-
-        //todo remove, just for testing
-//        $oX = (((CustomPet::$test * 1000) + CustomPet::$test2) % 25)*2;
-//        $oY = floor(((CustomPet::$test * 1000) + CustomPet::$test2) / 25)*2;
-//        $oX = (CustomPet::$test % 25)*2;
-//        $oY = floor(CustomPet::$test/25)*2;
-        Pet::$nbCat++;
-        $oX = (Pet::$nbCat%25)*2;
-        $oY = (Pet::$nbCat/25)*2;
 
 
         $tag = new CompoundTag("", [
                 "Pos" => new ListTag("Pos", [
-                    new DoubleTag("", $this->m_fatPlayer->getPlayer()->getLocation()->getX() + $oX),
+                    new DoubleTag("", $this->m_fatPlayer->getPlayer()->getLocation()->getX()),
                     new DoubleTag("", $this->m_fatPlayer->getPlayer()->getLocation()->getY()),
-                    new DoubleTag("", $this->m_fatPlayer->getPlayer()->getLocation()->getZ() + $oY)
+                    new DoubleTag("", $this->m_fatPlayer->getPlayer()->getLocation()->getZ())
                 ]),
                 "Motion" => new ListTag("Motion", [
                     new DoubleTag("", 0),
@@ -74,7 +67,7 @@ class Pet extends ShopItem
             ]
         );
 
-        $this->m_entity = new CustomPet($this->m_fatPlayer->getPlayer()->getLevel(), $tag, $this->m_petTypes);
+        $this->m_entity = new CustomPet($this->m_fatPlayer->getPlayer()->getLevel(), $tag, $this->m_petTypes, $this->m_options);
 
         $this->m_entity->setDataProperty(Entity::DATA_FLAG_NO_AI, Entity::DATA_TYPE_BYTE, 1, true);
 
@@ -84,7 +77,7 @@ class Pet extends ShopItem
 
     public function unequip()
     {
-//        $this->m_entity->kill();//todo re set this after tags tests
+        $this->m_entity->kill();
 //        $this->m_fatPlayer->setSlot(ShopItem::FAT_PLAYER_SHOP_SLOT_PET, null);
     }
 

@@ -9,6 +9,7 @@
 namespace fatutils\pets;
 
 
+use Exception;
 use pocketmine\entity\Entity;
 use pocketmine\entity\Living;
 use pocketmine\level\Level;
@@ -37,57 +38,105 @@ class CustomPet extends Living
     public static $test2 = 1;
     public static $test3 = 0;
 
-    public function __construct(Level $level, CompoundTag $nbt, string $petType)
+    public function __construct(Level $level, CompoundTag $nbt, string $petType, array $options = [])
     {
         $petDatas = PetTypes::ENTITIES[$petType];
+        // apply originals options
         $this->m_id = $petDatas["id"];
         $this->width = $petDatas["width"];
         $this->height = $petDatas["height"];
-        if(array_key_exists("fly", $petDatas))
-            $this->m_hasGravity =  false;
-        if(array_key_exists("jump", $petDatas))
+        if (array_key_exists("fly", $petDatas))
+            $this->m_hasGravity = false;
+        if (array_key_exists("jump", $petDatas))
             $this->m_isJumper = true;
-        if(array_key_exists("distOffset", $petDatas))
+        if (array_key_exists("distOffset", $petDatas))
             $this->m_distOffset = $petDatas["distOffset"];
-        if(array_key_exists("speed", $petDatas))
+        if (array_key_exists("speed", $petDatas))
             $this->m_speed = $petDatas["speed"];
-        if(array_key_exists("offsetY", $petDatas))
+        if (array_key_exists("offsetY", $petDatas))
             $this->m_offsetY = $petDatas["offsetY"]; //todo set the offset on pets config
-        if(array_key_exists("climb", $petDatas))
+        if (array_key_exists("climb", $petDatas))
             $this->m_climb = $petDatas["climb"]; //todo set the climb on pets config
-        if(array_key_exists("scale", $petDatas))
+        if (array_key_exists("scale", $petDatas))
             $this->m_scale = $petDatas["scale"];
-        if(array_key_exists("color", $petDatas))
+        if (array_key_exists("color", $petDatas))
             $this->m_color = $petDatas["color"];
 
+        // add customs options
+        foreach ($options as $optK => $optV) {
+            $option = explode("/", $optV);
+            if (!$this->modifyAttributes($optK, $option[0], $option[1])) {
+                echo "Error on pet construction on option \"" . $optK . ":" . $optV . "\"\n";
+            }
+        }
 
-
-        //todo there's something else.... but i forgot what...
-
-        echo "=============\nPet config :"
-            ."\ntype: ".$petType
-            ."\nfly: ".!$this->m_hasGravity
-            ."\njump: ".$this->m_isJumper
-            ."\nclimb: ".$this->m_climb
-            ."\ndistOffset: ".$this->m_distOffset
-            ."\noffsetY: ".$this->m_offsetY
-            ."\nscale: ".$this->m_scale
-            ."\nspeed: ".$this->m_speed
-            ."\n=============\n";
-
-        //todo test
-//        $this->setDataProperty(CustomPet::$test, Entity::DATA_TYPE_BYTE, 2, true);
-//        $this->dataProperties[CustomPet::$test] = [Entity::DATA_TYPE_BYTE, CustomPet::$test2];
+//        echo "=============\nPet config :"
+//            ."\ntype: ".$petType
+//            ."\nfly: ".!$this->m_hasGravity
+//            ."\njump: ".$this->m_isJumper
+//            ."\nclimb: ".$this->m_climb
+//            ."\ndistOffset: ".$this->m_distOffset
+//            ."\noffsetY: ".$this->m_offsetY
+//            ."\nscale: ".$this->m_scale
+//            ."\nspeed: ".$this->m_speed
+//            ."\n=============\n";
 
 
         $this->m_petType = $petType;
         $this->setCanSaveWithChunk(false);
         parent::__construct($level, $nbt);
         $this->setScale($this->m_scale);
+    }
 
-//        $this->setDataProperty(Entity::DATA_VARIANT, Entity::DATA_TYPE_INT, CustomPet::$test3, true);
-        //Entity::DATA_MARK_VARIANT //for horse combination ?
+    public function modifyAttributes(string $attributeName, string $valueType, $value): bool
+    {
+        try {
+            $attr = constant("self::" . $attributeName);
+            $type = constant("self::" . $valueType);
 
+            switch ($type) {
+                case 0: { //byte
+                    $value = $value + 0; //le cast pas sérieux qui est plus efficace que le cast correct (et toujours mieux que l'absence de cast)
+                }
+                    break;
+                case 1: { //short
+                    $value = intval($value);
+                }
+                    break;
+                case 2: { //int
+                    $value = intval($value);
+                }
+                    break;
+                case 3: { //float
+                    $value = floatval($value);
+                }
+                    break;
+                case 4: { //string
+                    // nothing to do
+                }
+                    break;
+                case 5: { //slot ?
+                    echo "Error for attribute ".$attributeName.": type SLOT isn't implemented\n";
+                }
+                    break;
+                case 6: { //pos ?
+                    echo "Error for attribute " . $attributeName . ": type POS isn't implemented\n";
+                }
+                    break;
+                case 7: { //long
+                    $value = $value + 0;
+                }
+                    break;
+                case 8: { //Vec3F
+                    echo "Error for attribute " . $attributeName . ": type VECTOR3F isn't implemented\n";
+                }
+            }
+            $this->setDataProperty($attr, $type, $value, true);
+
+        } catch (Exception $exception) {
+            return false;
+        }
+        return true;
     }
 
     public function spawnTo(Player $player)
@@ -100,7 +149,6 @@ class CustomPet extends Living
         $pk->yaw = $this->yaw;
         $pk->pitch = $this->pitch;
         $pk->metadata = $this->dataProperties;
-//        $pk->metadata = CustomPet::$test2;
         $player->dataPacket($pk);
 
         parent::spawnTo($player);
@@ -114,10 +162,21 @@ class CustomPet extends Living
 
     protected function applyGravity()
     {
-        if($this->m_hasGravity)
+        if ($this->m_hasGravity)
             parent::applyGravity();
     }
 
 
+    //todo debug
+    public function testVar(string $varName)
+    {
+        //to get instance-specific variable
+//        $value = $this->{$varName};
+
+        //to get const
+//        $value = get_defined_constants()[$varName];
+        $value = constant("self::" . $varName);
+        echo $varName . " -> " . print_r($value, true);
+    }
 
 }
