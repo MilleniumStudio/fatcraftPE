@@ -1,7 +1,8 @@
 content:
   particles:
     orbit:
-      name: "shop.items.particles.circle"
+      name: "shop.items.particles.orbit"
+      desc: "shop.items.particles.circle.desc"
       img: "https://icon-icons.com/icons2/365/PNG/256/kitten-icon_36975.png"
       class: "fatutils\\shop\\particles\\OrbitParticle"
       priceFS: 15

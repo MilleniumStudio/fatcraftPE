@@ -72,8 +72,8 @@ class Lobby extends PluginBase implements Listener
 			->addMutableLine(function (Player $p_Player) {
 				$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Player);
 				return [
-					$l_FatPlayer->getFatsilver() . " " . (new TextFormatter("currency.fatcoin.short"))->asStringForFatPlayer($l_FatPlayer),
-					$l_FatPlayer->getFatgold() . " " . (new TextFormatter("currency.fatbill.short"))->asStringForFatPlayer($l_FatPlayer)
+					$l_FatPlayer->getFatsilver() . " " . (new TextFormatter("currency.fatsilver.short"))->asStringForFatPlayer($l_FatPlayer),
+					$l_FatPlayer->getFatgold() . " " . (new TextFormatter("currency.fatgold.short"))->asStringForFatPlayer($l_FatPlayer)
 				];
 			});
     }
