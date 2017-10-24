@@ -4,7 +4,7 @@ namespace hungergames;
 
 use fatutils\game\GameManager;
 use fatutils\players\PlayersManager;
-use fatutils\scores\PlayerScoresManager;
+use fatutils\scores\ScoresManager;
 use fatutils\tools\Sidebar;
 use fatutils\tools\WorldUtils;
 use fatutils\spawns\SpawnManager;
@@ -30,18 +30,18 @@ class EventListener implements Listener
         $p = $e->getEntity();
         if (!GameManager::getInstance()->isWaiting())
         {
-            PlayerScoresManager::getInstance()->registerPlayer($p->getPlayer());
             PlayersManager::getInstance()->getFatPlayer($p)->setHasLost(true);
 
             WorldUtils::addStrike($p->getLocation());
             $l_PlayerLeft = PlayersManager::getInstance()->getAlivePlayerLeft();
 
+            ScoresManager::getInstance()->giveRewardToPlayer($p->getUniqueId(), ((GameManager::getInstance()->getPlayerNbrAtStart() - $l_PlayerLeft) / GameManager::getInstance()->getPlayerNbrAtStart()));
 
             foreach (HungerGame::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
             {
                 $l_Player->sendMessage($e->getDeathMessage());
                 if ($l_PlayerLeft > 1)
-                    $l_Player->sendMessage("Il reste " . TextFormat::YELLOW . PlayersManager::getInstance()->getAlivePlayerLeft() . TextFormat::RESET . " survivants !", "*");
+                    $l_Player->sendMessage("Il reste " . TextFormat::YELLOW . PlayersManager::getInstance()->getAlivePlayerLeft() . TextFormat::RESET . " survivants !");
             }
 
             if ($l_PlayerLeft <= 1 && !GameManager::getInstance()->isGameFinished())

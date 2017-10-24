@@ -9,7 +9,9 @@ use fatutils\players\PlayersManager;
 use fatutils\shop\ShopManager;
 use fatutils\teams\Team;
 use fatutils\teams\TeamsManager;
+use fatutils\tools\TextFormatter;
 use libasynql\DirectQueryMysqlTask;
+use pocketmine\utils\TextFormat;
 use pocketmine\utils\UUID;
 use SalmonDE\StatsPE\CustomEntries;
 
@@ -28,9 +30,9 @@ class ScoresManager
 	private $m_MaxFatgoldReward = null;
 	private $m_MaxXpReward = null;
 
-    protected static $m_Instance = null;
+	protected static $m_Instance = null;
 
-    public static function getInstance():ScoresManager
+	public static function getInstance(): ScoresManager
 	{
 		if (is_null(self::$m_Instance))
 			self::$m_Instance = new ScoresManager();
@@ -38,49 +40,49 @@ class ScoresManager
 		return self::$m_Instance;
 	}
 
-    private function __construct()
-    {
-        $this->initialize();
-    }
+	private function __construct()
+	{
+		$this->initialize();
+	}
 
-    private function initialize()
-    {
-        $this->initDatabase();
-    }
+	private function initialize()
+	{
+		$this->initDatabase();
+	}
 
-    private function initDatabase()
-    {
-        LoadBalancer::getInstance()->connectMainThreadMysql()->query("CREATE TABLE IF NOT EXISTS `scores` (
-            `id` int(11) NOT NULL AUTO_INCREMENT,
-            `game` int(11) NOT NULL,
-            `player` varchar(36) NOT NULL,
-            `position` int(11) NOT NULL,
-            `data` text DEFAULT NULL,
-            `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	private function initDatabase()
+	{
+		LoadBalancer::getInstance()->connectMainThreadMysql()->query("CREATE TABLE IF NOT EXISTS `scores` (
+            `id` INT(11) NOT NULL AUTO_INCREMENT,
+            `game` INT(11) NOT NULL,
+            `player` VARCHAR(36) NOT NULL,
+            `position` INT(11) NOT NULL,
+            `data` TEXT DEFAULT NULL,
+            `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (`id`)
         )");
-    }
+	}
 
-    public function recordScore(String $p_PlayerUUID, int $p_Position, $data = array())
-    {
-    	var_dump("REGISTER SCORE", $p_PlayerUUID, $p_Position, $data);
+	public function recordScore(String $p_PlayerUUID, int $p_Position, $data = array())
+	{
+		var_dump($p_PlayerUUID, $p_Position, $data);
 
-    	$l_JsonData = json_encode($data);
-    	FatUtils::getInstance()->getLogger()->info("Registering score for $p_PlayerUUID at pos $p_Position. ($l_JsonData)");
+		$l_JsonData = json_encode($data);
+		FatUtils::getInstance()->getLogger()->info("Registering score for $p_PlayerUUID at pos $p_Position. ($l_JsonData)");
 
-        if (GameDataManager::getInstance()->getGameId() != 0)
-        {
-            FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
-                new DirectQueryMysqlTask(LoadBalancer::getInstance()->getCredentials(),
-                    "INSERT INTO scores (game, player, position, data) VALUES (?, ?, ?, ?)", [
-                    ["i", GameDataManager::getInstance()->getGameId()],
-                    ["s", $p_PlayerUUID],
-                    ["i", $p_Position],
-                    ["s", $l_JsonData]
-                ]
-            ));
-        }
-    }
+		if (GameDataManager::getInstance()->getGameId() != 0)
+		{
+			FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
+				new DirectQueryMysqlTask(LoadBalancer::getInstance()->getCredentials(),
+					"INSERT INTO scores (game, player, position, data) VALUES (?, ?, ?, ?)", [
+						["i", GameDataManager::getInstance()->getGameId()],
+						["s", $p_PlayerUUID],
+						["i", $p_Position],
+						["s", $l_JsonData]
+					]
+				));
+		}
+	}
 
 	public function getMaxFatsilverReward()
 	{
@@ -112,7 +114,7 @@ class ScoresManager
 		$this->m_MaxXpReward = $p_MaxXpReward;
 	}
 
-	public function addScoreboard(Scoreboard &$p_Scoreboard, int $p_Weight = 1):ScoresManager
+	public function addScoreboard(Scoreboard &$p_Scoreboard, int $p_Weight = 1): ScoresManager
 	{
 		if (array_search($p_Scoreboard, $this->m_Scoreboards) == false)
 			$this->m_Scoreboards[] = $p_Scoreboard;
@@ -143,7 +145,7 @@ class ScoresManager
 					$l_Team = TeamsManager::getInstance()->getTeamByName($l_TeamName);
 					if ($l_Team instanceof Team)
 					{
-						foreach ($l_Team->getPlayerUUIDs() as $l_PlayerUUID)
+						foreach ($l_Team->getPlayersUuid() as $l_PlayerUUID)
 							$l_GeneratedScoreboard->addUuidScore($l_PlayerUUID, $l_Score * $l_Scoreboard->getWeight());
 					}
 				}
@@ -178,12 +180,36 @@ class ScoresManager
 			if ($l_Player != null && $l_Player->isOnline() && $l_FatPlayer != null)
 			{
 				if ($l_FatsilverReward > 0)
+				{
 					$l_FatPlayer->addFatsilver($l_FatsilverReward);
+					CustomEntries::getInstance()->modIntEntry("XP", $l_Player, $l_XpReward);
+					$l_Player->sendMessage((new TextFormatter("reward.endGame.earn", [
+							"amount" => $l_FatsilverReward,
+							"moneyName" => new TextFormatter("currency.fatsilver.short")]
+					))->asStringForPlayer($l_Player));
+				}
 				if ($l_FatgoldReward > 0)
+				{
 					$l_FatPlayer->addFatgold($l_FatgoldReward);
-				CustomEntries::getInstance()->modIntEntry("XP", $l_Player, $l_XpReward);
+					CustomEntries::getInstance()->modIntEntry("XP", $l_Player, $l_XpReward);
+					$l_Player->sendMessage((new TextFormatter("reward.endGame.earn", [
+							"amount" => $l_FatgoldReward,
+							"moneyName" => new TextFormatter("currency.fatgold.short")]
+					))->asStringForPlayer($l_Player));
+				}
+				if ($l_XpReward > 0)
+				{
+					CustomEntries::getInstance()->modIntEntry("XP", $l_Player, $l_XpReward);
+					$l_Player->sendMessage((new TextFormatter("reward.endGame.earn", [
+							"amount" => $l_XpReward,
+							"moneyName" => TextFormat::GOLD . "XP"]
+					))->asStringForPlayer($l_Player));
+				}
 
-				echo $p_PlayerUuid->toString() . "has been rewarded with \n";
+				// add game specific stats
+				$l_ServerType = LoadBalancer::getInstance()->getServerType();
+				CustomEntries::getInstance()->modIntEntry($l_ServerType . "_XP", $l_Player, $l_XpReward);
+				CustomEntries::getInstance()->modIntEntry($l_ServerType . "_played", $l_Player, 1);
 			}
 
 			$this->m_RewardedPlayers[] = $p_PlayerUuid->toString();

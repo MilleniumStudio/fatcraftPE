@@ -69,7 +69,7 @@ class Team
         return $l_Ret;
     }
 
-    public function getPlayersNames(): array
+    public function getPlayersName(): array
     {
         $array = [];
         foreach ($this->m_Players as $playerBinUUID) {
@@ -195,7 +195,7 @@ class Team
         return $l_Players;
     }
 
-    public function getPlayerUUIDs(): array
+    public function getPlayersUuid(): array
     {
         $l_PlayerUUIDs = [];
 

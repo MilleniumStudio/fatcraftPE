@@ -10,6 +10,7 @@ namespace fatutils\game;
 
 use fatutils\gamedata\GameDataManager;
 use fatutils\FatUtils;
+use fatutils\players\PlayersManager;
 
 class GameManager
 {
@@ -26,6 +27,8 @@ class GameManager
 
     private $m_StartGameTimestamp = null;
     private $m_EndGameTimestamp = null;
+
+	private $m_PlayerNbrAtStart = 0;
 
     public static function getInstance(): GameManager
     {
@@ -53,6 +56,7 @@ class GameManager
         $this->m_StartGameTimestamp = time();
         GameDataManager::getInstance()->recordStartGame();
         FatUtils::getInstance()->getLogger()->info("=== GameStarted ===");
+		$this->m_PlayerNbrAtStart = PlayersManager::getInstance()->getAlivePlayerLeft();
     }
 
     public function endGame()
@@ -61,6 +65,11 @@ class GameManager
         GameDataManager::getInstance()->recordStopGame("eng_game");
         FatUtils::getInstance()->getLogger()->info("=== GameFinished ===");
     }
+
+	public function getPlayerNbrAtStart()
+	{
+		return $this->m_PlayerNbrAtStart;
+	}
 
     public function isGameStarted():bool
     {

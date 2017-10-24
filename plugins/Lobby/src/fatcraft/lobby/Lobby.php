@@ -13,7 +13,9 @@ use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
 use fatutils\scores\PlayerScoreboard;
 use fatutils\scores\ScoresManager;
+use fatutils\scores\TeamScoreboard;
 use fatutils\shop\ShopManager;
+use fatutils\teams\Team;
 use fatutils\tools\Sidebar;
 use fatutils\tools\TextFormatter;
 use fatutils\tools\WorldUtils;
@@ -74,32 +76,6 @@ class Lobby extends PluginBase implements Listener
 					$l_FatPlayer->getFatgold() . " " . (new TextFormatter("currency.fatbill.short"))->asStringForFatPlayer($l_FatPlayer)
 				];
 			});
-
-
-		$p1 = UUID::fromRandom();
-		$p2 = UUID::fromRandom();
-		$p3 = UUID::fromRandom();
-
-		$sb1 = new PlayerScoreboard();
-		$sb1->addUuidScore($p1, 10);
-		$sb1->addUuidScore($p2, 50);
-		$sb1->addUuidScore($p3, 150);
-
-		$sb2 = new PlayerScoreboard();
-		$sb2->addUuidScore($p1, 0);
-		$sb2->addUuidScore($p2, 0);
-		$sb2->addUuidScore($p3, 0);
-
-		ScoresManager::getInstance()
-			->addScoreboard($sb1)
-			->addScoreboard($sb2, 2);
-
-		$l_MergedScore = ScoresManager::getInstance()->getMergedPlayersScore();
-		var_dump($l_MergedScore, $l_MergedScore->getBest()->toString(), $l_MergedScore->getRatios());
-
-		ScoresManager::getInstance()->giveRewardToPlayer($p1, 0.5);
-
-		ScoresManager::getInstance()->giveRewardToPlayers($l_MergedScore->getRatios());
     }
 
     public function onPlayerJoin(PlayerJoinEvent $e)

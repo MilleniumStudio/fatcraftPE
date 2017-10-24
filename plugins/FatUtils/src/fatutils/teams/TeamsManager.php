@@ -194,7 +194,7 @@ class TeamsManager
         $l_Window->setTitle((new TextFormatter("team.choice"))->asStringForPlayer($p_player));
         /** @var Team $team */
         foreach ($this->getTeams() as $team) {
-            $playerList = " (" . implode(", ", $team->getPlayersNames()) . ")";
+            $playerList = " (" . implode(", ", $team->getPlayersName()) . ")";
             $l_Window->addPart((new Button())
                 ->setText($team->getColoredName() . $playerList)
                 ->setCallback(function () use (&$p_player, $team) {

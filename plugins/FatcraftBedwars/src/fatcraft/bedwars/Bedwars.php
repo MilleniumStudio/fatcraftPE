@@ -7,7 +7,6 @@ use fatutils\FatUtils;
 use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
 use fatutils\scores\ScoresManager;
-use fatutils\scores\TeamScoresManager;
 use fatutils\teams\Team;
 use fatutils\teams\TeamsManager;
 use fatutils\tools\bossBarAPI\BossBarAPI;
@@ -443,7 +442,8 @@ class Bedwars extends PluginBase implements Listener
             if ($winnerTeam instanceof Team)
             {
                 $winnerName = $winnerTeam->getColoredName();
-                TeamScoresManager::getInstance()->registerTeam($winnerTeam);
+				foreach ($winnerTeam->getPlayersUuid() as $l_Uuid)
+					ScoresManager::getInstance()->giveRewardToPlayer($l_Uuid, 1);
             }
         }
 
@@ -454,8 +454,6 @@ class Bedwars extends PluginBase implements Listener
                 (new TextFormatter("game.winner.team.single"))->addParam("name", $winnerName)->asStringForPlayer($l_Player),
                 30, 80, 30);
         }
-
-        TeamScoresManager::getInstance()->giveRewards();
 
         (new TipsTimer(150))
             ->setTitle(new TextFormatter("timer.returnToLobby"))
@@ -575,7 +573,10 @@ class Bedwars extends PluginBase implements Listener
         PlayersManager::getInstance()->getFatPlayer($p)->setHasLost();
 
         if ($team->getAlivePlayerLeft() == 0)
-            TeamScoresManager::getInstance()->registerTeam($team);
+		{
+			foreach ($team->getPlayersUuid() as $p_PlayerUuid)
+				ScoresManager::getInstance()->giveRewardToPlayer($p_PlayerUuid, ((GameManager::getInstance()->getPlayerNbrAtStart() - PlayersManager::getInstance()->getAlivePlayerLeft()) / GameManager::getInstance()->getPlayerNbrAtStart()));
+		}
 
         WorldUtils::addStrike($p->getLocation());
 

@@ -9,7 +9,7 @@ isSkywar: false
 #Max rewards for the first player, divided by place un score
 rewards:
   xp: 1
-  money: 1
+  fatSilver: 1
 
 endgameMessageMoney: "Vous avez gagné {0} money !"
 endgameMessageXP: "Vous avez gagné {0} XP !"

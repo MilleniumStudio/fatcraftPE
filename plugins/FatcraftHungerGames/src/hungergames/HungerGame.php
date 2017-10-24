@@ -7,9 +7,7 @@ use fatutils\loot\ChestsManager;
 use fatutils\FatUtils;
 use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
-use fatutils\scores\PlayerScoresManager;
 use fatutils\scores\ScoresManager;
-use fatutils\tools\bossBarAPI\BossBarAPI;
 use fatutils\tools\DelayedExec;
 use fatutils\tools\Sidebar;
 use fatutils\tools\TextFormatter;
@@ -17,7 +15,6 @@ use fatutils\tools\Timer;
 use fatutils\tools\WorldUtils;
 use fatutils\game\GameManager;
 use fatutils\spawns\SpawnManager;
-use fatutils\tools\MathUtils;
 use fatutils\tools\TipsTimer;
 use pocketmine\entity\Effect;
 use pocketmine\event\Listener;
@@ -184,7 +181,7 @@ class HungerGame extends PluginBase implements Listener
             if ($winner instanceof FatPlayer)
             {
                 $winnerName = $winner->getPlayer()->getName();
-                PlayerScoresManager::getInstance()->registerPlayer($winner->getPlayer());
+                ScoresManager::getInstance()->giveRewardToPlayer($winner->getPlayer()->getUniqueId(), 1);
             }
         }
         foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
@@ -194,8 +191,6 @@ class HungerGame extends PluginBase implements Listener
                 (new TextFormatter("game.winner.single"))->addParam("name", $winnerName)->asStringForPlayer($l_Player),
                 30, 80, 30);
         }
-
-        PlayerScoresManager::getInstance()->giveRewards();
         
         (new TipsTimer(150))
             ->setTitle(new TextFormatter("timer.returnToLobby"))

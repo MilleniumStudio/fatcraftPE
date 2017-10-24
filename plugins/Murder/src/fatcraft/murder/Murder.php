@@ -9,12 +9,9 @@ use fatcraft\loadbalancer\LoadBalancer;
 use fatutils\FatUtils;
 use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
-use fatutils\scores\PlayerScoresManager;
 use fatutils\scores\ScoresManager;
-use fatutils\scores\TeamScoresManager;
 use fatutils\teams\Team;
 use fatutils\teams\TeamsManager;
-use fatutils\tools\bossBarAPI\BossBarAPI;
 use fatutils\tools\DelayedExec;
 use fatutils\tools\ItemUtils;
 use fatutils\tools\Sidebar;
@@ -239,9 +236,9 @@ class Murder extends PluginBase implements Listener
         //rewards
         foreach (Server::getInstance()->getOnlinePlayers() as $player) {
             if ($player->getUniqueId()->equals($this->m_murdererUUID))
-                $this->giveReward(PlayersManager::getInstance()->getFatPlayerByUUID($this->m_murdererUUID), 100, 10);
+				ScoresManager::getInstance()->giveRewardToPlayer($player->getUniqueId(), 1);
             else
-                $this->giveReward(PlayersManager::getInstance()->getFatPlayerByUUID($player->getUniqueId()), 30, 3);
+				ScoresManager::getInstance()->giveRewardToPlayer($player->getUniqueId(), 0.3);
         }
 
         $this->endGame();
@@ -257,14 +254,14 @@ class Murder extends PluginBase implements Listener
         }
         //rewards
         foreach (Server::getInstance()->getOnlinePlayers() as $player) {
-            if ($player->getUniqueId()->equals($this->m_murdererUUID)) {
-                $this->giveReward(PlayersManager::getInstance()->getFatPlayerByUUID($this->m_murdererUUID), 30 + ($this->m_playersKilled * 10), 3 + $this->m_playersKilled);
-            } else if ($player->getUniqueId()->equals($killer->getUniqueId()))
-                $this->giveReward(PlayersManager::getInstance()->getFatPlayerByUUID($player->getUniqueId()), 150, 15);
+            if ($player->getUniqueId()->equals($this->m_murdererUUID))
+				ScoresManager::getInstance()->giveRewardToPlayer($player->getUniqueId(), 0.3 + ($this->m_playersKilled * 0.1));
+            else if ($player->getUniqueId()->equals($killer->getUniqueId()))
+				ScoresManager::getInstance()->giveRewardToPlayer($player->getUniqueId(), 1.1);
             else if ($player->getGamemode() == Player::SPECTATOR)
-                $this->giveReward(PlayersManager::getInstance()->getFatPlayerByUUID($player->getUniqueId()), 50, 5);
+            	ScoresManager::getInstance()->giveRewardToPlayer($player->getUniqueId(), 0.5);
             else
-                $this->giveReward(PlayersManager::getInstance()->getFatPlayerByUUID($player->getUniqueId()), 100, 10);
+				ScoresManager::getInstance()->giveRewardToPlayer($player->getUniqueId(), 1);
         }
 
         $this->endGame();
@@ -291,27 +288,6 @@ class Murder extends PluginBase implements Listener
             ->start();
 
         GameManager::getInstance()->endGame();
-    }
-
-    public function giveReward(FatPlayer $p_fatPlayer, int $p_money, int $p_xp)
-    {
-        $l_Player = $p_fatPlayer->getPlayer();
-        // add general stats
-        \SalmonDE\StatsPE\CustomEntries::getInstance()->modIntEntry("Money", $l_Player, $p_money);
-        \SalmonDE\StatsPE\CustomEntries::getInstance()->modIntEntry("XP", $l_Player, $p_xp);
-
-        $l_Player->sendMessage((new TextFormatter("reward.endGame.money", ["amount" => $p_money]))->asStringForFatPlayer($p_fatPlayer));
-        $l_Player->sendMessage((new TextFormatter("reward.endGame.xp", ["amount" => $p_xp]))->asStringForFatPlayer($p_fatPlayer));
-
-        // add game specific stats
-        $l_ServerType = \fatcraft\loadbalancer\LoadBalancer::getInstance()->getServerType();
-        \SalmonDE\StatsPE\CustomEntries::getInstance()->modIntEntry($l_ServerType . "_XP", $l_Player, $p_xp);
-        \SalmonDE\StatsPE\CustomEntries::getInstance()->modIntEntry($l_ServerType . "_played", $l_Player, 1);
-
-        $datas = ["xp" => $p_xp, "money" => $p_money];
-        if ($l_Player->getUniqueId()->equals($this->m_murdererUUID))
-            $datas["isMurderer"] = true;
-        PlayerScoresManager::getInstance()->recordScore($l_Player->getUniqueId(), 0, $datas);
     }
 
     //---------------------
