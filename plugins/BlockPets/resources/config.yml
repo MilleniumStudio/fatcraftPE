@@ -1,0 +1,78 @@
+---
+# Configuration file for BlockPets, a pets plugin by BlockHorizons.
+
+# The language to be used in messages in this plugin.
+# Available options:
+# - en (English)
+# - nl (Dutch)
+# - vi (Vietnamese)
+# - gr (Greek)
+# - ko (Korean)
+Language: en
+
+# Whether to make pets invulnerable to any damage, or allow damaging them.
+Invulnerable-Pets: false
+
+# Whether to directly follow the player, or search random positions near the player.
+Stalk-Owner-Blindly: false
+
+# Whether to make the pet invulnerable to damage if the owner of it is or not.
+Invulnerable-If-Owner-Is: true
+
+# The time in seconds to wait before spawning a pet that died earlier.
+Pet-Respawn-Time: 10
+
+# Whether to make pets attack the person that attacked them or their owner.
+Attacking-Pets: true
+
+# The limit of pets per player by default.
+Pet-Limit: 3
+
+# The base health a pet will be spawned with. This is equal to the health of a pet with level 0.
+Pet-Base-Health: 20
+
+# The health that gets added each level the pet gets.
+Pet-Per-Level-Health: 0.5
+
+# The size that gets added each level the pet gets.
+Pet-Per-Level-Size: 0.02
+
+# The base damage a pet will be spawned with. This is equal to the damage of a pet with level 0.
+Pet-Base-Damage: 4
+
+# The damage that gets added each level the pet gets.
+Pet-Per-Level-Damage: 0.1
+
+# The experience a pet gets each time it kills a player.
+Experience-Points-Per-Player-Kill: 15
+
+# The experience a pet gets each time it kills an entity.
+Experience-Points-Per-Entity-Kill: 10
+
+# Whether to give the pet some experience if it's being fed by the owner or not.
+Give-Experience-For-Feeding: true
+
+# The database used to store data of pets in. This is only relevant if storage to database is turned to true.
+# Options:
+# - MySQL
+# - SQLite
+Database: SQLite
+
+# MySQL information. This is only relevant if database above is set to MySQL.
+MySQL-Info:
+  Host: 127.0.0.1
+  User: Admin
+  Password: Admin
+  Database: BlockPets
+  Port: 3306
+
+# Whether to store pet data to the database set above or not.
+Store-To-Database: true
+
+# Whether to use data from the database. Pets get saved using NBT by default, and do not necessarily need this.
+Fetch-From-Database: false
+
+# WARNING: This will delete all pets and pet data the next restart if set to true.
+# Use with caution!
+Hard-Reset: false
+...
