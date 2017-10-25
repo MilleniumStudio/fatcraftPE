@@ -48,6 +48,11 @@ class ShopManager
 			$this->m_ShopItems = $this->m_Config->getNested("content");
 	}
 
+	public function reload()
+	{
+		$this->init();
+	}
+
 	public function getShopItemByKey(Player $p_Player, string $p_Key): ?ShopItem
 	{
 		if ($this->m_Config instanceof Config)

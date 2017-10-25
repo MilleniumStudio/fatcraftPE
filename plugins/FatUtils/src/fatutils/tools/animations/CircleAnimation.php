@@ -69,6 +69,10 @@ class CircleAnimation extends Animation
 		return $this;
 	}
 
+	/**
+	 * @param callable $p_Callback => as an array of Vector3
+	 * @return CircleAnimation
+	 */
 	public function setCallback(Callable $p_Callback): CircleAnimation
 	{
 		$this->m_Callback = $p_Callback;

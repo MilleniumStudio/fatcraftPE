@@ -100,6 +100,10 @@ class FatUtils extends PluginBase
 					if ($sender instanceof Player)
 						ShopManager::getInstance()->getShopMenu($sender)->open();
 					break;
+				case "mainshopreload":
+					if ($sender instanceof Player)
+						ShopManager::getInstance()->reload();
+					break;
                 case "atest":
                     if ($sender instanceof Player)
                     {

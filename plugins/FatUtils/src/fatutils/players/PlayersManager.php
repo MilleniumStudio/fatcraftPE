@@ -57,6 +57,7 @@ class PlayersManager
             `email` VARCHAR(50) DEFAULT NULL,
             `fsaccount` VARCHAR(50) DEFAULT NULL,
             `lang` INT(3) NOT NULL DEFAULT '0' COMMENT '0 en, 1 fr, 2 es',
+            `permission_group` varchar(50) DEFAULT NULL,
             `join_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             `fatsilver` INT(11) DEFAULT 0,
             `fatgold` INT(11) DEFAULT 0,

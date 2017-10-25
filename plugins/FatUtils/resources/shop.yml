@@ -11,10 +11,39 @@ content:
       name: "shop.items.particles.crown"
       class: "fatutils\\shop\\particles\\CrownParticle"
       priceFS: 25
-    barrier:
-      name: "shop.items.particles.barrier"
+    barrierYellow:
+      name: "shop.items.particles.barrierYellow"
       class: "fatutils\\shop\\particles\\BarrierParticle"
       priceFS: 25
+      rColor: 255
+      gColor: 255
+      bColor: 20
+    barrierRandom:
+      name: "shop.items.particles.barrierRandom"
+      class: "fatutils\\shop\\particles\\BarrierParticle"
+      priceFS: 25
+      randomColors: true
+    funnel:
+      name: "shop.items.particles.funnel"
+      class: "fatutils\\shop\\particles\\FunnelParticle"
+      priceFS: 25
+      randomColors: true
+    funnelSmall:
+      name: "shop.items.particles.funnel"
+      class: "fatutils\\shop\\particles\\FunnelParticle"
+      priceFS: 25
+      offsetY: 0.4
+      randomColors: true
+    glyph:
+      name: "shop.items.particles.glyph"
+      class: "fatutils\\shop\\particles\\GlyphParticle"
+      priceFS: 25
+      offsetY: 0.1
+    glyphyPath:
+      name: "shop.items.particles.glyphyPath"
+      class: "fatutils\\shop\\particles\\GlyphyPathParticle"
+      priceFS: 25
+      offsetY: 0.1
     cape:
       name: "shop.items.particles.cape"
       class: "fatutils\\shop\\particles\\CapeParticle"
