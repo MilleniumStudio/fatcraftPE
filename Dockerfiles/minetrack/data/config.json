@@ -1,0 +1,49 @@
+{
+    "routes": {
+        "/": "assets/html/index.html",
+        "/images/compass.png": "assets/images/compass.png",
+        "/js/site.js": "assets/js/site.js",
+        "/js/util.js": "assets/js/util.js",
+        "/js/graph.js": "assets/js/graph.js",
+        "/css/main.css": "assets/css/main.css"
+    },
+    "faviconOverride": {
+		"Mineplex": "/favicons/mineplex.png",
+		"Lifeboat": "/favicons/lifeboat.png",
+		"InPvP": "/favicons/inpvp.png",
+		"CookieBuild": "/favicons/cookie_build.png",
+		"PigRaid": "/favicons/pigraid.png"
+    },
+    "site": {
+        "port": 80,
+        "ip": "0.0.0.0"
+    },
+    "rates": {
+        "upateMojangStatus": 5000,
+        "mojangStatusTimeout": 3500,
+        "pingAll": 5000,
+        "connectTimeout": 5000
+    },
+    "logToDatabase": true,
+    "graphDuration": 86400000,
+    "serverCategories": {
+        "minigames": "Minigame Networks",
+        "pocket": "Pocket Edition Networks"
+    },
+    "versions": {
+        "PC": [
+            4,
+            5,
+            47,
+            107,
+            210,
+            315,
+            335
+        ],
+        "PE": [
+            0
+        ]
+    },
+    "categoriesVisible": false,
+    "serverTypesVisible": true
+}

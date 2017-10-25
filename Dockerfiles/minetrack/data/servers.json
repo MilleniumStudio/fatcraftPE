@@ -1,0 +1,13 @@
+[
+    {
+        "name": "Fatcraft",
+        "ip": "play.fatcraft.com",
+        "type": "PC"
+    },
+    {
+        "name": "Fatcraft : PE",
+        "ip": "play.fatcraft.com",
+        "port": 19133,
+        "type": "PE"
+    }
+]
