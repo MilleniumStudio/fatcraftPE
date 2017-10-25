@@ -5,6 +5,10 @@ php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
 --out DataDigger.phar
 
 php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
+--make BlockPets/ \
+--out BlockPets.phar
+
+php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
 --make LoadBalancer/ \
 --out LoadBalancer.phar
 
@@ -59,6 +63,10 @@ php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
 php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
 --make Lobby/ \
 --out Lobby.phar
+
+php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
+--make BoatRacer/ \
+--out BoatRacer.phar
 
 php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
 --make FatcraftBedwars/ \
