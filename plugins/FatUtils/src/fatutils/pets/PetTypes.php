@@ -80,80 +80,28 @@ class PetTypes
         //test color
         "cat" => ["id" => 22, "height" => 0.7, "width" => 0.6, "fly" => true, "speed" => 0, "color" => 2], //0->3
         "cat1" => ["id" => 22, "height" => 0.7, "width" => 0.6, "fly" => true, "speed" => 0], //0->3
+        "c1" => ["id" => 22, "height" => 0.7, "width" => 0.6, "fly" => true, "speed" => 0,  "options" => ["DATA_VARIANT"=>"DATA_TYPE_INT/3"]], //0->3
         "truc" => ["id" => 30, "height" => 0.8, "width" => 0.5, "fly" => true, "offsetY" => 1.2, "speed" => 0],
-        "z" => ["id" => 32, "height" => 1.95, "width" => 0.6, "speed" => 0, "fly" => true],
 
+        //test horse
+//        "h1" => ["id" => 23, "height" => 1.6, "width" => 1.4, "options" => ["DATA_VARIANT"=>"DATA_TYPE_INT/0"]], // white
+//        "h2" => ["id" => 23, "height" => 1.6, "width" => 1.4, "options" => ["DATA_VARIANT"=>"DATA_TYPE_INT/1"]], // light light brown ^^
+//        "h3" => ["id" => 23, "height" => 1.6, "width" => 1.4, "options" => ["DATA_VARIANT"=>"DATA_TYPE_INT/2"]], // light brown
+//        "h4" => ["id" => 23, "height" => 1.6, "width" => 1.4, "options" => ["DATA_VARIANT"=>"DATA_TYPE_INT/3"]], // brown
+//        "h5" => ["id" => 23, "height" => 1.6, "width" => 1.4, "options" => ["DATA_VARIANT"=>"DATA_TYPE_INT/4"]], // black
+//        "h6" => ["id" => 23, "height" => 1.6, "width" => 1.4, "options" => ["DATA_VARIANT"=>"DATA_TYPE_INT/5"]], // grey
+//        "h7" => ["id" => 23, "height" => 1.6, "width" => 1.4, "options" => ["DATA_VARIANT"=>"DATA_TYPE_INT/6"]], // dark brown
+
+//        "h1" => ["id" => 23, "height" => 1.6, "width" => 1.4, "options" => ["DATA_VARIANT"=>"DATA_TYPE_INT/2", "DATA_COLOR"=>"DATA_TYPE_BYTE/0"]],
+//        "h2" => ["id" => 23, "height" => 1.6, "width" => 1.4, "options" => ["DATA_VARIANT"=>"DATA_TYPE_INT/20", "DATA_COLOR"=>"DATA_TYPE_BYTE/1"]],
+//        "h3" => ["id" => 23, "height" => 1.6, "width" => 1.4, "options" => ["DATA_VARIANT"=>"DATA_TYPE_INT/21", "DATA_COLOR"=>"DATA_TYPE_BYTE/2"]],
+//        "h4" => ["id" => 23, "height" => 1.6, "width" => 1.4, "options" => ["DATA_VARIANT"=>"DATA_TYPE_INT/27", "DATA_COLOR"=>"DATA_TYPE_BYTE/3"]],
+//        "h5" => ["id" => 23, "height" => 1.6, "width" => 1.4, "options" => ["DATA_VARIANT"=>"DATA_TYPE_INT/35", "DATA_COLOR"=>"DATA_TYPE_BYTE/4"]],
+//        "h6" => ["id" => 23, "height" => 1.6, "width" => 1.4, "options" => ["DATA_VARIANT"=>"DATA_TYPE_INT/46", "DATA_COLOR"=>"DATA_TYPE_BYTE/5"]],
+
+        "h0" => ["id" => 23, "height" => 1.6, "width" => 1.4, "options" => ["DATA_VARIANT"=>"DATA_TYPE_INT/256"]],
+        "h1" => ["id" => 23, "height" => 1.6, "width" => 1.4, "options" => ["DATA_VARIANT"=>"DATA_TYPE_INT/257"]],
+        "h2" => ["id" => 23, "height" => 1.6, "width" => 1.4, "options" => ["DATA_VARIANT"=>"DATA_TYPE_INT/258"]],
+        "h3" => ["id" => 23, "height" => 1.6, "width" => 1.4, "options" => ["DATA_VARIANT"=>"DATA_TYPE_INT/259"]],
     ];
-
-//    const ENTITIES = [
-//        "Bat" => [19, 0.5, 0.9],
-//        "Blaze" => [43, 0.6, 1.8],
-//        "CaveSpider" => [40, 0.7, 0.5],
-//        "Chicken" => [10, 0.4, 0.7],
-//        "Cow" => [11, 0.9, 1.4],
-//        "Creeper" => [33, 0.6, 1.7],
-//        "Enderman" => [38, 0.6, 2.9],
-//        "Ghast" => [41, 4, 4],
-//        "IronGolem" => [20, 1.4, 2.7],
-//        "MagmaCube" => [42, 0.51, 0.51],
-//        "Mooshroom" => [16, 0.9, 1.4],
-//        "Ocelot" => [22, 0.6, 0.7],
-//        "Pig" => [12, 0.9, 0.9],
-//        "ZombiePigman" => [36, 0.6, 1.95],
-//        "Sheep" => [13, 0.9, 1.3],
-//        "Skeleton" => [34, 0.6, 1.99],
-//        "Slime" => [37, 0.51, 0.51],
-//        "Snowman" => [21, 0.7, 1.9],
-//        "Spider" => [35, 0.9, 1.4],
-//        "Squid" => [17, 0.8, 0.8],
-//        "Villager" => [15, 0.6, 1.95],
-//        "Wolf" => [14, 0.6, 0.85],
-//        "Zombie" => [32, 0.6, 1.95],
-//        "ZombieVillager" => [44, 0.6, 1.95],
-//        "Husk" => [47, 0.6, 1.95],
-//
-//        "Parrot" => [-1, 0.9, 0.5],
-//        "Llama" => [29, 0.9, 1.87],
-//        "Horse" => [23, 1.4, 1.6],
-//        "Donkey" => [24, 1.4, 1.6],
-//        "Mule" => [25, 1.4, 1.6],
-//        "ZombieHorse" => [27, 1.4, 1.6],
-//        "SkeletonHorse" => [26, 1.4, 1.6],
-//        "Guardian" => [49, 0.85, 0.85],
-//        "Silverfish" => [39, 0.4, 0.3],
-//        "Vex" => [105, 0.4, 0.8],
-//        "Bunny" => [18, 0.4, 0.5],
-//        "PolarBear" => [28, 1.3, 1.4],
-//        "Witch" => [45, 0.6, 1.95],
-//        "Stray" => [46, 0.6, 1.99],
-//        "Vindicator" => [57, 0.6, 1.95],
-//        "WitherSkeleton" => [48, 0.7, 2.4],
-//        "Wither" => [52, 0.9, 3.5],
-//        "EnderDragon" => [53, 16, 8],
-//        "Endermite" => [55, 0.4, 0.3],
-//        "Evoker" => [104, 0.6, 1.95],
-//
-//
-//        "t1" => [30, 1, 1],
-//        "t2" => [31, 1, 1],
-//        "t3" => [50, 1, 1],
-//        "t4" => [51, 1, 1],
-//        "t5" => [9, 1, 1],
-//        "t6" => [58, 1, 1],
-//        "t7" => [101, 1, 1],
-//        "t8" => [102, 1, 1],
-//        "t9" => [103, 1, 1],
-//        "t10" => [106, 1, 1],
-//
-//        "a1" => [0, 1, 1],
-//        "a2" => [1, 1, 1],
-//        "a3" => [2, 1, 1],
-//        "a4" => [3, 1, 1],
-//        "a5" => [4, 1, 1],
-//        "a6" => [5, 1, 1],
-//        "a7" => [6, 1, 1],
-//        "a8" => [7, 1, 1],
-//        "a9" => [8, 1, 1],
-//
-//    ];
 }

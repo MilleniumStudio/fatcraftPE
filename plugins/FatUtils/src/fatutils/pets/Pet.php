@@ -45,7 +45,7 @@ class Pet extends ShopItem
     {
         $this->m_fatPlayer = PlayersManager::getInstance()->getFatPlayer($this->getPlayer());
         $this->m_petTypes = $this->getDataValue("type", "Parrot");
-        $this->m_options = $this->getDataValue("options", []);
+        $this->m_options = $this->getDataValue("options", array_key_exists("options", PetTypes::ENTITIES[$this->m_petTypes])?PetTypes::ENTITIES[$this->m_petTypes]["options"]:[]);
         $this->m_nextPosition = $this->m_fatPlayer->getPlayer()->getLocation();
 
 

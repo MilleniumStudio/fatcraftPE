@@ -131,25 +131,9 @@ class PetsManager implements Listener, CommandExecutor
                     break;
                 case "test2": {
                     for ($i = 0; $i < 4; $i++)
-                        $this->caaaaatsss[] = $this->spawnPet($sender, $args[1])->equip();
+                        $this->spawnPet($sender, $args[1])->equip();
                 }
                     break;
-                case "clear":{
-                    foreach ($this->caaaaatsss as $cat) {
-                        /** @var Pet $cat */
-                        $cat->getEntity()->kill();
-                    }
-                    $this->caaaaatsss = [];
-                }break;
-                case "var":{
-                    /** @var Pet $pet */
-                    $pet = PlayersManager::getInstance()->getFatPlayer($sender)->getSlot(ShopItem::SLOT_PET);
-                    $pet->getEntity()->testVar($args[1]);
-                }break;
-                case "shop":{
-
-                }break;
-
             }
         } else {
             echo "Commands only available as a player\n";

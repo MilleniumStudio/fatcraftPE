@@ -54,9 +54,9 @@ class CustomPet extends Living
         if (array_key_exists("speed", $petDatas))
             $this->m_speed = $petDatas["speed"];
         if (array_key_exists("offsetY", $petDatas))
-            $this->m_offsetY = $petDatas["offsetY"]; //todo set the offset on pets config
+            $this->m_offsetY = $petDatas["offsetY"];
         if (array_key_exists("climb", $petDatas))
-            $this->m_climb = $petDatas["climb"]; //todo set the climb on pets config
+            $this->m_climb = $petDatas["climb"];
         if (array_key_exists("scale", $petDatas))
             $this->m_scale = $petDatas["scale"];
         if (array_key_exists("color", $petDatas))
@@ -64,6 +64,7 @@ class CustomPet extends Living
 
         // add customs options
         foreach ($options as $optK => $optV) {
+//            echo $optK." =>".$optV."\n";
             $option = explode("/", $optV);
             if (!$this->modifyAttributes($optK, $option[0], $option[1])) {
                 echo "Error on pet construction on option \"" . $optK . ":" . $optV . "\"\n";
@@ -164,19 +165,6 @@ class CustomPet extends Living
     {
         if ($this->m_hasGravity)
             parent::applyGravity();
-    }
-
-
-    //todo debug
-    public function testVar(string $varName)
-    {
-        //to get instance-specific variable
-//        $value = $this->{$varName};
-
-        //to get const
-//        $value = get_defined_constants()[$varName];
-        $value = constant("self::" . $varName);
-        echo $varName . " -> " . print_r($value, true);
     }
 
 }
