@@ -69,5 +69,9 @@ php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
 --out BoatRacer.phar
 
 php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
+--make Murder/ \
+--out Murder.phar
+
+php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
 --make FatcraftBedwars/ \
 --out FatcraftBedwars.phar
