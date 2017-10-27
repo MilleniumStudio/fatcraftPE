@@ -59,7 +59,7 @@ class Lobby extends PluginBase implements Listener
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         FatUtils::getInstance()->setTemplateConfig($this->getConfig());
         WorldUtils::stopWorldsTime();
-//        $this->getCommand("menu")->setExecutor(new MenuCommand($this));
+        WorldUtils::setWorldsTime(864000); // 12h * 3600 seconds * 20 ticks
         HologramsManager::getInstance();
 
         FatPlayer::$m_OptionDisplayHealth = false;
