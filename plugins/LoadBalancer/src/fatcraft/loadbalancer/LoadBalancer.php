@@ -344,7 +344,7 @@ class LoadBalancer extends PluginBase implements Listener
                         }
                         else
                         {
-                            $this->getLogger()->warning("getRandomNonEmptyServer -> servers is NULL")
+                            $this->getLogger()->warning("getRandomNonEmptyServer -> servers is NULL");
                         }
 
 			if (!is_null($l_ChoosedServer))
