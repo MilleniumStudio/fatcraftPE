@@ -8,3 +8,5 @@ authors:
 commands:
  test:
   description: test command
+ debug:
+  description: test command

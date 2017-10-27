@@ -10,6 +10,7 @@ use pocketmine\Player;
 use pocketmine\entity\Entity;
 use pocketmine\entity\Boat as BoatEntity;
 use pocketmine\entity\Human;
+use pocketmine\entity\Living;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\nbt\tag\CompoundTag;
@@ -113,9 +114,81 @@ class DataDigger extends PluginBase implements Listener
                         $entity->mountEntity($sender);
                         break;
                     default:
-                        
+                        //
                         break;
                 }
+            }
+        }
+        elseif ($cmd->getName() === "debug")
+        {
+            switch ($p_Param[0])
+            {
+                case "entity":
+                    if ($sender instanceof Player)
+                    {
+                        if (count($p_Param) == 2) //debug entity <distance> -> return the entity ID you are looking at in the specified distance
+                        {
+                            $radius = intval($p_Param[1]);
+                            if ($radius > 10)
+                            {
+                                $sender->sendMessage("Radius limit to 10 !");
+                                return true;
+                            }
+                            $entity = $sender->getEntityLookingAt($radius);
+                            if ($entity !== null)
+                            {
+                                $sender->sendMessage("Entity looking at : " . $entity->getId());
+                            }
+                            else
+                            {
+                                $sender->sendMessage("No entity in radius !");
+                            }
+                        }
+                        elseif (count($p_Param) == 3) //debug entity <entity_id>
+                        {
+                            //
+                        }
+                        elseif (count($p_Param) == 4) //debug entity <entity_id> <param> <value>
+                        {
+                            $entity = $sender->level->getEntity(intval($p_Param[1]));
+                            switch ($p_Param[2])
+                            {
+                                case "x": //debug entity <entity_id> x <yaw>
+                                    $entity->x = floatval($p_Param[3]);
+                                    $sender->sendMessage("Entity x set to " . floatval($p_Param[3]));
+                                    break;
+                                case "y": //debug entity <entity_id> y <pitch>
+                                    $entity->y = floatval($p_Param[3]);
+                                    $sender->sendMessage("Entity y set to " . floatval($p_Param[3]));
+                                    break;
+                                case "z": //debug entity <entity_id> z <pitch>
+                                    $entity->z = floatval($p_Param[3]);
+                                    $sender->sendMessage("Entity z set to " . floatval($p_Param[3]));
+                                    break;
+                                case "yaw": //debug entity <entity_id> yaw <yaw>
+                                    $entity->yaw = floatval($p_Param[3]);
+                                    $sender->sendMessage("Entity yaw set to " . floatval($p_Param[3]));
+                                    break;
+                                case "pitch": //debug entity <entity_id> pitch <pitch>
+                                    $entity->pitch = floatval($p_Param[3]);
+                                    $sender->sendMessage("Entity pitch set to " . floatval($p_Param[3]));
+                                    break;
+                                case "speed": //debug entity <entity_id> speed <pitch>
+                                    $entity->speed = intval($p_Param[3]);
+                                    $sender->sendMessage("Entity speed set to " . intval($p_Param[3]));
+                                    break;
+                                case "gravity": //debug entity <entity_id> gravity <pitch>
+                                    $entity->gravity = floatval($p_Param[3]);
+                                    $sender->sendMessage("Entity gravity set to " . floatval($p_Param[3]));
+                                    break;
+                                case "drag": //debug entity <entity_id> drag <pitch>
+                                    $entity->drag = floatval($p_Param[3]);
+                                    $sender->sendMessage("Entity drag set to " . floatval($p_Param[3]));
+                                    break;
+                            }
+                        }
+                    }
+                    break;
             }
         }
         return true;
