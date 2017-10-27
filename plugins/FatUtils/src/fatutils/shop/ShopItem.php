@@ -9,6 +9,7 @@
 namespace fatutils\shop;
 
 
+use fatutils\tools\ArrayUtils;
 use pocketmine\Player;
 
 abstract class ShopItem
@@ -50,10 +51,7 @@ abstract class ShopItem
 
 	public function getDataValue(string $p_Key, $p_Default = null)
 	{
-		if (array_key_exists($p_Key, $this->m_Data))
-			return $this->m_Data[$p_Key];
-		else
-			return $p_Default;
+		return ArrayUtils::getKeyOrDefault($this->m_Data, $p_Key, $p_Default);
 	}
 
 	public function getName(): ?string

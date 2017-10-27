@@ -12,6 +12,7 @@ use fatutils\FatUtils;
 use fatutils\shop\ShopItem;
 use fatutils\tools\animations\CircleAnimation;
 use fatutils\tools\animations\ShockWaveAnimation;
+use fatutils\tools\ColorUtils;
 use fatutils\tools\LoopedExec;
 use fatutils\tools\Timer;
 use pocketmine\level\particle\BlockForceFieldParticle;
@@ -32,9 +33,10 @@ class FunnelParticle extends ShopItem
 
 	public function equip()
 	{
-		$rVar = $this->getDataValue("rColor", 255);
-		$gVar = $this->getDataValue("gColor", 255);
-		$bVar = $this->getDataValue("bColor", 255);
+		$l_RgbColor = ColorUtils::hexToRgb($this->getDataValue("rgbColor", "#FFFFFF"));
+		$rVar = $l_RgbColor["r"];
+		$gVar = $l_RgbColor["g"];
+		$bVar = $l_RgbColor["b"];
 
 		$l_ShouldVary = $this->getDataValue("randomColors", false);
 

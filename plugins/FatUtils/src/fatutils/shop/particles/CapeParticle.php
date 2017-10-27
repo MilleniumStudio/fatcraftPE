@@ -9,6 +9,7 @@
 namespace fatutils\shop\particles;
 
 use fatutils\shop\ShopItem;
+use fatutils\tools\ColorUtils;
 use fatutils\tools\GeometryUtils;
 use fatutils\tools\LoopedExec;
 use pocketmine\level\Location;
@@ -39,9 +40,10 @@ class CapeParticle extends ShopItem
 
 	public function equip()
 	{
-		$this->rColor = $this->getDataValue("rColor", 255);
-		$this->gColor = $this->getDataValue("gColor", 255);
-		$this->bColor = $this->getDataValue("bColor", 255);
+		$l_RgbColor = ColorUtils::hexToRgb($this->getDataValue("rgbColor", "#FFFFFF"));
+		$this->rColor = $l_RgbColor["r"];
+		$this->gColor = $l_RgbColor["g"];
+		$this->bColor = $l_RgbColor["b"];
 
 		$this->m_MainLoop = new LoopedExec(function ()
 		{

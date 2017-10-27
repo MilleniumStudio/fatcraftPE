@@ -15,9 +15,7 @@ content:
       name: "shop.items.particles.barrierYellow"
       class: "fatutils\\shop\\particles\\BarrierParticle"
       priceFS: 25
-      rColor: 255
-      gColor: 255
-      bColor: 20
+      rgbColor: "#FFFF20"
     barrierRandom:
       name: "shop.items.particles.barrierRandom"
       class: "fatutils\\shop\\particles\\BarrierParticle"
@@ -43,14 +41,21 @@ content:
       name: "shop.items.particles.glyphyPath"
       class: "fatutils\\shop\\particles\\GlyphyPathParticle"
       priceFS: 25
-      offsetY: 0.1
+    heartPath:
+      name: "shop.items.particles.heartPath"
+      class: "fatutils\\shop\\particles\\PathParticle"
+      priceFS: 25
+      rawParticle: "{\"particleName\":\"TYPE_HEART\"}"
+    flamePath:
+      name: "shop.items.particles.flamePath"
+      class: "fatutils\\shop\\particles\\PathParticle"
+      priceFS: 25
+      rawParticle: "{\"particleName\":\"TYPE_FLAME\"}"
     cape:
       name: "shop.items.particles.cape"
       class: "fatutils\\shop\\particles\\CapeParticle"
       priceFS: 16
-      rColor: 255
-      gColor: 50
-      bColor: 50
+      rgbColor: "#FF2020"
   pets:
     Chicken:
       name: "shop.items.pets.Chicken"

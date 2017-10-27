@@ -11,12 +11,9 @@ namespace fatutils\shop\particles;
 use fatutils\shop\ShopItem;
 use fatutils\tools\animations\CircleAnimation;
 use fatutils\tools\LoopedExec;
-use fatutils\tools\Timer;
-use pocketmine\level\particle\BlockForceFieldParticle;
-use pocketmine\level\particle\CriticalParticle;
-use pocketmine\level\particle\DustParticle;
-use pocketmine\level\particle\FlameParticle;
-use pocketmine\level\particle\RedstoneParticle;
+use fatutils\tools\particles\ParticleBuilder;
+use pocketmine\level\particle\Particle;
+use pocketmine\level\Position;
 use pocketmine\math\Vector3;
 
 class CrownParticle extends ShopItem
@@ -31,7 +28,10 @@ class CrownParticle extends ShopItem
 
 	public function equip()
 	{
-		$this->m_MainLoop = new LoopedExec(function ()
+		$l_RawParticle = $this->getDataValue("rawParticle", null);
+		$l_ParticleBuilder = is_null($l_RawParticle) ? ParticleBuilder::fromParticleId(Particle::TYPE_FLAME) : ParticleBuilder::fromRaw($l_RawParticle);
+
+		$this->m_MainLoop = new LoopedExec(function () use ($l_ParticleBuilder)
 		{
 			if (!($this->m_Circle instanceof CircleAnimation) || !$this->m_Circle->isRunning())
 			{
@@ -44,7 +44,7 @@ class CrownParticle extends ShopItem
 					->setNbSubDivision(5)
 					->setRadius(0.5)
 					->setTickDuration(100)
-					->setCallback(function ($data) use ($l_Level, &$i)
+					->setCallback(function ($data) use ($l_ParticleBuilder, $l_Level, &$i)
 					{
 						if (gettype($data) === "array")
 						{
@@ -54,7 +54,7 @@ class CrownParticle extends ShopItem
 							{
 								if ($l_Location instanceof Vector3)
 								{
-									$l_Level->addParticle(new FlameParticle($l_Location->add(0, 2 + $l_Var, 0)));
+									$l_ParticleBuilder->play(Position::fromObject($l_Location->add(0, 2 + $l_Var, 0), $this->getPlayer()->getLevel()));
 								}
 							}
 						}

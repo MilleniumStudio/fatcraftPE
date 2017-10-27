@@ -49,4 +49,12 @@ class ArrayUtils
 
 		return $l_Ret;
 	}
+
+	public static function getKeyOrDefault(array &$p_Array, string $p_Key, $p_Default = null)
+	{
+		if (array_key_exists($p_Key, $p_Array))
+			return $p_Array[$p_Key];
+		else
+			return $p_Default;
+	}
 }

@@ -159,4 +159,10 @@ class ColorUtils
     {
         return ($p_Color->getR() << 16 | $p_Color->getG() << 8 | $p_Color->getB() ) & 0xffffff;
     }
+
+	public static function hexToRgb(string $p_HexaColor):array
+	{
+		list($r, $g, $b) = sscanf($p_HexaColor, "#%02x%02x%02x");
+		return ["r" => $r, "g" => $g, "b" => $b];
+	}
 }

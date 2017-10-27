@@ -15,6 +15,7 @@ use fatutils\scores\ScoreboardContainer;
 use fatutils\scores\ScoresManager;
 use fatutils\shop\ShopManager;
 use fatutils\tools\animations\CircleAnimation;
+use fatutils\tools\RawParticle;
 use fatutils\tools\WorldUtils;
 use fatutils\ui\windows\ButtonWindow;
 use fatutils\ui\windows\FormWindow;
@@ -107,28 +108,7 @@ class FatUtils extends PluginBase
                 case "atest":
                     if ($sender instanceof Player)
                     {
-                    	ShopManager::getInstance()->getShopMenu($sender)->open();
-//						$l_Level = $sender->getLevel();
-//						(new CircleAnimation())
-//							->setEntity($sender)
-//							->setNbPoint(100000)
-//							->setNbSubDivision(1000)
-//							->setRadius(5)
-//							->setTickDuration(20 * 30)
-//							->setCallback(function($data) use ($l_Level)
-//							{
-//								if (gettype($data) === "array")
-//								{
-//									foreach ($data as $l_Location)
-//									{
-//										if ($l_Location instanceof Vector3)
-//										{
-//											$l_Level->addParticle(new RedstoneParticle($l_Location));
-//										}
-//									}
-//								}
-//							})
-//						->play();
+						(new RawParticle($sender->asVector3()->add(0, 2.5, 0), $args[1]))->playForPlayer($sender);
                     }
                     break;
                 case "fillchests":

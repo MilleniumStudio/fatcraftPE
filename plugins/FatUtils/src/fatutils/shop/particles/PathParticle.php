@@ -12,7 +12,6 @@ use fatutils\FatUtils;
 use fatutils\shop\ShopItem;
 use fatutils\tools\animations\CircleAnimation;
 use fatutils\tools\animations\ShockWaveAnimation;
-use fatutils\tools\ColorUtils;
 use fatutils\tools\LoopedExec;
 use fatutils\tools\particles\ParticleBuilder;
 use fatutils\tools\Timer;
@@ -21,15 +20,15 @@ use pocketmine\level\particle\CriticalParticle;
 use pocketmine\level\particle\DustParticle;
 use pocketmine\level\particle\EnchantmentTableParticle;
 use pocketmine\level\particle\FlameParticle;
+use pocketmine\level\particle\HeartParticle;
 use pocketmine\level\particle\Particle;
 use pocketmine\level\particle\RedstoneParticle;
 use pocketmine\level\Position;
 use pocketmine\math\Vector3;
 
-class GlyphParticle extends ShopItem
+class PathParticle extends ShopItem
 {
 	private $m_MainLoop = null;
-	private $m_Anim = null;
 
 	public function getSlotName(): string
 	{
@@ -43,32 +42,8 @@ class GlyphParticle extends ShopItem
 
 		$this->m_MainLoop = new LoopedExec(function () use ($l_ParticleBuilder)
 		{
-			if (FatUtils::getInstance()->getServer()->getTick() % 70 == 0)
-			{
-				if (!($this->m_Anim instanceof ShockWaveAnimation) || !$this->m_Anim->isRunning())
-				{
-					$l_Level = $this->getPlayer()->getLevel();
-					$this->m_Anim = new ShockWaveAnimation($this->getPlayer()->asLocation());
-					$this->m_Anim
-						->setNbPointInACircle(10)
-						->setTickDuration(20 * 2)
-						->setFinalRadius(2)
-						->setCallback(function ($data) use ($l_Level, $l_ParticleBuilder)
-						{
-							if (gettype($data) === "array")
-							{
-								foreach ($data as $l_Location)
-								{
-									if ($l_Location instanceof Vector3)
-									{
-										$l_ParticleBuilder->play(Position::fromObject($l_Location->add(0, $this->getDataValue("offsetY", 0.1), 0), $this->getPlayer()->getLevel()));
-									}
-								}
-							}
-						})
-						->play();
-				}
-			}
+			if (FatUtils::getInstance()->getServer()->getTick() % 3 == 0 && $this->getPlayer()->isMoving())
+				$l_ParticleBuilder->play(Position::fromObject($this->getPlayer()->asLocation()->add(0, $this->getDataValue("offsetY", 0.1), 0), $this->getPlayer()->getLevel()));
 		});
 	}
 
@@ -76,7 +51,5 @@ class GlyphParticle extends ShopItem
 	{
 		if ($this->m_MainLoop instanceof LoopedExec)
 			$this->m_MainLoop->cancel();
-		if ($this->m_Anim instanceof CircleAnimation)
-			$this->m_Anim->stop();
 	}
 }

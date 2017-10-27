@@ -75,19 +75,24 @@ class ShockWaveAnimation extends Animation
 	{
 		$l_ProgressiveRadius = $this->m_StartRadius;
 		$l_DistanceByTick = $this->m_FinalRadius / (float)$this->m_TickRemaining;
+		$l_NbCircle = 0;
 
 		$this->m_Timer = new Timer($this->m_TickRemaining);
 		$this->m_Timer
-			->addTickCallback(function () use (&$l_ProgressiveRadius, $l_DistanceByTick)
+			->addTickCallback(function () use (&$l_NbCircle, &$l_ProgressiveRadius, $l_DistanceByTick)
 			{
 				$l_locationList = [];
 				for ($c = 0; $c < $this->m_NbCirclePerTick; $c++)
 				{
-					for ($i = 0, $l = ($this->m_NbPointPerCircle * $l_ProgressiveRadius); $i < $l; $i++)
+					$l_Distance = ($l_ProgressiveRadius + ($l_DistanceByTick * (float)$c / (float)$this->m_NbCirclePerTick));
+					$l_AngleStep = (float)360 / (float)($this->m_NbPointPerCircle + $l_NbCircle);
+
+					for ($i = 0, $l = $this->m_NbPointPerCircle + $l_NbCircle; $i < $l; $i++)
 					{
-						$l_location = GeometryUtils::relativeToLocation($this->m_Location, 0, (((float)360 / ($this->m_NbPointPerCircle * $l_ProgressiveRadius)) * (float)$i), ($l_ProgressiveRadius + ($l_DistanceByTick * (float)$c / (float)$this->m_NbCirclePerTick)));
+						$l_location = GeometryUtils::relativeToLocation($this->m_Location, 0, $l_AngleStep * $i, $l_Distance);
 						$l_locationList[] = $l_location;
 					}
+					$l_NbCircle++;
 				}
 				$l_ProgressiveRadius += $l_DistanceByTick;
 
