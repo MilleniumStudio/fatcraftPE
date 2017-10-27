@@ -9,5 +9,3 @@ cp ../../cores/PocketMine-MP.phar install/
 cp ../../PocketMine-MP/compile.sh install/
 cp ../../PocketMine-MP/composer.json install/
 cp ../../PocketMine-MP/composer.lock install/
-
-cp ../../plugins/LoadBalancer.phar install/plugins
