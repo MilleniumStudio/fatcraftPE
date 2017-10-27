@@ -20,7 +20,6 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
-use pocketmine\scheduler\PluginTask;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\DoubleTag;
 use pocketmine\nbt\tag\FloatTag;
@@ -50,11 +49,21 @@ class BoatRacer extends PluginBase implements Listener
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
 //        FatUtils::getInstance()->setTemplateConfig($this->getConfig());
         WorldUtils::stopWorldsTime();
+//        new \fatutils\tools\LoopedExec(function()
+//        {
+//            foreach (BoatRacer::$m_Instance->getServer()->getOnlinePlayers() as $l_Player)
+//            {
+//                if ($l_Player->vehicle == null)
+//                {
+//                    BoatRacer::$m_Instance->applyBoat($l_Player);
+//                }
+//            }
+//        }, 20);
     }
 
     public function onPlayerJoin(PlayerJoinEvent $p_Event)
     {
-        $p_Event->getPlayer()->sendMessage("You are autamaticaly on a boat !");
+        $p_Event->getPlayer()->sendMessage("You are automaticaly on a boat !");
         $this->applyBoat($p_Event->getPlayer());
     }
 
@@ -65,10 +74,10 @@ class BoatRacer extends PluginBase implements Listener
         if ($p_Event->getEntity() instanceof Player){
 //            if (!$p_Event->getEntity()->isOp())
 //            {
-                $p_Event->setCancelled(true);
-                $p_Event->geVehicle()->kill();
-                $this->applyBoat($p_Event->getEntity());
-                $p_Event->getEntity()->sendMessage("You can't get out !");
+//                $p_Event->setCancelled(true);
+//                $p_Event->geVehicle()->kill();
+//                $this->applyBoat($p_Event->getEntity());
+//                $p_Event->getEntity()->sendMessage("You can't get out !");
 //            }
         }
     }
@@ -85,10 +94,17 @@ class BoatRacer extends PluginBase implements Listener
 
     public function applyBoat(Player $p_Player)
     {
+
+        if ($p_Player->getLevel() === null)
+        {
+            echo "level null\n";
+            return;
+        }
+
         $nbt = new CompoundTag("", [
             new ListTag("Pos", [
                 new DoubleTag("", $p_Player->getX() + 0.5),
-                new DoubleTag("", $p_Player->getY() + 0.0),
+                new DoubleTag("", $p_Player->getY() + 0.5),
                 new DoubleTag("", $p_Player->getZ() + 0.5)
                     ]),
             new ListTag("Motion", [
@@ -102,10 +118,6 @@ class BoatRacer extends PluginBase implements Listener
                     ]),
         ]);
 
-        if ($p_Player->getLevel() !== null)
-        {
-            return;
-        }
         $entity = Entity::createEntity(BoatEntity::NETWORK_ID, $p_Player->getLevel(), $nbt);
 //        $entity->mountEntity($p_Player);
         new \fatutils\tools\DelayedExec(function() use (&$entity, &$p_Player)
