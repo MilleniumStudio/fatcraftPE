@@ -161,4 +161,10 @@ class WorldUtils
         foreach (FatUtils::getInstance()->getServer()->getLevels() as $l_Level)
             $l_Level->stopTime();
     }
+
+    public static function setWorldsTime(int $time)
+    {
+        foreach (FatUtils::getInstance()->getServer()->getLevels() as $l_Level)
+            $l_Level->setTime($time);
+    }
 }
