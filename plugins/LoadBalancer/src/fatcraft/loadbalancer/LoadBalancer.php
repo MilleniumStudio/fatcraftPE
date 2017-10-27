@@ -331,14 +331,21 @@ class LoadBalancer extends PluginBase implements Listener
 		{
 			$l_AvailableServerIndex = count($p_TemplatesNames) - 1;
 			$l_Servers = LoadBalancer::getInstance()->getServers($p_TemplatesNames[rand(0, $l_AvailableServerIndex)]);
-			foreach ($l_Servers as $l_Server)
-			{
-				if ($l_Server["online"] < $l_Server["max"])
-				{
-					$l_ChoosedServer = $l_Server;
-					break;
-				}
-			}
+                        if (!is_null($l_Servers))
+                        {
+                            foreach ($l_Servers as $l_Server)
+                            {
+                                    if ($l_Server["online"] < $l_Server["max"])
+                                    {
+                                            $l_ChoosedServer = $l_Server;
+                                            break;
+                                    }
+                            }
+                        }
+                        else
+                        {
+                            $this->getLogger()->warning("getRandomNonEmptyServer -> servers is NULL")
+                        }
 
 			if (!is_null($l_ChoosedServer))
 				break;
@@ -407,20 +414,22 @@ class LoadBalancer extends PluginBase implements Listener
         );
         if (($result instanceof MysqlSelectResult) and count($result->rows) > 0)
         {
-            $server = array();
+            $servers = array();
             foreach ($result->rows as $row)
             {
-                $server[]["sid"] = $row["sid"];
-                $server[]["type"] = $row["type"];
-                $server[]["id"] = $row["id"];
-                $server[]["ip"] = $row["ip"];
-                $server[]["port"] = $row["port"];
-                $server[]["status"] = $row["status"];
-                $server[]["online"] = $row["online"];
-                $server[]["max"] = $row["max"];
-                $server[]["diff"] = $row["diff"];
+                $server["sid"] = $row["sid"];
+                $server["type"] = $row["type"];
+                $server["id"] = $row["id"];
+                $server["ip"] = $row["ip"];
+                $server["port"] = $row["port"];
+                $server["status"] = $row["status"];
+                $server["online"] = $row["online"];
+                $server["max"] = $row["max"];
+                $server["diff"] = $row["diff"];
+                $servers[] = $server;
+                unset($server);
             }
-            return $server;
+            return $servers;
         }
         return null;
     }
