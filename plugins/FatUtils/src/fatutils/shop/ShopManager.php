@@ -42,6 +42,7 @@ class ShopManager
 
 	private function init()
 	{
+            FatUtils::getInstance()->saveResource("shop.yml");
 		$this->m_Config = new Config(FatUtils::getInstance()->getDataFolder() . "shop.yml");
 
 		if ($this->m_Config->exists("content"))

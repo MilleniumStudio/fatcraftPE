@@ -32,6 +32,7 @@ class PermissionManager
 
     public function loadFromConfig()
     {
+        FatUtils::getInstance()->saveResource("permissions.yml");
         $config = new Config(FatUtils::getInstance()->getDataFolder() . "permissions.yml", Config::YAML);
         $this->m_permissions = $config->getAll();
         foreach ($this->m_permissions as $key => $value) {

@@ -45,6 +45,14 @@ class GamesWindow
 		);
 
 		$l_Window->addPart((new Button())
+			->setText((new TextFormatter("template.md"))->asStringForPlayer($p_Player))
+			->setCallback(function () use ($l_FatPlayer)
+			{
+				LoadBalancer::getInstance()->balancePlayer($l_FatPlayer->getPlayer(), LoadBalancer::TEMPLATE_TYPE_MURDER);
+			})
+		);
+
+		$l_Window->addPart((new Button())
 			->setText((new TextFormatter("template.pk"))->asStringForPlayer($p_Player))
 			->setCallback(function () use ($l_FatPlayer)
 			{
