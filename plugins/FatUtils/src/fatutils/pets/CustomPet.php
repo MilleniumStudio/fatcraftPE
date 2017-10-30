@@ -31,7 +31,7 @@ class CustomPet extends Living
     public $m_climb = false;
     public $m_scale = 1;
 
-    //todo remove, juste for testing
+    //todo remove, just for testing
 //    public static $test = 108;
 //    public static $test2 = 90;
     public static $test = 0;
@@ -140,7 +140,8 @@ class CustomPet extends Living
         return true;
     }
 
-    public function spawnTo(Player $player)
+//    public function spawnTo(Player $player)
+    protected function sendSpawnPacket(Player $player) : void
     {
         $pk = new AddEntityPacket();
         $pk->entityRuntimeId = $this->getId();
@@ -152,7 +153,7 @@ class CustomPet extends Living
         $pk->metadata = $this->dataProperties;
         $player->dataPacket($pk);
 
-        parent::spawnTo($player);
+//        parent::spawnTo($player);
     }
 
 
