@@ -13,10 +13,8 @@ use fatutils\FatUtils;
 use fatutils\tools\ArrayUtils;
 use fatutils\tools\ColorUtils;
 use fatutils\tools\ItemUtils;
-use fatutils\tools\WorldUtils;
 use pocketmine\level\particle\Particle;
 use pocketmine\level\Position;
-use pocketmine\math\Vector3;
 use pocketmine\Player;
 use ReflectionClass;
 

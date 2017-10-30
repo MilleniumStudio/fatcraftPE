@@ -8,6 +8,7 @@ use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
 use fatutils\shop\ShopItem;
 use fatutils\tools\DelayedExec;
+use fatutils\tools\TextFormatter;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityRegainHealthEvent;
 use pocketmine\event\Listener;
@@ -45,6 +46,12 @@ class EventListener implements Listener
     {
         $p = $e->getPlayer();
         $p->getInventory()->clearAll();
+
+		if (!GameManager::getInstance()->isWaiting())
+		{
+			$e->getPlayer()->kick((new TextFormatter("template.currentlyPlaying"))->asString());
+			return;
+		}
 
         if (!PlayersManager::getInstance()->fatPlayerExist($p))
             PlayersManager::getInstance()->addPlayer($p);

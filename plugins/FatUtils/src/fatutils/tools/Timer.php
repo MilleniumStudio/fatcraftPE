@@ -25,7 +25,7 @@ class Timer
 	private $m_StopCallback;
 	private $m_TickCallback;
 
-	private $m_Task;
+	private $m_Task = null;
 
 	/**
 	 * Timer constructor.
@@ -141,7 +141,10 @@ class Timer
 	public function cancel()
     {
         if ($this->m_Task instanceof TaskHandler)
+		{
             $this->m_Task->cancel();
+			$this->m_Task = null;
+		}
     }
 
 	public function start():Timer
