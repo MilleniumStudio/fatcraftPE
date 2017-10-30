@@ -180,5 +180,7 @@ class PlayersManager
 	public function setMaxPlayer($p_MaxPlayer)
 	{
 		$this->m_MaxPlayer = $p_MaxPlayer;
+                if ($p_MaxPlayer != 0)
+                    \fatcraft\loadbalancer\LoadBalancer::getInstance()->setMaxPlayers($p_MaxPlayer);
 	}
 }
