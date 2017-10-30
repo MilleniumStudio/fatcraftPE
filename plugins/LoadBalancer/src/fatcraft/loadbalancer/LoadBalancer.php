@@ -168,6 +168,15 @@ class LoadBalancer extends PluginBase implements Listener
         $this->m_ServerState = $p_State;
     }
 
+    public function setMaxPlayers(int $p_MaxPlayers)
+    {
+        $this->getConfig()->setNested("redirect.limit", $p_MaxPlayers);
+        $reflection = new \ReflectionProperty(get_class($this->getServer()), 'maxPlayers');
+        $reflection->setAccessible(true);
+        $reflection->setValue($this->getServer(), $p_MaxPlayers);
+        $this->getLogger()->info("Set max players to " . $p_MaxPlayers . " in server by reflexion !");
+    }
+
     public function getPlayerServerUUIDByName(String $p_PlayerName)
     {
         $result = MysqlResult::executeQuery($this->connectMainThreadMysql(),
@@ -322,7 +331,8 @@ class LoadBalancer extends PluginBase implements Listener
 				LoadBalancer::TEMPLATE_TYPE_BEDWAR,
 				LoadBalancer::TEMPLATE_TYPE_HUNGER_GAME,
 				LoadBalancer::TEMPLATE_TYPE_SKYWAR,
-				LoadBalancer::TEMPLATE_TYPE_PARKOUR
+				LoadBalancer::TEMPLATE_TYPE_PARKOUR,
+				LoadBalancer::TEMPLATE_TYPE_MURDER
 			];
 		}
 
@@ -438,7 +448,7 @@ class LoadBalancer extends PluginBase implements Listener
     public function getNetworkServer($type = LoadBalancer::TEMPLATE_TYPE_LOBBY, $id = -1)
     {
         $result = MysqlResult::executeQuery($this->connectMainThreadMysql(),
-            "SELECT *, (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) AS diff FROM servers WHERE `type` = ? AND `id` = ? LIMIT 1", [
+            "SELECT *, (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) AS diff FROM servers WHERE `type` = ? AND `max` > `online` AND `id` = ? LIMIT 1", [
                 ["s", $type],
                 ["i", $id]
             ]
