@@ -10,3 +10,5 @@ commands:
   description: test command
  debug:
   description: test command
+ world:
+  description: test command

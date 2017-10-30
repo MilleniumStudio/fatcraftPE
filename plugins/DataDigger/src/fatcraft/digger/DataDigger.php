@@ -191,6 +191,51 @@ class DataDigger extends PluginBase implements Listener
                     break;
             }
         }
+        elseif ($cmd->getName() === "world")
+        {
+            switch ($p_Param[0])
+            {
+                case "list":
+                    $sender->sendMessage("worlds :");
+                    foreach ($this->getServer()->getLevels() as $level)
+                    {
+                        $sender->sendMessage(" - " . $level->getId() . " " . $level->getName());
+                    }
+                    break;
+                case "dump":
+                    $level = $this->getServer()->getLevel(intval($p_Param[1]));
+                    if ($level !== null)
+                    {
+                        $sender->sendMessage("world " . $level->getName() . " leveldata : ");
+                        $result = print_r($level->getProvider()->getLevelData(), TRUE);
+                        $sender->sendMessage($result);
+                    }
+                    else
+                    {
+                        $sender->sendMessage("world " . $p_Param[1] . " not found !");
+                    }
+                    break;
+                case "load":
+                    $level = $this->getServer()->getLevel(intval($p_Param[1]));
+                    if ($level !== null)
+                    {
+                        if (count($p_Param) == 4)
+                        {
+                            $task = $level->getProvider()->requestChunkTask(intval($p_Param[2]), intval($p_Param[3]));
+                            $this->getServer()->getScheduler()->scheduleAsyncTask($task);
+                        }
+                        else
+                        {
+                            $sender->sendMessage("syntax : /world load <map> <chunkX> <chunkZ>");
+                        }
+                    }
+                    else
+                    {
+                        $sender->sendMessage("world " . $p_Param[1] . " not found !");
+                    }
+                    break;
+            }
+        }
         return true;
     }
 
