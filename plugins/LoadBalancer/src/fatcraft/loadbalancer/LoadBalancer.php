@@ -27,6 +27,7 @@ class LoadBalancer extends PluginBase implements Listener
 
     const TEMPLATE_TYPE_LOBBY = "lobby";
     const TEMPLATE_TYPE_PARKOUR = "pk";
+    const TEMPLATE_TYPE_MURDER = "md";
     const TEMPLATE_TYPE_HUNGER_GAME = "hg";
     const TEMPLATE_TYPE_SKYWAR = "sw";
     const TEMPLATE_TYPE_BEDWAR = "bw";
