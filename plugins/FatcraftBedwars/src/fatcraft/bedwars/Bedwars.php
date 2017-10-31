@@ -11,6 +11,7 @@ use fatutils\teams\Team;
 use fatutils\teams\TeamsManager;
 use fatutils\tools\bossBarAPI\BossBarAPI;
 use fatutils\tools\DelayedExec;
+use fatutils\tools\DisplayableTimer;
 use fatutils\tools\ItemUtils;
 use fatutils\tools\Sidebar;
 use fatutils\tools\TextFormatter;
@@ -127,46 +128,22 @@ class Bedwars extends PluginBase implements Listener
             }
         }
 
-        Sidebar::getInstance()
+		$this->m_WaitingTimer = new DisplayableTimer(GameManager::getInstance()->getWaitingTickDuration());
+		$this->m_WaitingTimer
+			->setTitle(new TextFormatter("timer.waiting.title"))
+			->addStopCallback(function ()
+			{
+				$this->startGame();
+			});
+
+		Sidebar::getInstance()
 //            ->setUpdateTickInterval(40)
-            ->addTranslatedLine(new TextFormatter("bedwars.sidebar.title"))
-            ->addWhiteSpace()
-            ->addTranslatedLine(new TextFormatter("bedwars.sidebar.teams.title"))
-            ->addMutableLine(function () {
-                $l_Ret = [];
-
-                foreach (TeamsManager::getInstance()->getTeams() as $l_Team)
-                {
-                    if ($l_Team instanceof Team)
-                    {
-                        $l_State = "";
-                        $bedLocation = $this->getBedwarsConfig()->getBedLocation($l_Team);
-                        if (Server::getInstance()->getDefaultLevel()->getBlockIdAt($bedLocation->getFloorX(), $bedLocation->getFloorY(), $bedLocation->getFloorZ()) == self::BLOCK_ID)
-                            $l_State = TextFormat::GREEN . "OK";
-                        else
-                        {
-                            $l_AliveTeamPlayer = $l_Team->getAlivePlayerLeft();
-                            if ($l_AliveTeamPlayer > 0)
-                                $l_State = TextFormat::AQUA . $l_AliveTeamPlayer;
-                            else
-                                $l_State = TextFormat::RED . "X";
-                        }
-
-                        $l_Ret[] = $l_Team->getColoredName() . TextFormat::WHITE . " : " . $l_State;
-                    }
-                }
-
-                return $l_Ret;
-            })
-            ->addWhiteSpace()
-            ->addTranslatedLine(new TextFormatter("bedwars.sidebar.currencies.title"))
-            ->addMutableLine(function (Player $p_Player) {
-                return [
-                    new TextFormatter("bedwars.sidebar.currency.iron", ["amount" => $this->getPlayerIron($p_Player)]),
-                    new TextFormatter("bedwars.sidebar.currency.gold", ["amount" => $this->getPlayerGold($p_Player)]),
-                    new TextFormatter("bedwars.sidebar.currency.diamond", ["amount" => $this->getPlayerDiamond($p_Player)])
-                ];
-            });
+			->addTranslatedLine(new TextFormatter("bedwars.sidebar.title"))
+			->addTimer($this->m_WaitingTimer)
+			->addWhiteSpace()
+			->addMutableLine(function () {
+				return new TextFormatter("game.waitingForMore", ["amount" => PlayersManager::getInstance()->getMinPlayer() - count($this->getServer()->getOnlinePlayers())]);
+			});
     }
 
     public function handlePlayerConnection(Player $p_Player)
@@ -195,25 +172,17 @@ class Bedwars extends PluginBase implements Listener
                     $this->startGame();
                 }
                 else if (count($this->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMinPlayer())
-                {
-                    if (is_null($this->m_WaitingTimer))
-                    {
-                        $this->getLogger()->info("MIN PLAYER REACH !");
-                        $this->m_WaitingTimer = (new TipsTimer(GameManager::getInstance()->getWaitingTickDuration()))
-                            ->setTitle(new TextFormatter("timer.waiting.title"))
-                            ->addStopCallback(function ()
-                            {
-                                $this->startGame();
-                            })
-                            ->start();
-                    }
-                }
-                else if (count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMinPlayer())
-                {
-                    $l_WaitingFor = PlayersManager::getInstance()->getMinPlayer() - count($this->getServer()->getOnlinePlayers());
-                    foreach ($this->getServer()->getOnlinePlayers() as $l_Player)
-                        $l_Player->addTitle("", (new TextFormatter("game.waitingForMore", ["amount" => $l_WaitingFor]))->asStringForPlayer($l_Player), 1, 60, 1);
-                }
+				{
+					$this->getLogger()->info("MIN PLAYER REACH !");
+					if ($this->m_WaitingTimer instanceof Timer)
+						$this->m_WaitingTimer->start();
+				}
+//                else if (count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMinPlayer())
+//                {
+//                    $l_WaitingFor = PlayersManager::getInstance()->getMinPlayer() - count($this->getServer()->getOnlinePlayers());
+//                    foreach ($this->getServer()->getOnlinePlayers() as $l_Player)
+//                        $l_Player->addTitle("", (new TextFormatter("game.waitingForMore", ["amount" => $l_WaitingFor]))->asStringForPlayer($l_Player), 1, 60, 1);
+//                }
             }
         } else
         {
@@ -342,8 +311,103 @@ class Bedwars extends PluginBase implements Listener
     //---------------------
     public function startGame()
     {
+    	// CLOSING SERVER
         LoadBalancer::getInstance()->setServerState(LoadBalancer::SERVER_STATE_CLOSED);
 		GameManager::getInstance()->startGame();
+
+		// INIT PLAY TIMER
+		$this->m_PlayTimer = new DisplayableTimer(GameManager::getInstance()->getPlayingTickDuration());
+		$this->m_PlayTimer
+			->setTitle(new TextFormatter("timer.playing.title"))
+			->addStartCallback(function ()
+			{
+				FatUtils::getInstance()->getLogger()->info("Game end timer starts !");
+				FatUtils::getInstance()->getLogger()->info("Forges are heating up !");
+
+				Server::getInstance()->broadcastMessage("Team Balance...");
+				TeamsManager::getInstance()->balanceTeams();
+
+				$l_GoMsgFormatter = new TextFormatter("game.start");
+				foreach ($this->getServer()->getOnlinePlayers() as $l_Player)
+				{
+					$l_Team = TeamsManager::getInstance()->getPlayerTeam($l_Player);
+
+					if ($l_Team instanceof Team)
+					{
+						PlayersManager::getInstance()->getFatPlayer($l_Player)->setPlaying();
+						$l_Player->setGamemode(Player::SURVIVAL);
+						$l_Team->getSpawn()->teleport($l_Player, 2);
+
+						$l_Player->getInventory()->setChestplate(ItemUtils::getColoredItemIfColorable(Item::get(ItemIds::LEATHER_CHESTPLATE), $l_Team->getColor()));
+						$l_Player->getInventory()->setLeggings(ItemUtils::getColoredItemIfColorable(Item::get(ItemIds::LEATHER_LEGGINGS), $l_Team->getColor()));
+						$l_Player->getInventory()->addItem(Item::get(ItemIds::WOODEN_SWORD));
+
+						$l_Player->addTitle($l_GoMsgFormatter->asStringForPlayer($l_Player));
+					}
+				}
+
+				Sidebar::getInstance()->update();
+			})
+			->addTickCallback([$this, "onPlayingTick"])
+			->addStopCallback(function ()
+			{
+				if (TeamsManager::getInstance()->getAliveTeamNbr() <= 1 && !Bedwars::DEBUG)
+					$this->endGame();
+				else
+				{
+					foreach (TeamsManager::getInstance()->getTeams() as $team)
+					{
+						$bedLoc = $this->getBedwarsConfig()->getBedLocation($team);
+						$bedLoc->level->setBlockIdAt($bedLoc->getFloorX(), $bedLoc->getFloorY(), $bedLoc->getFloorZ(), BlockIds::AIR);
+					}
+					Sidebar::getInstance()->update();
+					foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+						$l_Player->addTitle((new TextFormatter("bedwars.deathmatch.title"))->asStringForPlayer($l_Player), (new TextFormatter("bedwars.deathmatch.subtitle"))->asStringForPlayer($l_Player));
+				}
+			});
+
+		// INIT SIDEBAR
+		Sidebar::getInstance()->clearLines();
+		Sidebar::getInstance()
+			->addTranslatedLine(new TextFormatter("bedwars.sidebar.title"))
+			->addTimer($this->m_PlayTimer)
+			->addWhiteSpace()
+			->addTranslatedLine(new TextFormatter("bedwars.sidebar.teams.title"))
+			->addMutableLine(function () {
+				$l_Ret = [];
+
+				foreach (TeamsManager::getInstance()->getTeams() as $l_Team)
+				{
+					if ($l_Team instanceof Team)
+					{
+						$l_State = "";
+						$bedLocation = $this->getBedwarsConfig()->getBedLocation($l_Team);
+						if (Server::getInstance()->getDefaultLevel()->getBlockIdAt($bedLocation->getFloorX(), $bedLocation->getFloorY(), $bedLocation->getFloorZ()) == self::BLOCK_ID)
+							$l_State = TextFormat::GREEN . "OK";
+						else
+						{
+							$l_AliveTeamPlayer = $l_Team->getAlivePlayerLeft();
+							if ($l_AliveTeamPlayer > 0)
+								$l_State = TextFormat::AQUA . $l_AliveTeamPlayer;
+							else
+								$l_State = TextFormat::RED . "X";
+						}
+
+						$l_Ret[] = $l_Team->getColoredName() . TextFormat::WHITE . " : " . $l_State;
+					}
+				}
+
+				return $l_Ret;
+			})
+			->addWhiteSpace()
+			->addTranslatedLine(new TextFormatter("bedwars.sidebar.currencies.title"))
+			->addMutableLine(function (Player $p_Player) {
+				return [
+					new TextFormatter("bedwars.sidebar.currency.iron", ["amount" => $this->getPlayerIron($p_Player)]),
+					new TextFormatter("bedwars.sidebar.currency.gold", ["amount" => $this->getPlayerGold($p_Player)]),
+					new TextFormatter("bedwars.sidebar.currency.diamond", ["amount" => $this->getPlayerDiamond($p_Player)])
+				];
+			});
 
         //remove team selectors
         TeamsManager::getInstance()->clearNPCs();
@@ -356,55 +420,9 @@ class Bedwars extends PluginBase implements Listener
             new ShopKeeper(WorldUtils::stringToLocation($value));
 
         $this->m_timeTier = (int)(GameManager::getInstance()->getPlayingTickDuration() / 60);
-        $this->m_PlayTimer = (new TipsTimer(GameManager::getInstance()->getPlayingTickDuration()))
-            ->setTitle(new TextFormatter("timer.playing.title"))
-            ->addStartCallback(function ()
-            {
-                FatUtils::getInstance()->getLogger()->info("Game end timer starts !");
-                FatUtils::getInstance()->getLogger()->info("Forges are heating up !");
 
-                Server::getInstance()->broadcastMessage("Team Balance...");
-                TeamsManager::getInstance()->balanceTeams();
-
-                $l_GoMsgFormatter = new TextFormatter("game.start");
-                foreach ($this->getServer()->getOnlinePlayers() as $l_Player)
-                {
-                    $l_Team = TeamsManager::getInstance()->getPlayerTeam($l_Player);
-
-                    if ($l_Team instanceof Team)
-                    {
-                        PlayersManager::getInstance()->getFatPlayer($l_Player)->setPlaying();
-                        $l_Player->setGamemode(Player::SURVIVAL);
-                        $l_Team->getSpawn()->teleport($l_Player, 2);
-
-                        $l_Player->getInventory()->setChestplate(ItemUtils::getColoredItemIfColorable(Item::get(ItemIds::LEATHER_CHESTPLATE), $l_Team->getColor()));
-                        $l_Player->getInventory()->setLeggings(ItemUtils::getColoredItemIfColorable(Item::get(ItemIds::LEATHER_LEGGINGS), $l_Team->getColor()));
-                        $l_Player->getInventory()->addItem(Item::get(ItemIds::WOODEN_SWORD));
-
-                        $l_Player->addTitle($l_GoMsgFormatter->asStringForPlayer($l_Player));
-                    }
-                }
-
-                Sidebar::getInstance()->update();
-            })
-            ->addTickCallback([$this, "onPlayingTick"])
-            ->addStopCallback(function ()
-            {
-                if (TeamsManager::getInstance()->getAliveTeamNbr() <= 1 && !Bedwars::DEBUG)
-                    $this->endGame();
-                else
-                {
-                    foreach (TeamsManager::getInstance()->getTeams() as $team)
-                    {
-                        $bedLoc = $this->getBedwarsConfig()->getBedLocation($team);
-                        $bedLoc->level->setBlockIdAt($bedLoc->getFloorX(), $bedLoc->getFloorY(), $bedLoc->getFloorZ(), BlockIds::AIR);
-                    }
-                    Sidebar::getInstance()->update();
-                    foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-                        $l_Player->addTitle((new TextFormatter("bedwars.deathmatch.title"))->asStringForPlayer($l_Player), (new TextFormatter("bedwars.deathmatch.subtitle"))->asStringForPlayer($l_Player));
-                }
-            })
-            ->start();
+        if ($this->m_PlayTimer instanceof Timer)
+			$this->m_PlayTimer->start();
     }
 
     public function onPlayingTick()

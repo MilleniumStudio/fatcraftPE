@@ -12,10 +12,9 @@ namespace fatutils\tools;
 use fatutils\FatUtils;
 use fatutils\tools\bossBarAPI\BossBar;
 
-class BossbarTimer extends Timer
+class BossbarTimer extends DisplayableTimer
 {
     private $m_BossBar = null;
-    private $m_Title = "";
 
     private $m_Players = null;
 
@@ -24,17 +23,11 @@ class BossbarTimer extends Timer
         $this->m_Players = $p_Players;
     }
 
-    /**
-     * @param string|TextFormatter $p_Title
-     * @return BossbarTimer
-     */
-    public function setTitle($p_Title):BossbarTimer
+    public function setTitle($p_Title):DisplayableTimer
     {
-        $this->m_Title = $p_Title;
         if ($this->m_BossBar instanceof BossBar)
             $this->m_BossBar->setTitle($this->m_Title);
-
-        return $this;
+    	return parent::setTitle($p_Title);
     }
 
     public function start(): Timer

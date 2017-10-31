@@ -13,6 +13,7 @@ use fatutils\scores\ScoresManager;
 use fatutils\teams\Team;
 use fatutils\teams\TeamsManager;
 use fatutils\tools\DelayedExec;
+use fatutils\tools\DisplayableTimer;
 use fatutils\tools\ItemUtils;
 use fatutils\tools\Sidebar;
 use fatutils\tools\TextFormatter;
@@ -93,21 +94,26 @@ class Murder extends PluginBase implements Listener
 //        PlayersManager::getInstance()->displayHealth();
         WorldUtils::stopWorldsTime();
 
-        Sidebar::getInstance()
-            ->addTranslatedLine(new TextFormatter("murder.sidebar.title"))
-            ->addWhiteSpace()
-            ->addMutableLine(function (Player $player) {
-                return (new TextFormatter("murder.nbAlivedPlayers"))->addParam("nb", PlayersManager::getInstance()->getAlivePlayerLeft() - 1)->asStringForPlayer($player);
-            })
-            ->addMutableLine(function (Player $player) {
-                return ($this->m_murdererUUID != null && $this->m_murdererUUID->equals($player->getUniqueId())) ? (new TextFormatter("murder.youarethemurderer"))->addParam("nb", PlayersManager::getInstance()->getAlivePlayerLeft())->asStringForPlayer($player) : "";
-            });
+		$this->m_WaitingTimer = new BossbarTimer(GameManager::getInstance()->getWaitingTickDuration());
+		$this->m_WaitingTimer
+			->setTitle(new TextFormatter("timer.waiting.title"))
+			->addStopCallback(function () {
+				$this->startGame();
+			});
+
+		Sidebar::getInstance()
+			->clearLines()
+			->addTranslatedLine(new TextFormatter("murder.sidebar.title"))
+			->addTimer($this->m_WaitingTimer)
+			->addWhiteSpace()
+			->addMutableLine(function () {
+				return new TextFormatter("game.waitingForMore", ["amount" => PlayersManager::getInstance()->getMinPlayer() - count($this->getServer()->getOnlinePlayers())]);
+			});
     }
 
     public function handlePlayerConnection(PlayerJoinEvent $p_event)
     {
         $p_Player = $p_event->getPlayer();
-        $l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Player);
 
         if (GameManager::getInstance()->isWaiting()) {
 
@@ -121,18 +127,15 @@ class Murder extends PluginBase implements Listener
             } else if (count($this->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMinPlayer()) {
                 if (is_null($this->m_WaitingTimer)) {
                     $this->getLogger()->info("MIN PLAYER REACH !");
-                    $this->m_WaitingTimer = (new BossbarTimer(GameManager::getInstance()->getWaitingTickDuration()))
-                        ->setTitle("Debut dans")
-                        ->addStopCallback(function () {
-                            $this->startGame();
-                        })
-                        ->start();
+                    if ($this->m_WaitingTimer instanceof Timer)
+                        $this->m_WaitingTimer->start();
                 }
-            } else if (count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMinPlayer()) {
-                $l_WaitingFor = PlayersManager::getInstance()->getMinPlayer() - count($this->getServer()->getOnlinePlayers());
-                foreach ($this->getServer()->getOnlinePlayers() as $l_Player)
-					$l_Player->addTitle("", (new TextFormatter("game.waitingForMore", ["amount" => $l_WaitingFor]))->asStringForPlayer($l_Player), 1, 60, 1);
             }
+//            else if (count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMinPlayer()) {
+//                $l_WaitingFor = PlayersManager::getInstance()->getMinPlayer() - count($this->getServer()->getOnlinePlayers());
+//                foreach ($this->getServer()->getOnlinePlayers() as $l_Player)
+//					$l_Player->addTitle("", (new TextFormatter("game.waitingForMore", ["amount" => $l_WaitingFor]))->asStringForPlayer($l_Player), 1, 60, 1);
+//            }
         }
 
         Sidebar::getInstance()->update();
@@ -145,52 +148,67 @@ class Murder extends PluginBase implements Listener
     public function startGame()
     {
         LoadBalancer::getInstance()->setServerState(LoadBalancer::SERVER_STATE_CLOSED);
+		GameManager::getInstance()->startGame();
 
         // Clear windows registry to avoid having player choosing team after start
         WindowsManager::getInstance()->clearRegistry();
+
+		// INIT PLAY TIMER
+		$this->m_PlayTimer = new DisplayableTimer(GameManager::getInstance()->getPlayingTickDuration());
+		$this->m_PlayTimer
+			->setTitle(new TextFormatter("timer.playing.title"))
+			->addStartCallback(function () {
+				FatUtils::getInstance()->getLogger()->info("Playing timer starts !");
+
+				foreach (Server::getInstance()->getOnlinePlayers() as $player) {
+					$player->getInventory()->setHeldItemIndex(2);
+				}
+
+				// random murderer
+				/** @var Player $murderer */
+				$murderer = Server::getInstance()->getOnlinePlayers()[array_rand(Server::getInstance()->getOnlinePlayers())];
+				print_r($murderer);
+				$this->m_murdererUUID = $murderer->getUniqueId();
+				$murderer->getInventory()->addItem(Item::get(ItemIds::IRON_SWORD));
+				$murderer->sendMessage("You are the MURDERER !");
+
+				//random cop
+				if (count(Server::getInstance()->getOnlinePlayers()) > 1) {
+					$cop = null;
+					do {
+						/** @var Player $cop */
+						$cop = Server::getInstance()->getOnlinePlayers()[array_rand(Server::getInstance()->getOnlinePlayers())];
+					} while ($cop->getUniqueId()->equals($murderer->getUniqueId()));
+
+					$cop->getInventory()->addItem(Item::get(ItemIds::BOW));
+					$cop->sendMessage("You got a gun !");
+				}
+
+				Sidebar::getInstance()->update();
+			})
+			->addTickCallback([$this, "onPlayingTick"])
+			->addStopCallback(function () {
+				$this->endGame();
+			});
+
+        // INIT SIDEBAR
+		Sidebar::getInstance()
+			->clearLines()
+			->addTranslatedLine(new TextFormatter("murder.sidebar.title"))
+			->addTimer($this->m_PlayTimer)
+			->addWhiteSpace()
+			->addMutableLine(function (Player $player) {
+				return (new TextFormatter("murder.nbAlivedPlayers"))->addParam("nb", PlayersManager::getInstance()->getAlivePlayerLeft() - 1)->asStringForPlayer($player);
+			})
+			->addMutableLine(function (Player $player) {
+				return ($this->m_murdererUUID != null && $this->m_murdererUUID->equals($player->getUniqueId())) ? (new TextFormatter("murder.youarethemurderer"))->addParam("nb", PlayersManager::getInstance()->getAlivePlayerLeft())->asStringForPlayer($player) : "";
+			});
 
         foreach (Server::getInstance()->getOnlinePlayers() as $player) {
             SpawnManager::getInstance()->getRandomEmptySpawn()->teleport($player);
         }
 
-        $this->m_PlayTimer = (new TipsTimer(GameManager::getInstance()->getPlayingTickDuration()))
-            ->setTitle(new TextFormatter("timer.playing.title"))
-            ->addStartCallback(function () {
-                FatUtils::getInstance()->getLogger()->info("Game end timer starts !");
-
-                foreach (Server::getInstance()->getOnlinePlayers() as $player) {
-                    $player->getInventory()->setHeldItemIndex(2);
-                }
-
-                // random murderer
-                /** @var Player $murderer */
-                $murderer = Server::getInstance()->getOnlinePlayers()[array_rand(Server::getInstance()->getOnlinePlayers())];
-                print_r($murderer);
-                $this->m_murdererUUID = $murderer->getUniqueId();
-                $murderer->getInventory()->addItem(Item::get(ItemIds::IRON_SWORD));
-                $murderer->sendMessage("You are the MURDERER !");
-
-                //random cop
-                if (count(Server::getInstance()->getOnlinePlayers()) > 1) {
-                    $cop = null;
-                    do {
-                        /** @var Player $cop */
-                        $cop = Server::getInstance()->getOnlinePlayers()[array_rand(Server::getInstance()->getOnlinePlayers())];
-                    } while ($cop->getUniqueId()->equals($murderer->getUniqueId()));
-
-                    $cop->getInventory()->addItem(Item::get(ItemIds::BOW));
-                    $cop->sendMessage("You got a gun !");
-                }
-
-                Sidebar::getInstance()->update();
-            })
-            ->addTickCallback([$this, "onPlayingTick"])
-            ->addStopCallback(function () {
-                $this->endGame();
-            })
-            ->start();
-
-        GameManager::getInstance()->startGame();
+		$this->m_PlayTimer->start();
     }
 
     public function onPlayingTick()

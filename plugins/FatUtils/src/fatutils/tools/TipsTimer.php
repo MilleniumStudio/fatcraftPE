@@ -11,25 +11,13 @@ namespace fatutils\tools;
 use fatutils\FatUtils;
 use pocketmine\Player;
 
-class TipsTimer extends Timer
+class TipsTimer extends DisplayableTimer
 {
-    private $m_Title = "";
-
     private $m_Players = null;
 
     public function addPlayers(array $p_Players)
     {
         $this->m_Players = $p_Players;
-    }
-
-    /**
-     * @param string|TextFormatter $p_Title
-     * @return TipsTimer
-     */
-    public function setTitle($p_Title):TipsTimer
-    {
-        $this->m_Title = $p_Title;
-        return $this;
     }
 
     public function _onStart()
@@ -64,21 +52,11 @@ class TipsTimer extends Timer
 
     public function display(): void
     {
-        $timeFormat = gmdate("H:i:s", $this->getSecondLeft());
-        if ($this->m_Title instanceof TextFormatter)
-            $this->m_Title->addParam("time", $timeFormat); //ref to param "{time}" in translation lines
-
         foreach ($this->getPlayers() as $l_Player)
         {
             if ($l_Player instanceof Player)
             {
-                if ($this->m_Title instanceof TextFormatter)
-                    $l_Text = $this->m_Title->asStringForPlayer($l_Player);
-                else
-                    $l_Text = $this->m_Title . ": " . $timeFormat;
-
-//                $l_Player->sendMessage($l_Text);
-                $l_Player->sendTip($l_Text);
+                $l_Player->sendTip($this->toString($l_Player));
             }
         }
     }

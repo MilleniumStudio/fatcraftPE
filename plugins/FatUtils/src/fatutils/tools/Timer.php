@@ -45,19 +45,19 @@ class Timer
 
 	public function addStartCallback(Callable $p_StartCallback):Timer
 	{
-		$this->m_StartCallback = $p_StartCallback;
+		$this->m_StartCallback[] = $p_StartCallback;
 		return $this;
 	}
 
 	public function addStopCallback(Callable $p_StopCallback):Timer
 	{
-		$this->m_StopCallback = $p_StopCallback;
+		$this->m_StopCallback[] = $p_StopCallback;
 		return $this;
 	}
 
     public function addTickCallback(Callable $p_TickCallback):Timer
     {
-        $this->m_TickCallback = $p_TickCallback;
+        $this->m_TickCallback[] = $p_TickCallback;
         return $this;
     }
 
@@ -208,22 +208,40 @@ class Timer
     /* PLEASE DON'T USE THAT, it's intended for package scope */
 	public function _onStart()
     {
-        if (!is_null($this->getStartCallback()))
-            call_user_func($this->getStartCallback());
+        if (!is_null($this->getStartCallback()) && gettype($this->getStartCallback()) === "array")
+		{
+			foreach ($this->getStartCallback() as $l_Callback)
+			{
+				if (is_callable($l_Callback))
+            		call_user_func($l_Callback);
+			}
+		}
     }
 
     /* PLEASE DON'T USE THAT, it's intended for package scope */
     public function _onTick()
     {
-        if (!is_null($this->getTickCallback()))
-            call_user_func($this->getTickCallback());
+		if (!is_null($this->getTickCallback()) && gettype($this->getTickCallback()) === "array")
+		{
+			foreach ($this->getTickCallback() as $l_Callback)
+			{
+				if (is_callable($l_Callback))
+					call_user_func($l_Callback);
+			}
+		}
     }
 
     /* PLEASE DON'T USE THAT, it's intended for package scope */
     public function _onStop()
     {
-        if (!is_null($this->getStopCallback()))
-            call_user_func($this->getStopCallback());
+		if (!is_null($this->getStopCallback()) && gettype($this->getStopCallback()) === "array")
+		{
+			foreach ($this->getStopCallback() as $l_Callback)
+			{
+				if (is_callable($l_Callback))
+					call_user_func($l_Callback);
+			}
+		}
 
         $this->m_Task = null;
     }
