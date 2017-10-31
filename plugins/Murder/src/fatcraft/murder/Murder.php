@@ -115,6 +115,11 @@ class Murder extends PluginBase implements Listener
     {
         $p_Player = $p_event->getPlayer();
 
+		$p_Player->sendMessage((new TextFormatter("template.info.template", [
+			"gameName" => new TextFormatter("template.md"),
+			"text" => new TextFormatter("template.info.md")
+		]))->asStringForPlayer($p_Player));
+
         if (GameManager::getInstance()->isWaiting()) {
 
             $p_Player->setGamemode(Player::ADVENTURE);
@@ -249,7 +254,7 @@ class Murder extends PluginBase implements Listener
             $l_Player->addTitle(
                 (new TextFormatter("murder.murderWin"))->asStringForPlayer($l_Player),
                 (new TextFormatter("game.winner.single"))->addParam("name", PlayersManager::getInstance()->getFatPlayerByUUID($this->m_murdererUUID)->getName())->asStringForPlayer($l_Player),
-                30, 80, 30);
+                30, 100, 30);
         }
         //rewards
         foreach (Server::getInstance()->getOnlinePlayers() as $player) {
@@ -268,7 +273,7 @@ class Murder extends PluginBase implements Listener
             $l_Player->addTitle(
                 (new TextFormatter("murder.lambdasWin"))->asStringForPlayer($l_Player),
                 (new TextFormatter("murder.lambdasWin.named"))->addParam("name", $killer->getName())->asStringForPlayer($l_Player),
-                30, 80, 30);
+                30, 100, 30);
         }
         //rewards
         foreach (Server::getInstance()->getOnlinePlayers() as $player) {

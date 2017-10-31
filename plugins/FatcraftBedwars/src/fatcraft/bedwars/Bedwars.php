@@ -10,6 +10,7 @@ use fatutils\scores\ScoresManager;
 use fatutils\teams\Team;
 use fatutils\teams\TeamsManager;
 use fatutils\tools\bossBarAPI\BossBarAPI;
+use fatutils\tools\BossbarTimer;
 use fatutils\tools\DelayedExec;
 use fatutils\tools\DisplayableTimer;
 use fatutils\tools\ItemUtils;
@@ -150,6 +151,11 @@ class Bedwars extends PluginBase implements Listener
     {
         $l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Player);
 
+		$p_Player->sendMessage((new TextFormatter("template.info.template", [
+			"gameName" => new TextFormatter("template.bw"),
+			"text" => new TextFormatter("template.info.bw")
+		]))->asStringForPlayer($p_Player));
+
         if (GameManager::getInstance()->isWaiting())
         {
             $l_Team = TeamsManager::getInstance()->addInBestTeam($p_Player);
@@ -161,7 +167,7 @@ class Bedwars extends PluginBase implements Listener
                 new DelayedExec(function () use ($p_Player, $l_Team)
 				{
 					$p_Player->addTitle("", (new TextFormatter("player.team.join", ["teamName" => $l_Team->getColoredName()]))->asStringForPlayer($p_Player));
-					$p_Player->sendMessage((new TextFormatter("bedwars.team.cooseYourTeam"))->asStringForPlayer($p_Player));
+					$p_Player->sendMessage((new TextFormatter("bedwars.team.chooseYourTeam"))->asStringForPlayer($p_Player));
 				}, 2);
 
                 if (count($this->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMaxPlayer())
@@ -440,7 +446,6 @@ class Bedwars extends PluginBase implements Listener
             $this->m_secondsSinceStart++;
             if ($this->m_secondsSinceStart == $this->m_timeTier || $this->m_secondsSinceStart == $this->m_timeTier * 2)
             {
-                echo "UP UP UP !\n";
                 $this->upgradeGoldForges();
                 $this->upgradeDiamondForges();
             }
@@ -451,6 +456,8 @@ class Bedwars extends PluginBase implements Listener
     {
         if ($this->m_PlayTimer instanceof Timer)
             $this->m_PlayTimer->cancel();
+
+		GameManager::getInstance()->endGame();
 
         $winnerTeams = TeamsManager::getInstance()->getAliveTeams();
         $winnerName = "";
@@ -470,10 +477,10 @@ class Bedwars extends PluginBase implements Listener
             $l_Player->addTitle(
                 (new TextFormatter("game.end"))->asStringForPlayer($l_Player),
                 (new TextFormatter("game.winner.team.single"))->addParam("name", $winnerName)->asStringForPlayer($l_Player),
-                30, 80, 30);
+                30, 100, 30);
         }
 
-        (new TipsTimer(150))
+        (new BossbarTimer(150))
             ->setTitle(new TextFormatter("timer.returnToLobby"))
             ->addStopCallback(function ()
             {
@@ -486,8 +493,6 @@ class Bedwars extends PluginBase implements Listener
 				}, 100);
             })
             ->start();
-
-        GameManager::getInstance()->endGame();
     }
 
     //---------------------

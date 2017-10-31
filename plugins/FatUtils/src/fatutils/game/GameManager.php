@@ -11,6 +11,7 @@ namespace fatutils\game;
 use fatutils\gamedata\GameDataManager;
 use fatutils\FatUtils;
 use fatutils\players\PlayersManager;
+use fatutils\tools\TextFormatter;
 
 class GameManager
 {
@@ -55,15 +56,24 @@ class GameManager
         $this->setPlaying();
         $this->m_StartGameTimestamp = time();
         GameDataManager::getInstance()->recordStartGame();
-        FatUtils::getInstance()->getLogger()->info("=== GameStarted ===");
 		$this->m_PlayerNbrAtStart = PlayersManager::getInstance()->getAlivePlayerLeft();
+        FatUtils::getInstance()->getLogger()->info("=== GameStarted ===");
+
+		$l_GoMsgFormatter = new TextFormatter("game.start");
+		foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+			$l_Player->addTitle($l_GoMsgFormatter->asStringForPlayer($l_Player));
+
     }
 
     public function endGame()
     {
         $this->m_EndGameTimestamp = time();
-        GameDataManager::getInstance()->recordStopGame("eng_game");
+        GameDataManager::getInstance()->recordStopGame("end_game");
         FatUtils::getInstance()->getLogger()->info("=== GameFinished ===");
+
+		$l_EndMsgFormatter = new TextFormatter("game.end");
+		foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+			$l_Player->addTitle($l_EndMsgFormatter->asStringForPlayer($l_Player));
     }
 
 	public function getPlayerNbrAtStart()

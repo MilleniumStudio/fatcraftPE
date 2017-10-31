@@ -8,6 +8,7 @@ use fatutils\FatUtils;
 use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
 use fatutils\scores\ScoresManager;
+use fatutils\tools\BossbarTimer;
 use fatutils\tools\DelayedExec;
 use fatutils\tools\DisplayableTimer;
 use fatutils\tools\Sidebar;
@@ -86,6 +87,20 @@ class HungerGame extends PluginBase implements Listener
 
 	public function handlePlayerConnection(Player $p_Player)
 	{
+		if ($this->getHungerGameConfig()->isSkyWars())
+		{
+			$p_Player->sendMessage((new TextFormatter("template.info.template", [
+				"gameName" => new TextFormatter("template.sw"),
+				"text" => new TextFormatter("template.info.sw")
+			]))->asStringForPlayer($p_Player));
+		} else
+		{
+			$p_Player->sendMessage((new TextFormatter("template.info.template", [
+				"gameName" => new TextFormatter("template.hg"),
+				"text" => new TextFormatter("template.info.hg")
+			]))->asStringForPlayer($p_Player));
+		}
+
 		$l_Spawn = SpawnManager::getInstance()->getRandomEmptySpawn();
 		if (GameManager::getInstance()->isWaiting() && isset($l_Spawn))
 		{
@@ -200,6 +215,8 @@ class HungerGame extends PluginBase implements Listener
 		if ($this->m_PlayTimer instanceof Timer)
 			$this->m_PlayTimer->cancel();
 
+		GameManager::getInstance()->endGame();
+
 		$winners = PlayersManager::getInstance()->getAlivePlayers();
 		$winnerName = "";
 		if (count($winners) > 0)
@@ -211,15 +228,16 @@ class HungerGame extends PluginBase implements Listener
 				ScoresManager::getInstance()->giveRewardToPlayer($winner->getPlayer()->getUniqueId(), 1);
 			}
 		}
+
 		foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
 		{
 			$l_Player->addTitle(
 				(new TextFormatter("game.end"))->asStringForPlayer($l_Player),
 				(new TextFormatter("game.winner.single"))->addParam("name", $winnerName)->asStringForPlayer($l_Player),
-				30, 80, 30);
+				30, 100, 30);
 		}
 
-		(new TipsTimer(150))
+		(new BossbarTimer(150))
 			->setTitle(new TextFormatter("timer.returnToLobby"))
 			->addStopCallback(function ()
 			{
@@ -232,8 +250,6 @@ class HungerGame extends PluginBase implements Listener
 				}, 100);
 			})
 			->start();
-
-		GameManager::getInstance()->endGame();
 	}
 
 	//---------------------

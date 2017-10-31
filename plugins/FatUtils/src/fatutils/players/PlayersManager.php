@@ -9,6 +9,7 @@
 namespace fatutils\players;
 
 use fatutils\FatUtils;
+use fatutils\tools\TextFormatter;
 use pocketmine\Player;
 use pocketmine\utils\UUID;
 use fatutils\gamedata\GameDataManager;
@@ -98,6 +99,20 @@ class PlayersManager
 		return null;
 	}
 
+	public function sendMessageToOnline($p_Message)
+	{
+		foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+		{
+			if ($p_Message instanceof TextFormatter)
+				$l_Player->sendMessage($p_Message->asStringForPlayer($l_Player));
+			else
+				$l_Player->sendMessage($p_Message);
+		}
+	}
+
+	/**
+	 * @return FatPlayer[]
+	 */
 	public function getFatPlayers(): array
 	{
 		return $this->m_FatPlayers;

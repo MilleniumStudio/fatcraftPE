@@ -8,6 +8,7 @@ use fatutils\players\PlayersManager;
 use fatutils\teams\TeamsManager;
 use fatutils\tools\DelayedExec;
 use fatutils\tools\Sidebar;
+use fatutils\tools\TextFormatter;
 use fatutils\tools\WorldUtils;
 use pocketmine\block\BlockIds;
 use pocketmine\event\block\BlockBreakEvent;
@@ -100,9 +101,9 @@ class EventListener implements Listener
 
             if (isset($l_PlayerTeam) && WorldUtils::getDistanceBetween($e->getBlock(), $l_PlayerTeam->getSpawn()->getLocation()) < 2) {
                 if (Bedwars::DEBUG) {
-                    echo "bed your own bed authorized cause debug is on\n";
+                    echo "break your own bed authorized cause debug is on\n";
                 } else {
-                    FatUtils::getInstance()->getLogger()->info("destroy of bed cancelled");
+					$e->getPlayer()->sendMessage((new TextFormatter("bedwars.bed.destroyed.cancelled"))->asStringForPlayer($e->getPlayer()));
                     $e->setCancelled(true);
                 }
             } else {
@@ -110,15 +111,13 @@ class EventListener implements Listener
 
                 new DelayedExec(function ()
 				{
+                	PlayersManager::getInstance()->sendMessageToOnline(new TextFormatter("bedwars.bed.destroyed"));
 					Sidebar::getInstance()->update();
 				}, 1);
             }
         } else {
-            if (Bedwars::DEBUG)
-                echo "authorized break cause debug is on !\n";
-            else if (!$e->getBlock()->hasMetadata("isCustom"))
+            if (!Bedwars::DEBUG && !$e->getBlock()->hasMetadata("isCustom"))
             {
-//                echo "block break cancelled cause block is not custom\n";
                 $e->setCancelled(true);
             }
         }
