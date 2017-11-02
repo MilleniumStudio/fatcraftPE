@@ -1,21 +1,34 @@
 #NPCS config
 
 npcs:
+#example for non Human NPC
   - name: "name"
     displayname: "subname"
-    location: 0/8/9.15/0/0
-    type : "Player"
+    location: 0/8/12/0/0
+    type : "Pig"
     size : 1
-    skin: "Base/steve"
-    geometry: "Base/base"
-    equipment:
-      - head: "GoldHelmet"
-      - chest: "IronChestplate"
-      - pants: "DiamondLeggings"
-      - boots: "LeatherBoots"
-      - held: "IronShovel"
     update: true
     effects: []
     commands: [
-      "/tell {player} This is a test message !"
+      "tell {player} I'm a PIG !!! OUINK!!!!"
     ]
+#example for Human NPC
+  - name: "player"
+    displayname: "subname"
+    location: 0/8/9/0/0
+    type : "Player"
+    size : 1
+    # from skin repository, see /skin list for full list !
+    skin: "Dryad"
+    equipment:
+      head: "{\"material\": \"GOLDEN_HELMET\"}"
+      chest: "{\"material\": \"CHAINMAIL_CHESTPLATE\"}"
+      pants: "{\"material\": \"IRON_LEGGINGS\"}"
+      boots: "{\"material\": \"LEATHER_BOOTS\"}"
+      held: "{\"material\": \"DIAMOND_PICKAXE\"}"
+    update: true
+    effects: []
+    commands: [
+      "tell {player} This is a test message !"
+    ]
+    menu : ""
