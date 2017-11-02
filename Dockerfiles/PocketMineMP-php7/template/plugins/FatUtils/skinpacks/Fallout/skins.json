@@ -1,0 +1,270 @@
+{
+  "skins": [
+    {
+      "localization_name": "Fallout1AlbertCole",
+      "geometry": "geometry.Fallout.Fallout1AlbertCole",
+      "texture": "Fallout1AlbertCole.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout1AlbertColev2",
+      "geometry": "geometry.Fallout.Fallout1AlbertColev2",
+      "texture": "Fallout1AlbertColev2.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout1MaxStone",
+      "geometry": "geometry.Fallout.Fallout1MaxStone",
+      "texture": "Fallout1MaxStone.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout1MaxStonev2",
+      "geometry": "geometry.Fallout.Fallout1MaxStonev2",
+      "texture": "Fallout1MaxStonev2.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout1NataliaDubrovhsky",
+      "geometry": "geometry.Fallout.Fallout1NataliaDubrovhsky",
+      "texture": "Fallout1NataliaDubrovhsky.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout1NataliaDubrovhskyv2",
+      "geometry": "geometry.Fallout.Fallout1NataliaDubrovhskyv2",
+      "texture": "Fallout1NataliaDubrovhskyv2.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout2Chitsa",
+      "geometry": "geometry.Fallout.Fallout2Chitsa",
+      "texture": "Fallout2Chitsa.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout2Hakunin",
+      "geometry": "geometry.Fallout.Fallout2Hakunin",
+      "texture": "Fallout2Hakunin.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout2Harold",
+      "geometry": "geometry.Fallout.Fallout2Harold",
+      "texture": "Fallout2Harold.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout2Mingan",
+      "geometry": "geometry.Fallout.Fallout2Mingan",
+      "texture": "Fallout2Mingan.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout2Narg",
+      "geometry": "geometry.Fallout.Fallout2Narg",
+      "texture": "Fallout2Narg.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout3BettyStanislausBraun",
+      "geometry": "geometry.Fallout.Fallout3BettyStanislausBraun",
+      "texture": "Fallout3BettyStanislausBraun.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout3BrotherhoodofSteelPaladin",
+      "geometry": "geometry.Fallout.Fallout3BrotherhoodofSteelPaladin",
+      "texture": "Fallout3BrotherhoodofSteelPaladin.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout3ButchDeLoria",
+      "geometry": "geometry.Fallout.Fallout3ButchDeLoria",
+      "texture": "Fallout3ButchDeLoria.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout3Clover",
+      "geometry": "geometry.Fallout.Fallout3Clover",
+      "texture": "Fallout3Clover.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout3ColonelAutumn",
+      "geometry": "geometry.Fallout.Fallout3ColonelAutumn",
+      "texture": "Fallout3ColonelAutumn.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout3Fawkes",
+      "geometry": "geometry.Fallout.Fallout3Fawkes",
+      "texture": "Fallout3Fawkes.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout3James",
+      "geometry": "geometry.Fallout.Fallout3James",
+      "texture": "Fallout3James.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout3LoneWanderer",
+      "geometry": "geometry.Fallout.Fallout3LoneWanderer",
+      "texture": "Fallout3LoneWanderer.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout3LoneWandererv2",
+      "geometry": "geometry.Fallout.Fallout3LoneWandererv2",
+      "texture": "Fallout3LoneWandererv2.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout3MoiraBrown",
+      "geometry": "geometry.Fallout.Fallout3MoiraBrown",
+      "texture": "Fallout3MoiraBrown.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout3StarPaladinCross",
+      "geometry": "geometry.Fallout.Fallout3StarPaladinCross",
+      "texture": "Fallout3StarPaladinCross.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout3ThreeDog",
+      "geometry": "geometry.Fallout.Fallout3ThreeDog",
+      "texture": "Fallout3ThreeDog.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout4Bosco",
+      "geometry": "geometry.Fallout.Fallout4Bosco",
+      "texture": "Fallout4Bosco.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout4Cait",
+      "geometry": "geometry.Fallout.Fallout4Cait",
+      "texture": "Fallout4Cait.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout4Hancock",
+      "geometry": "geometry.Fallout.Fallout4Hancock",
+      "texture": "Fallout4Hancock.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout4JanglestheMoonMonkey",
+      "geometry": "geometry.Fallout.Fallout4JanglestheMoonMonkey",
+      "texture": "Fallout4JanglestheMoonMonkey.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout4Kellogg",
+      "geometry": "geometry.Fallout.Fallout4Kellogg",
+      "texture": "Fallout4Kellogg.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout4NickValentine",
+      "geometry": "geometry.Fallout.Fallout4NickValentine",
+      "texture": "Fallout4NickValentine.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout4PaladinDanse",
+      "geometry": "geometry.Fallout.Fallout4PaladinDanse",
+      "texture": "Fallout4PaladinDanse.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout4Piper",
+      "geometry": "geometry.Fallout.Fallout4Piper",
+      "texture": "Fallout4Piper.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout4PrestonGarvey",
+      "geometry": "geometry.Fallout.Fallout4PrestonGarvey",
+      "texture": "Fallout4PrestonGarvey.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout4SilverShroud",
+      "geometry": "geometry.Fallout.Fallout4SilverShroud",
+      "texture": "Fallout4SilverShroud.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout4SoleSurvivor",
+      "geometry": "geometry.Fallout.Fallout4SoleSurvivor",
+      "texture": "Fallout4SoleSurvivor.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout4SoleSurvivorv2",
+      "geometry": "geometry.Fallout.Fallout4SoleSurvivorv2",
+      "texture": "Fallout4SoleSurvivorv2.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout4TheMechanist",
+      "geometry": "geometry.Fallout.Fallout4TheMechanist",
+      "texture": "Fallout4TheMechanist.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fallout4TinkerTom",
+      "geometry": "geometry.Fallout.Fallout4TinkerTom",
+      "texture": "Fallout4TinkerTom.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "FalloutGrognaktheBarbarian",
+      "geometry": "geometry.Fallout.FalloutGrognaktheBarbarian",
+      "texture": "FalloutGrognaktheBarbarian.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "FalloutGrognaktheBarbarianv2",
+      "geometry": "geometry.Fallout.FalloutGrognaktheBarbarianv2",
+      "texture": "FalloutGrognaktheBarbarianv2.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "FalloutRaider",
+      "geometry": "geometry.Fallout.FalloutRaider",
+      "texture": "FalloutRaider.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "FalloutRaiderv2",
+      "geometry": "geometry.Fallout.FalloutRaiderv2",
+      "texture": "FalloutRaiderv2.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "FalloutSuperMutant",
+      "geometry": "geometry.Fallout.FalloutSuperMutant",
+      "texture": "FalloutSuperMutant.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "FalloutVaultBoy",
+      "geometry": "geometry.Fallout.FalloutVaultBoy",
+      "texture": "FalloutVaultBoy.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "FalloutVaultGirl",
+      "geometry": "geometry.Fallout.FalloutVaultGirl",
+      "texture": "FalloutVaultGirl.png",
+      "type": "paid"
+    }
+  ],
+  "serialize_name": "Fallout",
+  "localization_name": "Fallout"
+}

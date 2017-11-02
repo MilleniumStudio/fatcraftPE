@@ -1,0 +1,96 @@
+{
+  "skins": [
+    {
+      "localization_name": "Ajani",
+      "geometry": "geometry.MagicTheGathering.Ajani",
+      "texture": "Ajani.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Avacyn",
+      "geometry": "geometry.MagicTheGathering.Avacyn",
+      "texture": "Avacyn.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Chandra",
+      "geometry": "geometry.MagicTheGathering.Chandra",
+      "texture": "Chandra.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "DovinBaan",
+      "geometry": "geometry.MagicTheGathering.DovinBaan",
+      "texture": "DovinBaan.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Emrakul",
+      "geometry": "geometry.MagicTheGathering.Emrakul",
+      "texture": "Emrakul.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Gideon",
+      "geometry": "geometry.MagicTheGathering.Gideon",
+      "texture": "Gideon.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Hazoret",
+      "geometry": "geometry.MagicTheGathering.Hazoret",
+      "texture": "Hazoret.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Jace",
+      "geometry": "geometry.MagicTheGathering.Jace",
+      "texture": "Jace.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Liliana",
+      "geometry": "geometry.MagicTheGathering.Liliana",
+      "texture": "Liliana.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "NicolBolas",
+      "geometry": "geometry.MagicTheGathering.NicolBolas",
+      "texture": "NicolBolas.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Nissa",
+      "geometry": "geometry.MagicTheGathering.Nissa",
+      "texture": "Nissa.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SaheeliRai",
+      "geometry": "geometry.MagicTheGathering.SaheeliRai",
+      "texture": "SaheeliRai.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Samut",
+      "geometry": "geometry.MagicTheGathering.Samut",
+      "texture": "Samut.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Tamiyo",
+      "geometry": "geometry.MagicTheGathering.Tamiyo",
+      "texture": "Tamiyo.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Tezzeret",
+      "geometry": "geometry.MagicTheGathering.Tezzeret",
+      "texture": "Tezzeret.png",
+      "type": "paid"
+    }
+  ],
+  "serialize_name": "MagicTheGathering",
+  "localization_name": "MagicTheGathering"
+}

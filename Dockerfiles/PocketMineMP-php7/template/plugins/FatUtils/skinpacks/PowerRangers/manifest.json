@@ -1,0 +1,25 @@
+{
+  "header": {
+    "version": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "description": "PLACE_HOLDER",
+    "name": "PowerRangers_SkinPack",
+    "uuid": "f9adfcce-74e6-4fa7-9bd3-3265e1ca77e1"
+  },
+  "modules": [
+    {
+      "version": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "description": "PLACE_HOLDER",
+      "type": "skin_pack",
+      "uuid": "00e2cf83-fe01-4b04-a4a1-422e47e86897"
+    }
+  ],
+  "format_version": 1.0
+}
