@@ -119,8 +119,8 @@ class ShopManager
 				->setCallback(function () use ($p_Player, $l_Ret)
 				{
 					$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Player);
-					$l_FatPlayer->addFatsilver(50);
-					$l_FatPlayer->addFatgold(50);
+					$l_FatPlayer->addFatsilver(500);
+					$l_FatPlayer->addFatgold(500);
 					$l_Ret->open();
 					Sidebar::getInstance()->updatePlayer($p_Player);
 				})
