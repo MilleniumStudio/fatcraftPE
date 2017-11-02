@@ -116,23 +116,23 @@ class NpcsManager implements Listener, CommandExecutor
                 {
                     if (isset($equipment["head"]) && $equipment["head"] !== "")
                     {
-                        $entity->getInventory()->setHelmet(Item::fromString($equipment["head"]));
+                        $entity->getInventory()->setHelmet(\fatutils\tools\ItemUtils::getItemFromRaw($equipment["head"]));
                     }
                     if (isset($equipment["chest"]) && $equipment["chest"] !== "")
                     {
-                        $entity->getInventory()->setChestplate(Item::fromString($equipment["chest"]));
+                        $entity->getInventory()->setChestplate(\fatutils\tools\ItemUtils::getItemFromRaw($equipment["chest"]));
                     }
                     if (isset($equipment["pants"]) && $equipment["pants"] !== "")
                     {
-                        $entity->getInventory()->setLeggings(Item::fromString($equipment["pants"]));
+                        $entity->getInventory()->setLeggings(\fatutils\tools\ItemUtils::getItemFromRaw($equipment["pants"]));
                     }
                     if (isset($equipment["boots"]) && $equipment["boots"] !== "")
                     {
-                        $entity->getInventory()->setItemInHand(Item::fromString($equipment["boots"]));
+                        $entity->getInventory()->setItemInHand(\fatutils\tools\ItemUtils::getItemFromRaw($equipment["boots"]));
                     }
                     if (isset($equipment["held"]) && $equipment["held"] !== "")
                     {
-                        $entity->getInventory()->setItemInHand(Item::fromString($equipment["held"]));
+                        $entity->getInventory()->setItemInHand(\fatutils\tools\ItemUtils::getItemFromRaw($equipment["held"]));
                     }
                 }
 
@@ -184,11 +184,9 @@ class NpcsManager implements Listener, CommandExecutor
         {
             $entity->namedtag->Commands[$command] = new StringTag($command, $command);
         }
-        $this->m_RegisteredNPCS[$name] = $entity;
-        $entity->setDataProperty(Entity::DATA_FLAG_NO_AI, Entity::DATA_TYPE_BYTE, 1, true);
-        $entity->setNameTagVisible(true);
-        $entity->setNameTagAlwaysVisible(true);
+        $entity->setNameTag($displayname);
         $p_Location->getLevel()->addEntity($entity);
+        $this->m_RegisteredNPCS[$name] = $entity;
         $entity->spawnToAll();
         FatUtils::getInstance()->getLogger()->info("[NPCS] Spawned entity " . $entity->getId() . " !");
         return $entity;

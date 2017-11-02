@@ -101,7 +101,8 @@ class HumanPet extends Human
                 $this->namedtag->Scale = new FloatTag("Scale", 1.0);
         }
         $this->setDataProperty(self::DATA_SCALE, self::DATA_TYPE_FLOAT, $this->namedtag->Scale->getValue());
-        
+        $this->setDataProperty(self::DATA_FLAG_NO_AI, self::DATA_TYPE_BYTE, 1, true);
+
         $this->initEntity();
     }
 
