@@ -16,8 +16,8 @@ class GPSCommand implements CommandExecutor
         {
             if ($sender instanceof Player)
             {
-                $sender->sendMessage("Position : " . round($sender->x, 2) . "/" . round($sender->y, 2) . "/" . round($sender->z, 2) . "/" . round($sender->pitch, 2) . "/" . round($sender->yaw, 2));
-                FatUtils::getInstance()->getLogger()->info("Position of ". $sender->getName() . " : " . round($sender->x, 2) . "/" . round($sender->y, 2) . "/" . round($sender->z, 2). "/" . round($sender->pitch, 2) . "/" . round($sender->yaw, 2));
+                $sender->sendMessage("Position : " . round($sender->x, 2) . "/" . round($sender->y, 2) . "/" . round($sender->z, 2) . "/" . round($sender->yaw, 2) . "/" . round($sender->pitch, 2));
+                FatUtils::getInstance()->getLogger()->info("Position of ". $sender->getName() . " : " . round($sender->x, 2) . "/" . round($sender->y, 2) . "/" . round($sender->z, 2). "/" . round($sender->yaw, 2). "/" . round($sender->pitch, 2) );
             }
         }
         return true;
