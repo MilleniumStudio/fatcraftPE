@@ -3,7 +3,6 @@ content:
     orbit:
       name: "shop.items.particles.orbit"
       desc: "shop.items.particles.circle.desc"
-      img: "https://icon-icons.com/icons2/365/PNG/256/kitten-icon_36975.png"
       class: "fatutils\\shop\\particles\\OrbitParticle"
       priceFS: 15
       priceFG: 5
@@ -281,7 +280,7 @@ content:
     EnderDragon:
       name: "shop.items.pets.EnderDragon"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 350
       type: "EnderDragon"
     Endermite:
       name: "shop.items.pets.Endermite"
