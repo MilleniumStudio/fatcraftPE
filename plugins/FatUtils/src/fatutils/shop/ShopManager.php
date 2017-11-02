@@ -198,7 +198,7 @@ class ShopManager
 		$l_Ret->setTitle((new TextFormatter($p_ShopItem->getName()))->asStringForFatPlayer($l_FatPlayer));
 
 		if ($p_ShopItem->getDescription() != null)
-			$l_Ret->setContent($p_ShopItem->getDescription());
+			$l_Ret->setContent((new TextFormatter($p_ShopItem->getDescription()))->asStringForFatPlayer($l_FatPlayer));
 
 		if (!$l_FatPlayer->isBought($p_ShopItem))
 		{
