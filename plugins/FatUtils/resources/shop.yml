@@ -2,56 +2,66 @@ content:
   particles:
     orbit:
       name: "shop.items.particles.orbit"
-      desc: "shop.items.particles.circle.desc"
+      desc: "shop.items.particles.orbit.desc"
       class: "fatutils\\shop\\particles\\OrbitParticle"
       priceFS: 15
       priceFG: 5
     crown:
       name: "shop.items.particles.crown"
+      desc: "shop.items.particles.crown.desc"
       class: "fatutils\\shop\\particles\\CrownParticle"
       priceFS: 25
     barrierYellow:
       name: "shop.items.particles.barrierYellow"
+      desc: "shop.items.particles.barrierYellow.desc"
       class: "fatutils\\shop\\particles\\BarrierParticle"
       priceFS: 25
       rgbColor: "#FFFF20"
     barrierRandom:
       name: "shop.items.particles.barrierRandom"
+      desc: "shop.items.particles.barrierRandom.desc"
       class: "fatutils\\shop\\particles\\BarrierParticle"
       priceFS: 25
       randomColors: true
     funnel:
       name: "shop.items.particles.funnel"
+      desc: "shop.items.particles.funnel.desc"
       class: "fatutils\\shop\\particles\\FunnelParticle"
       priceFS: 25
       randomColors: true
     funnelSmall:
       name: "shop.items.particles.funnelSmall"
+      desc: "shop.items.particles.funnelSmall.desc"
       class: "fatutils\\shop\\particles\\FunnelParticle"
       priceFS: 25
       offsetY: 0.4
       randomColors: true
     glyph:
       name: "shop.items.particles.glyph"
+      desc: "shop.items.particles.glyph.desc"
       class: "fatutils\\shop\\particles\\GlyphParticle"
       priceFS: 25
       offsetY: 0.1
     glyphyPath:
       name: "shop.items.particles.glyphyPath"
+      desc: "shop.items.particles.glyphyPath.desc"
       class: "fatutils\\shop\\particles\\GlyphyPathParticle"
       priceFS: 25
     heartPath:
       name: "shop.items.particles.heartPath"
+      desc: "shop.items.particles.heartPath.desc"
       class: "fatutils\\shop\\particles\\PathParticle"
       priceFS: 25
       rawParticle: "{\"particleName\":\"TYPE_HEART\"}"
     flamePath:
       name: "shop.items.particles.flamePath"
+      desc: "shop.items.particles.flamePath.desc"
       class: "fatutils\\shop\\particles\\PathParticle"
       priceFS: 25
       rawParticle: "{\"particleName\":\"TYPE_FLAME\"}"
     cape:
       name: "shop.items.particles.cape"
+      desc: "shop.items.particles.cape.desc"
       class: "fatutils\\shop\\particles\\CapeParticle"
       priceFS: 16
       rgbColor: "#FF2020"

@@ -163,8 +163,7 @@ class ShopManager
 					$l_BottomText .= $l_BuyableText->asStringForFatPlayer($l_FatPlayer);
 				else
 					$l_BottomText .= $l_UnbuyableText->asStringForFatPlayer($l_FatPlayer);
-			}
-			else if ($l_FatPlayer->isEquipped($l_ShopItem))
+			} else if ($l_FatPlayer->isEquipped($l_ShopItem))
 			{
 				$l_BottomText .= $l_EquippedText->asStringForFatPlayer($l_FatPlayer);
 			}
@@ -206,7 +205,13 @@ class ShopManager
 			if ($p_ShopItem->getFatsilverPrice() > -1)
 			{
 				$l_Ret->addPart((new Button())
-					->setText((new TextFormatter("shop.buy"))->asStringForFatPlayer($l_FatPlayer) . " (" . $p_ShopItem->getFatsilverPrice() . " " . (new TextFormatter("currency.fatsilver.short"))->asStringForFatPlayer($l_FatPlayer) . TextFormat::DARK_GRAY . TextFormat::RESET . ")")
+					->setText((new TextFormatter("shop.buy"))->asStringForFatPlayer($l_FatPlayer) .
+						" (" . $p_ShopItem->getFatsilverPrice() . " " . (new TextFormatter("currency.fatsilver.short"))->asStringForFatPlayer($l_FatPlayer) . TextFormat::DARK_GRAY . ")" .
+						($l_FatPlayer->getFatsilver() - $p_ShopItem->getFatsilverPrice() < 0 ? "\n" . (new TextFormatter("shop.moneyMissing", [
+								"amount" => abs($l_FatPlayer->getFatsilver() - $p_ShopItem->getFatsilverPrice()),
+								"money" => new TextFormatter("currency.fatsilver.short")
+							]))->asStringForFatPlayer($l_FatPlayer) : "")
+					)
 					->setCallback(function () use ($p_CategoryName, $p_ShopItem, $l_FatPlayer)
 					{
 						if ($l_FatPlayer->getFatsilver() - $p_ShopItem->getFatsilverPrice() >= 0)
@@ -225,7 +230,12 @@ class ShopManager
 			if ($p_ShopItem->getFatgoldPrice() > -1)
 			{
 				$l_Ret->addPart((new Button())
-					->setText((new TextFormatter("shop.buy"))->asStringForFatPlayer($l_FatPlayer) . " (" . $p_ShopItem->getFatgoldPrice() . " " . (new TextFormatter("currency.fatgold.short"))->asStringForFatPlayer($l_FatPlayer) . TextFormat::DARK_GRAY . TextFormat::RESET . ")")
+					->setText((new TextFormatter("shop.buy"))->asStringForFatPlayer($l_FatPlayer) .
+						" (" . $p_ShopItem->getFatgoldPrice() . " " . (new TextFormatter("currency.fatgold.short"))->asStringForFatPlayer($l_FatPlayer) . TextFormat::DARK_GRAY . ")" .
+						($l_FatPlayer->getFatgold() - $p_ShopItem->getFatgoldPrice() < 0 ? "\n" . (new TextFormatter("shop.moneyMissing", [
+								"amount" => abs($l_FatPlayer->getFatgold() - $p_ShopItem->getFatgoldPrice()),
+								"money" => new TextFormatter("currency.fatgold.short")
+							]))->asStringForFatPlayer($l_FatPlayer) : ""))
 					->setCallback(function () use ($p_CategoryName, $p_ShopItem, $l_FatPlayer)
 					{
 						if ($l_FatPlayer->getFatgold() - $p_ShopItem->getFatgoldPrice() >= 0)
