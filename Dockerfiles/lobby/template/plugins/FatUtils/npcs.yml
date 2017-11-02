@@ -1,0 +1,71 @@
+#NPCS config
+
+npcs:
+  - name: "hungergame"
+    displayname: "HungerGame"
+    location: -16.5/9/0.5/-3/270
+    type : "Player"
+    size : 1
+    skin: "Dryad"
+    equipment:
+      head: "{\"material\": \"GOLDEN_HELMET\"}"
+      chest: "{\"material\": \"CHAINMAIL_CHESTPLATE\"}"
+      pants: "{\"material\": \"IRON_LEGGINGS\"}"
+      boots: "{\"material\": \"LEATHER_BOOTS\"}"
+      held: "{\"material\": \"DIAMOND_PICKAXE\"}"
+    update: true
+    effects: []
+    commands: [
+      "server connect {player} hg"
+    ]
+  - name: "bedwar"
+    displayname: "BedWar"
+    location: 0.5/9/-17.5/-3/0
+    type : "Player"
+    size : 1
+    skin: "Dryad"
+    equipment:
+      head: "{\"material\": \"GOLDEN_HELMET\"}"
+      chest: "{\"material\": \"CHAINMAIL_CHESTPLATE\"}"
+      pants: "{\"material\": \"IRON_LEGGINGS\"}"
+      boots: "{\"material\": \"LEATHER_BOOTS\"}"
+      held: "{\"material\": \"DIAMOND_PICKAXE\"}"
+    update: true
+    effects: []
+    commands: [
+      "server connect {player} bw"
+    ]
+  - name: "skywar"
+    displayname: "SkyWar"
+    location: 17.71/9/0.27/-11/91
+    type : "Player"
+    size : 1
+    skin: "Dryad"
+    equipment:
+      head: "{\"material\": \"GOLDEN_HELMET\"}"
+      chest: "{\"material\": \"CHAINMAIL_CHESTPLATE\"}"
+      pants: "{\"material\": \"IRON_LEGGINGS\"}"
+      boots: "{\"material\": \"LEATHER_BOOTS\"}"
+      held: "{\"material\": \"DIAMOND_PICKAXE\"}"
+    update: true
+    effects: []
+    commands: [
+      "server connect {player} sw"
+    ]
+  - name: "murder"
+    displayname: "Murder"
+    location: 0.42/9/17.46/-11/177
+    type : "Player"
+    size : 1
+    skin: "Dryad"
+    equipment:
+      head: "{\"material\": \"GOLDEN_HELMET\"}"
+      chest: "{\"material\": \"CHAINMAIL_CHESTPLATE\"}"
+      pants: "{\"material\": \"IRON_LEGGINGS\"}"
+      boots: "{\"material\": \"LEATHER_BOOTS\"}"
+      held: "{\"material\": \"DIAMOND_PICKAXE\"}"
+    update: true
+    effects: []
+    commands: [
+      "server connect {player} md"
+    ]
