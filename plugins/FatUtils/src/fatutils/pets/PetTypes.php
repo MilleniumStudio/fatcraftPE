@@ -20,6 +20,8 @@ class PetTypes
     const PIG = "Pig";
 
     const ENTITIES = [
+        "Player" => ["id" => 63, "height" => 1.95, "width" => 0.6],
+
         "Chicken" => ["id" => 10, "height" => 0.7, "width" => 0.4, "fly" => true],
         "Cow" => ["id" => 11, "height" => 1.4, "width" => 0.9],
         "Pig" => ["id" => 12, "height" => 0.9, "width" => 0.9],

@@ -7,7 +7,6 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
-use pocketmine\plugin\PluginBase;
 
 class GPSCommand implements CommandExecutor
 {
@@ -17,9 +16,8 @@ class GPSCommand implements CommandExecutor
         {
             if ($sender instanceof Player)
             {
-                $l_Player = $sender;
-                $l_Player->sendMessage("Position : " . round($l_Player->x, 2) . "/" . round($l_Player->y, 2) . "/" . round($l_Player->z, 2));
-                FatUtils::getInstance()->getLogger()->info("Position of ". $l_Player->getName() . " : " . round($l_Player->x, 2) . "/" . round($l_Player->y, 2) . "/" . round($l_Player->z, 2));
+                $sender->sendMessage("Position : " . round($sender->x, 2) . "/" . round($sender->y, 2) . "/" . round($sender->z, 2) . "/" . round($sender->pitch, 2) . "/" . round($sender->yaw, 2));
+                FatUtils::getInstance()->getLogger()->info("Position of ". $sender->getName() . " : " . round($sender->x, 2) . "/" . round($sender->y, 2) . "/" . round($sender->z, 2). "/" . round($sender->pitch, 2) . "/" . round($sender->yaw, 2));
             }
         }
         return true;

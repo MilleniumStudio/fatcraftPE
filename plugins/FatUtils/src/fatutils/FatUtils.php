@@ -2,36 +2,22 @@
 
 namespace fatutils;
 
-use fatcraft\bedwars\ShopKeeper;
 use fatutils\ban\BanManager;
 use fatutils\commands\BanCommand;
 use fatutils\commands\MuteCommand;
 use fatutils\loot\ChestsManager;
 use fatutils\permission\PermissionManager;
 use fatutils\pets\PetsManager;
-use fatutils\players\PlayersManager;
-use fatutils\scores\PlayerScoreboard;
-use fatutils\scores\ScoreboardContainer;
-use fatutils\scores\ScoresManager;
+use fatutils\npcs\NpcsManager;
 use fatutils\shop\ShopManager;
-use fatutils\tools\animations\CircleAnimation;
 use fatutils\tools\RawParticle;
 use fatutils\tools\WorldUtils;
-use fatutils\ui\windows\ButtonWindow;
-use fatutils\ui\windows\FormWindow;
-use fatutils\ui\windows\ModalWindow;
 use fatutils\tools\TextFormatter;
-use fatutils\shop\ParticleItem;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use pocketmine\level\Location;
-use pocketmine\level\particle\RedstoneParticle;
-use pocketmine\level\Position;
-use pocketmine\math\Vector3;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
-use pocketmine\utils\UUID;
 
 class FatUtils extends PluginBase
 {
@@ -59,6 +45,7 @@ class FatUtils extends PluginBase
         $this->getCommand("ban")->setExecutor(new BanCommand());
         $this->getCommand("mute")->setExecutor(new MuteCommand());
         $this->getCommand("pet")->setExecutor(PetsManager::getInstance());
+        $this->getCommand("npcs")->setExecutor(NpcsManager::getInstance());
 
 
         WorldUtils::stopWorldsTime();
