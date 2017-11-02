@@ -17,6 +17,7 @@ use pocketmine\level\Location;
 use pocketmine\level\Position;
 use pocketmine\level\format\Chunk;
 use pocketmine\math\AxisAlignedBB;
+use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\AddEntityPacket;
 
 class WorldUtils
@@ -166,5 +167,25 @@ class WorldUtils
     {
         foreach (FatUtils::getInstance()->getServer()->getLevels() as $l_Level)
             $l_Level->setTime($time);
+    }
+
+    public static function getSideFromString($side)
+    {
+        switch($side){
+            case "SIDE_DOWN":
+                return Vector3::SIDE_DOWN;
+            case "SIDE_UP":
+                return Vector3::SIDE_UP;
+            case "SIDE_NORTH":
+                return Vector3::SIDE_NORTH;
+            case "SIDE_SOUTH":
+                return Vector3::SIDE_SOUTH;
+            case "SIDE_WEST":
+                return Vector3::SIDE_WEST;
+            case "SIDE_EAST":
+                return Vector3::SIDE_EAST;
+            default:
+                return Vector3::SIDE_DOWN;
+        }
     }
 }

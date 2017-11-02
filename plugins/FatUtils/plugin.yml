@@ -37,3 +37,6 @@ commands:
   npcs:
       description: "debug commands for pets"
       permission: command.npcs
+  sign:
+      description: "debug commands for pets"
+      permission: command.npcs

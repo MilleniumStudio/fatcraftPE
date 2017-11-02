@@ -1,0 +1,19 @@
+#Signs config
+
+signs:
+  - name: "example"
+    location: "0.24/8/8.07/359/-11"
+  # type : SIGN_POST / WALL_SIGN
+    type: "WALL_SIGN"
+  # side : SIDE_DOWN SIDE_UP SIDE_NORTH SIDE_SOUTH SIDE_WEST SIDE_EAST
+    side: "SIDE_WEST"
+    update: true
+    text : [
+      "line 1",
+      "line 2",
+      "line 3",
+      "line 4"
+    ]
+    commands: [
+      "tell {player} I'm a SIGN!!!!"
+    ]
