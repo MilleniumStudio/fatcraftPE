@@ -178,7 +178,6 @@ class HumanPet extends Human
 //        if(!($this instanceof Player)){
             $this->sendSkin([$player]);
 //        }
-        echo "sendSpawnPacket" . $this->getId();
     }
 
 

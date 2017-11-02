@@ -50,7 +50,6 @@ class NpcsManager implements Listener, CommandExecutor
 
     public function loadConfigs()
     {
-        \fatutils\tools\SkinUtils::listSkins();
         FatUtils::getInstance()->getLogger()->info("[NPCS] Loading npcs.yml");
         FatUtils::getInstance()->saveResource("npcs.yml");
         $this->config = new Config(FatUtils::getInstance()->getDataFolder() . "npcs.yml");
@@ -94,7 +93,6 @@ class NpcsManager implements Listener, CommandExecutor
             //Optionnal
             $size = (float) (isset($value['size']) ? $value['size'] : 1);
             $skin = isset($value['skin']) ? $value['skin'] : null;
-            $geometry = isset($value['geometry']) ? $value['geometry'] : null;
             $equipment = isset($value['equipment']) ? $value['equipment'] : [];
             $update = isset($value['update']) ? $value['update'] : false;
             $effects = isset($value['effects']) ? $value['effects'] : [];
@@ -105,9 +103,9 @@ class NpcsManager implements Listener, CommandExecutor
                 $entitySkin = null;
                 if ($type === "Player")
                 {
-                    if ($skin != null && $skin !== "" && $geometry != null && $geometry !== "")
+                    if ($skin != null && $skin !== "")
                     {
-                        $entitySkin = \fatutils\tools\SkinUtils::getSkin(FatUtils::getInstance()->getDataFolder() . "skins/" . $skin . ".png", FatUtils::getInstance()->getDataFolder() . "geometry/" . $geometry . ".json");
+                        $entitySkin = \fatutils\tools\SkinRepository::getInstance()->getSkin($skin);
                     }
                 }
 
@@ -172,9 +170,7 @@ class NpcsManager implements Listener, CommandExecutor
         {
             if ($p_Skin == null or $p_Skin == "")
             {
-                FatUtils::getInstance()->saveResource("skinpacks/steve.png");
-                FatUtils::getInstance()->saveResource("skinpacks/Base/base.json");
-                $p_Skin = \fatutils\tools\SkinUtils::getSkin(FatUtils::getInstance()->getDataFolder() . "skinpacks/Base/steve.png", FatUtils::getInstance()->getDataFolder() . "skinpacks/Base/base.json");
+                $p_Skin = \fatutils\tools\SkinRepository::getInstance()->getSkin("Steve");
             }
             $nbt->Skin = new CompoundTag("Skin", ["Data" => new StringTag("Data", $p_Skin->getSkinData()), "Name" => new StringTag("Name", $p_Skin->getSkinId())]);
             $entity = new \fatutils\pets\HumanPet($p_Location->getLevel(), $nbt, $chosenType);

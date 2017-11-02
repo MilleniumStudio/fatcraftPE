@@ -230,12 +230,44 @@ class SkinUtils{
             return $skin;
         }
 
+//        public static function getSkin($theme, $name)
+//        {
+//            $path = FatUtils::getInstance()->getDataFolder() . "/skinpacks/" . $theme . "/";
+//            $geometriesConf = new Config($path . "skins.json", Config::JSON);
+//            $skinData = self::fromImage(self::fromPNG($path));
+//            
+//            $geometryConf = new Config($geometry, Config::JSON);
+//            $geometryData = $geometryConf->getAll();
+//            $skin = new \pocketmine\entity\Skin(
+//                "test_1",
+//                $skinData,
+//                "",
+//                "geometry.humanoid.custom",
+//                json_encode($geometryData)
+//            );
+//            return $skin;
+//        }
+
         //Skin repository (in resources)
         public static function listSkins()
         {
-            foreach (FatUtils::getInstance()->getResources() as $resource)
+//            if(is_dir(FatUtils::getInstance()->getPluginFile() . "resources/skinpacks/")){
+////                FatUtils::getInstance()->saveResource("skinpacks/skins.json");
+////                $skinList = new Config("skinpacks/skins.json", Config::JSON);
+//                foreach(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(FatUtils::getInstance()->getPluginFile() . "resources/skinpacks/")) as $resource){
+//                    if (is_dir($resource))
+//                    {
+//                        echo $resource . "\n";
+//                    }
+//                }
+//            }
+            if (is_dir(FatUtils::getInstance()->getDataFolder() . "skinpacks/"))
             {
-                echo $resource . "\n";
+                foreach(new \IteratorIterator(new \DirectoryIterator(FatUtils::getInstance()->getDataFolder() . "/skinpacks/")) as $skinsPack)
+                {
+                    if ($skinsPack !== "." && $skinsPack !== "..")
+                    echo $skinsPack . "\n";
+                }
             }
         }
 	/**

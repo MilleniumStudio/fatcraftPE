@@ -1,0 +1,21 @@
+#NPCS config
+
+npcs:
+  - name: "name"
+    displayname: "subname"
+    location: 0/8/9.15/0/0
+    type : "Player"
+    size : 1
+    skin: "Base/steve"
+    geometry: "Base/base"
+    equipment:
+      - head: "GoldHelmet"
+      - chest: "IronChestplate"
+      - pants: "DiamondLeggings"
+      - boots: "LeatherBoots"
+      - held: "IronShovel"
+    update: true
+    effects: []
+    commands: [
+      "/tell {player} This is a test message !"
+    ]

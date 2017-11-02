@@ -13,6 +13,7 @@ use fatutils\shop\ShopManager;
 use fatutils\tools\RawParticle;
 use fatutils\tools\WorldUtils;
 use fatutils\tools\TextFormatter;
+use fatutils\tools\SkinRepository;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
@@ -45,6 +46,7 @@ class FatUtils extends PluginBase
         $this->getCommand("ban")->setExecutor(new BanCommand());
         $this->getCommand("mute")->setExecutor(new MuteCommand());
         $this->getCommand("pet")->setExecutor(PetsManager::getInstance());
+        $this->getCommand("skin")->setExecutor(SkinRepository::getInstance());
         $this->getCommand("npcs")->setExecutor(NpcsManager::getInstance());
 
 
@@ -120,5 +122,12 @@ class FatUtils extends PluginBase
     public function getTemplateConfig(): ?Config
     {
         return $this->m_TemplateConfig;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPluginFile() : string{
+        return $this->getFile();
     }
 }
