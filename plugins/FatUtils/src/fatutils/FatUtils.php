@@ -11,12 +11,15 @@ use fatutils\pets\PetsManager;
 use fatutils\npcs\NpcsManager;
 use fatutils\signs\SignsManager;
 use fatutils\shop\ShopManager;
+use fatutils\tools\LoopedExec;
+use fatutils\tools\volume\CuboidVolume;
 use fatutils\tools\RawParticle;
 use fatutils\tools\WorldUtils;
 use fatutils\tools\TextFormatter;
 use fatutils\tools\SkinRepository;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
+use pocketmine\entity\Entity;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
@@ -99,7 +102,28 @@ class FatUtils extends PluginBase
                 case "atest":
                     if ($sender instanceof Player)
                     {
-						(new RawParticle($sender->asVector3()->add(0, 2.5, 0), $args[1]))->playForPlayer($sender);
+//						(new RawParticle($sender->asVector3()->add(0, 2.5, 0), $args[1]))->playForPlayer($sender);
+
+						$vol = CuboidVolume::createRelativeVolume($sender, 1, 1, 1, -1, -1, -1);
+						new LoopedExec(function () use (&$sender, $vol) {
+							if ($vol instanceof CuboidVolume)
+							{
+								$vol->display();
+//								echo "Are you in ? " . ($vol->isIn($sender) ? "yes" : "nope") . "\n";
+							}
+						});
+
+						$vol->addCollisionListener(function (Entity $p_Entity) use ($vol) {
+							echo $vol->getId() . ": Collision With: " . $p_Entity->getId() . "\n";
+						});
+
+						$vol->addEnteringListener(function (Entity $p_Entity) use ($vol) {
+							echo $vol->getId() . ": Entering: " . $p_Entity->getId() . "\n";
+						});
+
+						$vol->addLeavingListener(function (Entity $p_Entity) use ($vol) {
+							echo $vol->getId() . ": Leaving: " . $p_Entity->getId() . "\n";
+						});
                     }
                     break;
                 case "fillchests":
