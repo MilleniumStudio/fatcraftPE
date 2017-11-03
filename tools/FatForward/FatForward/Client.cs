@@ -51,8 +51,12 @@ namespace FatForward
         /// </summary>
         public void ProcessReceivedClientPackets()
         {
-            m_PmmpEndPoint = GlobalVars.g_Database.getBestLobby();
-
+            while (m_PmmpEndPoint == null)
+            {
+                m_PmmpEndPoint = getBestLobby();
+                Thread.Sleep(500);
+                Console.WriteLine("Still no serv");
+            }
             m_PocketMineTunnel = new UdpClient();
             m_PocketMineTunnel.Client.ReceiveTimeout = GlobalVars.TIMEOUT * 1000;
             m_PocketMineTunnel.Connect(m_PmmpEndPoint);
@@ -121,6 +125,25 @@ namespace FatForward
                     break;
                 }
             }
+        }
+
+        public IPEndPoint getBestLobby()
+        {
+            IPEndPoint l_ToReturn = null;
+            int l_BestPlayerAmmount = 0;
+
+            foreach (KeyValuePair<string, ServerStatus> l_Itterator in GlobalVars.g_ServerStatus)
+            {
+                ServerStatus l_ServerStatus = l_Itterator.Value;
+                if (l_ServerStatus.m_Online < l_ServerStatus.m_Max && l_ServerStatus.m_Online >= l_BestPlayerAmmount)
+                    l_ToReturn = l_ServerStatus.m_EndPoint;
+
+                //Console.WriteLine("l_ToReturn = {0}", l_ToReturn.ToString());
+            }
+
+            if (l_ToReturn != null)
+                GlobalVars.g_ServerStatus[l_ToReturn.Address.ToString()].m_Online++;
+            return (l_ToReturn);
         }
     }
 }

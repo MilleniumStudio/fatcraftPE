@@ -5,88 +5,68 @@ using System.Text;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using System.Net;
+using System.Threading;
 
 namespace FatForward
 {
-    class DBConnector
+    static class DBConnector
     {
-        private MySqlConnection connection;
-        private string server;
-        private string database;
-        private string uid;
-        private string password;
-
-        //Constructor
-        public DBConnector()
+        static public void getLobbys()
         {
-            Initialize();
-        }
+            string l_Query = "SELECT ip, port, status, online, max FROM servers WHERE UNIX_TIMESTAMP() -UNIX_TIMESTAMP(laston) < 5 AND `max` > `online` AND `type` = 'lobby' AND `status` = 'open' ORDER BY `online` DESC";
+            MySqlConnection l_Connection;
+            string l_Server;
+            string l_Database;
+            string l_Uid;
+            string l_Password;
 
-        //Initialize values
-        private void Initialize()
-        {
-            /*            server = Environment.GetEnvironmentVariable("SERVER_IP");
-                        database = Environment.GetEnvironmentVariable("MYSQL_DATA");
-                        uid = Environment.GetEnvironmentVariable("MYSQL_USER");
-                        password = Environment.GetEnvironmentVariable("MYSQL_PASS");*/
+            l_Server = Environment.GetEnvironmentVariable("MYSQL_HOST");
+            l_Database = Environment.GetEnvironmentVariable("MYSQL_DATA");
+            l_Uid = Environment.GetEnvironmentVariable("MYSQL_USER");
+            l_Password = Environment.GetEnvironmentVariable("MYSQL_PASS");
 
-            server = "192.168.1.69";
-            database = "fatcraft_pe";
-            uid = "fatcraftpe";
-            password = "s54c5xcw4v56xc74g534cxb54g65b4gf654145bg";
+            string connectionString = "SERVER=" + l_Server + ";" + "DATABASE=" +
+            l_Database + ";" + "UID=" + l_Uid + ";" + "PASSWORD=" + l_Password + ";";
 
-            string connectionString = "SERVER=" + server + ";" + "DATABASE=" +
-            database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
+            l_Connection = new MySqlConnection(connectionString);
 
-            connection = new MySqlConnection(connectionString);
-            OpenConnection();
-        }
-
-        //open connection to database
-        private bool OpenConnection()
-        {
-            try
+            while (true)
             {
-                connection.Open();
-                return true;
+                try
+                {
+                    l_Connection.Open();
+                    break;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("DB not accessible");
+                    Thread.Sleep(1000);
+                    continue;
+                }
             }
-            catch (MySqlException e)
+
+            Console.WriteLine("Sql connection Opened.");
+
+            while (true)
             {
-                Console.WriteLine("SQL connection failed : {0}", e.ToString());
-                return false;
+                //Create Command
+                MySqlCommand cmd = new MySqlCommand(l_Query, l_Connection);
+                //Create a data reader and Execute the command
+               MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                while (dataReader.Read())
+                {
+                    ServerStatus l_SerververStatus = new ServerStatus(dataReader["ip"].ToString(), int.Parse(dataReader["port"].ToString()), dataReader["status"].ToString(), int.Parse(dataReader["online"].ToString()), int.Parse(dataReader["max"].ToString()));
+
+                    if (l_SerververStatus.m_Status != "open")
+                        continue;
+
+                    GlobalVars.g_ServerStatus[l_SerververStatus.m_Ip] = l_SerververStatus;
+                    //Console.WriteLine(l_SerververStatus.m_Ip);
+                }
+                dataReader.Close();
+                Thread.Sleep(1);
             }
-        }
-
-        //Close connection
-        private bool CloseConnection()
-        {
-            try
-            {
-                connection.Close();
-                return true;
-            }
-            catch (MySqlException e)
-            {
-                Console.WriteLine("SQL close connection failed : {0}", e.ToString());
-                return false;
-            }
-        }
-
-        public IPEndPoint getBestLobby()
-        {
-            string l_Query = "SELECT ip, PORT FROM servers WHERE UNIX_TIMESTAMP() -UNIX_TIMESTAMP(laston) < 5 AND `max` > `online` AND `type` = 'lobby' AND `status` = 'open' ORDER BY `online` DESC LIMIT 1";
-            IPEndPoint l_ToReturn = null;
-            string l_Result = "";
-
-            //Create Command
-            MySqlCommand cmd = new MySqlCommand(l_Query, connection);
-            //Create a data reader and Execute the command
-            MySqlDataReader dataReader = cmd.ExecuteReader();
-
-            while (dataReader.Read())
-                l_ToReturn = new IPEndPoint(IPAddress.Parse(dataReader["ip"].ToString()), int.Parse(dataReader["port"].ToString()));
-            dataReader.Close();
-            return l_ToReturn;
         }
     }
 }
