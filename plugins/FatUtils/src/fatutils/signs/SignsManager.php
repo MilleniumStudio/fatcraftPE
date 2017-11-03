@@ -95,10 +95,10 @@ class SignsManager implements Listener, CommandExecutor
 
 //            $sign = $this->spawnSign($l_Location, $p_Type, $p_Side, $name, $text, $commands);
 
-            if ($update)
-            {
-                $sign->namedtag->Update = true;
-            }
+//            if ($update)
+//            {
+//                $sign->namedtag->Update = true;
+//            }
 //            $this->updateSign($sign);
         }
     }
