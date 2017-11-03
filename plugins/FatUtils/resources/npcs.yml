@@ -1,6 +1,6 @@
 #NPCS config
 
-#npcs:
+npcs: []
 ##example for non Human NPC
 #  - name: "name"
 #    displayname: "subname"
