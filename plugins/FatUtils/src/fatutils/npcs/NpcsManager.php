@@ -150,7 +150,7 @@ class NpcsManager implements Listener, CommandExecutor
         $nbt = new CompoundTag("", [
             "Pos" => new ListTag("Pos", [
                 new DoubleTag("", $p_Location->getX()),
-                new DoubleTag("", $p_Location->getY() + 0.5),
+                new DoubleTag("", $p_Location->getY()),
                 new DoubleTag("", $p_Location->getZ())
             ]),
             "Motion" => new ListTag("Motion", [
