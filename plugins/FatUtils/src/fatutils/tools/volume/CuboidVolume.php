@@ -58,6 +58,7 @@ class CuboidVolume
 	public function __construct(Position $p_Pos1, Position $p_Pos2)
 	{
 		$this->m_Id = self::$m_IdAutoIncrement++;
+		echo "New Volume: " . $this->m_Id . " (next:" . self::$m_IdAutoIncrement .")\n";
 
 		$this->m_Pos1 = $p_Pos1;
 		$this->m_Pos2 = $p_Pos2;
@@ -100,7 +101,12 @@ class CuboidVolume
 	public function initScheduler()
 	{
 		if (array_key_exists($this->m_Id, self::$m_CollidableVolumes) == false)
+		{
 			self::$m_CollidableVolumes[$this->m_Id] = $this;
+			echo "Scheduler adding new volume: " . $this->getId() . "\n";
+			foreach (self::$m_CollidableVolumes as $key => $l_Volume)
+				echo "  --> " . $key . " => " . $l_Volume->getId() . "\n";
+		}
 
 		if (is_null(self::$m_CollisionTask))
 		{
@@ -109,36 +115,36 @@ class CuboidVolume
 				{
 					if ($l_Volume instanceof CuboidVolume)
 					{
-						foreach ($this->getPos1()->getLevel()->getEntities() as $l_Entity)
+						foreach ($l_Volume->getPos1()->getLevel()->getEntities() as $l_Entity)
 						{
-							$l_WasIn = array_key_exists($l_Entity->getId(), $this->m_EntitiesInside);
+							$l_WasIn = array_key_exists($l_Entity->getId(), $l_Volume->m_EntitiesInside);
 
 							if ($l_Volume->isIn($l_Entity))
 							{
-								// COLLISIONS
-								foreach ($this->m_CollisionCallbacks as $l_CollisionCallback)
-								{
-									if (is_callable($l_CollisionCallback))
-										$l_CollisionCallback($l_Entity);
-								}
-
 								if (!$l_WasIn)
 								{
-									$this->m_EntitiesInside[$l_Entity->getId()] = $l_Entity;
+									$l_Volume->m_EntitiesInside[$l_Entity->getId()] = $l_Entity;
 
 									// ENTERING
-									foreach ($this->m_EnterVolumeCallbacks as $l_EnterVolumeCallback)
+									foreach ($l_Volume->m_EnterVolumeCallbacks as $l_EnterVolumeCallback)
 									{
 										if (is_callable($l_EnterVolumeCallback))
 											$l_EnterVolumeCallback($l_Entity);
 									}
 								}
+
+								// COLLISIONS
+								foreach ($l_Volume->m_CollisionCallbacks as $l_CollisionCallback)
+								{
+									if (is_callable($l_CollisionCallback))
+										$l_CollisionCallback($l_Entity);
+								}
 							} else if ($l_WasIn)
 							{
-								unset($this->m_EntitiesInside[$l_Entity->getId()]);
+								unset($l_Volume->m_EntitiesInside[$l_Entity->getId()]);
 
 								// LEAVING
-								foreach ($this->m_LeaveVolumeCallbacks as $l_LeaveVolumeCallback)
+								foreach ($l_Volume->m_LeaveVolumeCallbacks as $l_LeaveVolumeCallback)
 								{
 									if (is_callable($l_LeaveVolumeCallback))
 										$l_LeaveVolumeCallback($l_Entity);
