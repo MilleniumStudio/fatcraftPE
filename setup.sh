@@ -7,7 +7,7 @@ BUILD_POCKETMINE_CORE="no"
 BUILD_POCKETMINE_DOCKER="no"
 
 
-while getopts "::ujcdp" OPTION; do
+while getopts "::ujcdph" OPTION; do
 
     case $OPTION in
         u)
@@ -35,6 +35,16 @@ while getopts "::ujcdp" OPTION; do
         p)
             echo "[opt] Recompile PHP7 set to YES"
             COMPILE_BIN="yes"
+            ;;
+        h)
+            echo "FatcraftPE setup script help :"
+            echo ""
+            echo "-u    Update PocketMine-MP repository to latest version"
+            echo "-j 8  Set make threads to 8"
+            echo "-c    Update PocketMine-MP repository & PocketMine-MP build core"
+            echo "-d    Update PocketMine-MP repository & PocketMine-MP build core & PocketMine-MP docker image build"
+            echo "-h    Display this help section"
+            exit 0
             ;;
         \?)
             echo "Invalid option: -$OPTION$OPTARG" >&2
