@@ -19,11 +19,17 @@ while getopts "::ujcdp" OPTION; do
             THREADS="$OPTARG"
             ;;
         c)
+            echo "[opt] Update PocketMine-MP repository to latest version"
             echo "[opt] PocketMine-MP build core set to YES"
+            UPDATE_POCKETMINE_CORE="yes"
             BUILD_POCKETMINE_CORE="yes"
             ;;
         d)
+            echo "[opt] Update PocketMine-MP repository to latest version"
+            echo "[opt] PocketMine-MP build core set to YES"
             echo "[opt] PocketMine-MP docker image build set to YES"
+            UPDATE_POCKETMINE_CORE="yes"
+            BUILD_POCKETMINE_CORE="yes"
             BUILD_POCKETMINE_DOCKER="yes"
             ;;
         p)
