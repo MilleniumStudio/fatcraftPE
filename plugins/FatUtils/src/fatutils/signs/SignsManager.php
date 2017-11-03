@@ -13,7 +13,7 @@ use pocketmine\Player;
 use pocketmine\scheduler\PluginTask;
 use pocketmine\utils\Config;
 use pocketmine\event\Listener;
-use pocketmine\event\entity\EntityDamageEvent;
+use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\entity\Entity;
 use pocketmine\level\Location;
 use pocketmine\nbt\tag\CompoundTag;
@@ -30,6 +30,7 @@ use pocketmine\tile\Sign as TileSign;
 use pocketmine\tile\Tile;
 use pocketmine\nbt\tag\NamedTag;
 use pocketmine\block\BlockIds;
+use pocketmine\block\Block;
 use pocketmine\block\BlockFactory;
 
 class SignsManager implements Listener, CommandExecutor
@@ -92,13 +93,27 @@ class SignsManager implements Listener, CommandExecutor
             $text = isset($value['text']) ? $value['text'] : ["", "", "", ""];
             $commands = isset($value['commands']) ? $value['commands'] : [];
 
-            $sign = $this->spawnSign($l_Location, $p_Type, $p_Side, $name, $text, $commands);
+//            $sign = $this->spawnSign($l_Location, $p_Type, $p_Side, $name, $text, $commands);
 
             if ($update)
             {
                 $sign->namedtag->Update = true;
             }
 //            $this->updateSign($sign);
+        }
+    }
+
+    public function getSignAt(Location $p_Location)
+    {
+        $block = $p_Location->getLevel()->getBlockAt($p_Location->x, $p_Location->y, $p_Location->z);
+        if ($block->getId() == Block::SIGN_POST OR $block->getId() == Block::WALL_SIGN)
+        {
+            $tile = $block->getLevel()->getTile($block);
+
+            if ($tile instanceof TileSign)
+            {
+                
+            }
         }
     }
 
@@ -138,7 +153,7 @@ class SignsManager implements Listener, CommandExecutor
 
     public function updateSigns(int $currentTick)
     {
-
+        
     }
 
     public function updateSign(Tile $p_Tile)
@@ -193,28 +208,32 @@ class SignsManager implements Listener, CommandExecutor
 //        \fatutils\tools\SkinUtils::saveSkin($p_Event->getPlayer()->getSkin(), FatUtils::getInstance()->getDataFolder() . "skins/" . $p_Event->getPlayer()->getName() . ".png");
     }
 
-    /**
-        * @param EntityDamageEvent $event
-        * @ignoreCancelled true
-        *
-        * @return void
-        */
-//    public function onEntityDamage(EntityDamageEvent $event)
-//    {
-//        if(!$event instanceof EntityDamageByEntityEvent) {
-//            return;
-//        }
-//        if(!$event->getDamager() instanceof Player) {
-//            return;
-//        }
-//        if(isset($event->getEntity()->namedtag->Commands))
-//        {
-//            $event->setCancelled(true);
-//            foreach ($event->getEntity()->namedtag->Commands as $cmd) {
-//                FatUtils::getInstance()->getServer()->dispatchCommand(new ConsoleCommandSender(), str_replace("{player}", $event->getDamager()->getName(), $cmd));
-//            }
-//        }
-//    }
+    public function onPlayerInteract(PlayerInteractEvent $event)
+    {
+        $player = $event->getPlayer();
+        $block = $event->getBlock();
+
+        if ($block->getId() == Block::SIGN_POST OR $block->getId() == Block::WALL_SIGN)
+        {
+            $tile = $block->getLevel()->getTile($block);
+
+            if ($tile instanceof TileSign)
+            {
+                echo "Text interact " . $block->getName() . " " . $tile->x . "/" . $tile->y . "/" . $tile->z . "\n";
+//                $config = $tile->namedtag->Config;
+//                $text = $tile->getText();
+//                $configFile = $this->config();
+//
+//                switch ($text[0])
+//                {
+//                    case $configFile->get(""):
+//                    {
+//                        
+//                    }
+//                }
+            }
+        }
+    }
 }
 
 //===============================================
