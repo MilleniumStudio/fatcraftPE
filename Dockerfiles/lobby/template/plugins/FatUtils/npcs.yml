@@ -3,7 +3,7 @@
 npcs:
   - name: "hungergame"
     displayname: "HungerGame"
-    location: -16.5/9/0.5/-3/270
+    location: -16.5/9/0.5/270/-10
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -20,7 +20,7 @@ npcs:
     ]
   - name: "bedwar"
     displayname: "BedWar"
-    location: 0.5/9/-17.5/-3/0
+    location: 0.5/9/-17.5/0/-10
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -37,7 +37,7 @@ npcs:
     ]
   - name: "skywar"
     displayname: "SkyWar"
-    location: 17.71/9/0.27/-11/91
+    location: 17.5/9/0.5/90/-10
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -54,7 +54,7 @@ npcs:
     ]
   - name: "murder"
     displayname: "Murder"
-    location: 0.42/9/17.46/-11/177
+    location: 0.5/9/17.5/180/-10
     type : "Player"
     size : 1
     skin: "Dryad"
