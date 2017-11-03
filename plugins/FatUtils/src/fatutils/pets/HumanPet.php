@@ -24,7 +24,7 @@ class HumanPet extends Human
     private $m_petType = "none";
     public $width = 1;
     public $height = 1;
-    public $m_hasGravity = true;
+    public $m_hasGravity = false;
     public $m_isJumper = false;
     public $m_distOffset = 0;
     public $m_offsetY = 0;
