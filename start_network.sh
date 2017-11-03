@@ -26,7 +26,7 @@ start_docker()
 
 # start lobbies
 start_docker lobby 1 19132 fatcraft/pocketmine:lobby mainLobby
-#start_docker lobby 2 19133 fatcraft/pocketmine:lobby mainLobby
+start_docker lobby 2 19133 fatcraft/pocketmine:lobby mainLobby
 
 # start games
 start_docker hg 1 19134 fatcraft/pocketmine:hg-1 hg/HGMapSpaceship
@@ -35,6 +35,7 @@ start_docker sw 1 19136 fatcraft/pocketmine:sw-1 sw/sw-end
 start_docker sw 2 19137 fatcraft/pocketmine:sw-2 sw/sw-alien
 start_docker bw 1 19138 fatcraft/pocketmine:bw-1 bw/map1-4x3
 start_docker bw 2 19139 fatcraft/pocketmine:bw-2 bw/bw-krum
+start_docker md 1 19140 fatcraft/pocketmine:md-1 md/murder_krum
 
 
 ## DEBUG
