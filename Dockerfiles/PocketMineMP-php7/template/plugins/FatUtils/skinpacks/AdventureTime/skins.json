@@ -1,0 +1,313 @@
+{
+  "skins": [
+    {
+      "localization_name": "BananaGuard",
+      "geometry": "geometry.MashupAdventureTime.BananaGuard",
+      "texture": "BananaGuard.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "BettyGrof",
+      "geometry": "geometry.MashupAdventureTime.BettyGrof",
+      "texture": "BettyGrof.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Billy",
+      "geometry": "geometry.MashupAdventureTime.Billy",
+      "texture": "Billy.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "BillyYoung",
+      "geometry": "geometry.MashupAdventureTime.BillyYoung",
+      "texture": "BillyYoung.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "BMO",
+      "geometry": "geometry.MashupAdventureTime.BMO",
+      "texture": "BMO.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "BreakfastPrincess",
+      "geometry": "geometry.MashupAdventureTime.BreakfastPrincess",
+      "texture": "BreakfastPrincess.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Cake",
+      "geometry": "geometry.MashupAdventureTime.Cake",
+      "texture": "Cake.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Charlie",
+      "geometry": "geometry.MashupAdventureTime.Charlie",
+      "texture": "Charlie.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Death",
+      "geometry": "geometry.MashupAdventureTime.Death",
+      "texture": "Death.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "DrGross",
+      "geometry": "geometry.MashupAdventureTime.DrGross",
+      "texture": "DrGross.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "DrPrincess",
+      "geometry": "geometry.MashupAdventureTime.DrPrincess",
+      "texture": "DrPrincess.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "EarlofLemongrab",
+      "geometry": "geometry.MashupAdventureTime.EarlofLemongrab",
+      "texture": "EarlofLemongrab.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "EmeraldPrincess",
+      "geometry": "geometry.MashupAdventureTime.EmeraldPrincess",
+      "texture": "EmeraldPrincess.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Finn",
+      "geometry": "geometry.MashupAdventureTime.Finn",
+      "texture": "Finn.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "FinnJammies",
+      "geometry": "geometry.MashupAdventureTime.FinnJammies",
+      "texture": "FinnJammies.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Fionna",
+      "geometry": "geometry.MashupAdventureTime.Fionna",
+      "texture": "Fionna.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "FionnaDress",
+      "geometry": "geometry.MashupAdventureTime.FionnaDress",
+      "texture": "FionnaDress.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "FlamePrince",
+      "geometry": "geometry.MashupAdventureTime.FlamePrince",
+      "texture": "FlamePrince.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "FlamePrincess",
+      "geometry": "geometry.MashupAdventureTime.FlamePrincess",
+      "texture": "FlamePrincess.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Frieda",
+      "geometry": "geometry.MashupAdventureTime.Frieda",
+      "texture": "Frieda.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "FrozenYogurtPrincess",
+      "geometry": "geometry.MashupAdventureTime.FrozenYogurtPrincess",
+      "texture": "FrozenYogurtPrincess.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "GaryTheMermaidQueen",
+      "geometry": "geometry.MashupAdventureTime.GaryTheMermaidQueen",
+      "texture": "GaryTheMermaidQueen.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "GrassFinn",
+      "geometry": "geometry.MashupAdventureTime.GrassFinn",
+      "texture": "GrassFinn.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "GrobGobGlobGrod",
+      "geometry": "geometry.MashupAdventureTime.GrobGobGlobGrod",
+      "texture": "GrobGobGlobGrod.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Gunter",
+      "geometry": "geometry.MashupAdventureTime.Gunter",
+      "texture": "Gunter.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "HeadMarauder",
+      "geometry": "geometry.MashupAdventureTime.HeadMarauder",
+      "texture": "HeadMarauder.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "HunsonAbadeer",
+      "geometry": "geometry.MashupAdventureTime.HunsonAbadeer",
+      "texture": "HunsonAbadeer.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "HuntressWizard",
+      "geometry": "geometry.MashupAdventureTime.HuntressWizard",
+      "texture": "HuntressWizard.png",
+      "cape": "skin_packs/MashupAdventureTime/HuntressWizard_cape.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "IceKing",
+      "geometry": "geometry.MashupAdventureTime.IceKing",
+      "texture": "IceKing.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "IceQueen",
+      "geometry": "geometry.MashupAdventureTime.IceQueen",
+      "texture": "IceQueen.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Jake",
+      "geometry": "geometry.MashupAdventureTime.Jake",
+      "texture": "Jake.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "JakeJr",
+      "geometry": "geometry.MashupAdventureTime.JakeJr",
+      "texture": "JakeJr.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "KingofOoo",
+      "geometry": "geometry.MashupAdventureTime.KingofOoo",
+      "texture": "KingofOoo.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "LadyRainicorn",
+      "geometry": "geometry.MashupAdventureTime.LadyRainicorn",
+      "texture": "LadyRainicorn.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "LumpySpacePrincess",
+      "geometry": "geometry.MashupAdventureTime.LumpySpacePrincess",
+      "texture": "LumpySpacePrincess.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "MagicMan",
+      "geometry": "geometry.MashupAdventureTime.MagicMan",
+      "texture": "MagicMan.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Marceline",
+      "geometry": "geometry.MashupAdventureTime.Marceline",
+      "texture": "Marceline.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "MarshallLee",
+      "geometry": "geometry.MashupAdventureTime.MarshallLee",
+      "texture": "MarshallLee.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "MartinMertens",
+      "geometry": "geometry.MashupAdventureTime.MartinMertens",
+      "texture": "MartinMertens.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "MartinMertensYoung",
+      "geometry": "geometry.MashupAdventureTime.MartinMertensYoung",
+      "texture": "MartinMertensYoung.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Minerva",
+      "geometry": "geometry.MashupAdventureTime.Minerva",
+      "texture": "Minerva.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "PrinceGumball",
+      "geometry": "geometry.MashupAdventureTime.PrinceGumball",
+      "texture": "PrinceGumball.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "PrincessBubblegum",
+      "geometry": "geometry.MashupAdventureTime.PrincessBubblegum",
+      "texture": "PrincessBubblegum.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "RaggedyPrincess",
+      "geometry": "geometry.MashupAdventureTime.RaggedyPrincess",
+      "texture": "RaggedyPrincess.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Ricardio",
+      "geometry": "geometry.MashupAdventureTime.Ricardio",
+      "texture": "Ricardio.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SimonPetrikov",
+      "geometry": "geometry.MashupAdventureTime.SimonPetrikov",
+      "texture": "SimonPetrikov.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SirSlicer",
+      "geometry": "geometry.MashupAdventureTime.SirSlicer",
+      "texture": "SirSlicer.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SusanStrong",
+      "geometry": "geometry.MashupAdventureTime.SusanStrong",
+      "texture": "SusanStrong.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "TheLich",
+      "geometry": "geometry.MashupAdventureTime.TheLich",
+      "texture": "TheLich.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Viola",
+      "geometry": "geometry.MashupAdventureTime.Viola",
+      "texture": "Viola.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Witch",
+      "geometry": "geometry.MashupAdventureTime.Witch",
+      "texture": "Witch.png",
+      "type": "paid"
+    }
+  ],
+  "serialize_name": "MashupAdventureTime",
+  "localization_name": "MashupAdventureTime"
+}

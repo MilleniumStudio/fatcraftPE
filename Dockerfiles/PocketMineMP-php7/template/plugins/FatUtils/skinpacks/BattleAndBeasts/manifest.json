@@ -1,0 +1,25 @@
+{
+  "header": {
+    "version": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "description": "PLACE_HOLDER",
+    "name": "BattleAndBeasts_SkinPack",
+    "uuid": "f0b7f10f-63fd-4aa0-a6bc-8ab13111e396"
+  },
+  "modules": [
+    {
+      "version": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "description": "PLACE_HOLDER",
+      "type": "skin_pack",
+      "uuid": "5e60b99d-f8d4-42d5-b84d-8adc1f7989cb"
+    }
+  ],
+  "format_version": 1.0
+}

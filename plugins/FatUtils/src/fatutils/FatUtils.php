@@ -2,36 +2,27 @@
 
 namespace fatutils;
 
-use fatcraft\bedwars\ShopKeeper;
 use fatutils\ban\BanManager;
 use fatutils\commands\BanCommand;
 use fatutils\commands\MuteCommand;
 use fatutils\loot\ChestsManager;
 use fatutils\permission\PermissionManager;
 use fatutils\pets\PetsManager;
-use fatutils\players\PlayersManager;
-use fatutils\scores\PlayerScoreboard;
-use fatutils\scores\ScoreboardContainer;
-use fatutils\scores\ScoresManager;
+use fatutils\npcs\NpcsManager;
+use fatutils\signs\SignsManager;
 use fatutils\shop\ShopManager;
-use fatutils\tools\animations\CircleAnimation;
+use fatutils\tools\LoopedExec;
+use fatutils\tools\volume\CuboidVolume;
 use fatutils\tools\RawParticle;
 use fatutils\tools\WorldUtils;
-use fatutils\ui\windows\ButtonWindow;
-use fatutils\ui\windows\FormWindow;
-use fatutils\ui\windows\ModalWindow;
 use fatutils\tools\TextFormatter;
-use fatutils\shop\ParticleItem;
+use fatutils\tools\SkinRepository;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use pocketmine\level\Location;
-use pocketmine\level\particle\RedstoneParticle;
-use pocketmine\level\Position;
-use pocketmine\math\Vector3;
+use pocketmine\entity\Entity;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
-use pocketmine\utils\UUID;
 
 class FatUtils extends PluginBase
 {
@@ -59,6 +50,9 @@ class FatUtils extends PluginBase
         $this->getCommand("ban")->setExecutor(new BanCommand());
         $this->getCommand("mute")->setExecutor(new MuteCommand());
         $this->getCommand("pet")->setExecutor(PetsManager::getInstance());
+        $this->getCommand("skin")->setExecutor(SkinRepository::getInstance());
+        $this->getCommand("npcs")->setExecutor(NpcsManager::getInstance());
+        $this->getCommand("sign")->setExecutor(SignsManager::getInstance());
 
 
         WorldUtils::stopWorldsTime();
@@ -108,7 +102,28 @@ class FatUtils extends PluginBase
                 case "atest":
                     if ($sender instanceof Player)
                     {
-						(new RawParticle($sender->asVector3()->add(0, 2.5, 0), $args[1]))->playForPlayer($sender);
+//						(new RawParticle($sender->asVector3()->add(0, 2.5, 0), $args[1]))->playForPlayer($sender);
+
+						$vol = CuboidVolume::createRelativeVolume($sender, 1, 1, 1, -1, -1, -1);
+						new LoopedExec(function () use (&$sender, $vol) {
+							if ($vol instanceof CuboidVolume)
+							{
+								$vol->display();
+//								echo "Are you in ? " . ($vol->isIn($sender) ? "yes" : "nope") . "\n";
+							}
+						});
+
+						$vol->addCollisionListener(function (Entity $p_Entity) use ($vol) {
+							echo $vol->getId() . ": Collision With: " . $p_Entity->getId() . "\n";
+						});
+
+						$vol->addEnteringListener(function (Entity $p_Entity) use ($vol) {
+							echo $vol->getId() . ": Entering: " . $p_Entity->getId() . "\n";
+						});
+
+						$vol->addLeavingListener(function (Entity $p_Entity) use ($vol) {
+							echo $vol->getId() . ": Leaving: " . $p_Entity->getId() . "\n";
+						});
                     }
                     break;
                 case "fillchests":
@@ -133,5 +148,12 @@ class FatUtils extends PluginBase
     public function getTemplateConfig(): ?Config
     {
         return $this->m_TemplateConfig;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPluginFile() : string{
+        return $this->getFile();
     }
 }

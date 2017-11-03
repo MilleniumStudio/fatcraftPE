@@ -67,13 +67,14 @@ class GamesWindow
 				$l_ChoosedServer = LoadBalancer::getInstance()->getRandomNonEmptyServer([
 					LoadBalancer::TEMPLATE_TYPE_BEDWAR,
 					LoadBalancer::TEMPLATE_TYPE_HUNGER_GAME,
-					LoadBalancer::TEMPLATE_TYPE_SKYWAR
+					LoadBalancer::TEMPLATE_TYPE_SKYWAR,
+					LoadBalancer::TEMPLATE_TYPE_MURDER
 				]);
 
 				if (!is_null($l_ChoosedServer))
 				{
-					$l_FatPlayer->getPlayer()->sendMessage((new TextFormatter("template.sendTo", ["name" => new TextFormatter("template." . $l_ChoosedServer)]))->asStringForFatPlayer($l_FatPlayer));
-					LoadBalancer::getInstance()->transferPlayer($l_FatPlayer->getPlayer(), $l_ChoosedServer["id"], $l_ChoosedServer["port"], "");
+					$l_FatPlayer->getPlayer()->sendMessage((new TextFormatter("template.sendTo", ["name" => new TextFormatter("template." . $l_ChoosedServer["type"])]))->asStringForFatPlayer($l_FatPlayer));
+					LoadBalancer::getInstance()->transferPlayer($l_FatPlayer->getPlayer(), $l_ChoosedServer["ip"], $l_ChoosedServer["port"], "");
 				} else
 					$l_FatPlayer->getPlayer()->sendMessage((new TextFormatter("template.noAvailable"))->asStringForFatPlayer($l_FatPlayer));
 			})

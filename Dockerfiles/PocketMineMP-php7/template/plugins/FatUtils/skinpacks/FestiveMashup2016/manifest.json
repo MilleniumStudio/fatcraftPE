@@ -1,0 +1,25 @@
+{
+  "header": {
+    "version": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "description": "PLACE_HOLDER",
+    "name": "Festive_SkinPack",
+    "uuid": "4751d3bd-a3ea-4094-8109-a815fd609599"
+  },
+  "modules": [
+    {
+      "version": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "description": "PLACE_HOLDER",
+      "type": "skin_pack",
+      "uuid": "3be58a3b-c309-4497-a121-6016e958ce67"
+    }
+  ],
+  "format_version": 1.0
+}

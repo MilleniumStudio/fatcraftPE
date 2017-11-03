@@ -1,0 +1,25 @@
+{
+  "header": {
+    "version": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "description": "PLACE_HOLDER",
+    "name": "MagicTheGathering_SkinPack",
+    "uuid": "4fcece3c-40f7-4875-b34d-0c0fa9661b0e"
+  },
+  "modules": [
+    {
+      "version": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "description": "PLACE_HOLDER",
+      "type": "skin_pack",
+      "uuid": "9d22cdba-62c7-4ef6-809d-9990fbd5c5cd"
+    }
+  ],
+  "format_version": 1.0
+}

@@ -1,0 +1,25 @@
+{
+  "header": {
+    "version": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "description": "PLACE_HOLDER",
+    "name": "Fallout_SkinPack",
+    "uuid": "9cb07be9-c770-4f6a-8624-4b719e8a1831"
+  },
+  "modules": [
+    {
+      "version": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "description": "PLACE_HOLDER",
+      "type": "skin_pack",
+      "uuid": "874c4ffa-a295-40dc-9965-78ee73ce8df8"
+    }
+  ],
+  "format_version": 1.0
+}

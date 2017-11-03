@@ -191,21 +191,24 @@ class EventListener implements Listener
                         if ($this->allSigns->getServer()->getPluginManager()->getPlugin("LoadBalancer") != null)
                         {
                             $LoadBalancer = \fatcraft\loadbalancer\LoadBalancer::getInstance();
-                            if (strstr($text[1], '-')) // in case of server sign
+                            if ($player->hasPermission("sign.network.serverjoin"))
                             {
-                                $split = explode('-', $text[1]);
-                                $server = $LoadBalancer->getNetworkServer($split[0], $split[1]);
-                                if ($server !== null)
+                                if (strstr($text[1], '-')) // in case of server sign
                                 {
-                                    if ($server["status"] == "open")
+                                    $split = explode('-', $text[1]);
+                                    $server = $LoadBalancer->getNetworkServer($split[0], $split[1]);
+                                    if ($server !== null)
                                     {
-                                        $this->getAllSigns()->getServer()->dispatchCommand($this->m_ConsoleCommandSender, "server connect " . $player->getName() . " ". $split[0] . " " . $split[1]);
+                                        if ($server["status"] == "open")
+                                        {
+                                            $this->getAllSigns()->getServer()->dispatchCommand($this->m_ConsoleCommandSender, "server connect " . $player->getName() . " ". $split[0] . " " . $split[1]);
+                                        }
                                     }
                                 }
-                            }
-                            else // in case of type sign
-                            {
-                                $this->getAllSigns()->getServer()->dispatchCommand($this->m_ConsoleCommandSender, "server connect " . $player->getName() . " ". $text[1]);
+                                else // in case of type sign
+                                {
+                                    $this->getAllSigns()->getServer()->dispatchCommand($this->m_ConsoleCommandSender, "server connect " . $player->getName() . " ". $text[1]);
+                                }
                             }
                         }
                         break;

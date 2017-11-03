@@ -1,0 +1,278 @@
+{
+  "skins": [
+    {
+      "localization_name": "Aardvark",
+      "geometry": "geometry.BattleAndBeasts.Aardvark",
+      "texture": "Aardvark.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "AfricanWarrior",
+      "geometry": "geometry.BattleAndBeasts.AfricanWarrior",
+      "texture": "AfricanWarrior.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "AfricanWarriorv2",
+      "geometry": "geometry.BattleAndBeasts.AfricanWarriorv2",
+      "texture": "AfricanWarriorv2.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Antelope",
+      "geometry": "geometry.BattleAndBeasts.Antelope",
+      "texture": "Antelope.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "BushBaby",
+      "geometry": "geometry.BattleAndBeasts.BushBaby",
+      "texture": "BushBaby.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "CaveSpiderinaSuit",
+      "geometry": "geometry.BattleAndBeasts.CaveSpiderinaSuit",
+      "texture": "CaveSpiderinaSuit.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "ChickeninaSuit",
+      "geometry": "geometry.BattleAndBeasts.ChickeninaSuit",
+      "texture": "ChickeninaSuit.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Cowhand",
+      "geometry": "geometry.BattleAndBeasts.Cowhand",
+      "texture": "Cowhand.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Cowhandv2",
+      "geometry": "geometry.BattleAndBeasts.Cowhandv2",
+      "texture": "Cowhandv2.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Crocodile",
+      "geometry": "geometry.BattleAndBeasts.Crocodile",
+      "texture": "Crocodile.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Elephant",
+      "geometry": "geometry.BattleAndBeasts.Elephant",
+      "texture": "Elephant.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "EndermaninaSuit",
+      "geometry": "geometry.BattleAndBeasts.EndermaninaSuit",
+      "texture": "EndermaninaSuit.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Gnu",
+      "geometry": "geometry.BattleAndBeasts.Gnu",
+      "texture": "Gnu.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Gorilla",
+      "geometry": "geometry.BattleAndBeasts.Gorilla",
+      "texture": "Gorilla.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Hippopotamus",
+      "geometry": "geometry.BattleAndBeasts.Hippopotamus",
+      "texture": "Hippopotamus.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Hyena",
+      "geometry": "geometry.BattleAndBeasts.Hyena",
+      "texture": "Hyena.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "ImperialBritishSoldier",
+      "geometry": "geometry.BattleAndBeasts.ImperialBritishSoldier",
+      "texture": "ImperialBritishSoldier.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "ImperialBritishSoldierv2",
+      "geometry": "geometry.BattleAndBeasts.ImperialBritishSoldierv2",
+      "texture": "ImperialBritishSoldierv2.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "ImperialFrenchSoldier",
+      "geometry": "geometry.BattleAndBeasts.ImperialFrenchSoldier",
+      "texture": "ImperialFrenchSoldier.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "ImperialFrenchSoldierv2",
+      "geometry": "geometry.BattleAndBeasts.ImperialFrenchSoldierv2",
+      "texture": "ImperialFrenchSoldierv2.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Leopard",
+      "geometry": "geometry.BattleAndBeasts.Leopard",
+      "texture": "Leopard.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Lion",
+      "geometry": "geometry.BattleAndBeasts.Lion",
+      "texture": "Lion.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "MandrillBaboon",
+      "geometry": "geometry.BattleAndBeasts.MandrillBaboon",
+      "texture": "MandrillBaboon.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "MedievalKnight",
+      "geometry": "geometry.BattleAndBeasts.MedievalKnight",
+      "texture": "MedievalKnight.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "MedievalKnightv2",
+      "geometry": "geometry.BattleAndBeasts.MedievalKnightv2",
+      "texture": "MedievalKnightv2.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Meerkat",
+      "geometry": "geometry.BattleAndBeasts.Meerkat",
+      "texture": "Meerkat.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "NativeAmerican",
+      "geometry": "geometry.BattleAndBeasts.NativeAmerican",
+      "texture": "NativeAmerican.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "NativeAmericanv2",
+      "geometry": "geometry.BattleAndBeasts.NativeAmericanv2",
+      "texture": "NativeAmericanv2.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "NorseRaider",
+      "geometry": "geometry.BattleAndBeasts.NorseRaider",
+      "texture": "NorseRaider.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "NorseRaiderv2",
+      "geometry": "geometry.BattleAndBeasts.NorseRaiderv2",
+      "texture": "NorseRaiderv2.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Panther",
+      "geometry": "geometry.BattleAndBeasts.Panther",
+      "texture": "Panther.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Rhinoceros",
+      "geometry": "geometry.BattleAndBeasts.Rhinoceros",
+      "texture": "Rhinoceros.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Roman",
+      "geometry": "geometry.BattleAndBeasts.Roman",
+      "texture": "Roman.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Romanv2",
+      "geometry": "geometry.BattleAndBeasts.Romanv2",
+      "texture": "Romanv2.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SamuraiWarrior",
+      "geometry": "geometry.BattleAndBeasts.SamuraiWarrior",
+      "texture": "SamuraiWarrior.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SamuraiWarriorv2",
+      "geometry": "geometry.BattleAndBeasts.SamuraiWarriorv2",
+      "texture": "SamuraiWarriorv2.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SouthernAfricanWarrior",
+      "geometry": "geometry.BattleAndBeasts.SouthernAfricanWarrior",
+      "texture": "SouthernAfricanWarrior.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SouthernAfricanWarriorv2",
+      "geometry": "geometry.BattleAndBeasts.SouthernAfricanWarriorv2",
+      "texture": "SouthernAfricanWarriorv2.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Spartan",
+      "geometry": "geometry.BattleAndBeasts.Spartan",
+      "texture": "Spartan.png",
+      "cape": "skin_packs/BattleAndBeasts/Spartan_cape.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Spartanv2",
+      "geometry": "geometry.BattleAndBeasts.Spartanv2",
+      "texture": "Spartanv2.png",
+      "cape": "skin_packs/BattleAndBeasts/Spartanv2_cape.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SteppesWarrior",
+      "geometry": "geometry.BattleAndBeasts.SteppesWarrior",
+      "texture": "SteppesWarrior.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SteppesWarriorv2",
+      "geometry": "geometry.BattleAndBeasts.SteppesWarriorv2",
+      "texture": "SteppesWarriorv2.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Warthog",
+      "geometry": "geometry.BattleAndBeasts.Warthog",
+      "texture": "Warthog.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Zebra",
+      "geometry": "geometry.BattleAndBeasts.Zebra",
+      "texture": "Zebra.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "ZombieinaSuit",
+      "geometry": "geometry.BattleAndBeasts.ZombieinaSuit",
+      "texture": "ZombieinaSuit.png",
+      "type": "paid"
+    }
+  ],
+  "serialize_name": "BattleAndBeasts",
+  "localization_name": "BattleAndBeasts"
+}

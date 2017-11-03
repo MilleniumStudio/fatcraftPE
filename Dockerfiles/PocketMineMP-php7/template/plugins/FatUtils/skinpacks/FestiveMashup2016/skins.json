@@ -1,0 +1,132 @@
+{
+  "skins": [
+    {
+      "localization_name": "SnowhohomanSweater",
+      "geometry": "geometry.FestiveMashup.SnowhohomanSweater",
+      "texture": "SnowhohomanSweater.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "MistletoesTheBigfoot",
+      "geometry": "geometry.FestiveMashup.MistletoesTheBigfoot",
+      "texture": "MistletoesTheBigfoot.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "Blitzen",
+      "geometry": "geometry.FestiveMashup.Blitzen",
+      "texture": "Blitzen.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "MrsCoolClaus",
+      "geometry": "geometry.FestiveMashup.MrsCoolClaus",
+      "texture": "MrsCoolClaus.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "CoolClaus",
+      "geometry": "geometry.FestiveMashup.CoolClaus",
+      "texture": "CoolClaus.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "Comet",
+      "geometry": "geometry.FestiveMashup.Comet",
+      "texture": "Comet.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "Cupid",
+      "geometry": "geometry.FestiveMashup.Cupid",
+      "texture": "Cupid.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "Dancer",
+      "geometry": "geometry.FestiveMashup.Dancer",
+      "texture": "Dancer.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "Dasher",
+      "geometry": "geometry.FestiveMashup.Dasher",
+      "texture": "Dasher.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "Donner",
+      "geometry": "geometry.FestiveMashup.Donner",
+      "texture": "Donner.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "Dishevelf",
+      "geometry": "geometry.FestiveMashup.Dishevelf",
+      "texture": "Dishevelf.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "ChrisCringle",
+      "geometry": "geometry.FestiveMashup.ChrisCringle",
+      "texture": "ChrisCringle.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "Krampus",
+      "geometry": "geometry.FestiveMashup.Krampus",
+      "texture": "Krampus.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "Prancer",
+      "geometry": "geometry.FestiveMashup.Prancer",
+      "texture": "Prancer.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "Noelf",
+      "geometry": "geometry.FestiveMashup.Noelf",
+      "texture": "Noelf.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "Tinself",
+      "geometry": "geometry.FestiveMashup.Tinself",
+      "texture": "Tinself.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "CringleCreeperCardigan",
+      "geometry": "geometry.FestiveMashup.CringleCreeperCardigan",
+      "texture": "CringleCreeperCardigan.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "Toastmistress",
+      "geometry": "geometry.FestiveMashup.Toastmistress",
+      "texture": "Toastmistress.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "Toastmaster",
+      "geometry": "geometry.FestiveMashup.Toastmaster",
+      "texture": "Toastmaster.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "Vixen",
+      "geometry": "geometry.FestiveMashup.Vixen",
+      "texture": "Vixen.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "YuletideYeti",
+      "geometry": "geometry.FestiveMashup.YuletideYeti",
+      "texture": "YuletideYeti.png",
+      "type": "free"
+    }
+  ],
+  "serialize_name": "Festive",
+  "localization_name": "Festive"
+}

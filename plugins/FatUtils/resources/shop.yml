@@ -2,314 +2,383 @@ content:
   particles:
     orbit:
       name: "shop.items.particles.orbit"
-      desc: "shop.items.particles.circle.desc"
-      img: "https://icon-icons.com/icons2/365/PNG/256/kitten-icon_36975.png"
+      desc: "shop.items.particles.orbit.desc"
       class: "fatutils\\shop\\particles\\OrbitParticle"
-      priceFS: 15
-      priceFG: 5
+      priceFS: 1500
+      priceFG: 50
     crown:
       name: "shop.items.particles.crown"
+      desc: "shop.items.particles.crown.desc"
       class: "fatutils\\shop\\particles\\CrownParticle"
-      priceFS: 25
+      priceFS: 1500
+      priceFG: 50
     barrierYellow:
       name: "shop.items.particles.barrierYellow"
+      desc: "shop.items.particles.barrierYellow.desc"
       class: "fatutils\\shop\\particles\\BarrierParticle"
-      priceFS: 25
+      priceFS: 1500
+      priceFG: 50
       rgbColor: "#FFFF20"
     barrierRandom:
       name: "shop.items.particles.barrierRandom"
+      desc: "shop.items.particles.barrierRandom.desc"
       class: "fatutils\\shop\\particles\\BarrierParticle"
-      priceFS: 25
+      priceFS: 1500
+      priceFG: 50
       randomColors: true
     funnel:
       name: "shop.items.particles.funnel"
+      desc: "shop.items.particles.funnel.desc"
       class: "fatutils\\shop\\particles\\FunnelParticle"
-      priceFS: 25
+      priceFS: 5500
+      priceFG: 250
       randomColors: true
     funnelSmall:
       name: "shop.items.particles.funnelSmall"
+      desc: "shop.items.particles.funnelSmall.desc"
       class: "fatutils\\shop\\particles\\FunnelParticle"
-      priceFS: 25
+      priceFS: 2000
+      priceFG: 75
       offsetY: 0.4
       randomColors: true
     glyph:
       name: "shop.items.particles.glyph"
+      desc: "shop.items.particles.glyph.desc"
       class: "fatutils\\shop\\particles\\GlyphParticle"
-      priceFS: 25
+      priceFS: 1500
+      priceFG: 50
       offsetY: 0.1
     glyphyPath:
       name: "shop.items.particles.glyphyPath"
+      desc: "shop.items.particles.glyphyPath.desc"
       class: "fatutils\\shop\\particles\\GlyphyPathParticle"
-      priceFS: 25
+      priceFS: 1500
+      priceFG: 50
     heartPath:
       name: "shop.items.particles.heartPath"
+      desc: "shop.items.particles.heartPath.desc"
       class: "fatutils\\shop\\particles\\PathParticle"
-      priceFS: 25
+      priceFS: 1500
+      priceFG: 50
       rawParticle: "{\"particleName\":\"TYPE_HEART\"}"
     flamePath:
       name: "shop.items.particles.flamePath"
+      desc: "shop.items.particles.flamePath.desc"
       class: "fatutils\\shop\\particles\\PathParticle"
-      priceFS: 25
+      priceFS: 500
+      priceFG: 5
       rawParticle: "{\"particleName\":\"TYPE_FLAME\"}"
     cape:
       name: "shop.items.particles.cape"
+      desc: "shop.items.particles.cape.desc"
       class: "fatutils\\shop\\particles\\CapeParticle"
-      priceFS: 16
+      priceFS: 1500
+      priceFG: 50
       rgbColor: "#FF2020"
   pets:
     Chicken:
       name: "shop.items.pets.Chicken"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Chicken"
     Cow:
       name: "shop.items.pets.Cow"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Cow"
     Pig:
       name: "shop.items.pets.Pig"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Pig"
     Sheep:
       name: "shop.items.pets.Sheep"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Sheep"
     Wolf:
       name: "shop.items.pets.Wolf"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Wolf"
     Villager:
       name: "shop.items.pets.Villager"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Villager"
     Mooshroom:
       name: "shop.items.pets.Mooshroom"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Mooshroom"
     Squid:
       name: "shop.items.pets.Squid"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Squid"
     Bunny:
       name: "shop.items.pets.Bunny"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Bunny"
     Bat:
       name: "shop.items.pets.Bat"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Bat"
     IronGolem:
       name: "shop.items.pets.IronGolem"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "IronGolem"
     Snowman:
       name: "shop.items.pets.Snowman"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Snowman"
     Cat1:
       name: "shop.items.pets.ocelot"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Ocelot"
     Cat2:
       name: "shop.items.pets.catBlack"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Ocelot"
       options:
         DATA_VARIANT: "DATA_TYPE_INT/1"
     Cat3:
       name: "shop.items.pets.catRed"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Ocelot"
       options:
         DATA_VARIANT: "DATA_TYPE_INT/2"
     Cat4:
       name: "shop.items.pets.catWhite"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Ocelot"
       options:
         DATA_VARIANT: "DATA_TYPE_INT/3"
     Horse:
       name: "shop.items.pets.Horse"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Horse"
     Donkey:
       name: "shop.items.pets.Donkey"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Donkey"
     Mule:
       name: "shop.items.pets.Mule"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Mule"
     SkeletonHorse:
       name: "shop.items.pets.SkeletonHorse"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "SkeletonHorse"
     ZombieHorse:
       name: "shop.items.pets.ZombieHorse"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "ZombieHorse"
     PolarBear:
       name: "shop.items.pets.PolarBear"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "PolarBear"
     Llama:
       name: "shop.items.pets.Llama"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Llama"
     Parrot:
       name: "shop.items.pets.Parrot"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Parrot"
     Zombie:
       name: "shop.items.pets.Zombie"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Zombie"
     Creeper:
       name: "shop.items.pets.Creeper"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Creeper"
     Skeleton:
       name: "shop.items.pets.Skeleton"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Skeleton"
     Spider:
       name: "shop.items.pets.Spider"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Spider"
     ZombiePigman:
       name: "shop.items.pets.ZombiePigman"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "ZombiePigman"
     Slime:
       name: "shop.items.pets.Slime"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Slime"
     Enderman:
       name: "shop.items.pets.Enderman"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Enderman"
     Silverfish:
       name: "shop.items.pets.Silverfish"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Silverfish"
     CaveSpider:
       name: "shop.items.pets.CaveSpider"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "CaveSpider"
     Ghast:
       name: "shop.items.pets.Ghast"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Ghast"
     MagmaCube:
       name: "shop.items.pets.MagmaCube"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "MagmaCube"
     Blaze:
       name: "shop.items.pets.Blaze"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Blaze"
     ZombieVillager:
       name: "shop.items.pets.ZombieVillager"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "ZombieVillager"
     Witch:
       name: "shop.items.pets.Witch"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Witch"
     Stray:
       name: "shop.items.pets.Stray"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Stray"
     Husk:
       name: "shop.items.pets.Husk"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Husk"
     WitherSkeleton:
       name: "shop.items.pets.WitherSkeleton"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "WitherSkeleton"
     Guardian:
       name: "shop.items.pets.Guardian"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Guardian"
     Wither:
       name: "shop.items.pets.Wither"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 15000
+      priceFG: 1000
       type: "Wither"
-    EnderDragon:
-      name: "shop.items.pets.EnderDragon"
-      class: "fatutils\\pets\\Pet"
-      priceFS: 5
-      type: "EnderDragon"
+#    EnderDragon:
+#      name: "shop.items.pets.EnderDragon"
+#      class: "fatutils\\pets\\Pet"
+#      priceFS: 1500
+#      priceFG: 50
+#      type: "EnderDragon"
     Endermite:
       name: "shop.items.pets.Endermite"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Endermite"
     Vindicator:
       name: "shop.items.pets.Vindicator"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Vindicator"
     Potion:
       name: "shop.items.pets.Potion"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Potion"
     Smoker:
       name: "shop.items.pets.Smoker"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Smoker"
     Evoker:
       name: "shop.items.pets.Evoker"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Evoker"
     Vex:
       name: "shop.items.pets.Vex"
       class: "fatutils\\pets\\Pet"
-      priceFS: 5
+      priceFS: 1500
+      priceFG: 50
       type: "Vex"

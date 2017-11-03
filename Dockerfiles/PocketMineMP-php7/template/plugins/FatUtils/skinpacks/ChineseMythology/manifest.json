@@ -1,0 +1,25 @@
+{
+  "header": {
+    "version": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "description": "PLACE_HOLDER",
+    "name": "PLACE_HOLDER",
+    "uuid": "4c2de916-4e60-4b91-a6ff-f4da48d5c900"
+  },
+  "modules": [
+    {
+      "version": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "description": "PLACE_HOLDER",
+      "type": "skin_pack",
+      "uuid": "0b384cdc-d2f9-49de-801b-682780f95ff7"
+    }
+  ],
+  "format_version": 1.0
+}

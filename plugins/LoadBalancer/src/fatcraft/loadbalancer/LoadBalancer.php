@@ -302,7 +302,7 @@ class LoadBalancer extends PluginBase implements Listener
     public function getBest($type = LoadBalancer::TEMPLATE_TYPE_LOBBY, $p_State = LoadBalancer::SERVER_STATE_OPEN):?array
     {
         $result = MysqlResult::executeQuery($this->connectMainThreadMysql(),
-            "SELECT *, (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) AS diff  FROM servers WHERE UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston) < 5 AND sid != ? AND `max` > `online` AND `type` = ? AND `status` = ? ORDER BY `max` DESC LIMIT 1", [
+            "SELECT *, (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) AS diff  FROM servers WHERE UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston) < 5 AND sid != ? AND `max` > `online` AND `type` = ? AND `status` = ? ORDER BY `online` DESC LIMIT 1", [
                 ["s", $this::getInstance()->m_ServerUUID],
                 ["s", $type],
                 ["s", $p_State]

@@ -2,6 +2,7 @@
 
 namespace fatutils\ui\impl;
 
+use fatutils\tools\Sidebar;
 use pocketmine\Player;
 
 use fatutils\tools\TextFormatter;
@@ -26,6 +27,7 @@ class LanguageWindow
             ->setCallback(function () use ($l_FatPlayer)
             {
                 $l_FatPlayer->setLanguage(TextFormatter::LANG_ID_EN);
+				Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());
                 $l_FatPlayer->getPlayer()->sendMessage((new TextFormatter("language.apply"))->asStringForFatPlayer($l_FatPlayer));
             })
         );
@@ -36,6 +38,7 @@ class LanguageWindow
             ->setCallback(function () use ($l_FatPlayer)
             {
                 $l_FatPlayer->setLanguage(TextFormatter::LANG_ID_FR);
+                Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());
                 $l_FatPlayer->getPlayer()->sendMessage((new TextFormatter("language.apply"))->asStringForFatPlayer($l_FatPlayer));
             })
         );
@@ -46,6 +49,7 @@ class LanguageWindow
             ->setCallback(function () use ($l_FatPlayer)
             {
                 $l_FatPlayer->setLanguage(TextFormatter::LANG_ID_ES);
+				Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());
 				$l_FatPlayer->getPlayer()->sendMessage((new TextFormatter("language.apply"))->asStringForFatPlayer($l_FatPlayer));
             })
         );

@@ -1,0 +1,240 @@
+{
+  "skins": [
+    {
+      "localization_name": "Achilles",
+      "geometry": "geometry.GreekMythology.Achilles",
+      "texture": "Achilles.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Aphrodite",
+      "geometry": "geometry.GreekMythology.Aphrodite",
+      "texture": "Aphrodite.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Apollo",
+      "geometry": "geometry.GreekMythology.Apollo",
+      "texture": "Apollo.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Ares",
+      "geometry": "geometry.GreekMythology.Ares",
+      "texture": "Ares.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Argonaut1",
+      "geometry": "geometry.GreekMythology.Argonaut1",
+      "texture": "Argonaut1.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Argonaut2",
+      "geometry": "geometry.GreekMythology.Argonaut2",
+      "texture": "Argonaut2.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Artemis",
+      "geometry": "geometry.GreekMythology.Artemis",
+      "texture": "Artemis.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Atalanta",
+      "geometry": "geometry.GreekMythology.Atalanta",
+      "texture": "Atalanta.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Athena",
+      "geometry": "geometry.GreekMythology.Athena",
+      "texture": "Athena.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Cadmus",
+      "geometry": "geometry.GreekMythology.Cadmus",
+      "texture": "Cadmus.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Cerberus",
+      "geometry": "geometry.GreekMythology.Cerberus",
+      "texture": "Cerberus.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Cyclops",
+      "geometry": "geometry.GreekMythology.Cyclops",
+      "texture": "Cyclops.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Dryad",
+      "geometry": "geometry.GreekMythology.Dryad",
+      "texture": "Dryad.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Erinyes",
+      "geometry": "geometry.GreekMythology.Erinyes",
+      "texture": "Erinyes.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Hades",
+      "geometry": "geometry.GreekMythology.Hades",
+      "texture": "Hades.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Harpy",
+      "geometry": "geometry.GreekMythology.Harpy",
+      "texture": "Harpy.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "HelenOfTroy",
+      "geometry": "geometry.GreekMythology.HelenOfTroy",
+      "texture": "HelenOfTroy.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Hephaestus",
+      "geometry": "geometry.GreekMythology.Hephaestus",
+      "texture": "Hephaestus.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Hera",
+      "geometry": "geometry.GreekMythology.Hera",
+      "texture": "Hera.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Heracles",
+      "geometry": "geometry.GreekMythology.Heracles",
+      "texture": "Heracles.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Hermes",
+      "geometry": "geometry.GreekMythology.Hermes",
+      "texture": "Hermes.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Hydra",
+      "geometry": "geometry.GreekMythology.Hydra",
+      "texture": "Hydra.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Jason",
+      "geometry": "geometry.GreekMythology.Jason",
+      "texture": "Jason.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Medea",
+      "geometry": "geometry.GreekMythology.Medea",
+      "texture": "Medea.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Medusa",
+      "geometry": "geometry.GreekMythology.Medusa",
+      "texture": "Medusa.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Minos",
+      "geometry": "geometry.GreekMythology.Minos",
+      "texture": "Minos.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Minotaur",
+      "geometry": "geometry.GreekMythology.Minotaur",
+      "texture": "Minotaur.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Odysseus",
+      "geometry": "geometry.GreekMythology.Odysseus",
+      "texture": "Odysseus.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Perseus",
+      "geometry": "geometry.GreekMythology.Perseus",
+      "texture": "Perseus.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Poseidon",
+      "geometry": "geometry.GreekMythology.Poseidon",
+      "texture": "Poseidon.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Prometheus",
+      "geometry": "geometry.GreekMythology.Prometheus",
+      "texture": "Prometheus.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Satyr",
+      "geometry": "geometry.GreekMythology.Satyr",
+      "texture": "Satyr.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SeaMonster",
+      "geometry": "geometry.GreekMythology.SeaMonster",
+      "texture": "SeaMonster.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Siren",
+      "geometry": "geometry.GreekMythology.Siren",
+      "texture": "Siren.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Spartoi",
+      "geometry": "geometry.GreekMythology.Spartoi",
+      "texture": "Spartoi.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "StygianWitch",
+      "geometry": "geometry.GreekMythology.StygianWitch",
+      "texture": "StygianWitch.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Theseus",
+      "geometry": "geometry.GreekMythology.Theseus",
+      "texture": "Theseus.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "TrojanWarrior",
+      "geometry": "geometry.GreekMythology.TrojanWarrior",
+      "texture": "TrojanWarrior.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "Zeus",
+      "geometry": "geometry.GreekMythology.Zeus",
+      "texture": "Zeus.png",
+      "type": "paid"
+    }
+  ],
+  "serialize_name": "GreekMythology",
+  "localization_name": "GreekMythology"
+}

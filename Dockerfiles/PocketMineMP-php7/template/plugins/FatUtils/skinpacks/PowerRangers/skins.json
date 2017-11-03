@@ -1,0 +1,126 @@
+{
+  "skins": [
+    {
+      "localization_name": "Alpha5",
+      "geometry": "geometry.PowerRangers.Alpha5",
+      "texture": "Alpha5.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "BlackRangerDragonShield",
+      "geometry": "geometry.PowerRangers.BlackRangerDragonShield",
+      "texture": "BlackRangerDragonShield.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "BlackRanger",
+      "geometry": "geometry.PowerRangers.BlackRanger",
+      "texture": "BlackRanger.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "BlueRanger",
+      "geometry": "geometry.PowerRangers.BlueRanger",
+      "texture": "BlueRanger.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "Bulk",
+      "geometry": "geometry.PowerRangers.Bulk",
+      "texture": "Bulk.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "Goldar",
+      "geometry": "geometry.PowerRangers.Goldar",
+      "texture": "Goldar.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "GreenRanger",
+      "geometry": "geometry.PowerRangers.GreenRanger",
+      "texture": "GreenRanger.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "LordZedd",
+      "geometry": "geometry.PowerRangers.LordZedd",
+      "texture": "LordZedd.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "Megazord",
+      "geometry": "geometry.PowerRangers.Megazord",
+      "texture": "Megazord.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "Ninjor",
+      "geometry": "geometry.PowerRangers.Ninjor",
+      "texture": "Ninjor.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "PinkRanger",
+      "geometry": "geometry.PowerRangers.PinkRanger",
+      "texture": "PinkRanger.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "Putty",
+      "geometry": "geometry.PowerRangers.Putty",
+      "texture": "Putty.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "RedRangerDragonShield",
+      "geometry": "geometry.PowerRangers.RedRangerDragonShield",
+      "texture": "RedRangerDragonShield.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "RedRanger",
+      "geometry": "geometry.PowerRangers.RedRanger",
+      "texture": "RedRanger.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "RitaRepulsa",
+      "geometry": "geometry.PowerRangers.RitaRepulsa",
+      "texture": "RitaRepulsa.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "RitoRevolto",
+      "geometry": "geometry.PowerRangers.RitoRevolto",
+      "texture": "RitoRevolto.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "Scorpina",
+      "geometry": "geometry.PowerRangers.Scorpina",
+      "texture": "Scorpina.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "Skull",
+      "geometry": "geometry.PowerRangers.Skull",
+      "texture": "Skull.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "WhiteRanger",
+      "geometry": "geometry.PowerRangers.WhiteRanger",
+      "texture": "WhiteRanger.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "YellowRanger",
+      "geometry": "geometry.PowerRangers.YellowRanger",
+      "texture": "YellowRanger.png",
+      "type": "free"
+    }
+  ],
+  "serialize_name": "PowerRangers",
+  "localization_name": "PowerRangers"
+}

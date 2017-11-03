@@ -1,0 +1,25 @@
+{
+  "header": {
+    "version": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "description": "PLACE_HOLDER",
+    "name": "GreekMythology_SkinPack",
+    "uuid": "35f58b46-b3e2-4fd8-9116-879813001e97"
+  },
+  "modules": [
+    {
+      "version": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "description": "PLACE_HOLDER",
+      "type": "skin_pack",
+      "uuid": "dd29c6da-3c91-4412-8d10-279d33c62a41"
+    }
+  ],
+  "format_version": 1.0
+}

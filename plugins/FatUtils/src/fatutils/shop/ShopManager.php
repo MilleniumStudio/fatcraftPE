@@ -42,7 +42,7 @@ class ShopManager
 
 	private function init()
 	{
-            FatUtils::getInstance()->saveResource("shop.yml");
+		FatUtils::getInstance()->saveResource("shop.yml");
 		$this->m_Config = new Config(FatUtils::getInstance()->getDataFolder() . "shop.yml");
 
 		if ($this->m_Config->exists("content"))
@@ -119,8 +119,8 @@ class ShopManager
 				->setCallback(function () use ($p_Player, $l_Ret)
 				{
 					$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Player);
-					$l_FatPlayer->addFatsilver(50);
-					$l_FatPlayer->addFatgold(50);
+					$l_FatPlayer->addFatsilver(500);
+					$l_FatPlayer->addFatgold(500);
 					$l_Ret->open();
 					Sidebar::getInstance()->updatePlayer($p_Player);
 				})
@@ -137,11 +137,39 @@ class ShopManager
 		$l_Ret->setContent((new TextFormatter("shop.cat." . $p_CategoryName . ".desc"))->asStringForPlayer($p_Player));
 		$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Player);
 
+		$l_EquippedText = new TextFormatter("shop.equpped");
+		$l_BuyableText = new TextFormatter("shop.buyable");
+		$l_UnbuyableText = new TextFormatter("shop.unbuyable");
+
+		$l_Ret->addPart((new Button())
+			->setText((new TextFormatter("window.return"))->asStringForFatPlayer($l_FatPlayer))
+			->setCallback(function () use ($p_Player)
+			{
+				$this->getShopMenu($p_Player)->open();
+			})
+		);
+
 		foreach ($this->getShopContent()[$p_CategoryName] as $l_Key => $l_Pet)
 		{
 			$l_ShopItem = ShopItem::createShopItem($p_Player, $p_CategoryName . "." . $l_Key, $this->getShopContent()[$p_CategoryName][$l_Key]);
+
+			$l_TopText = (new TextFormatter($l_ShopItem->getName()))->asStringForFatPlayer($l_FatPlayer);
+			$l_BottomText = "";
+
+			if (!$l_FatPlayer->isBought($l_ShopItem))
+			{
+				if (($l_ShopItem->getFatsilverPrice() > -1 && ($l_FatPlayer->getFatsilver() - $l_ShopItem->getFatsilverPrice() >= 0))
+					|| ($l_ShopItem->getFatgoldPrice() > -1 && ($l_FatPlayer->getFatgold() - $l_ShopItem->getFatgoldPrice() >= 0)))
+					$l_BottomText .= $l_BuyableText->asStringForFatPlayer($l_FatPlayer);
+				else
+					$l_BottomText .= $l_UnbuyableText->asStringForFatPlayer($l_FatPlayer);
+			} else if ($l_FatPlayer->isEquipped($l_ShopItem))
+			{
+				$l_BottomText .= $l_EquippedText->asStringForFatPlayer($l_FatPlayer);
+			}
+
 			$l_Ret->addPart((new Button())
-				->setText(($l_FatPlayer->isBought($l_ShopItem) ? TextFormat::GREEN . "✔ " . TextFormat::DARK_GRAY . TextFormat::RESET : "") . (new TextFormatter($l_ShopItem->getName()))->asStringForPlayer($p_Player))
+				->setText($l_TopText . (strlen($l_BottomText) > 0 ? "\n" . $l_BottomText : ""))
 				->setImage($l_ShopItem->getImage())
 				->setCallback(function () use ($p_CategoryName, $l_ShopItem)
 				{
@@ -170,14 +198,20 @@ class ShopManager
 		$l_Ret->setTitle((new TextFormatter($p_ShopItem->getName()))->asStringForFatPlayer($l_FatPlayer));
 
 		if ($p_ShopItem->getDescription() != null)
-			$l_Ret->setContent($p_ShopItem->getDescription());
+			$l_Ret->setContent((new TextFormatter($p_ShopItem->getDescription()))->asStringForFatPlayer($l_FatPlayer));
 
 		if (!$l_FatPlayer->isBought($p_ShopItem))
 		{
 			if ($p_ShopItem->getFatsilverPrice() > -1)
 			{
 				$l_Ret->addPart((new Button())
-					->setText((new TextFormatter("shop.buy"))->asStringForFatPlayer($l_FatPlayer) . " (" . $p_ShopItem->getFatsilverPrice() . " " . (new TextFormatter("currency.fatsilver.short"))->asStringForFatPlayer($l_FatPlayer) . TextFormat::DARK_GRAY . TextFormat::RESET . ")")
+					->setText((new TextFormatter("shop.buy"))->asStringForFatPlayer($l_FatPlayer) .
+						" (" . $p_ShopItem->getFatsilverPrice() . " " . (new TextFormatter("currency.fatsilver.short"))->asStringForFatPlayer($l_FatPlayer) . TextFormat::DARK_GRAY . ")" .
+						($l_FatPlayer->getFatsilver() - $p_ShopItem->getFatsilverPrice() < 0 ? "\n" . (new TextFormatter("shop.moneyMissing", [
+								"amount" => abs($l_FatPlayer->getFatsilver() - $p_ShopItem->getFatsilverPrice()),
+								"money" => new TextFormatter("currency.fatsilver.short")
+							]))->asStringForFatPlayer($l_FatPlayer) : "")
+					)
 					->setCallback(function () use ($p_CategoryName, $p_ShopItem, $l_FatPlayer)
 					{
 						if ($l_FatPlayer->getFatsilver() - $p_ShopItem->getFatsilverPrice() >= 0)
@@ -196,7 +230,12 @@ class ShopManager
 			if ($p_ShopItem->getFatgoldPrice() > -1)
 			{
 				$l_Ret->addPart((new Button())
-					->setText((new TextFormatter("shop.buy"))->asStringForFatPlayer($l_FatPlayer) . " (" . $p_ShopItem->getFatgoldPrice() . " " . (new TextFormatter("currency.fatgold.short"))->asStringForFatPlayer($l_FatPlayer) . TextFormat::DARK_GRAY . TextFormat::RESET . ")")
+					->setText((new TextFormatter("shop.buy"))->asStringForFatPlayer($l_FatPlayer) .
+						" (" . $p_ShopItem->getFatgoldPrice() . " " . (new TextFormatter("currency.fatgold.short"))->asStringForFatPlayer($l_FatPlayer) . TextFormat::DARK_GRAY . ")" .
+						($l_FatPlayer->getFatgold() - $p_ShopItem->getFatgoldPrice() < 0 ? "\n" . (new TextFormatter("shop.moneyMissing", [
+								"amount" => abs($l_FatPlayer->getFatgold() - $p_ShopItem->getFatgoldPrice()),
+								"money" => new TextFormatter("currency.fatgold.short")
+							]))->asStringForFatPlayer($l_FatPlayer) : ""))
 					->setCallback(function () use ($p_CategoryName, $p_ShopItem, $l_FatPlayer)
 					{
 						if ($l_FatPlayer->getFatgold() - $p_ShopItem->getFatgoldPrice() >= 0)

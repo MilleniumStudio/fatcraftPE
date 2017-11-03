@@ -1,0 +1,18 @@
+premiumPacks.push_back(Unique<SkinPack>(new SkinPack(mOffers.getOfferByName("MagicTheGathering"), SkinPack::SkinPackType::Premium, "MagicTheGathering", "skinpack.MagicTheGathering", std::initializer_list < Skin >{
+{ "MagicTheGatheringAjani", "skin.MagicTheGathering.Ajani", "geometry.MagicTheGathering.Ajani", "resource_packs/skins/skinpacks/MagicTheGathering/Ajani.png", Skin::SkinType::Paid },
+{ "MagicTheGatheringAvacyn", "skin.MagicTheGathering.Avacyn", "geometry.MagicTheGathering.Avacyn", "resource_packs/skins/skinpacks/MagicTheGathering/Avacyn.png", Skin::SkinType::Paid },
+{ "MagicTheGatheringChandra", "skin.MagicTheGathering.Chandra", "geometry.MagicTheGathering.Chandra", "resource_packs/skins/skinpacks/MagicTheGathering/Chandra.png", Skin::SkinType::Paid },
+{ "MagicTheGatheringDovinBaan", "skin.MagicTheGathering.DovinBaan", "geometry.MagicTheGathering.DovinBaan", "resource_packs/skins/skinpacks/MagicTheGathering/DovinBaan.png", Skin::SkinType::Paid },
+{ "MagicTheGatheringEmrakul", "skin.MagicTheGathering.Emrakul", "geometry.MagicTheGathering.Emrakul", "resource_packs/skins/skinpacks/MagicTheGathering/Emrakul.png", Skin::SkinType::Paid },
+{ "MagicTheGatheringGideon", "skin.MagicTheGathering.Gideon", "geometry.MagicTheGathering.Gideon", "resource_packs/skins/skinpacks/MagicTheGathering/Gideon.png", Skin::SkinType::Paid },
+{ "MagicTheGatheringHazoret", "skin.MagicTheGathering.Hazoret", "geometry.MagicTheGathering.Hazoret", "resource_packs/skins/skinpacks/MagicTheGathering/Hazoret.png", Skin::SkinType::Paid },
+{ "MagicTheGatheringJace", "skin.MagicTheGathering.Jace", "geometry.MagicTheGathering.Jace", "resource_packs/skins/skinpacks/MagicTheGathering/Jace.png", Skin::SkinType::Paid },
+{ "MagicTheGatheringLiliana", "skin.MagicTheGathering.Liliana", "geometry.MagicTheGathering.Liliana", "resource_packs/skins/skinpacks/MagicTheGathering/Liliana.png", Skin::SkinType::Paid },
+{ "MagicTheGatheringNicolBolas", "skin.MagicTheGathering.NicolBolas", "geometry.MagicTheGathering.NicolBolas", "resource_packs/skins/skinpacks/MagicTheGathering/NicolBolas.png", Skin::SkinType::Paid },
+{ "MagicTheGatheringNissa", "skin.MagicTheGathering.Nissa", "geometry.MagicTheGathering.Nissa", "resource_packs/skins/skinpacks/MagicTheGathering/Nissa.png", Skin::SkinType::Paid },
+{ "MagicTheGatheringSaheeliRai", "skin.MagicTheGathering.SaheeliRai", "geometry.MagicTheGathering.SaheeliRai", "resource_packs/skins/skinpacks/MagicTheGathering/SaheeliRai.png", Skin::SkinType::Paid },
+{ "MagicTheGatheringSamut", "skin.MagicTheGathering.Samut", "geometry.MagicTheGathering.Samut", "resource_packs/skins/skinpacks/MagicTheGathering/Samut.png", Skin::SkinType::Paid },
+{ "MagicTheGatheringTamiyo", "skin.MagicTheGathering.Tamiyo", "geometry.MagicTheGathering.Tamiyo", "resource_packs/skins/skinpacks/MagicTheGathering/Tamiyo.png", Skin::SkinType::Paid },
+{ "MagicTheGatheringTezzeret", "skin.MagicTheGathering.Tezzeret", "geometry.MagicTheGathering.Tezzeret", "resource_packs/skins/skinpacks/MagicTheGathering/Tezzeret.png", Skin::SkinType::Paid },
+
+})));

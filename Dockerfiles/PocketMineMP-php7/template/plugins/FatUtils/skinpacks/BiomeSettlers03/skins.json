@@ -1,0 +1,156 @@
+{
+  "skins": [
+    {
+      "localization_name": "EndArcher",
+      "geometry": "geometry.BiomeSettlers03.EndArcher",
+      "texture": "EndArcher.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "EndBrawler",
+      "geometry": "geometry.BiomeSettlers03.EndBrawler",
+      "texture": "EndBrawler.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "EndBrewer",
+      "geometry": "geometry.BiomeSettlers03.EndBrewer",
+      "texture": "EndBrewer.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "EndEngineer",
+      "geometry": "geometry.BiomeSettlers03.EndEngineer",
+      "texture": "EndEngineer.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "EndGriefer",
+      "geometry": "geometry.BiomeSettlers03.EndGriefer",
+      "texture": "EndGriefer.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "EndHunter",
+      "geometry": "geometry.BiomeSettlers03.EndHunter",
+      "texture": "EndHunter.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "EndTamer",
+      "geometry": "geometry.BiomeSettlers03.EndTamer",
+      "texture": "EndTamer.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "EndZealot",
+      "geometry": "geometry.BiomeSettlers03.EndZealot",
+      "texture": "EndZealot.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "FarlandArcher",
+      "geometry": "geometry.BiomeSettlers03.FarlandArcher",
+      "texture": "FarlandArcher.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "FarlandBrawler",
+      "geometry": "geometry.BiomeSettlers03.FarlandBrawler",
+      "texture": "FarlandBrawler.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "FarlandBrewer",
+      "geometry": "geometry.BiomeSettlers03.FarlandBrewer",
+      "texture": "FarlandBrewer.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "FarlandEngineer",
+      "geometry": "geometry.BiomeSettlers03.FarlandEngineer",
+      "texture": "FarlandEngineer.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "FarlandGriefer",
+      "geometry": "geometry.BiomeSettlers03.FarlandGriefer",
+      "texture": "FarlandGriefer.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "FarlandHunter",
+      "geometry": "geometry.BiomeSettlers03.FarlandHunter",
+      "texture": "FarlandHunter.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "FarlandMiner",
+      "geometry": "geometry.BiomeSettlers03.FarlandMiner",
+      "texture": "FarlandMiner.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "FarlandTamer",
+      "geometry": "geometry.BiomeSettlers03.FarlandTamer",
+      "texture": "FarlandTamer.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "FarlandZealot",
+      "geometry": "geometry.BiomeSettlers03.FarlandZealot",
+      "texture": "FarlandZealot.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "OceanArcher",
+      "geometry": "geometry.BiomeSettlers03.OceanArcher",
+      "texture": "OceanArcher.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "OceanBrawler",
+      "geometry": "geometry.BiomeSettlers03.OceanBrawler",
+      "texture": "OceanBrawler.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "OceanBrewer",
+      "geometry": "geometry.BiomeSettlers03.OceanBrewer",
+      "texture": "OceanBrewer.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "OceanEngineer",
+      "geometry": "geometry.BiomeSettlers03.OceanEngineer",
+      "texture": "OceanEngineer.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "OceanGriefer",
+      "geometry": "geometry.BiomeSettlers03.OceanGriefer",
+      "texture": "OceanGriefer.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "OceanHunter",
+      "geometry": "geometry.BiomeSettlers03.OceanHunter",
+      "texture": "OceanHunter.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "OceanTamer",
+      "geometry": "geometry.BiomeSettlers03.OceanTamer",
+      "texture": "OceanTamer.png",
+      "type": "free"
+    },
+    {
+      "localization_name": "OceanZealot",
+      "geometry": "geometry.BiomeSettlers03.OceanZealot",
+      "texture": "OceanZealot.png",
+      "type": "free"
+    }
+  ],
+  "serialize_name": "BiomeSettlers03",
+  "localization_name": "BiomeSettlers03"
+}

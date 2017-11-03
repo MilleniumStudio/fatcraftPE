@@ -1,0 +1,248 @@
+{
+  "skins": [
+    {
+      "localization_name": "SkyrimAelatheHuntress",
+      "geometry": "geometry.Skyrim.SkyrimAelatheHuntress",
+      "texture": "SkyrimAelatheHuntress.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimAncano",
+      "geometry": "geometry.Skyrim.SkyrimAncano",
+      "texture": "SkyrimAncano.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimArgonianFighter",
+      "geometry": "geometry.Skyrim.SkyrimArgonianFighter",
+      "texture": "SkyrimArgonianFighter.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimArgonianMage",
+      "geometry": "geometry.Skyrim.SkyrimArgonianMage",
+      "texture": "SkyrimArgonianMage.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimAstrid",
+      "geometry": "geometry.Skyrim.SkyrimAstrid",
+      "texture": "SkyrimAstrid.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimBretonMage",
+      "geometry": "geometry.Skyrim.SkyrimBretonMage",
+      "texture": "SkyrimBretonMage.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimDarkElfAssassin",
+      "geometry": "geometry.Skyrim.SkyrimDarkElfAssassin",
+      "texture": "SkyrimDarkElfAssassin.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimDarkElfMage",
+      "geometry": "geometry.Skyrim.SkyrimDarkElfMage",
+      "texture": "SkyrimDarkElfMage.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimDragonbornFemale",
+      "geometry": "geometry.Skyrim.SkyrimDragonbornFemale",
+      "texture": "SkyrimDragonbornFemale.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimDragonbornMale",
+      "geometry": "geometry.Skyrim.SkyrimDragonbornMale",
+      "texture": "SkyrimDragonbornMale.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimDragonPriest",
+      "geometry": "geometry.Skyrim.SkyrimDragonPriest",
+      "texture": "SkyrimDragonPriest.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimDraugrDeathlord",
+      "geometry": "geometry.Skyrim.SkyrimDraugrDeathlord",
+      "texture": "SkyrimDraugrDeathlord.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimDremoraLord",
+      "geometry": "geometry.Skyrim.SkyrimDremoraLord",
+      "texture": "SkyrimDremoraLord.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimDwarvenCenturion",
+      "geometry": "geometry.Skyrim.SkyrimDwarvenCenturion",
+      "texture": "SkyrimDwarvenCenturion.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimElenwen",
+      "geometry": "geometry.Skyrim.SkyrimElenwen",
+      "texture": "SkyrimElenwen.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimFlameAtronach",
+      "geometry": "geometry.Skyrim.SkyrimFlameAtronach",
+      "texture": "SkyrimFlameAtronach.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimForswornShaman",
+      "geometry": "geometry.Skyrim.SkyrimForswornShaman",
+      "texture": "SkyrimForswornShaman.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimFrostTroll",
+      "geometry": "geometry.Skyrim.SkyrimFrostTroll",
+      "texture": "SkyrimFrostTroll.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimGreybeard",
+      "geometry": "geometry.Skyrim.SkyrimGreybeard",
+      "texture": "SkyrimGreybeard.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimHagraven",
+      "geometry": "geometry.Skyrim.SkyrimHagraven",
+      "texture": "SkyrimHagraven.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimImperialSoldier",
+      "geometry": "geometry.Skyrim.SkyrimImperialSoldier",
+      "texture": "SkyrimImperialSoldier.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimIsran",
+      "geometry": "geometry.Skyrim.SkyrimIsran",
+      "texture": "SkyrimIsran.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimKhajiitMerchant",
+      "geometry": "geometry.Skyrim.SkyrimKhajiitMerchant",
+      "texture": "SkyrimKhajiitMerchant.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimLydia",
+      "geometry": "geometry.Skyrim.SkyrimLydia",
+      "texture": "SkyrimLydia.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimMaiqtheLiar",
+      "geometry": "geometry.Skyrim.SkyrimMaiqtheLiar",
+      "texture": "SkyrimMaiqtheLiar.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimMasterNecromancer",
+      "geometry": "geometry.Skyrim.SkyrimMasterNecromancer",
+      "texture": "SkyrimMasterNecromancer.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimNazir",
+      "geometry": "geometry.Skyrim.SkyrimNazir",
+      "texture": "SkyrimNazir.png",
+      "cape": "../skin_packs/Skyrim/SkyrimNazir_cape.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimOrcBlacksmith",
+      "geometry": "geometry.Skyrim.SkyrimOrcBlacksmith",
+      "texture": "SkyrimOrcBlacksmith.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimOrcWarriorFemale",
+      "geometry": "geometry.Skyrim.SkyrimOrcWarriorFemale",
+      "texture": "SkyrimOrcWarriorFemale.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimOrcWarriorMale",
+      "geometry": "geometry.Skyrim.SkyrimOrcWarriorMale",
+      "texture": "SkyrimOrcWarriorMale.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimSaadia",
+      "geometry": "geometry.Skyrim.SkyrimSaadia",
+      "texture": "SkyrimSaadia.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimSheogorath",
+      "geometry": "geometry.Skyrim.SkyrimSheogorath",
+      "texture": "SkyrimSheogorath.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimSpriggan",
+      "geometry": "geometry.Skyrim.SkyrimSpriggan",
+      "texture": "SkyrimSpriggan.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimStormcloakSoldier",
+      "geometry": "geometry.Skyrim.SkyrimStormcloakSoldier",
+      "texture": "SkyrimStormcloakSoldier.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimVampireLord",
+      "geometry": "geometry.Skyrim.SkyrimVampireLord",
+      "texture": "SkyrimVampireLord.png",
+      "cape": "../skin_packs/Skyrim/SkyrimVampireLord_cape.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimVex",
+      "geometry": "geometry.Skyrim.SkyrimVex",
+      "texture": "SkyrimVex.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimVilkas",
+      "geometry": "geometry.Skyrim.SkyrimVilkas",
+      "texture": "SkyrimVilkas.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimWispmother",
+      "geometry": "geometry.Skyrim.SkyrimWispmother",
+      "texture": "SkyrimWispmother.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimWoodElfArcher",
+      "geometry": "geometry.Skyrim.SkyrimWoodElfArcher",
+      "texture": "SkyrimWoodElfArcher.png",
+      "type": "paid"
+    },
+    {
+      "localization_name": "SkyrimWoodElfMage",
+      "geometry": "geometry.Skyrim.SkyrimWoodElfMage",
+      "texture": "SkyrimWoodElfMage.png",
+      "type": "paid"
+    }
+  ],
+  "serialize_name": "Skyrim",
+  "localization_name": "Skyrim"
+}

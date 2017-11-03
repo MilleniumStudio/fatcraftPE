@@ -1,0 +1,25 @@
+{
+  "header": {
+    "version": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "description": "resourcePack.Skyrim.description",
+    "name": "Skyrim_SkinPack",
+    "uuid": "eb258083-fb5c-4780-bca7-7f3fb9065539"
+  },
+  "modules": [
+    {
+      "version": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "description": "resourcePack.Skyrim.description",
+      "type": "skin_pack",
+      "uuid": "2efd6be5-0d3b-405a-bf98-fc2d00ce6393"
+    }
+  ],
+  "format_version": 1.0
+}
