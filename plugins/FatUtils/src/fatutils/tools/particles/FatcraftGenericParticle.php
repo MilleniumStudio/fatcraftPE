@@ -18,7 +18,6 @@ class FatcraftGenericParticle extends Particle
 {
 	protected $id;
 	protected $data;
-	protected $vector3;
 
 	public function __construct($id, $data = 0){
 		parent::__construct();
@@ -28,13 +27,15 @@ class FatcraftGenericParticle extends Particle
 
 	public function setPosition(Vector3 $p_Position)
 	{
-		$this->vector3 = $p_Position;
+		$this->x = $p_Position->x;
+		$this->y = $p_Position->y;
+		$this->z = $p_Position->z;
 	}
 
 	public function encode(){
 		$pk = new LevelEventPacket;
 		$pk->evid = LevelEventPacket::EVENT_ADD_PARTICLE_MASK | $this->id;
-		$pk->position = $this->vector3;
+		$pk->position = $this;
 		$pk->data = $this->data;
 
 		return $pk;
