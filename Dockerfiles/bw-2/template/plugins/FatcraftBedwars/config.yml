@@ -1,5 +1,5 @@
 minPlayer: 2
-maxPlayer: 8
+maxPlayer: 4
 waitingSecDuration: 15
 playingSecDuration: 1200
 deathArenaLoc: 0.5/6.1/60.5
@@ -9,44 +9,42 @@ rewards:
   fatSilver: 100
 
 spawns:
-  blueSpawn:
-    location: 33.32/54/93.7
   redSpawn:
     location: -52.5/54/-102.5
   orangeSpawn:
-    location: -107.7/54/-47.37
-  greenSpawn:
-    location: -52.49/54/93.69
+    location: -107.5/54/-47.5
   yellowSpawn:
-    location: -107.64/54/38.67
+    location: -107.5/54/38.5
+  greenSpawn:
+    location: -52.5/54/93.5
+  blueSpawn:
+    location: 33.5/54/93.5
+  purpleSpawn:
+    location: 88.5/54/38.5
+  magentaSpawn:
+    location: 88.5/54/-47.5
+  pinkSpawn:
+    location: 33.5/54/-102.5
 
 forges:
   i1:
-    location: 33.63/53/100.7
-    itemType: IRON_INGOT
-    team: Blue
-    popDelay:
-      - 3
-      - 2
-      - 1
-  i2:
-    location: -52.34/53/-109.7
+    location: -52.5/53/-109.7
     itemType: IRON_INGOT
     team: Red
     popDelay:
       - 3
       - 2
       - 1
-  i3:
-    location: -114.7/53/-47.36
+  i2:
+    location: -114.5/53/-47.5
     itemType: IRON_INGOT
     team: Orange
     popDelay:
       - 3
       - 2
       - 1
-  i4:
-    location: -52.46/53/100.7
+  i3:
+    location: -114.5/53/38.5
     itemType: IRON_INGOT
     team: Yellow
     popDelay:
@@ -54,51 +52,111 @@ forges:
       - 2
       - 1
   i4:
-    location: -52.56/53/100.7
+    location: -52.5/53/100.5
     itemType: IRON_INGOT
     team: Green
     popDelay:
       - 3
       - 2
       - 1
+  i5:
+    location: 33.5/53/100.5
+    itemType: IRON_INGOT
+    team: Blue
+    popDelay:
+      - 3
+      - 2
+      - 1
+  i6:
+    location: 95.5/53/38.5
+    itemType: IRON_INGOT
+    team: Purple
+    popDelay:
+      - 3
+      - 2
+      - 1
+  i7:
+    location: 95.5/53/-47.5
+    itemType: IRON_INGOT
+    team: Magenta
+    popDelay:
+      - 3
+      - 2
+      - 1
+  i8:
+    location: 33.5/53/-109.5
+    itemType: IRON_INGOT
+    team: Pink
+    popDelay:
+      - 3
+      - 2
+      - 1
 
   g1:
-    location: 
+    location: -9.5/55/-64.5
     itemType: GOLD_INGOT
     popDelay:
       - 8
       - 6
       - 4
   g2:
-    location: 
+    location: -51.5/55/-48.5
     itemType: GOLD_INGOT
     popDelay:
       - 8
       - 6
       - 4
   g3:
-    location: 
+    location: -69.5/55/-5.5
     itemType: GOLD_INGOT
     popDelay:
       - 8
       - 6
       - 4
   g4:
-    location: 
+    location: -53.5/55/36.5
+    itemType: GOLD_INGOT
+    popDelay:
+      - 8
+      - 6
+      - 4
+  g5:
+    location: -10.5/55/55.5
+    itemType: GOLD_INGOT
+    popDelay:
+      - 8
+      - 6
+      - 4
+  g6:
+    location: 31.5/55/38.5
+    itemType: GOLD_INGOT
+    popDelay:
+      - 8
+      - 6
+      - 4
+  g7:
+    location: 50.5/55/-3.5
+    itemType: GOLD_INGOT
+    popDelay:
+      - 8
+      - 6
+      - 4
+  g8:
+    location: 33.5/55/-45.5
     itemType: GOLD_INGOT
     popDelay:
       - 8
       - 6
       - 4
   d1:
-    location: 
+    location: -9.5/55/-13.5
     itemType: DIAMOND
     popDelay:
       - 12
       - 10
       - 8
   d2:
-    location: 
+    location: -9.5/55/4.5
     itemType: DIAMOND
     popDelay:
       - 12
@@ -106,9 +164,6 @@ forges:
       - 8
 
 teams:
-  Blue:
-    color: BLUE
-    spawn: blueSpawn
   Red:
     color: RED
     spawn: redSpawn
@@ -121,24 +176,42 @@ teams:
   Green:
     color: GREEN
     spawn: greenSpawn
+  Blue:
+    color: BLUE
+    spawn: blueSpawn
+  Purple:
+    color: DARK_PURPLE
+    spawn: purpleSpawn
+  Magenta:
+    color: MAGENTA
+    spawn: magentaSpawn
+  Pink:
+    color: PINK
+    spawn: pinkSpawn
 
 npcTeamSelector:
-  1: 17/116.0/4
-  2: 13/116.0/8
+  1: -9.5/55/12.5
+  2: -9.5/55/-21.5
 
 npcShop:
-  1: 39.7/54/91.3
   2: -58.3/54/-100.52
   3: -105.7/54/-53.7
   4: -105.7/54/44.7
   5: -58.7/54/91.3
+  1: 39.7/54/91.3
+  6: 86.47/54/44.7
+  7: 86.3/54/-53.7
+  8: 39.7/54/-100.3
 
 beds:
-  Blue: 16.73/56/63.46
-  Red: -35.5/56/-72.5
-  Orange: -77.46/56/-30.4
-  Yellow: -77.3/56/21.43
-  Green: -35.4/56/63.34
+  Red: -35.5/55/-72.5
+  Orange: -77.46/55/-30.4
+  Yellow: -77.3/55/21.43
+  Green: -35.4/55/63.34
+  Blue: 16.73/55/63.46
+  Purple: 58.4/55/21.51
+  Magenta: 58.43/55/-30.55
+  Pink: 16.48/55/-72.52
 
 shop:
   blocks:
