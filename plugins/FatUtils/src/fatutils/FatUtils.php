@@ -104,25 +104,22 @@ class FatUtils extends PluginBase
                     {
 //						(new RawParticle($sender->asVector3()->add(0, 2.5, 0), $args[1]))->playForPlayer($sender);
 
-						$vol = CuboidVolume::createRelativeVolume($sender, 1, 1, 1, -1, -1, -1);
+						$vol = CuboidVolume::createRelativeVolume($sender, 1.5, 1.5, 1.5, -1.5, -1.5, -1.5);
 						new LoopedExec(function () use (&$sender, $vol) {
 							if ($vol instanceof CuboidVolume)
-							{
 								$vol->display();
-//								echo "Are you in ? " . ($vol->isIn($sender) ? "yes" : "nope") . "\n";
-							}
-						});
+						}, 5);
 
 						$vol->addCollisionListener(function (Entity $p_Entity) use ($vol) {
-							echo $vol->getId() . ": Collision With: " . $p_Entity->getId() . "\n";
+							echo $vol->getId() . ": Collision With entity " . $p_Entity->getId() . "\n";
 						});
 
 						$vol->addEnteringListener(function (Entity $p_Entity) use ($vol) {
-							echo $vol->getId() . ": Entering: " . $p_Entity->getId() . "\n";
+							echo $vol->getId() . ": Entering entity " . $p_Entity->getId() . "\n";
 						});
 
 						$vol->addLeavingListener(function (Entity $p_Entity) use ($vol) {
-							echo $vol->getId() . ": Leaving: " . $p_Entity->getId() . "\n";
+							echo $vol->getId() . ": Leaving entity " . $p_Entity->getId() . "\n";
 						});
                     }
                     break;

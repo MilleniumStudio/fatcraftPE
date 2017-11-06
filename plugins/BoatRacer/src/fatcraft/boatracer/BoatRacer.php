@@ -9,6 +9,7 @@
 namespace fatcraft\boatracer;
 
 use fatutils\FatUtils;
+use fatutils\tools\DelayedExec;
 use fatutils\tools\WorldUtils;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\inventory\InventoryPickupItemEvent;
@@ -71,7 +72,11 @@ class BoatRacer extends PluginBase implements Listener
     public function onEntityVehicleExit(EntityVehicleExitEvent $p_Event)
     {
         echo "EntityVehicleExitEvent\n";
-        if ($p_Event->getEntity() instanceof Player){
+        new DelayedExec(function () use ($p_Event) {
+			echo "Remount boat\n";
+			$p_Event->getVehicle()->mountEntity($p_Event->getEntity());
+		});
+//        if ($p_Event->getEntity() instanceof Player){
 //            if (!$p_Event->getEntity()->isOp())
 //            {
 //                $p_Event->setCancelled(true);
@@ -79,17 +84,17 @@ class BoatRacer extends PluginBase implements Listener
 //                $this->applyBoat($p_Event->getEntity());
 //                $p_Event->getEntity()->sendMessage("You can't get out !");
 //            }
-        }
+//        }
     }
 
     public function onEntityVehicleEnter(EntityVehicleEnterEvent $p_Event)
     {
         echo "EntityVehicleEnterEvent\n";
-        if ($p_Event->getEntity() instanceof Player)
-        {
+//        if ($p_Event->getEntity() instanceof Player)
+//        {
 //            $p_Event->getEntity()->setInvulnerable(true);
             //
-        }
+//        }
     }
 
     public function applyBoat(Player $p_Player)
