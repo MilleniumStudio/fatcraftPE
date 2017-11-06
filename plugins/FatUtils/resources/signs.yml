@@ -1,10 +1,16 @@
 #Signs config
+#
+# Sign must be placed on map !
+# If a sign is configured but not spawned, an error will be thown.
 
 signs:
+    # name of the sign (must be unique)
   - name: "counter"
+    # position of the existing sign
     location: "1/9/2"
+    # sign have to be updated or not
     update: true
-    # text writen on sign
+    # text writen on sign (can be overrided by function)
     text : [
       "This is a counter",
       "",
@@ -15,7 +21,10 @@ signs:
     commands: [
       "tell {player} I'm a SIGN!!!!"
     ]
+    # function name for "internal" manager
+    # must be coded.
     function: "SignFunctionCounter"
+    # data array that can be used in function
     data:
       start : 1
 
@@ -36,6 +45,7 @@ signs:
       type : "lobby"
       id : 1
 
+# Signs Areas are multiple signs location managed by a single function.
 signsareas:
   - name: "multiple.server_lobby"
     update: true
@@ -45,6 +55,7 @@ signsareas:
       "",
       ""
     ]
+    # Multiple location of the signs
     locations: [
       "2/10/2",
       "1/10/2",
