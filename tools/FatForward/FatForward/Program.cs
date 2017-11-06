@@ -80,7 +80,7 @@ namespace FatForward
                     l_Client.m_DataToSend.Enqueue(l_Data);
 
                     GlobalVars.g_ClientDict[m_ClientIpEndPoint.ToString()] = l_Client;
-                    Console.WriteLine("Receive new connection from {0}", m_ClientIpEndPoint.ToString());
+                    //Console.WriteLine("Receive new connection from {0}", m_ClientIpEndPoint.ToString());
                 }
             }
         }

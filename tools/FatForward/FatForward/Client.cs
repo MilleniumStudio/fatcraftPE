@@ -15,8 +15,6 @@ namespace FatForward
     class Client
     {
         /// Pmmp stuffs
-        static string m_PmmpIp = "192.168.1.32";
-        static int m_PmmpPort = 19132;
         IPEndPoint m_PmmpEndPoint;
 
         /// Client stuffs
@@ -31,8 +29,6 @@ namespace FatForward
 
         Thread m_RecvThread = null;
         Thread m_SendThread = null;
-
-        bool m_ShouldTerminate = false;
 
         public Client(ref UdpClient p_MCPETunnel, IPEndPoint p_MCPEIpEndPoint)
         {
@@ -55,8 +51,14 @@ namespace FatForward
             {
                 m_PmmpEndPoint = getBestLobby();
                 Thread.Sleep(500);
-                Console.WriteLine("Still no serv");
             }
+
+            Console.WriteLine("\n###\nClient : {0}:{1} going to => {2}:{3}\n###\n", m_MCPEIpEndPoint.Address, m_MCPEIpEndPoint.Port, m_PmmpEndPoint.Address, m_PmmpEndPoint.Port);
+            foreach (KeyValuePair<string, ServerStatus> l_Itterator in GlobalVars.g_ServerStatus)
+            {
+                ServerStatus l_Debug = l_Itterator.Value;
+            }
+
             m_PocketMineTunnel = new UdpClient();
             m_PocketMineTunnel.Client.ReceiveTimeout = GlobalVars.TIMEOUT * 1000;
             m_PocketMineTunnel.Connect(m_PmmpEndPoint);
@@ -79,9 +81,7 @@ namespace FatForward
                     {
                         m_PocketMineTunnel.Close();
                         Console.WriteLine("Close : {0} ", m_MCPEIpEndPoint.ToString());
-                        //Console.WriteLine("Client 1 : {0}", GlobalVars.g_ClientDict.Count);
                         GlobalVars.g_ClientDict.TryRemove(m_MCPEIpEndPoint.ToString(), out Client l_Client);
-                        //Console.WriteLine("m_LastUpdateTime : {2} / now : {4}  / i am : {1} Clients remaining : {0}", GlobalVars.g_ClientDict.Count, m_MCPEIpEndPoint.ToString(), m_LastUpdateTime, m_LastUpdateTime, (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds);
                         break;
                     }
                 }
@@ -89,7 +89,6 @@ namespace FatForward
                 {
                     try
                     {
-                        //Console.WriteLine("{0}", e.ToString());
                         GlobalVars.g_ClientDict.TryRemove(m_MCPEIpEndPoint.ToString(), out Client l_Client);
                         m_PocketMineTunnel.Close();
                         break;
@@ -117,7 +116,6 @@ namespace FatForward
                     //Console.WriteLine("PMMP->MCPE :" + Encoding.UTF8.GetString(l_Data));
                     m_MCPETunnel.Send(l_Data, l_Data.Length, m_MCPEIpEndPoint);
                     m_LastUpdateTime = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-                    //Console.WriteLine("i am : {1} Clients remaining : {0}", GlobalVars.g_ClientDict.Count, m_MCPEIpEndPoint.ToString());
                 }
                 catch (Exception e)
                 {
@@ -132,19 +130,20 @@ namespace FatForward
             IPEndPoint l_ToReturn = null;
             int l_BestPlayerAmmount = 0;
 
+            Console.WriteLine("nb servers = {0}", GlobalVars.g_ServerStatus.Count,ToString());
+
             foreach (KeyValuePair<string, ServerStatus> l_Itterator in GlobalVars.g_ServerStatus)
             {
                 ServerStatus l_ServerStatus = l_Itterator.Value;
+
                 if (l_ServerStatus.m_Online < l_ServerStatus.m_Max && l_ServerStatus.m_Online >= l_BestPlayerAmmount)
                 {
                     l_BestPlayerAmmount = l_ServerStatus.m_Online;
                     l_ToReturn = l_ServerStatus.m_EndPoint;
                 }
-                //Console.WriteLine("l_ToReturn = {0}", l_ToReturn.ToString());
+                Console.WriteLine("l_ToReturn = {0} with {1}", l_ToReturn.ToString(), l_ServerStatus.m_Online);
             }
 
-            if (l_ToReturn != null)
-                GlobalVars.g_ServerStatus[l_ToReturn.Address.ToString()].m_Online++;
             return (l_ToReturn);
         }
     }
