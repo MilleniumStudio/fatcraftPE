@@ -136,8 +136,10 @@ namespace FatForward
             {
                 ServerStatus l_ServerStatus = l_Itterator.Value;
                 if (l_ServerStatus.m_Online < l_ServerStatus.m_Max && l_ServerStatus.m_Online >= l_BestPlayerAmmount)
+                {
+                    l_BestPlayerAmmount = l_ServerStatus.m_Online;
                     l_ToReturn = l_ServerStatus.m_EndPoint;
-
+                }
                 //Console.WriteLine("l_ToReturn = {0}", l_ToReturn.ToString());
             }
 

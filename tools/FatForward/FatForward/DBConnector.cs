@@ -13,7 +13,7 @@ namespace FatForward
     {
         static public void getLobbys()
         {
-            string l_Query = "SELECT ip, port, status, online, max FROM servers WHERE UNIX_TIMESTAMP() -UNIX_TIMESTAMP(laston) < 5 AND `max` > `online` AND `type` = 'lobby' AND `status` = 'open' ORDER BY `online` DESC";
+            string l_Query = "SELECT `ip`, `port`, `status`, `online`, `max` FROM servers WHERE UNIX_TIMESTAMP() -UNIX_TIMESTAMP(laston) < 5 AND `max` > `online` AND `type` = 'lobby' AND `status` = 'open' ORDER BY `online` DESC";
             MySqlConnection l_Connection;
             string l_Server;
             string l_Database;
