@@ -41,13 +41,14 @@ class TextFormatter
     const LANG_ID_EN = 0;
     const LANG_ID_FR = 1;
     const LANG_ID_ES = 2;
+    const LANG_ID_RU = 3;
     const LANG_ID_DEFAULT = TextFormatter::LANG_ID_EN;
 
     public static $m_AvailableLanguages = [
         TextFormatter::LANG_ID_EN => "EN",
         TextFormatter::LANG_ID_FR => "FR",
         TextFormatter::LANG_ID_ES => "ES",
-//		TextFormatter::LANG_ID_ES => "RU"
+	TextFormatter::LANG_ID_RU => "RU"
     ];
 
     private static $m_LangsLines = null;
