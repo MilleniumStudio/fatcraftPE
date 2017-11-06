@@ -23,19 +23,22 @@ start_docker()
 }
 
 # start front load-balancer
-docker run \
---rm --name lb-1 \
---hostname lb-1 \
---env SERVER_PORT=19132 \
---link mysql:mysql \
---env MYSQL_HOST=$MYSQL_HOST \
---env MYSQL_PORT=$MYSQL_PORT \
---env MYSQL_USER=$MYSQL_USER \
---env MYSQL_PASS=$MYSQL_PASS \
---env MYSQL_DATA=$MYSQL_DATA \
---publish 19132:19132 \
---publish 19132:19132/udp \
--d fatcraft/pocketmine:lb
+#docker run \
+#--rm --name lb-1 \
+#--hostname lb-1 \
+#--link mysql:mysql \
+#--env MYSQL_HOST=$MYSQL_HOST \
+#--env MYSQL_PORT=$MYSQL_PORT \
+#--env MYSQL_USER=$MYSQL_USER \
+#--env MYSQL_PASS=$MYSQL_PASS \
+#--env MYSQL_DATA=$MYSQL_DATA \
+#--publish 19132:19132 \
+#--publish 19132:19132/udp \
+#-d fatcraft/pocketmine:lb
+
+#cd tools/FatForward/binaries
+#screen -dmS FatForward loadbalancer.sh
+#cd ../../../
 
 # start lobbies
 start_docker lobby 1 19133 fatcraft/pocketmine:lobby mainLobby

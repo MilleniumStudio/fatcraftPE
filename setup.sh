@@ -87,9 +87,9 @@ if [ "$BUILD_POCKETMINE_DOCKER" == "yes" ]; then
 fi
 
 
-cd entry-lb/
-./docker_build.sh
-cd ../
+#cd entry-lb/
+#./docker_build.sh
+#cd ../
 
 cd lobby/
 ./docker_build.sh
