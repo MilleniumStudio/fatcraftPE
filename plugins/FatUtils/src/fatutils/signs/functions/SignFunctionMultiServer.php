@@ -39,14 +39,11 @@ class SignFunctionMultiServer extends SignFunction
 
     public function onInterract(Player $player, int $p_Index = -1)
     {
-        if ($player->hasPermission("sign.network.serverjoin"))
+        if ($p_Index != -1)
         {
-            if ($p_Index != -1)
+            if (isset($this->sign->signs[$p_Index]))
             {
-                if (isset($this->sign->signs[$p_Index]))
-                {
-                    $this->sign->signs[$p_Index]->onInterract($player);
-                }
+                $this->sign->signs[$p_Index]->onInterract($player);
             }
         }
     }

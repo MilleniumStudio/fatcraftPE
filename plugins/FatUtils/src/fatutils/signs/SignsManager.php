@@ -86,6 +86,11 @@ class SignsManager implements Listener, CommandExecutor
 
             $tile = $this->getSignAt($l_Location);
 
+            if ($tile == null)
+            {
+                $tile = $this->fixSignAt($l_Location);
+            }
+
             if ($tile !== null)
             {
                 //Optionnal
@@ -108,6 +113,9 @@ class SignsManager implements Listener, CommandExecutor
                     {
                         case "SignFunctionServer":
                             $sign->function = new functions\SignFunctionServer($sign);
+                            break;
+                        case "SignFunctionRandomServer":
+                            $sign->function = new functions\SignFunctionRandomServer($sign);
                             break;
                         case "SignFunctionCounter":
                             $sign->function = new functions\SignFunctionCounter($sign);
@@ -154,28 +162,36 @@ class SignsManager implements Listener, CommandExecutor
             $i = 0;
             foreach ($p_RawLocations as $p_RawLocation)
             {
-//                $name = $name . $i;
                 $l_Location = WorldUtils::stringToLocation($p_RawLocation);
                 if ($l_Location->level == null)
                 {
                     FatUtils::getInstance()->getLogger()->warning("[Signs] Error: signsarea ". $name . " world " . $p_RawLocation . " not found");
                     continue;
                 }
+
                 $tile = $this->getSignAt($l_Location);
+
                 if ($tile == null)
+                {
+                    $tile = $this->fixSignAt($l_Location);
+                }
+
+                if ($tile !== null)
+                {
+                    $tile->namedtag->signName = $name;
+                    $tile->namedtag->index = $i;
+
+                    $sign = new CustomSign($name, $tile);
+                    $sign->update = $update;
+                    $sign->text = $text;
+
+                    $tiles[] = $sign;
+                    $i++;
+                }
+                else
                 {
                     FatUtils::getInstance()->getLogger()->warning("[Signs] Error: signsarea ". $name . " : no sign found in " . $p_RawLocation . "");
                 }
-
-                $tile->namedtag->signName = $name;
-                $tile->namedtag->index = $i;
-
-                $sign = new CustomSign($name, $tile);
-                $sign->update = $update;
-                $sign->text = $text;
-
-                $tiles[] = $sign;
-                $i++;
             }
 
             if (count($tiles))
@@ -215,6 +231,25 @@ class SignsManager implements Listener, CommandExecutor
 
             if ($tile instanceof TileSign)
             {
+                return $tile;
+            }
+        }
+        return null;
+    }
+
+    public function fixSignAt(Location $p_Location) : ?TileSign
+    {
+        $block = $p_Location->getLevel()->getBlockAt($p_Location->x, $p_Location->y, $p_Location->z);
+        $p_Location->getLevel()->setBlock($block, BlockFactory::get(Block::WALL_SIGN, 5), true);
+        if ($block->getId() == Block::SIGN_POST OR $block->getId() == Block::WALL_SIGN)
+        {
+            $tile = $block->getLevel()->getTile($block);
+            $tile->namedtag->setString(TileSign::TAG_TEXT_BLOB, implode("\n", array("", "", "", "")));
+
+            if ($tile instanceof TileSign)
+            {
+                FatUtils::getInstance()->getLogger()->warning("[Signs] sign fixed on ". \fatutils\tools\WorldUtils::locationToString($p_Location));
+                $tile->spawnToAll();
                 return $tile;
             }
         }
@@ -282,7 +317,7 @@ class SignsManager implements Listener, CommandExecutor
 
             if ($tile instanceof TileSign)
             {
-                FatUtils::getInstance()->getLogger()->debug("[Signs] Text interact " . $block->getName() . " " . $tile->x . "/" . $tile->y . "/" . $tile->z);
+                FatUtils::getInstance()->getLogger()->debug("[Signs] Text interact " . $block->getName() . " " . $tile->x . "/" . $tile->y . "/" . $tile->z . " face: " . $block->getDamage());
                 if (isset($tile->namedtag->signName))
                 {
                     if (isset($this->m_RegisteredSigns[$tile->namedtag->signName]))
