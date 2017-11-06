@@ -8,11 +8,11 @@
 
 namespace fatutils\tools\volume;
 
-
-use fatutils\FatUtils;
 use fatutils\tools\LoopedExec;
+use fatutils\tools\MathUtils;
 use fatutils\tools\particles\ParticleBuilder;
 use pocketmine\entity\Entity;
+use pocketmine\event\TimingsHandler;
 use pocketmine\level\particle\Particle;
 use pocketmine\level\Position;
 use pocketmine\math\Vector3;
@@ -34,6 +34,7 @@ class CuboidVolume
 
 	/** @var CuboidVolume[] */
 	private static $m_CollidableVolumes = [];
+	private $m_Timings = null;
 
 	/** @var Position */
 	private $m_Pos1;
@@ -58,7 +59,6 @@ class CuboidVolume
 	public function __construct(Position $p_Pos1, Position $p_Pos2)
 	{
 		$this->m_Id = self::$m_IdAutoIncrement++;
-		echo "New Volume: " . $this->m_Id . " (next:" . self::$m_IdAutoIncrement .")\n";
 
 		$this->m_Pos1 = $p_Pos1;
 		$this->m_Pos2 = $p_Pos2;
@@ -98,19 +98,35 @@ class CuboidVolume
 		$this->initScheduler();
 	}
 
+	/**
+	 * @param int $p_Quantity
+	 * @return Position[]
+	 */
+	public function getRandomLocations(int $p_Quantity = 1): array
+	{
+		$l_Ret = [];
+
+		for ($i = 0; $i < $p_Quantity; $i++)
+			$l_Ret[] = new Position(MathUtils::frand($this->getMinX(), $this->getMaxX(), 2), MathUtils::frand($this->getMinY(), $this->getMaxY(), 2), MathUtils::frand($this->getMinZ(), $this->getMaxZ(), 2), $this->getPos1()->getLevel());
+
+		return $l_Ret;
+	}
+
 	public function initScheduler()
 	{
 		if (array_key_exists($this->m_Id, self::$m_CollidableVolumes) == false)
 		{
 			self::$m_CollidableVolumes[$this->m_Id] = $this;
-			echo "Scheduler adding new volume: " . $this->getId() . "\n";
-			foreach (self::$m_CollidableVolumes as $key => $l_Volume)
-				echo "  --> " . $key . " => " . $l_Volume->getId() . "\n";
 		}
 
 		if (is_null(self::$m_CollisionTask))
 		{
 			self::$m_CollisionTask = new LoopedExec(function () {
+
+				if (is_null($this->m_Timings))
+					$this->m_Timings = new TimingsHandler("VolumesCollide");
+
+				$this->m_Timings->startTiming();
 				foreach (self::$m_CollidableVolumes as $l_Volume)
 				{
 					if ($l_Volume instanceof CuboidVolume)
@@ -153,6 +169,7 @@ class CuboidVolume
 						}
 					}
 				}
+				$this->m_Timings->stopTiming();
 			});
 		}
 	}
@@ -196,8 +213,14 @@ class CuboidVolume
 
 	public function display()
 	{
-		(ParticleBuilder::fromParticleId(Particle::TYPE_REDSTONE))->play(Position::fromObject($this->getPos1(), FatUtils::getInstance()->getServer()->getLevel(1)));
-		(ParticleBuilder::fromParticleId(Particle::TYPE_REDSTONE))->play(Position::fromObject($this->getPos2(), FatUtils::getInstance()->getServer()->getLevel(1)));
+		$l_Edges = ParticleBuilder::fromParticleId(Particle::TYPE_REDSTONE);
+
+		$l_Edges->play(Position::fromObject($this->getPos1(), $this->getPos1()->getLevel()));
+		$l_Edges->play(Position::fromObject($this->getPos2(), $this->getPos2()->getLevel()));
+
+		$l_RandomParticle = ParticleBuilder::fromParticleId(Particle::TYPE_DUST)->setColor(10, 10, 210);
+		foreach ($this->getRandomLocations(5) as $l_Position)
+			$l_RandomParticle->play($l_Position);
 	}
 
 	/**
@@ -225,49 +248,49 @@ class CuboidVolume
 	}
 
 	/**
-	 * @return int
+	 * @return float
 	 */
-	public function getMinX(): int
+	public function getMinX(): float
 	{
 		return $this->m_MinX;
 	}
 
 	/**
-	 * @return int
+	 * @return float
 	 */
-	public function getMinY(): int
+	public function getMinY(): float
 	{
 		return $this->m_MinY;
 	}
 
 	/**
-	 * @return int
+	 * @return float
 	 */
-	public function getMinZ(): int
+	public function getMinZ(): float
 	{
 		return $this->m_MinZ;
 	}
 
 	/**
-	 * @return int
+	 * @return float
 	 */
-	public function getMaxX(): int
+	public function getMaxX(): float
 	{
 		return $this->m_MaxX;
 	}
 
 	/**
-	 * @return int
+	 * @return float
 	 */
-	public function getMaxY(): int
+	public function getMaxY(): float
 	{
 		return $this->m_MaxY;
 	}
 
 	/**
-	 * @return int
+	 * @return float
 	 */
-	public function getMaxZ(): int
+	public function getMaxZ(): float
 	{
 		return $this->m_MaxZ;
 	}

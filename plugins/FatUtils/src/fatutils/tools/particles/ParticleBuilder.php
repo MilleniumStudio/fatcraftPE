@@ -170,7 +170,7 @@ class ParticleBuilder
 		if ($this->m_Particle instanceof FatcraftGenericParticle)
 		{
 			$this->m_Particle->setPosition($p_Position);
-			$p_Player->getLevel()->addParticle($this->m_Particle);
+			$p_Player->getLevel()->addParticle(clone $this->m_Particle, [$p_Player]);
 		}
 	}
 
@@ -182,10 +182,7 @@ class ParticleBuilder
 		if ($this->m_Particle instanceof FatcraftGenericParticle)
 		{
 			$this->m_Particle->setPosition($p_Position);
-			foreach ($p_Players as $l_Player)
-			{
-				$l_Player->getLevel()->addParticle($this->m_Particle);
-			}
+			$p_Position->getLevel()->addParticle(clone $this->m_Particle, $p_Players);
 		}
 	}
 
@@ -197,7 +194,7 @@ class ParticleBuilder
 		if ($this->m_Particle instanceof FatcraftGenericParticle)
 		{
 			$this->m_Particle->setPosition($p_Position);
-			$p_Position->getLevel()->addParticle($this->m_Particle);
+			$p_Position->getLevel()->addParticle(clone $this->m_Particle);
 		}
 	}
 
