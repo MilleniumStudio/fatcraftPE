@@ -553,7 +553,7 @@ class LoadBalancer extends PluginBase implements Listener
             {
                 try
                 {
-                    $this->balancePlayer($p_Event->getPlayer(), $this->getConfig()->getNested("redirect.to_type"));
+                    $this->balancePlayer($p_Event->getPlayer(), $this->getConfig()->getNested("redirect.to_type"), -1, true);
                 }
                 catch (Exception $ex)
                 {
@@ -568,10 +568,22 @@ class LoadBalancer extends PluginBase implements Listener
         }
     }
 
-    public function balancePlayer(Player $p_Player, string $p_Type):bool
+    public function balancePlayer(Player $p_Player, string $p_Type, int $p_Id = -1, bool $p_Kick = false):bool
     {
-        // select random server
-        $server = $this->getBest($p_Type, "open");
+        $server = null;
+        if ($p_Id == -1)
+        {
+            // select random server
+            $server = $this->getBest($p_Type, "open");
+        }
+        else
+        {
+            $server = $this->getNetworkServer($p_Type, $p_Id);
+            if ($server["online"] == $server["max"])
+            {
+                $server = null;
+            }
+        }
         if ($server !== null)
         {
             // fire event
@@ -579,17 +591,20 @@ class LoadBalancer extends PluginBase implements Listener
             if ($l_Event->getIp() === null or $l_Event->getPort() === null)
             {
                 $p_Player->kick("%disconnectScreen.serverFull", false);
-				return false;
+		return false;
             }
             else
             {
                 $this->transferPlayer($p_Player, $l_Event->getIp(), $l_Event->getPort(), $this->getConfig()->getNested("redirect.message"));
             }
-			return true;
+	    return true;
         }
         else
         {
-            $p_Player->kick("LoadBalancer error, no server route !", false);
+            if ($p_Kick)
+            {
+                $p_Player->kick("LoadBalancer error, no server route !", false);
+            }
             return false;
         }
     }
