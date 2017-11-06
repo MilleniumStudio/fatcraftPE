@@ -32,6 +32,7 @@ use pocketmine\nbt\tag\NamedTag;
 use pocketmine\block\BlockIds;
 use pocketmine\block\Block;
 use pocketmine\block\BlockFactory;
+use fatutils\tools\LoopedExec;
 
 class SignsManager implements Listener, CommandExecutor
 {
@@ -49,7 +50,7 @@ class SignsManager implements Listener, CommandExecutor
     private function __construct()
     {
         FatUtils::getInstance()->getServer()->getPluginManager()->registerEvents($this, FatUtils::getInstance());
-        FatUtils::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new OnTick(FatUtils::getInstance()), 1);
+        new LoopedExec([$this, "updateSigns"]);
         $this->loadConfigs();
     }
 
@@ -71,8 +72,6 @@ class SignsManager implements Listener, CommandExecutor
                 continue;
             }
             $p_RawLocation = isset($value['location']) ? $value['location'] : null;
-            $p_RawType = isset($value['location']) ? $value['location'] : "WALL_SIGN";
-            $p_RawSide = isset($value['location']) ? $value['location'] : "SIDE_WEST";
             if ($p_RawLocation == null)
             {
                 FatUtils::getInstance()->getLogger()->warning("[Signs] Error: sign ". $name . " has no/bad location");
@@ -81,29 +80,133 @@ class SignsManager implements Listener, CommandExecutor
             $l_Location = WorldUtils::stringToLocation($p_RawLocation);
             if ($l_Location->level == null)
             {
-                FatUtils::getInstance()->getLogger()->warning("[Signs] Error: npc ". $name . " world " . $p_RawLocation . " not found");
+                FatUtils::getInstance()->getLogger()->warning("[Signs] Error: sign ". $name . " world " . $p_RawLocation . " not found");
                 continue;
             }
 
-            $p_Type = null;
-            $p_Side = WorldUtils::getSideFromString($p_RawSide);
+            $tile = $this->getSignAt($l_Location);
 
+            if ($tile !== null)
+            {
+                //Optionnal
+                $update = isset($value['update']) ? $value['update'] : false;
+                $text = isset($value['text']) ? $value['text'] : ["", "", "", ""];
+                $commands = isset($value['commands']) ? $value['commands'] : [];
+                $function = isset($value['function']) ? $value['function'] : "";
+                $data = isset($value['data']) ? $value['data'] : [];
+
+                $sign = new CustomSign($name, $tile);
+                $tile->namedtag->signName = $name;
+                $sign->update = $update;
+                $sign->text = $text;
+                $sign->commands = $commands;
+                $sign->data = $data;
+
+                try
+                {
+                    switch ($function)
+                    {
+                        case "SignFunctionServer":
+                            $sign->function = new functions\SignFunctionServer($sign);
+                            break;
+                        case "SignFunctionCounter":
+                            $sign->function = new functions\SignFunctionCounter($sign);
+                            break;
+
+                        default:
+                            break;
+                    }
+                } catch (Exception $ex)
+                {
+                    FatUtils::getInstance()->getLogger()->warning("[Signs] ". $ex->getMessage());
+                }
+
+                $this->m_RegisteredSigns[$name] = $sign;
+            }
+            else
+            {
+                FatUtils::getInstance()->getLogger()->warning("[Signs] Error: no sign ". $name . " found in " . $p_RawLocation . "");
+            }
+        }
+
+        foreach ($this->config->get("signsareas") as $key => $value)
+        {
+            $name = isset($value['name']) ? $value['name'] : null;
+            if ($name == null)
+            {
+                FatUtils::getInstance()->getLogger()->warning("[Signs] Error: signsarea without name");
+                continue;
+            }
+            $p_RawLocations = isset($value['locations']) ? $value['locations'] : [];
+            if (count($p_RawLocations) == 0)
+            {
+                FatUtils::getInstance()->getLogger()->warning("[Signs] Error: signsarea ". $name . " has no/bad location");
+                continue;
+            }
             //Optionnal
             $update = isset($value['update']) ? $value['update'] : false;
             $text = isset($value['text']) ? $value['text'] : ["", "", "", ""];
             $commands = isset($value['commands']) ? $value['commands'] : [];
+            $function = isset($value['function']) ? $value['function'] : "";
+            $data = isset($value['data']) ? $value['data'] : [];
 
-//            $sign = $this->spawnSign($l_Location, $p_Type, $p_Side, $name, $text, $commands);
+            $tiles = array();
+            $i = 0;
+            foreach ($p_RawLocations as $p_RawLocation)
+            {
+//                $name = $name . $i;
+                $l_Location = WorldUtils::stringToLocation($p_RawLocation);
+                if ($l_Location->level == null)
+                {
+                    FatUtils::getInstance()->getLogger()->warning("[Signs] Error: signsarea ". $name . " world " . $p_RawLocation . " not found");
+                    continue;
+                }
+                $tile = $this->getSignAt($l_Location);
+                if ($tile == null)
+                {
+                    FatUtils::getInstance()->getLogger()->warning("[Signs] Error: signsarea ". $name . " : no sign found in " . $p_RawLocation . "");
+                }
 
-//            if ($update)
-//            {
-//                $sign->namedtag->Update = true;
-//            }
-//            $this->updateSign($sign);
+                $tile->namedtag->signName = $name;
+                $tile->namedtag->index = $i;
+
+                $sign = new CustomSign($name, $tile);
+                $sign->update = $update;
+                $sign->text = $text;
+
+                $tiles[] = $sign;
+                $i++;
+            }
+
+            if (count($tiles))
+            {
+                $multipleSign = new MultipleSigns($name, $tiles);
+                $multipleSign->update = $update;
+                $multipleSign->commands = $commands;
+                $multipleSign->data = $data;
+
+                try
+                {
+                    switch ($function)
+                    {
+                        case "SignFunctionMultiServer":
+                            $multipleSign->function = new functions\SignFunctionMultiServer($multipleSign);
+                            break;
+
+                        default:
+                            break;
+                    }
+                } catch (Exception $ex)
+                {
+                    FatUtils::getInstance()->getLogger()->warning("[Signs] ". $ex->getMessage());
+                }
+
+                $this->m_RegisteredSigns[$name] = $multipleSign;
+            }
         }
     }
 
-    public function getSignAt(Location $p_Location)
+    public function getSignAt(Location $p_Location) : ?TileSign
     {
         $block = $p_Location->getLevel()->getBlockAt($p_Location->x, $p_Location->y, $p_Location->z);
         if ($block->getId() == Block::SIGN_POST OR $block->getId() == Block::WALL_SIGN)
@@ -112,54 +215,19 @@ class SignsManager implements Listener, CommandExecutor
 
             if ($tile instanceof TileSign)
             {
-                
+                return $tile;
             }
         }
+        return null;
     }
 
-    public function spawnSign(Location $p_Location, $type, $face, $name, array $text = ["", "", "", ""], array $commands = []): Tile
+    public function updateSigns()
     {
-        $nbt = new CompoundTag("", [
-            new StringTag("id", $name),
-            new IntTag("x", (int) $p_Location->x),
-            new IntTag("y", (int) $p_Location->y),
-            new IntTag("z", (int) $p_Location->z)
-        ]);
-        for($i = 1; $i <= 4; ++$i){
-            $nbt->setString(sprintf(TileSign::TAG_TEXT_LINE, $i), "");
-        }
-
-        $nbt->Commands = new CompoundTag("Commands", []);
-        $nbt->Update = new ByteTag("Update", false);
-        echo "set nbt\n";
-
-//        $block = $p_Location->getLevel()->getBlockAt($p_Location->x, $p_Location->y, $p_Location->z);
-//        $p_Location->getLevel()->setBlock($block, BlockFactory::get(BlockIds::WALL_SIGN, 0), true);
-
-        $tile = Tile::createTile(Tile::SIGN, $p_Location->getLevel(), $nbt);
-        echo "tile created\n";
-        $tile->setText($text[0], $text[1], $text[2], $text[3]);
-        echo "set text\n";
-
-        foreach ($commands as $command)
+        $currentTick = FatUtils::getInstance()->getServer()->getTick();
+        foreach ($this->m_RegisteredSigns as $l_Sign)
         {
-            $tile->namedtag->Commands[$command] = new StringTag($command, $command);
+            $l_Sign->onTick($currentTick);
         }
-        $this->m_RegisteredSigns[$name] = $tile;
-        $tile->spawnToAll();
-        FatUtils::getInstance()->getLogger()->info("[Signs] Spawned sign tile " . $tile->getId() . " !");
-        return $tile;
-    }
-
-    public function updateSigns(int $currentTick)
-    {
-        
-    }
-
-    public function updateSign(Tile $p_Tile)
-    {
-        FatUtils::getInstance()->getLogger()->info("[Signs] update " . $p_Tile->getId());
-//        $p_Tile->sendData($p_Tile->getViewers());
     }
 
     /**
@@ -175,8 +243,8 @@ class SignsManager implements Listener, CommandExecutor
         if ($sender instanceof Player) {
             switch ($args[0]) {
                 case "spawn": {
-                    $entity = $this->spawnSign($sender, BlockIds::SIGN_POST, Vector3::SIDE_SOUTH, $args[1]);
-                    $sender->sendMessage("NPC " . $entity->getId() . " spawned !");
+//                    $entity = $this->spawnSign($sender, BlockIds::SIGN_POST, Vector3::SIDE_SOUTH, $args[1]);
+//                    $sender->sendMessage("NPC " . $entity->getId() . " spawned !");
                 }
                     break;
                 case "rm": {
@@ -189,7 +257,7 @@ class SignsManager implements Listener, CommandExecutor
                     $sender->sendMessage("Signs list :");
                     foreach ($this->m_RegisteredSigns as $l_Sign)
                     {
-                        $sender->sendMessage(" - " . $l_Sign->getId() . " " . "");
+                        $sender->sendMessage(" - " . $l_Sign->name . " " . "");
                     }
                 }
                     break;
@@ -203,11 +271,6 @@ class SignsManager implements Listener, CommandExecutor
         return true;
     }
 
-    public function onPlayerPeLoginEvent(\pocketmine\event\player\PlayerPreLoginEvent $p_Event)
-    {
-//        \fatutils\tools\SkinUtils::saveSkin($p_Event->getPlayer()->getSkin(), FatUtils::getInstance()->getDataFolder() . "skins/" . $p_Event->getPlayer()->getName() . ".png");
-    }
-
     public function onPlayerInteract(PlayerInteractEvent $event)
     {
         $player = $event->getPlayer();
@@ -219,35 +282,22 @@ class SignsManager implements Listener, CommandExecutor
 
             if ($tile instanceof TileSign)
             {
-                echo "Text interact " . $block->getName() . " " . $tile->x . "/" . $tile->y . "/" . $tile->z . "\n";
-//                $config = $tile->namedtag->Config;
-//                $text = $tile->getText();
-//                $configFile = $this->config();
-//
-//                switch ($text[0])
-//                {
-//                    case $configFile->get(""):
-//                    {
-//                        
-//                    }
-//                }
+                FatUtils::getInstance()->getLogger()->debug("[Signs] Text interact " . $block->getName() . " " . $tile->x . "/" . $tile->y . "/" . $tile->z);
+                if (isset($tile->namedtag->signName))
+                {
+                    if (isset($this->m_RegisteredSigns[$tile->namedtag->signName]))
+                    {
+                        $sign = $this->m_RegisteredSigns[$tile->namedtag->signName];
+                        $index = -1;
+                        if (isset($tile->namedtag->index))
+                        {
+                            $index = $tile->namedtag->index;
+                        }
+                        $sign->onInterract($player, $index);
+                        $event->setCancelled(TRUE);
+                    }
+                }
             }
         }
-    }
-}
-
-//===============================================
-class OnTick extends PluginTask
-{
-    /**
-     * Actions to execute when run
-     *
-     * @param int $currentTick
-     *
-     * @return void
-     */
-    public function onRun(int $currentTick)
-    {
-        SignsManager::getInstance()->updateSigns($currentTick);
     }
 }
