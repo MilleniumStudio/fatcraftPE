@@ -8,7 +8,7 @@
 
 namespace fatutils\pets;
 
-
+use fatutils\FatUtils;
 use Exception;
 use pocketmine\entity\Human;
 use pocketmine\level\Level;
@@ -17,6 +17,7 @@ use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\FloatTag;
 use pocketmine\Player;
 use pocketmine\network\mcpe\protocol\AddPlayerPacket;
+use pocketmine\command\ConsoleCommandSender;
 
 class HumanPet extends Human
 {
@@ -38,6 +39,9 @@ class HumanPet extends Human
     public static $test = 0;
     public static $test2 = 1;
     public static $test3 = 0;
+
+    public $function = null;
+    public $data = array();
 
     public function __construct(Level $level, CompoundTag $nbt, string $petType, array $options = [])
     {
@@ -77,25 +81,25 @@ class HumanPet extends Human
 
         parent::__construct($level, $nbt);
         if(!isset($this->namedtag->NameVisibility)) {
-                $this->namedtag->NameVisibility = new IntTag("NameVisibility", 2);
+            $this->namedtag->NameVisibility = new IntTag("NameVisibility", 2);
         }
         switch ($this->namedtag->NameVisibility->getValue()) {
-                case 0:
-                        $this->setNameTagVisible(false);
-                        $this->setNameTagAlwaysVisible(false);
-                        break;
-                case 1:
-                        $this->setNameTagVisible(true);
-                        $this->setNameTagAlwaysVisible(false);
-                        break;
-                case 2:
-                        $this->setNameTagVisible(true);
-                        $this->setNameTagAlwaysVisible(true);
-                        break;
-                default:
-                        $this->setNameTagVisible(true);
-                        $this->setNameTagAlwaysVisible(true);
-                        break;
+            case 0:
+                $this->setNameTagVisible(false);
+                $this->setNameTagAlwaysVisible(false);
+                break;
+            case 1:
+                $this->setNameTagVisible(true);
+                $this->setNameTagAlwaysVisible(false);
+                break;
+            case 2:
+                $this->setNameTagVisible(true);
+                $this->setNameTagAlwaysVisible(true);
+                break;
+            default:
+                $this->setNameTagVisible(true);
+                $this->setNameTagAlwaysVisible(true);
+                break;
         }
         if(!isset($this->namedtag->Scale)) {
                 $this->namedtag->Scale = new FloatTag("Scale", 1.0);
@@ -155,6 +159,29 @@ class HumanPet extends Human
             return false;
         }
         return true;
+    }
+
+    public function onTick(int $currentTick)
+    {
+        if ($this->function !== null)
+        {
+            $this->function->onTick($currentTick);
+        }
+    }
+
+    public function onInterract(Player $player)
+    {
+        if ($this->function !== null)
+        {
+            $this->function->onInterract($player);
+        }
+        if(isset($this->namedtag->Commands))
+        {
+            foreach ($this->namedtag->Commands as $cmd)
+            {
+                FatUtils::getInstance()->getServer()->dispatchCommand(new ConsoleCommandSender(), str_replace("{player}", $player->getName(), $cmd));
+            }
+        }
     }
 
     protected function sendSpawnPacket(Player $player) : void{
