@@ -11,18 +11,16 @@ use fatutils\pets\PetsManager;
 use fatutils\npcs\NpcsManager;
 use fatutils\signs\SignsManager;
 use fatutils\shop\ShopManager;
-use fatutils\tools\LoopedExec;
-use fatutils\tools\volume\CuboidVolume;
-use fatutils\tools\RawParticle;
 use fatutils\tools\WorldUtils;
 use fatutils\tools\TextFormatter;
 use fatutils\tools\SkinRepository;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use pocketmine\entity\Entity;
+use pocketmine\level\sound\GenericSound;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
+use pocketmine\utils\TextFormat;
 
 class FatUtils extends PluginBase
 {
@@ -89,7 +87,11 @@ class FatUtils extends PluginBase
                 case "loc":
                 case "location":
                     if ($sender instanceof Player)
-                        $sender->sendMessage("CurrentLocation: " . WorldUtils::locationToString($sender->getLocation()));
+					{
+						$l_Ret = "Location " . (count($args) > 1 ? TextFormat::YELLOW . $args[1] . TextFormat::WHITE . ": " : ": ") . WorldUtils::locationToString($sender->getLocation());
+                        $sender->sendMessage($l_Ret);
+						FatUtils::getInstance()->getLogger()->info($l_Ret);
+					}
                     break;
 				case "mainshop":
 					if ($sender instanceof Player)
@@ -102,25 +104,6 @@ class FatUtils extends PluginBase
                 case "atest":
                     if ($sender instanceof Player)
                     {
-//						(new RawParticle($sender->asVector3()->add(0, 2.5, 0), $args[1]))->playForPlayer($sender);
-
-						$vol = CuboidVolume::createRelativeVolume($sender, 1.5, 1.5, 1.5, -1.5, -1.5, -1.5);
-						new LoopedExec(function () use (&$sender, $vol) {
-							if ($vol instanceof CuboidVolume)
-								$vol->display();
-						}, 5);
-
-						$vol->addCollisionListener(function (Entity $p_Entity) use ($vol) {
-							echo $vol->getId() . ": Collision With entity " . $p_Entity->getId() . "\n";
-						});
-
-						$vol->addEnteringListener(function (Entity $p_Entity) use ($vol) {
-							echo $vol->getId() . ": Entering entity " . $p_Entity->getId() . "\n";
-						});
-
-						$vol->addLeavingListener(function (Entity $p_Entity) use ($vol) {
-							echo $vol->getId() . ": Leaving entity " . $p_Entity->getId() . "\n";
-						});
                     }
                     break;
                 case "fillchests":

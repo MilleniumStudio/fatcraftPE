@@ -13,6 +13,7 @@ use fatutils\FatUtils;
 use fatutils\tools\ArrayUtils;
 use fatutils\tools\ColorUtils;
 use fatutils\tools\ItemUtils;
+use pocketmine\level\particle\GenericParticle;
 use pocketmine\level\particle\Particle;
 use pocketmine\level\Position;
 use pocketmine\Player;
@@ -22,7 +23,6 @@ class ParticleBuilder
 {
 	private static $m_ParticleNames = null;
 
-	private $m_Particle = null;
 	private $m_Id = Particle::TYPE_REDSTONE;
 	private $m_Data = 0;
 
@@ -157,61 +157,18 @@ class ParticleBuilder
 		return Particle::TYPE_REDSTONE;
 	}
 
-	private function generateParticle()
-	{
-		$this->m_Particle = new FatcraftGenericParticle($this->m_Id, $this->m_Data);
-	}
-
 	public function playForPlayer(Position $p_Position, Player $p_Player)
 	{
-		if (is_null($this->m_Particle))
-			$this->generateParticle();
-
-		if ($this->m_Particle instanceof FatcraftGenericParticle)
-		{
-			$this->m_Particle->setPosition($p_Position);
-			$p_Player->getLevel()->addParticle(clone $this->m_Particle, [$p_Player]);
-		}
+		$p_Player->getLevel()->addParticle(new GenericParticle($p_Position, $this->m_Id, $this->m_Data), [$p_Player]);
 	}
 
 	public function playForPlayers(Position $p_Position, array $p_Players)
 	{
-		if (is_null($this->m_Particle))
-			$this->generateParticle();
-
-		if ($this->m_Particle instanceof FatcraftGenericParticle)
-		{
-			$this->m_Particle->setPosition($p_Position);
-			$p_Position->getLevel()->addParticle(clone $this->m_Particle, $p_Players);
-		}
+		$p_Position->getLevel()->addParticle(new GenericParticle($p_Position, $this->m_Id, $this->m_Data), $p_Players);
 	}
 
 	public function play(Position $p_Position)
 	{
-		if (is_null($this->m_Particle))
-			$this->generateParticle();
-
-		if ($this->m_Particle instanceof FatcraftGenericParticle)
-		{
-			$this->m_Particle->setPosition($p_Position);
-			$p_Position->getLevel()->addParticle(clone $this->m_Particle);
-		}
+		$p_Position->getLevel()->addParticle(new GenericParticle($p_Position, $this->m_Id, $this->m_Data));
 	}
-
-//	public function playForPlayersForAll(Position $p_Position, float $p_Radius)
-//	{
-//		if (!($this->m_Particle instanceof FatcraftGenericParticle))
-//			$this->generateParticle();
-//
-//		if ($this->m_Particle instanceof FatcraftGenericParticle)
-//		{
-//			$this->m_Particle->setPosition($p_Position);
-//			$l_NearbyEntities = $p_Position->getLevel()->getNearbyEntities(WorldUtils::getRadiusBB($p_Position, $p_Radius));
-//			foreach ($l_NearbyEntities as $l_Entity)
-//			{
-//				if ($l_Entity instanceof Player)
-//					$l_Entity->getLevel()->addParticle($this->m_Particle);
-//			}
-//		}
-//	}
 }
