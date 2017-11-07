@@ -2,6 +2,8 @@ minPlayer: 1
 maxPlayer: 18
 waitingSecDuration: 2
 
+lapToFinish: 2
+
 checkpoints:
   - pos1: -1035.6476/19/-64.7498
     pos2: -1024.3/23/-58.375
@@ -13,8 +15,8 @@ checkpoints:
     pos2: -831.7001/23/-177.6530
   - pos1: -948.5013/19/-29.6741
     pos2: -943.4753/23/-18.3954
-  - pos1: -1035.6476/19/-64.7498
-    pos2: -1024.3/23/-58.375
+  - pos1: -1035.6476/19/-51.7498
+    pos2: -1024.3/23/-57.375
 
 spawns:
   waiting:

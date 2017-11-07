@@ -159,7 +159,7 @@ class CheckpointsPath
 								}
 							} else
 							{
-								$l_PlayerData->addLap();
+								$l_PlayerData->addLap(0);
 								$l_PlayerData->end();
 
 								echo $p_Player->getName() . " on " . $p_Checkpoint->getIndex() . " -> End (TotalTime: " . $l_PlayerData->getMicroTime() . ")" . "\n";

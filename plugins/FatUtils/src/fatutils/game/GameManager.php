@@ -61,7 +61,7 @@ class GameManager
 
 		$l_GoMsgFormatter = new TextFormatter("game.start");
 		foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-			$l_Player->addTitle($l_GoMsgFormatter->asStringForPlayer($l_Player));
+			$l_Player->addTitle($l_GoMsgFormatter->asStringForPlayer($l_Player), "", 0, 40, 10);
 
     }
 

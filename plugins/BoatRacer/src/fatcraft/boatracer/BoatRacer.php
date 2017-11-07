@@ -82,9 +82,11 @@ class BoatRacer extends PluginBase implements Listener
 		}
 
 		$this->m_CheckpointPath
+			->setLapToFinish($this->getConfig()->get("lapToFinish", 1))
 			->addStartCallback(function (Player $p_Player)
 			{
 				$this->applyBoat($p_Player);
+				Sidebar::getInstance()->updatePlayer($p_Player);
 			})
 			->addCheckpointCallback(function (Player $p_Player, Checkpoint $p_Checkpoint)
 			{
@@ -93,6 +95,10 @@ class BoatRacer extends PluginBase implements Listener
 			->addEndCallback(function (Player $p_Player)
 			{
 				$this->playerFinish($p_Player);
+				Sidebar::getInstance()->updatePlayer($p_Player);
+			})
+			->addLapCompleteCallback(function (Player $p_Player) {
+				Sidebar::getInstance()->updatePlayer($p_Player);
 			})
 			->disable();
 
@@ -127,7 +133,12 @@ class BoatRacer extends PluginBase implements Listener
 			{
 				$l_PlayerData = $this->m_CheckpointPath->getPlayerData($p_Player);
 				if ($l_PlayerData != null)
-					return new TextFormatter("boatracer.currentPos", ["pos" => ($l_PlayerData->getLastCheckpoint() != null ? $l_PlayerData->getLastCheckpoint()->getIndex() + 1 : 0), "total" => $this->m_CheckpointPath->getCheckpointCount()]);
+				{
+					return [
+						new TextFormatter("boatracer.currentLap", ["current" => $l_PlayerData->getCurrentLap(), "total" => $this->m_CheckpointPath->getLapToFinish()]),
+						new TextFormatter("boatracer.currentPos", ["pos" => ($l_PlayerData->getLastCheckpoint() != null ? $l_PlayerData->getLastCheckpoint()->getIndex() + 1 : 0), "total" => $this->m_CheckpointPath->getCheckpointCount()])
+					];
+				}
 				return [];
 			});
 
@@ -150,7 +161,7 @@ class BoatRacer extends PluginBase implements Listener
 	public function playerFinish(Player $p_Player)
 	{
 		PlayersManager::getInstance()->getFatPlayer($p_Player)->setHasLost();
-		$l_PlayerPos = PlayersManager::getInstance()->getAlivePlayerLeft() - GameManager::getInstance()->getPlayerNbrAtStart();
+		$l_PlayerPos = GameManager::getInstance()->getPlayerNbrAtStart() - PlayersManager::getInstance()->getAlivePlayerLeft();
 
 		echo $p_Player->getName() . " finished at " . $l_PlayerPos . "\n";
 
