@@ -1,38 +1,19 @@
 #Signs config
 
 signs:
-  - name: "counter"
-    location: "1/9/2"
+  - name: "random_hungergame"
+    location: "-16/8/0"
+    face: "SIDE_EAST"
     update: true
     text : [
-      "This is a counter",
+      "Game",
       "",
       "",
       ""
     ]
-    commands: [
-      "tell {player} I'm a SIGN!!!!"
-    ]
-    function: "SignFunctionCounter"
+    function: "SignFunctionRandomServer"
     data:
-      start : 1
-
-  - name: "server_lobby_1"
-    location: "-1/9/2"
-    update: true
-    text : [
-      "Server",
-      "",
-      "",
-      ""
-    ]
-    commands: [
-      "tell {player} I'm a SIGN!!!!"
-    ]
-    function: "SignFunctionServer"
-    data:
-      type : "lobby"
-      id : 1
+      type : "hg"
 
 signsareas:
   - name: "multiple.server_hungergame"
@@ -51,6 +32,7 @@ signsareas:
       "-18/9/-4", "-18/9/-3",
       "-18/8/-4", "-18/8/-3"
     ]
+    face: "SIDE_EAST"
     function: "SignFunctionMultiServer"
     data:
       type : "hg"
