@@ -371,6 +371,7 @@ class LoadBalancer extends PluginBase implements Listener
     {
         $l_Servers = array();
         $l_TotalPlayers = 0;
+        $l_MaxPlayers = 0;
         $result = MysqlResult::executeQuery($this->connectMainThreadMysql(),
             "SELECT *, (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) AS diff  FROM servers WHERE (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) < 5", [
 //                ["s", $this::getInstance()->m_ServerUUID]
@@ -391,10 +392,19 @@ class LoadBalancer extends PluginBase implements Listener
 
                 $l_Servers[$server["type"]][$server["id"]] = $server;
                 $l_TotalPlayers += $row["online"];
+
+                if ($this->getConfig()->getNested("network.max") === -1)
+                {
+                    if ($server["type"] === $this->getConfig()->getNested("network.type_based"))
+                    {
+                        $l_MaxPlayers += $server["max"];
+                    }
+                }
             }
         }
         $this->m_Servers = $l_Servers;
         $this->m_TotalPlayers = $l_TotalPlayers;
+        $this->m_MaxPlayers = $l_MaxPlayers;
     }
 
     public function getServersByType($type = LoadBalancer::TEMPLATE_TYPE_LOBBY)
@@ -527,9 +537,12 @@ class LoadBalancer extends PluginBase implements Listener
     public function onServerPing(QueryRegenerateEvent $event)
     {
 
-        $event->setMaxPlayerCount($this->getConfig()->getNested("network.max"));
+        if ($this->getConfig()->getNested("network.max") !== -1)
+        {
+            $event->setMaxPlayerCount($this->m_MaxPlayers);
+        }
 
-        if ($this->getConfig()->getNested("network.online") == "total")
+        if ($this->getConfig()->getNested("network.online") === "total")
         {
             $event->setPlayerCount($this->m_TotalPlayers);
         }
