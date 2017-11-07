@@ -121,6 +121,9 @@ class SignsManager implements Listener, CommandExecutor
                         case "SignFunctionCounter":
                             $sign->function = new functions\SignFunctionCounter($sign);
                             break;
+                        case "NPCFunctionTeleport":
+                            $sign->function = new functions\SignFunctionCounter($sign);
+                            break;
 
                         default:
                             break;
