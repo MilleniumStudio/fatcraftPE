@@ -371,9 +371,10 @@ class LoadBalancer extends PluginBase implements Listener
     {
         $l_Servers = array();
         $l_TotalPlayers = 0;
+        $l_MaxPlayers = 0;
         $result = MysqlResult::executeQuery($this->connectMainThreadMysql(),
-            "SELECT *, (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) AS diff  FROM servers WHERE (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) < 5 AND sid != ?", [
-                ["s", $this::getInstance()->m_ServerUUID]
+            "SELECT *, (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) AS diff  FROM servers WHERE (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) < 5", [
+//                ["s", $this::getInstance()->m_ServerUUID]
         ]);
         if (($result instanceof MysqlSelectResult) and count($result->rows) > 0)
         {
@@ -390,11 +391,20 @@ class LoadBalancer extends PluginBase implements Listener
                 $server["diff"] = $row["diff"];
 
                 $l_Servers[$server["type"]][$server["id"]] = $server;
-                $l_TotalPlayers = $row["online"];
+                $l_TotalPlayers += $row["online"];
+
+                if ($this->getConfig()->getNested("network.max") === -1)
+                {
+                    if ($server["type"] === $this->getConfig()->getNested("network.type_based"))
+                    {
+                        $l_MaxPlayers += $server["max"];
+                    }
+                }
             }
         }
         $this->m_Servers = $l_Servers;
         $this->m_TotalPlayers = $l_TotalPlayers;
+        $this->m_MaxPlayers = $l_MaxPlayers;
     }
 
     public function getServersByType($type = LoadBalancer::TEMPLATE_TYPE_LOBBY)
@@ -527,9 +537,12 @@ class LoadBalancer extends PluginBase implements Listener
     public function onServerPing(QueryRegenerateEvent $event)
     {
 
-        $event->setMaxPlayerCount($this->getConfig()->getNested("network.max"));
+        if ($this->getConfig()->getNested("network.max") !== -1)
+        {
+            $event->setMaxPlayerCount($this->m_MaxPlayers);
+        }
 
-        if ($this->getConfig()->getNested("network.online") == "total")
+        if ($this->getConfig()->getNested("network.online") === "total")
         {
             $event->setPlayerCount($this->m_TotalPlayers);
         }
@@ -553,7 +566,7 @@ class LoadBalancer extends PluginBase implements Listener
             {
                 try
                 {
-                    $this->balancePlayer($p_Event->getPlayer(), $this->getConfig()->getNested("redirect.to_type"));
+                    $this->balancePlayer($p_Event->getPlayer(), $this->getConfig()->getNested("redirect.to_type"), -1, true);
                 }
                 catch (Exception $ex)
                 {
@@ -568,10 +581,22 @@ class LoadBalancer extends PluginBase implements Listener
         }
     }
 
-    public function balancePlayer(Player $p_Player, string $p_Type):bool
+    public function balancePlayer(Player $p_Player, string $p_Type, int $p_Id = -1, bool $p_Kick = false):bool
     {
-        // select random server
-        $server = $this->getBest($p_Type, "open");
+        $server = null;
+        if ($p_Id == -1)
+        {
+            // select random server
+            $server = $this->getBest($p_Type, "open");
+        }
+        else
+        {
+            $server = $this->getNetworkServer($p_Type, $p_Id);
+            if ($server["online"] == $server["max"])
+            {
+                $server = null;
+            }
+        }
         if ($server !== null)
         {
             // fire event
@@ -579,17 +604,20 @@ class LoadBalancer extends PluginBase implements Listener
             if ($l_Event->getIp() === null or $l_Event->getPort() === null)
             {
                 $p_Player->kick("%disconnectScreen.serverFull", false);
-				return false;
+		return false;
             }
             else
             {
                 $this->transferPlayer($p_Player, $l_Event->getIp(), $l_Event->getPort(), $this->getConfig()->getNested("redirect.message"));
             }
-			return true;
+	    return true;
         }
         else
         {
-            $p_Player->kick("LoadBalancer error, no server route !", false);
+            if ($p_Kick)
+            {
+                $p_Player->kick("LoadBalancer error, no server route !", false);
+            }
             return false;
         }
     }

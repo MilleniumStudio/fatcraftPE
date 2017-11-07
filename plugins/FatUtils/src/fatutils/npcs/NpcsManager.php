@@ -5,14 +5,12 @@ namespace fatutils\npcs;
 use fatutils\FatUtils;
 use fatutils\pets\PetTypes;
 use fatutils\tools\WorldUtils;
+use fatutils\tools\LoopedExec;
 
-use pocketmine\command\ConsoleCommandSender;
 use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
-use pocketmine\Item\Item;
-use pocketmine\scheduler\PluginTask;
 use pocketmine\utils\Config;
 use pocketmine\event\Listener;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
@@ -21,6 +19,7 @@ use pocketmine\entity\Entity;
 use pocketmine\entity\Human;
 use pocketmine\entity\Skin;
 use pocketmine\level\Location;
+
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\DoubleTag;
 use pocketmine\nbt\tag\FloatTag;
@@ -44,7 +43,7 @@ class NpcsManager implements Listener, CommandExecutor
     private function __construct()
     {
         FatUtils::getInstance()->getServer()->getPluginManager()->registerEvents($this, FatUtils::getInstance());
-        FatUtils::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new OnTick(FatUtils::getInstance()), 1);
+        new LoopedExec([$this, "updateNpcs"]);
         $this->loadConfigs();
     }
 
@@ -95,7 +94,9 @@ class NpcsManager implements Listener, CommandExecutor
             $skin = isset($value['skin']) ? $value['skin'] : null;
             $equipment = isset($value['equipment']) ? $value['equipment'] : [];
             $update = isset($value['update']) ? $value['update'] : false;
-            $effects = isset($value['effects']) ? $value['effects'] : [];
+//            $effects = isset($value['effects']) ? $value['effects'] : [];
+            $function = isset($value['function']) ? $value['function'] : null;
+            $data = isset($value['data']) ? $value['data'] : [];
             $commands = isset($value['commands']) ? $value['commands'] : [];
 
             if (array_key_exists($type, PetTypes::ENTITIES))
@@ -134,6 +135,26 @@ class NpcsManager implements Listener, CommandExecutor
                     {
                         $entity->getInventory()->setItemInHand(\fatutils\tools\ItemUtils::getItemFromRaw($equipment["held"]));
                     }
+                }
+
+                $entity->data = $data;
+                try
+                {
+                    switch ($function)
+                    {
+                        case "NPCFunctionTeleport":
+                            $entity->function = new functions\NPCFunctionTeleport($entity);
+                            break;
+                        case "NPCFunctionCounter":
+                            $entity->function = new functions\NPCFunctionCounter($entity);
+                            break;
+
+                        default:
+                            break;
+                    }
+                } catch (Exception $ex)
+                {
+                    FatUtils::getInstance()->getLogger()->warning("[NPCS] ". $ex->getMessage());
                 }
 
                 if ($update)
@@ -184,6 +205,7 @@ class NpcsManager implements Listener, CommandExecutor
         {
             $entity->namedtag->Commands[$command] = new StringTag($command, $command);
         }
+        $entity->namedtag->npcName = $name;
         $entity->setNameTag($displayname);
         $p_Location->getLevel()->addEntity($entity);
         $this->m_RegisteredNPCS[$name] = $entity;
@@ -192,18 +214,13 @@ class NpcsManager implements Listener, CommandExecutor
         return $entity;
     }
 
-    public function updateNpcs(int $currentTick)
+    public function updateNpcs()
     {
-//        if ($currentTick % 60)
-//        {
-//            foreach ($this->m_RegisteredNPCS as $l_Entity)
-//            {
-//                if(isset($l_Entity->namedtag->Update))
-//                {
-//                    $this->updateNPC($l_Entity);
-//                }
-//            }
-//        }
+        $currentTick = FatUtils::getInstance()->getServer()->getTick();
+        foreach ($this->m_RegisteredNPCS as $l_Npc)
+        {
+            $l_Npc->onTick($currentTick);
+        }
     }
 
     public function updateNPC(Entity $p_Entity)
@@ -253,11 +270,6 @@ class NpcsManager implements Listener, CommandExecutor
         return true;
     }
 
-    public function onPlayerPeLoginEvent(\pocketmine\event\player\PlayerPreLoginEvent $p_Event)
-    {
-//        \fatutils\tools\SkinUtils::saveSkin($p_Event->getPlayer()->getSkin(), FatUtils::getInstance()->getDataFolder() . "skins/" . $p_Event->getPlayer()->getName() . ".png");
-    }
-
     /**
         * @param EntityDamageEvent $event
         * @ignoreCancelled true
@@ -272,45 +284,14 @@ class NpcsManager implements Listener, CommandExecutor
         if(!$event->getDamager() instanceof Player) {
             return;
         }
-        if(isset($event->getEntity()->namedtag->Commands))
+        if(isset($event->getEntity()->namedtag->npcName))
         {
-            $event->setCancelled(true);
-            foreach ($event->getEntity()->namedtag->Commands as $cmd) {
-                FatUtils::getInstance()->getServer()->dispatchCommand(new ConsoleCommandSender(), str_replace("{player}", $event->getDamager()->getName(), $cmd));
+            if(isset($this->m_RegisteredNPCS[$event->getEntity()->namedtag->npcName]))
+            {
+                $entity = $this->m_RegisteredNPCS[$event->getEntity()->namedtag->npcName];
+                $entity->onInterract($event->getDamager());
+                $event->setCancelled(true);
             }
         }
-    }
-
-//    public static function getPlayerSkinFromPNG(string $o_Resource) :Skin
-//    {
-//        $geometryJsonEncoded = base64_decode($packet->clientData["SkinGeometry"] ?? "");
-//        if($geometryJsonEncoded !== ""){
-//            $geometryJsonEncoded = json_encode(json_decode($geometryJsonEncoded));
-//        }
-//
-//        $skin = new Skin(
-//            $packet->clientData["SkinId"],
-//            base64_decode($packet->clientData["SkinData"] ?? ""),
-//            base64_decode($packet->clientData["CapeData"] ?? ""),
-//            $packet->clientData["SkinGeometryName"],
-//            $geometryJsonEncoded
-//        );
-//        return $skin;
-//    }
-}
-
-//===============================================
-class OnTick extends PluginTask
-{
-    /**
-     * Actions to execute when run
-     *
-     * @param int $currentTick
-     *
-     * @return void
-     */
-    public function onRun(int $currentTick)
-    {
-        NpcsManager::getInstance()->updateNpcs($currentTick);
     }
 }

@@ -1,19 +1,86 @@
 #Signs config
+#
+# Sign must be placed on map !
+# If a sign is configured but not spawned, an error will be thown
+# OR the server will try to spawn it
+#
+# faces :
+#   SIDE_DOWN
+#   SIDE_UP
+#   SIDE_NORTH
+#   SIDE_SOUTH
+#   SIDE_WEST
+#   SIDE_EAST
 
-signs:
-  - name: "example"
-    location: "0.24/8/8.07/359/-11"
-  # type : SIGN_POST / WALL_SIGN
-    type: "WALL_SIGN"
-  # side : SIDE_DOWN SIDE_UP SIDE_NORTH SIDE_SOUTH SIDE_WEST SIDE_EAST
-    side: "SIDE_WEST"
-    update: true
-    text : [
-      "line 1",
-      "line 2",
-      "line 3",
-      "line 4"
-    ]
-    commands: [
-      "tell {player} I'm a SIGN!!!!"
-    ]
+signs: []
+#    # name of the sign (must be unique)
+#  - name: "counter"
+#    # position of the existing sign
+#    location: "1/9/2"
+#    # facing sign (optional if the sign is spawned)
+#    face: "SIDE_NORTH"
+#    # sign have to be updated or not
+#    update: true
+#    # text writen on sign (can be overrided by function)
+#    text : [
+#      "This is a counter",
+#      "",
+#      "",
+#      ""
+#    ]
+#    # executed commands on sign tap
+#    commands: [
+#      "tell {player} I'm a SIGN!!!!"
+#    ]
+#    # function name for "internal" manager
+#    # must be coded.
+#    function: "SignFunctionCounter"
+#    # data array that can be used in function
+#    data:
+#      start : 1
+#
+#  - name: "server_lobby_1"
+#    location: "-1/9/2"
+#    face: "SIDE_NORTH"
+#    update: true
+#    text : [
+#      "Server",
+#      "",
+#      "",
+#      ""
+#    ]
+#    commands: [
+#      "tell {player} I'm a SIGN!!!!"
+#    ]
+#    function: "SignFunctionServer"
+#    data:
+#      type : "lobby"
+#      id : 1
+
+# Signs Areas are multiple signs location managed by a single function.
+signsareas: []
+#  - name: "multiple.server_lobby"
+#    update: true
+#    text : [
+#      "Server",
+#      "",
+#      "",
+#      ""
+#    ]
+#    # Multiple location of the signs
+#    locations: [
+#      "2/10/2",
+#      "1/10/2",
+#      "0/10/2",
+#      "-1/10/2",
+#      "-2/10/2"
+#    ]
+#    # in multi mode, all signs have to be in the same side or spawned before.
+#    face: "SIDE_NORTH"
+#    commands: [
+#      "tell {player} I'm a SIGN!!!!"
+#    ]
+#    function: "SignFunctionMultiServer"
+#    data:
+#      type : "lobby"
+#      offset : 1

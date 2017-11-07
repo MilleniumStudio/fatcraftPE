@@ -23,19 +23,22 @@ start_docker()
 }
 
 # start front load-balancer
-docker run \
---rm --name lb-1 \
---hostname lb-1 \
---env SERVER_PORT=19132 \
---link mysql:mysql \
---env MYSQL_HOST=$MYSQL_HOST \
---env MYSQL_PORT=$MYSQL_PORT \
---env MYSQL_USER=$MYSQL_USER \
---env MYSQL_PASS=$MYSQL_PASS \
---env MYSQL_DATA=$MYSQL_DATA \
---publish 19132:19132 \
---publish 19132:19132/udp \
--d fatcraft/pocketmine:lb
+#docker run \
+#--rm --name lb-1 \
+#--hostname lb-1 \
+#--link mysql:mysql \
+#--env MYSQL_HOST=$MYSQL_HOST \
+#--env MYSQL_PORT=$MYSQL_PORT \
+#--env MYSQL_USER=$MYSQL_USER \
+#--env MYSQL_PASS=$MYSQL_PASS \
+#--env MYSQL_DATA=$MYSQL_DATA \
+#--publish 19132:19132 \
+#--publish 19132:19132/udp \
+#-d fatcraft/pocketmine:lb
+
+#cd tools/FatForward/binaries
+#screen -dmS FatForward loadbalancer.sh
+#cd ../../../
 
 # start lobbies
 start_docker lobby 1 19133 fatcraft/pocketmine:lobby mainLobby
@@ -46,9 +49,10 @@ start_docker hg 1 19135 fatcraft/pocketmine:hg-1 hg/HGMapSpaceship
 start_docker pk 1 19136 fatcraft/pocketmine:pk-1 parkour/giantHouse
 start_docker sw 1 19137 fatcraft/pocketmine:sw-1 sw/sw-end
 start_docker sw 2 19138 fatcraft/pocketmine:sw-2 sw/sw-alien
-start_docker bw 1 19139 fatcraft/pocketmine:bw-1 bw/map1-4x3
-start_docker bw 2 19140 fatcraft/pocketmine:bw-2 bw/bw-krum
-start_docker md 1 19141 fatcraft/pocketmine:md-1 md/murder_krum
+start_docker sw 3 19139 fatcraft/pocketmine:sw-3 sw/sw-krum-1
+start_docker bw 1 19140 fatcraft/pocketmine:bw-1 bw/map1-4x3
+start_docker bw 2 19141 fatcraft/pocketmine:bw-2 bw/bw-krum
+start_docker md 1 19142 fatcraft/pocketmine:md-1 md/murder_krum
 
 
 ## DEBUG

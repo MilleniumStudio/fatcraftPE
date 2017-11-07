@@ -53,9 +53,9 @@ class PermissionManager
                 }
             }
         }
-        echo "================================================\n";
-        print_r($this->m_processedPerms);
-        echo "================================================\n";
+//        echo "================================================\n";
+//        print_r($this->m_processedPerms);
+//        echo "================================================\n";
     }
 
     public function updatePermissions(FatPlayer $p_player)

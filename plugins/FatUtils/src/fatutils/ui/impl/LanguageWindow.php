@@ -54,6 +54,17 @@ class LanguageWindow
             })
         );
 
+        $l_Window->addPart((new Button())
+            ->setText((new TextFormatter("form.language.button.ru"))->asStringForFatPlayer($l_FatPlayer))
+            ->setImage("https://vignette.wikia.nocookie.net/unturned-bunker/images/e/e0/Russian_Flag.jpg")
+            ->setCallback(function () use ($l_FatPlayer)
+            {
+                $l_FatPlayer->setLanguage(TextFormatter::LANG_ID_RU);
+				Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());
+				$l_FatPlayer->getPlayer()->sendMessage((new TextFormatter("language.apply"))->asStringForFatPlayer($l_FatPlayer));
+            })
+        );
+
         $l_Window->open();
     }
 }

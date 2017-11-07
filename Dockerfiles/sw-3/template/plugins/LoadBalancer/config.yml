@@ -12,7 +12,7 @@ mysql:
 ## type : is the server type, ex : entry, main_lobby, parkour_lobby...
 ## id   : is the server id, different server types can have the same server id
 node:
-  type: lobby
+  type: hg
   id: 1
   state: open
 
@@ -21,7 +21,7 @@ node:
 ## type_based : sum the max players for the selected type and set the network max players
 ## online : total or type based
 network:
-  max: -1
+  max: 0
   type_based: lobby
   online : total
 
