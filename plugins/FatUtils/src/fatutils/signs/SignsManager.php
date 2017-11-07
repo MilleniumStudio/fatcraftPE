@@ -83,12 +83,13 @@ class SignsManager implements Listener, CommandExecutor
                 FatUtils::getInstance()->getLogger()->warning("[Signs] Error: sign ". $name . " world " . $p_RawLocation . " not found");
                 continue;
             }
+            $face = isset($value['face']) ? $value['face'] : null;
 
             $tile = $this->getSignAt($l_Location);
 
-            if ($tile == null)
+            if ($tile == null && $face != null)
             {
-                $tile = $this->fixSignAt($l_Location);
+                $tile = $this->fixSignAt($l_Location, $face);
             }
 
             if ($tile !== null)
@@ -151,6 +152,8 @@ class SignsManager implements Listener, CommandExecutor
                 FatUtils::getInstance()->getLogger()->warning("[Signs] Error: signsarea ". $name . " has no/bad location");
                 continue;
             }
+            $face = isset($value['face']) ? $value['face'] : null;
+
             //Optionnal
             $update = isset($value['update']) ? $value['update'] : false;
             $text = isset($value['text']) ? $value['text'] : ["", "", "", ""];
@@ -171,9 +174,9 @@ class SignsManager implements Listener, CommandExecutor
 
                 $tile = $this->getSignAt($l_Location);
 
-                if ($tile == null)
+                if ($tile == null && $face != null)
                 {
-                    $tile = $this->fixSignAt($l_Location);
+                    $tile = $this->fixSignAt($l_Location, $face);
                 }
 
                 if ($tile !== null)
@@ -237,18 +240,19 @@ class SignsManager implements Listener, CommandExecutor
         return null;
     }
 
-    public function fixSignAt(Location $p_Location) : ?TileSign
+    public function fixSignAt(Location $p_Location, $face) : ?TileSign
     {
-        $block = $p_Location->getLevel()->getBlockAt($p_Location->x, $p_Location->y, $p_Location->z);
-        $p_Location->getLevel()->setBlock($block, BlockFactory::get(Block::WALL_SIGN, 5), true);
+        $side = \fatutils\tools\WorldUtils::getSideFromString($face);
+        $oldblock = $p_Location->getLevel()->getBlockAt($p_Location->x, $p_Location->y, $p_Location->z);
+        $p_Location->getLevel()->setBlock($oldblock, BlockFactory::get(Block::WALL_SIGN, $side), true);
         $block = $p_Location->getLevel()->getBlockAt($p_Location->x, $p_Location->y, $p_Location->z);
         if ($block->getId() == Block::SIGN_POST OR $block->getId() == Block::WALL_SIGN)
         {
             $tile = $block->getLevel()->getTile($block);
-            $tile->namedtag->setString(TileSign::TAG_TEXT_BLOB, implode("\n", array("", "", "", "")));
 
             if ($tile instanceof TileSign)
             {
+                $tile->namedtag->setString(TileSign::TAG_TEXT_BLOB, implode("\n", array("", "", "", "")));
                 FatUtils::getInstance()->getLogger()->warning("[Signs] sign fixed on ". \fatutils\tools\WorldUtils::locationToString($p_Location));
                 $tile->spawnToAll();
                 return $tile;
