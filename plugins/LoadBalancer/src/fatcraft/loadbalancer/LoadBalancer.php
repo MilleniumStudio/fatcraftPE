@@ -537,9 +537,13 @@ class LoadBalancer extends PluginBase implements Listener
     public function onServerPing(QueryRegenerateEvent $event)
     {
 
-        if ($this->getConfig()->getNested("network.max") !== -1)
+        if ($this->getConfig()->getNested("network.max") === -1)
         {
             $event->setMaxPlayerCount($this->m_MaxPlayers);
+        }
+        else
+        {
+            $this->getConfig()->getNested("network.max");
         }
 
         if ($this->getConfig()->getNested("network.online") === "total")
