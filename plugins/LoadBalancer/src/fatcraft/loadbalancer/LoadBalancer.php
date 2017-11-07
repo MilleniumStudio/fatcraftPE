@@ -372,8 +372,8 @@ class LoadBalancer extends PluginBase implements Listener
         $l_Servers = array();
         $l_TotalPlayers = 0;
         $result = MysqlResult::executeQuery($this->connectMainThreadMysql(),
-            "SELECT *, (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) AS diff  FROM servers WHERE (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) < 5 AND sid != ?", [
-                ["s", $this::getInstance()->m_ServerUUID]
+            "SELECT *, (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) AS diff  FROM servers WHERE (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) < 5", [
+//                ["s", $this::getInstance()->m_ServerUUID]
         ]);
         if (($result instanceof MysqlSelectResult) and count($result->rows) > 0)
         {
@@ -390,7 +390,7 @@ class LoadBalancer extends PluginBase implements Listener
                 $server["diff"] = $row["diff"];
 
                 $l_Servers[$server["type"]][$server["id"]] = $server;
-                $l_TotalPlayers = $row["online"];
+                $l_TotalPlayers += $row["online"];
             }
         }
         $this->m_Servers = $l_Servers;
