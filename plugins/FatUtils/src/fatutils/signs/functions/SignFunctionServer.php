@@ -31,6 +31,9 @@ class SignFunctionServer extends SignFunction
         if ($currentTick % 20 == 0)// update every seconds
         {
             $server = LoadBalancer::getInstance()->getNetworkServer($this->type, $this->id);
+            $this->sign->text[1] = "";
+            $this->sign->text[2] = "";
+            $this->sign->text[3] = "";
             if ($server !== null)
             {
                 $this->sign->text[1] = "§r    " . $server["online"] . "/" . $server["max"];

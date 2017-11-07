@@ -29,6 +29,9 @@ class SignFunctionRandomServer extends SignFunction
     {
         if ($currentTick % 20 == 0)// update every seconds
         {
+            $this->sign->text[1] = "";
+            $this->sign->text[2] = "";
+            $this->sign->text[3] = "";
             $online = 0;
             $max = 0;
             $servers = LoadBalancer::getInstance()->getServersByType($this->type);

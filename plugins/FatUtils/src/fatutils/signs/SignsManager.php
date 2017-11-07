@@ -241,6 +241,7 @@ class SignsManager implements Listener, CommandExecutor
     {
         $block = $p_Location->getLevel()->getBlockAt($p_Location->x, $p_Location->y, $p_Location->z);
         $p_Location->getLevel()->setBlock($block, BlockFactory::get(Block::WALL_SIGN, 5), true);
+        $block = $p_Location->getLevel()->getBlockAt($p_Location->x, $p_Location->y, $p_Location->z);
         if ($block->getId() == Block::SIGN_POST OR $block->getId() == Block::WALL_SIGN)
         {
             $tile = $block->getLevel()->getTile($block);
