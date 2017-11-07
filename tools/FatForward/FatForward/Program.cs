@@ -50,6 +50,12 @@ namespace FatForward
             new Program();
         }
 
+        public static string ByteArrayToString(byte[] ba)
+        {
+            string hex = BitConverter.ToString(ba);
+            return hex.Replace("-", "");
+        }
+
         public Program()
         {
             m_ClientToProxyReceiver = new UdpClient(m_EndPoint);
@@ -72,6 +78,9 @@ namespace FatForward
                 if (GlobalVars.g_ClientDict.TryGetValue(m_ClientIpEndPoint.ToString(), out Client l_ExistingClient))
                 {
                     l_ExistingClient.m_DataToSend.Enqueue(l_Data);
+                    //Console.Write(ByteArrayToString(l_Data));
+                    //Console.Write(" => ");
+                    //Console.WriteLine(UTF8Encoding.ASCII.GetString(l_Data));
                     continue;
                 }
                 else

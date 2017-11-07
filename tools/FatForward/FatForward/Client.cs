@@ -114,6 +114,7 @@ namespace FatForward
                 {
                     byte[] l_Data = m_PocketMineTunnel.Receive(ref m_PmmpEndPoint);
                     //Console.WriteLine("PMMP->MCPE :" + Encoding.UTF8.GetString(l_Data));
+                    //Console.WriteLine("Client : {0}:{1}",m_MCPEIpEndPoint.Address.ToString(), m_MCPEIpEndPoint.Port.ToString());
                     m_MCPETunnel.Send(l_Data, l_Data.Length, m_MCPEIpEndPoint);
                     m_LastUpdateTime = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
                 }
