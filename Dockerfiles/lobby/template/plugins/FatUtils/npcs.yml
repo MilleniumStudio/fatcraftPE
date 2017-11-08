@@ -1,6 +1,48 @@
 #NPCS config
 
 npcs:
+  - name: "welcomenpc"
+    displayname: "Welcome"
+    location: 0.5/55.1/56.5/0/0
+    type : "Player"
+    size : 1
+    skin: "FalloutVaultBoy"
+    equipment:
+      held: "{\"material\": \"TOTEM\"}"
+    update: true
+    effects: []
+    function: "NPCFunctionTeleport"
+    data:
+      to: 0.5/34/8.5/180/0
+
+  - name: "shopnpc1"
+    displayname: "shop.title"
+    location: -4.5/55.1/57.5/342/0
+    type : "Player"
+    size : 1
+    skin: "Fallout1AlbertColev2"
+    equipment:
+      held: "{\"material\": \"CARROTONASTICK\"}"
+    update: true
+    effects: []
+    function: "NPCFunctionTeleport"
+    data:
+      to: -49.5/52/49.5/132/-19
+
+  - name: "shopnpc2"
+    displayname: "shop.title"
+    location: 5.5/55.1/57.5/19/0
+    type : "Player"
+    size : 1
+    skin: "Fallout1AlbertColev2"
+    equipment:
+      held: "{\"material\": \"CARROTONASTICK\"}"
+    update: true
+    effects: []
+    function: "NPCFunctionTeleport"
+    data:
+      to: 49.5/52/49.5/241/-19
+
   - name: "boatracer"
     displayname: "template.br"
     location: 13.5/35/-3.5/45/15
@@ -108,3 +150,84 @@ npcs:
     commands: [
       "server connect {player} bw"
     ]
+
+  - name: "shopkeeper1"
+    displayname: "ShopMan"
+    location: 59.3/53/46.7/19/7
+    type : "Player"
+    size : 1
+    skin: "Fallout4TheMechanist"
+    update: true
+    effects: []
+    commands: []
+    function: "NPCFunctionShop"
+  - name: "shopkeeper2"
+    displayname: "ShopMan"
+    location: 56.3/53/44.7/63/23
+    type : "Player"
+    size : 1
+    skin: "Fallout4TheMechanist"
+    update: true
+    effects: []
+    commands: []
+    function: "NPCFunctionShop"
+  - name: "shopkeeper3"
+    displayname: "ShopMan"
+    location: 55.35/53/41.49/97/3
+    type : "Player"
+    size : 1
+    skin: "Fallout4TheMechanist"
+    update: true
+    effects: []
+    commands: []
+    function: "NPCFunctionShop"
+  - name: "shopkeeper4"
+    displayname: "ShopMan"
+    location: 56.3/53/38.3/136/-11
+    type : "Player"
+    size : 1
+    skin: "Fallout4TheMechanist"
+    update: true
+    effects: []
+    commands: []
+    function: "NPCFunctionShop"
+  - name: "shopkeeper5"
+    displayname: "ShopMan"
+    location: 60.57/53/36.46/175/-4
+    type : "Player"
+    size : 1
+    skin: "Fallout4TheMechanist"
+    update: true
+    effects: []
+    commands: []
+    function: "NPCFunctionShop"
+  - name: "shopkeeper6"
+    displayname: "ShopMan"
+    location: 64.7/53/38.3/224/-19
+    type : "Player"
+    size : 1
+    skin: "Fallout4TheMechanist"
+    update: true
+    effects: []
+    commands: []
+    function: "NPCFunctionShop"
+  - name: "shopkeeper7"
+    displayname: "ShopMan"
+    location: 65.7/53/41.64/267/-11
+    type : "Player"
+    size : 1
+    skin: "Fallout4TheMechanist"
+    update: true
+    effects: []
+    commands: []
+    function: "NPCFunctionShop"
+  - name: "shopkeeper8"
+    displayname: "ShopMan"
+    location: 64.65/53/44.7/328/-4
+    type : "Player"
+    size : 1
+    skin: "Fallout4TheMechanist"
+    update: true
+    effects: []
+    commands: []
+    function: "NPCFunctionShop"
