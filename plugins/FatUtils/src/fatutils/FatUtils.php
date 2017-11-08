@@ -9,6 +9,7 @@ use fatutils\loot\ChestsManager;
 use fatutils\permission\PermissionManager;
 use fatutils\pets\PetsManager;
 use fatutils\npcs\NpcsManager;
+use fatutils\powers\PowersManager;
 use fatutils\signs\SignsManager;
 use fatutils\shop\ShopManager;
 use fatutils\tools\WorldUtils;
@@ -51,6 +52,7 @@ class FatUtils extends PluginBase
         $this->getCommand("skin")->setExecutor(SkinRepository::getInstance());
         $this->getCommand("npcs")->setExecutor(NpcsManager::getInstance());
         $this->getCommand("sign")->setExecutor(SignsManager::getInstance());
+        $this->getCommand("pwr")->setExecutor(PowersManager::getInstance());
 
 
         WorldUtils::stopWorldsTime();

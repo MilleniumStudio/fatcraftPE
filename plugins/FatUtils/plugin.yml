@@ -40,3 +40,6 @@ commands:
   sign:
       description: "debug commands for signs"
       permission: command.npcs
+  pwr:
+      description: "debug commands for powers"
+      permission: command.powers
