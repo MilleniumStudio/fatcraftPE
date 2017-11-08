@@ -147,7 +147,7 @@ class NpcsManager implements Listener, CommandExecutor
                             $entity->function = new functions\NPCFunctionTeleport($entity);
                             break;
                         case "NPCFunctionCounter":
-                            $entity->function = new functions\NPCFunctionCounter($entity);NPCFunctionShop
+                            $entity->function = new functions\NPCFunctionCounter($entity);
                             break;
                         case "NPCFunctionShop":
                             $entity->function = new functions\NPCFunctionShop($entity);
