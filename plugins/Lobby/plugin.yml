@@ -5,5 +5,5 @@ api: 3.0.0-ALPHA9
 depend: [FatUtils]
 load: POSTWORLD
 commands:
- menu:
-  description: menu Command.
+ spawn:
+  description: Teleport you back to the world spawn

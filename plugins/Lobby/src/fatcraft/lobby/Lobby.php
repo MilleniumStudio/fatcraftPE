@@ -32,6 +32,8 @@ use pocketmine\item\Item;
 use pocketmine\item\ItemIds;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
+use pocketmine\command\Command;
+use pocketmine\command\CommandSender;
 use fatutils\holograms\HologramsManager;
 
 class Lobby extends PluginBase implements Listener
@@ -52,14 +54,16 @@ class Lobby extends PluginBase implements Listener
     public function onEnable()
     {
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
+        $this->getCommand("spawn")->setExecutor($this);
         FatUtils::getInstance()->setTemplateConfig($this->getConfig());
         WorldUtils::stopWorldsTime();
-        WorldUtils::setWorldsTime(864000); // 12h * 3600 seconds * 20 ticks
+        WorldUtils::setWorldsTime(864000); // = 12h * 3600 seconds * 20 ticks
         HologramsManager::getInstance();
 
         if ($this->getConfig()->exists("spawn"))
         {
             $this->m_SpawnPoint = WorldUtils::stringToLocation($this->getConfig()->getNested("spawn"));
+            $this->m_SpawnPoint->getLevel()->setSpawnLocation($this->m_SpawnPoint);
         }
 
         FatPlayer::$m_OptionDisplayHealth = false;
@@ -89,22 +93,24 @@ class Lobby extends PluginBase implements Listener
 		}, 5);
 
         // Items in player bar
-        $e->getPlayer()->getInventory()->setHeldItemIndex(4);
+        if ($e->getPlayer()->hasPermission("lobby.items"))
+        {
+            $e->getPlayer()->getInventory()->setHeldItemIndex(4);
 
-        $l_Shop = Item::get(ItemIds::EMERALD);
-        $l_Shop->setCustomName((new TextFormatter("shop.title"))->asStringForPlayer($e->getPlayer()));
-        $e->getPlayer()->getInventory()->setItem(1, $l_Shop);
+            $l_Shop = Item::get(ItemIds::EMERALD);
+            $l_Shop->setCustomName((new TextFormatter("shop.title"))->asStringForPlayer($e->getPlayer()));
+            $e->getPlayer()->getInventory()->setItem(1, $l_Shop);
 
-        $l_MainMenu = Item::get(ItemIds::COMPASS);
-		$l_MainMenu->setCustomName((new TextFormatter("lobby.hotbar.mainMenu"))->asStringForPlayer($e->getPlayer()));
-        $e->getPlayer()->getInventory()->setItem(2, $l_MainMenu);
+            $l_MainMenu = Item::get(ItemIds::COMPASS);
+                    $l_MainMenu->setCustomName((new TextFormatter("lobby.hotbar.mainMenu"))->asStringForPlayer($e->getPlayer()));
+            $e->getPlayer()->getInventory()->setItem(2, $l_MainMenu);
 
-		$l_LobbyChooser = Item::get(ItemIds::NETHERSTAR);
-		$l_LobbyChooser->setCustomName((new TextFormatter("lobby.hotbar.lobbyChooser"))->asStringForPlayer($e->getPlayer()));
-		$e->getPlayer()->getInventory()->setItem(6, $l_LobbyChooser);
+                    $l_LobbyChooser = Item::get(ItemIds::NETHERSTAR);
+                    $l_LobbyChooser->setCustomName((new TextFormatter("lobby.hotbar.lobbyChooser"))->asStringForPlayer($e->getPlayer()));
+                    $e->getPlayer()->getInventory()->setItem(6, $l_LobbyChooser);
 
-        $e->getPlayer()->getInventory()->sendContents($e->getPlayer());
-
+            $e->getPlayer()->getInventory()->sendContents($e->getPlayer());
+        }
         if ($this->m_SpawnPoint != null)
         {
             $e->getPlayer()->teleport($this->m_SpawnPoint, $this->m_SpawnPoint->yaw, $this->m_SpawnPoint->pitch);
@@ -153,15 +159,15 @@ class Lobby extends PluginBase implements Listener
         $p = $e->getEntity();
         if ($p instanceof Player)
         {
+            $e->setCancelled(true);
             if ($e->getCause() == EntityDamageEvent::CAUSE_VOID)
             {
                 if ($this->m_SpawnPoint != null)
                 {
-                    $e->getPlayer()->setHealth(20);
-                    $e->getPlayer()->teleport($this->m_SpawnPoint, $this->m_SpawnPoint->yaw, $this->m_SpawnPoint->pitch);
+                    $p->getPlayer()->setHealth(20);
+                    $p->getPlayer()->teleport($this->m_SpawnPoint, $this->m_SpawnPoint->yaw, $this->m_SpawnPoint->pitch);
                 }
             }
-            $e->setCancelled(true);
         }
     }
 
@@ -172,5 +178,26 @@ class Lobby extends PluginBase implements Listener
             $p_Event->getPlayer()->setHealth(20);
             $p_Event->getPlayer()->teleport($this->m_SpawnPoint, $this->m_SpawnPoint->yaw, $this->m_SpawnPoint->pitch);
         }
+    }
+
+    /**
+     * @param \pocketmine\command\CommandSender $sender
+     * @param \pocketmine\command\Command $command
+     * @param string $label
+     * @param string[] $args
+     *
+     * @return bool
+     */
+    public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool
+    {
+        if ($sender instanceof Player)
+        {
+            $sender->teleport($this->m_SpawnPoint, $this->m_SpawnPoint->yaw, $this->m_SpawnPoint->pitch);
+        }
+        else
+        {
+            echo "Commands only available as a player\n";
+        }
+        return true;
     }
 }
