@@ -11,11 +11,7 @@ namespace fatcraft\lobby;
 use fatutils\FatUtils;
 use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
-use fatutils\scores\PlayerScoreboard;
-use fatutils\scores\ScoresManager;
-use fatutils\scores\TeamScoreboard;
 use fatutils\shop\ShopManager;
-use fatutils\teams\Team;
 use fatutils\tools\Sidebar;
 use fatutils\tools\TextFormatter;
 use fatutils\tools\WorldUtils;
@@ -28,21 +24,20 @@ use pocketmine\event\inventory\InventoryPickupArrowEvent;
 use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\player\PlayerDropItemEvent;
 use pocketmine\event\player\PlayerInteractEvent;
-use pocketmine\event\player\PlayerItemHeldEvent;
 use pocketmine\event\player\PlayerExhaustEvent;
+use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\item\Item;
 use pocketmine\item\ItemIds;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
-use fatcraft\lobby\commands\MenuCommand;
 use fatutils\holograms\HologramsManager;
-use pocketmine\utils\UUID;
 
 class Lobby extends PluginBase implements Listener
 {
     private static $m_Instance;
+    private $m_SpawnPoint = null;
 
     public static function getInstance(): Lobby
     {
@@ -61,6 +56,11 @@ class Lobby extends PluginBase implements Listener
         WorldUtils::stopWorldsTime();
         WorldUtils::setWorldsTime(864000); // 12h * 3600 seconds * 20 ticks
         HologramsManager::getInstance();
+
+        if ($this->getConfig()->exists("spawn"))
+        {
+            $this->m_SpawnPoint = WorldUtils::stringToLocation($this->getConfig()->getNested("spawn"));
+        }
 
         FatPlayer::$m_OptionDisplayHealth = false;
         ShopManager::$m_OptionAutoEquipSavedItems = true;
@@ -104,6 +104,11 @@ class Lobby extends PluginBase implements Listener
 		$e->getPlayer()->getInventory()->setItem(6, $l_LobbyChooser);
 
         $e->getPlayer()->getInventory()->sendContents($e->getPlayer());
+
+        if ($this->m_SpawnPoint != null)
+        {
+            $e->getPlayer()->teleport($this->m_SpawnPoint, $this->m_SpawnPoint->yaw, $this->m_SpawnPoint->pitch);
+        }
     }
 
     // actions on item select / touch
@@ -147,6 +152,25 @@ class Lobby extends PluginBase implements Listener
     {
         $p = $e->getEntity();
         if ($p instanceof Player)
+        {
+            if ($e->getCause() == EntityDamageEvent::CAUSE_VOID)
+            {
+                if ($this->m_SpawnPoint != null)
+                {
+                    $e->getPlayer()->setHealth(20);
+                    $e->getPlayer()->teleport($this->m_SpawnPoint, $this->m_SpawnPoint->yaw, $this->m_SpawnPoint->pitch);
+                }
+            }
             $e->setCancelled(true);
+        }
+    }
+
+    public function onPlayerDeath(PlayerDeathEvent $p_Event)
+    {
+        if ($this->m_SpawnPoint != null)
+        {
+            $p_Event->getPlayer()->setHealth(20);
+            $p_Event->getPlayer()->teleport($this->m_SpawnPoint, $this->m_SpawnPoint->yaw, $this->m_SpawnPoint->pitch);
+        }
     }
 }
