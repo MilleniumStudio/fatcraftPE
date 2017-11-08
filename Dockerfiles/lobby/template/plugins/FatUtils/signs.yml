@@ -13,7 +13,7 @@ signs:
     ]
     function: "SignFunctionRandomServer"
     data:
-      type : "hg"
+      type : "br"
 
   - name: "random_skywar"
     location: "10/34/-10"
