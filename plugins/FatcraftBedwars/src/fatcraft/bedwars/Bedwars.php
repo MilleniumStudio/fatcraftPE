@@ -485,7 +485,7 @@ class Bedwars extends PluginBase implements Listener
             ->addStopCallback(function ()
             {
                 foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-                    LoadBalancer::getInstance()->balancePlayer($l_Player, "lobby");
+                    LoadBalancer::getInstance()->balancePlayer($l_Player, LoadBalancer::TEMPLATE_TYPE_LOBBY);
 
                 new DelayedExec(function ()
 				{

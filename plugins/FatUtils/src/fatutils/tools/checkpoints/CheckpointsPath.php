@@ -11,6 +11,7 @@ namespace fatutils\tools\checkpoints;
 
 use fatutils\FatUtils;
 use fatutils\tools\LoopedExec;
+use fatutils\tools\volume\CuboidVolume;
 use pocketmine\level\sound\GenericSound;
 use pocketmine\network\mcpe\protocol\LevelEventPacket;
 use pocketmine\Player;
@@ -30,7 +31,7 @@ class CheckpointsPath
 	private $m_LapToFinish = 1;
 	private $m_CheckpointCount = 0;
 
-	private $m_Enable = true;
+	private $m_Enable = false;
 
 	public function __construct()
 	{
@@ -52,6 +53,20 @@ class CheckpointsPath
 				}
 			}
 		}, 5);
+	}
+
+	public static function fromConfig(array $p_Checkpoints): CheckpointsPath
+	{
+		$l_Ret = new CheckpointsPath();
+
+		foreach ($p_Checkpoints as $l_RawCheckpoint)
+		{
+			$l_Volume = CuboidVolume::fromConfig($l_RawCheckpoint);
+			if ($l_Volume != null)
+				$l_Ret->addCheckpoint(new VolumeCheckpoint($l_Volume));
+		}
+
+		return $l_Ret;
 	}
 
 	//-----------------------

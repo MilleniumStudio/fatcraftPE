@@ -45,18 +45,18 @@ class VolumeCheckpoint extends Checkpoint
 		if ($this->isStart())
 		{
 			$l_RandomParticle = ParticleBuilder::fromParticleId(Particle::TYPE_DUST)->setColor(10, 10, 240);
-			foreach ($this->getCollisionVolume()->getRandomLocations(7) as $l_Position)
-				$l_RandomParticle->playForPlayer($l_Position, $p_Player);
+			foreach ($this->getCollisionVolume()->getRandomLocations(7) as $l_Location)
+				$l_RandomParticle->playForPlayer($l_Location, $p_Player);
 		} else if ($this->isEnd())
 		{
 			$l_RandomParticle = ParticleBuilder::fromParticleId(Particle::TYPE_VILLAGER_HAPPY);
-			foreach ($this->getCollisionVolume()->getRandomLocations(10) as $l_Position)
-				$l_RandomParticle->playForPlayer($l_Position, $p_Player);
+			foreach ($this->getCollisionVolume()->getRandomLocations(10) as $l_Location)
+				$l_RandomParticle->playForPlayer($l_Location, $p_Player);
 		} else
 		{
 			$l_RandomParticle = ParticleBuilder::fromParticleId(Particle::TYPE_LAVA);
-			foreach ($this->getCollisionVolume()->getRandomLocations(4) as $l_Position)
-				$l_RandomParticle->playForPlayer($l_Position, $p_Player);
+			foreach ($this->getCollisionVolume()->getRandomLocations(4) as $l_Location)
+				$l_RandomParticle->playForPlayer($l_Location, $p_Player);
 		}
 	}
 

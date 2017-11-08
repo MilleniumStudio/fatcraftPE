@@ -299,7 +299,7 @@ class Murder extends PluginBase implements Listener
             ->setTitle(new TextFormatter("timer.returnToLobby"))
             ->addStopCallback(function () {
                 foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player) {
-                    LoadBalancer::getInstance()->balancePlayer($l_Player, "lobby");
+                    LoadBalancer::getInstance()->balancePlayer($l_Player, LoadBalancer::TEMPLATE_TYPE_LOBBY);
                 }
             })
             ->start();
