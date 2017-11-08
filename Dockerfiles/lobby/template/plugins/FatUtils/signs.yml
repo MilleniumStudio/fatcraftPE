@@ -1,8 +1,8 @@
 #Signs config
 
 signs:
-  - name: "random_hungergame"
-    location: "-16/8/0"
+  - name: "random_boatracer"
+    location: "12/34/-4"
     face: "SIDE_EAST"
     update: true
     text : [
@@ -15,25 +15,95 @@ signs:
     data:
       type : "hg"
 
-signsareas:
-  - name: "multiple.server_hungergame"
+  - name: "random_skywar"
+    location: "10/34/-10"
+    face: "SIDE_EAST"
     update: true
     text : [
-      "Server",
+      "Game",
       "",
       "",
       ""
     ]
-    locations: [
-      "-18/10/4", "-18/10/3",
-      "-18/9/4", "-18/9/3",
-      "-18/8/4", "-18/8/3",
-      "-18/10/-4","-18/10/-3",
-      "-18/9/-4", "-18/9/-3",
-      "-18/8/-4", "-18/8/-3"
-    ]
+    function: "SignFunctionRandomServer"
+    data:
+      type : "sw"
+
+  - name: "random_parkour"
+    location: "3/34/-14"
     face: "SIDE_EAST"
-    function: "SignFunctionMultiServer"
+    update: true
+    text : [
+      "Game",
+      "",
+      "",
+      ""
+    ]
+    function: "SignFunctionRandomServer"
+    data:
+      type : "pk"
+
+  - name: "random_hungergames"
+    location: "-4/34/-14"
+    face: "SIDE_EAST"
+    update: true
+    text : [
+      "Game",
+      "",
+      "",
+      ""
+    ]
+    function: "SignFunctionRandomServer"
     data:
       type : "hg"
-      offset : 1
+
+  - name: "random_murder"
+    location: "-10/34/-10"
+    face: "SIDE_EAST"
+    update: true
+    text : [
+      "Game",
+      "",
+      "",
+      ""
+    ]
+    function: "SignFunctionRandomServer"
+    data:
+      type : "md"
+
+  - name: "random_bedwars"
+    location: "-12/34/-4"
+    face: "SIDE_EAST"
+    update: true
+    text : [
+      "Game",
+      "",
+      "",
+      ""
+    ]
+    function: "SignFunctionRandomServer"
+    data:
+      type : "bw"
+
+signsareas: []
+#  - name: "multiple.server_hungergame"
+#    update: true
+#    text : [
+#      "Server",
+#      "",
+#      "",
+#      ""
+#    ]
+#    locations: [
+#      "-18/10/4", "-18/10/3",
+#      "-18/9/4", "-18/9/3",
+#      "-18/8/4", "-18/8/3",
+#      "-18/10/-4","-18/10/-3",
+#      "-18/9/-4", "-18/9/-3",
+#      "-18/8/-4", "-18/8/-3"
+#    ]
+#    face: "SIDE_EAST"
+#    function: "SignFunctionMultiServer"
+#    data:
+#      type : "hg"
+#      offset : 1
