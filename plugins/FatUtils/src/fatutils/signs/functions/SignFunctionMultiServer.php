@@ -34,7 +34,6 @@ class SignFunctionMultiServer extends SignFunction
         foreach ($this->sign->signs as $sign)
         {
             $sign->onTick($currentTick);
-            echo "sign tick\n";
         }
     }
 

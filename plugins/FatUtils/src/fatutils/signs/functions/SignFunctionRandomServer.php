@@ -22,7 +22,7 @@ class SignFunctionRandomServer extends SignFunction
         {
             throw Exception("SignFunctionServer has no server!");
         }
-        $sign->text[0] = "Game " . $this->type;
+        $sign->text[0] = (new \fatutils\tools\TextFormatter("template." . $this->type))->asString();
     }
 
     public function onTick(int $currentTick)
@@ -46,7 +46,7 @@ class SignFunctionRandomServer extends SignFunction
             if ($max == 0)
             {
                 $this->canJoin = false;
-                $this->sign->text[2] = "§4CNo Server";
+                $this->sign->text[2] = (new \fatutils\tools\TextFormatter("game.status.noserver"))->asString();
             }
             else
             {
@@ -54,12 +54,12 @@ class SignFunctionRandomServer extends SignFunction
                 if ($online < $max)
                 {
                     $this->canJoin = true;
-                    $this->sign->text[3] = "Tap to join";
+                    $this->sign->text[3] = (new \fatutils\tools\TextFormatter("game.status.joinrandom"))->asString();
                 }
                 else
                 {
                     $this->canJoin = false;
-                    $this->sign->text[2] = "§4CServers Full";
+                    $this->sign->text[2] = (new \fatutils\tools\TextFormatter("game.status.serversfull"))->asString();
                 }
             }
             $this->sign->updateTexte();
@@ -74,7 +74,7 @@ class SignFunctionRandomServer extends SignFunction
         }
         else
         {
-            $player->sendMessage("You can't dirrectly join this server now.");
+            $player->sendMessage((new \fatutils\tools\TextFormatter("game.status.joinnotnow"))->asStringForPlayer($player));
         }
     }
 }

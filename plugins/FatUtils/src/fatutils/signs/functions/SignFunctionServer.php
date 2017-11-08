@@ -23,7 +23,7 @@ class SignFunctionServer extends SignFunction
         {
             throw Exception("SignFunctionServer has no server!");
         }
-        $sign->text[0] = "Server " . $this->type . " " . $this->id;
+        $sign->text[0] = (new \fatutils\tools\TextFormatter("template." . $this->type))->asString() . " " . $this->id;
     }
 
     public function onTick(int $currentTick)
@@ -39,12 +39,12 @@ class SignFunctionServer extends SignFunction
                 $this->sign->text[1] = "§r    " . $server["online"] . "/" . $server["max"];
                 if ($server["status"] == "open")
                 {
-                    $this->sign->text[2] = "§2OPEN";
-                    $this->sign->text[3] = "tap to join";
+                    $this->sign->text[2] = (new \fatutils\tools\TextFormatter("game.status.open"))->asString();
+                    $this->sign->text[3] = (new \fatutils\tools\TextFormatter("game.status.join"))->asString();
                 }
                 else if ($server["status"] == "closed")
                 {
-                    $this->sign->text[2] = "§4CLOSED";
+                    $this->sign->text[2] = (new \fatutils\tools\TextFormatter("game.status.closed"))->asString();
                 }
                 else
                 {
@@ -53,7 +53,7 @@ class SignFunctionServer extends SignFunction
             }
             else
             {
-                $this->sign->text[2] = "§4OFFLINE";
+                $this->sign->text[2] = (new \fatutils\tools\TextFormatter("game.status.offline"))->asString();
             }
             $this->sign->updateTexte();
         }
@@ -67,7 +67,7 @@ class SignFunctionServer extends SignFunction
         }
         else
         {
-            $player->sendMessage("You can't dirrectly join this server now.");
+            $player->sendMessage((new \fatutils\tools\TextFormatter("game.status.joinnotnow"))->asStringForPlayer($player));
         }
     }
 }

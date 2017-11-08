@@ -70,6 +70,7 @@ class NpcsManager implements Listener, CommandExecutor
                 FatUtils::getInstance()->getLogger()->warning("[NPCS] Error: npc without displayname");
                 continue;
             }
+            $displayname = (new \fatutils\tools\TextFormatter($displayname))->asString();
             $p_RawLocation = isset($value['location']) ? $value['location'] : null;
             if ($p_RawLocation == null)
             {
