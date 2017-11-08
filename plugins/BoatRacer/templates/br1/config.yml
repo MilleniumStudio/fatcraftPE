@@ -4,6 +4,10 @@ waitingSecDuration: 2
 
 lapToFinish: 2
 
+rewards:
+  xp: 1000
+  fatSilver: 100
+
 checkpoints:
   - loc1: -1035.6476/19/-64.7498
     loc2: -1024.3/23/-58.375
