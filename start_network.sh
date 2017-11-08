@@ -41,8 +41,8 @@ start_docker()
 #cd ../../../
 
 # start lobbies
-start_docker lobby 1 19133 fatcraft/pocketmine:lobby mainLobby
-start_docker lobby 2 19134 fatcraft/pocketmine:lobby mainLobby
+start_docker lobby 1 19133 fatcraft/pocketmine:lobby lobby/lobby_bones
+start_docker lobby 2 19134 fatcraft/pocketmine:lobby lobby/lobby_bones
 
 # start games
 start_docker hg 1 19135 fatcraft/pocketmine:hg-1 hg/HGMapSpaceship
