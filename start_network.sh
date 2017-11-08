@@ -53,6 +53,7 @@ start_docker sw 3 19139 fatcraft/pocketmine:sw-3 sw/sw-krum-1
 start_docker bw 1 19140 fatcraft/pocketmine:bw-1 bw/map1-4x3
 start_docker bw 2 19141 fatcraft/pocketmine:bw-2 bw/bw-krum
 start_docker md 1 19142 fatcraft/pocketmine:md-1 md/murder_krum
+start_docker br 1 19143 fatcraft/pocketmine:br-1 br/WipeOut_01_build4
 
 
 ## DEBUG
