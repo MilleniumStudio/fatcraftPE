@@ -71,6 +71,8 @@ class BoatRacer extends PluginBase implements Listener
 		WorldUtils::setWorldsTime(0);
 		WorldUtils::stopWorldsTime();
 
+
+		// CheckpointPath Initialization
 		$this->m_CheckpointPath = CheckpointsPath
 			::fromConfig($this->getConfig()->get("checkpoints"))
 			->setLapToFinish($this->getConfig()->get("lapToFinish", 1))
@@ -93,6 +95,8 @@ class BoatRacer extends PluginBase implements Listener
 				$p_Player->addTitle("", (new TextFormatter("boatracer.lapFinished", ["nbr" => $p_LastTurnIndex + 1]))->asStringForPlayer($p_Player));
 			});
 
+
+		// Waiting Clock Initialization
 		$this->m_WaitingTimer = new DisplayableTimer(GameManager::getInstance()->getWaitingTickDuration());
 		$this->m_WaitingTimer
 			->setTitle(new TextFormatter("timer.waiting.title"))
@@ -101,6 +105,8 @@ class BoatRacer extends PluginBase implements Listener
 				$this->startGame();
 			});
 
+
+		// Waiting Sidebar Initialization
 		Sidebar::getInstance()
 			->addTranslatedLine(new TextFormatter("template.br"))
 			->addTimer($this->m_WaitingTimer)
@@ -119,6 +125,8 @@ class BoatRacer extends PluginBase implements Listener
 		GameManager::getInstance()->startGame();
 		LoadBalancer::getInstance()->setServerState(LoadBalancer::SERVER_STATE_CLOSED);
 
+
+		// Playing Sidebar Initialization
 		Sidebar::getInstance()
 			->clearLines()
 			->addTranslatedLine(new TextFormatter("template.br"))
@@ -136,6 +144,8 @@ class BoatRacer extends PluginBase implements Listener
 				return [];
 			});
 
+
+		// Teleport players to playing spawn
 		$l_Spawn = SpawnManager::getInstance()->getSpawnByName("playing");
 		foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
 			$l_Spawn->teleport($l_Player, 1);
@@ -151,10 +161,12 @@ class BoatRacer extends PluginBase implements Listener
 	{
 		PlayersManager::getInstance()->getFatPlayer($p_Player)->setHasLost();
 		$l_PlayerPos = GameManager::getInstance()->getPlayerNbrAtStart() - PlayersManager::getInstance()->getAlivePlayerLeft();
-
 		FatUtils::getInstance()->getLogger()->info($p_Player->getName() . " finished at " . $l_PlayerPos);
+
+		// Applying reward
 		ScoresManager::getInstance()->giveRewardToPlayer($p_Player->getUniqueId(), (GameManager::getInstance()->getPlayerNbrAtStart() / $l_PlayerPos) / GameManager::getInstance()->getPlayerNbrAtStart());
 
+		// Displaying player score
 		if ($l_PlayerPos == 1)
 			$l_Message = new TextFormatter("boatracer.raceFinished.first", ["playerName" => $p_Player->getDisplayName()]);
 		else if ($l_PlayerPos == 2)
@@ -163,16 +175,15 @@ class BoatRacer extends PluginBase implements Listener
 			$l_Message = new TextFormatter("boatracer.raceFinished.third", ["playerName" => $p_Player->getDisplayName()]);
 		else
 			$l_Message = new TextFormatter("boatracer.raceFinished.other", ["playerName" => $p_Player->getDisplayName(), "pos" => $l_PlayerPos]);
-
 		foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
 			$l_Player->addTitle("", $l_Message->asStringForPlayer($l_Player));
 
 		$p_Player->sendMessage((new TextFormatter("boatracer.canQuitGame"))->asStringForPlayer($p_Player));
 
 		$this->destroyPlayerBoat($p_Player);
-
 		$p_Player->setGamemode(3);
 
+		// Shutdown clock
 		if ($l_PlayerPos == GameManager::getInstance()->getPlayerNbrAtStart())
 		{
 			(new BossbarTimer(150))
