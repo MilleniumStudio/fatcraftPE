@@ -19,9 +19,13 @@ use pocketmine\level\format\Chunk;
 use pocketmine\math\AxisAlignedBB;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\AddEntityPacket;
+use pocketmine\event\Listener;
+use pocketmine\event\level\ChunkUnloadEvent;
 
 class WorldUtils
 {
+    public static $m_ForceLoadedChunks;
+
 	public static function stringToLocation(string $p_RawLoc):Location
 	{
 		$x = 0.0;
@@ -121,7 +125,10 @@ class WorldUtils
 
 	public static function loadChunkAt(Position $p_Pos)
     {
-        $p_Pos->getLevel()->loadChunk($p_Pos->getFloorX() >> 4, $p_Pos->getFloorZ() >> 4);
+            if ($p_Pos->getLevel()->loadChunk($p_Pos->getFloorX() >> 4, $p_Pos->getFloorZ() >> 4))
+            {
+                FatUtils::getInstance()->getLogger()->debug("Chunk " . ($p_Pos->getFloorX() >> 4) . "/" . ($p_Pos->getFloorZ() >> 4) . " force loaded !");
+            }
     }
 
     public static function isPosInChunk(Location $p_Pos, Chunk $p_Chunk): Boolean
@@ -132,6 +139,37 @@ class WorldUtils
             return true;
         }
         return false;
+    }
+
+    public static function forceLoadChunk(Position $p_Pos, bool $load = true)
+    {
+        $chunk = $p_Pos->getLevel()->getChunk($p_Pos->getFloorX() >> 4, $p_Pos->getFloorZ() >> 4);
+
+        if ($load)
+        {
+            self::loadChunkAt($p_Pos);
+            if (self::$m_ForceLoadedChunks == null)
+            {
+                self::$m_ForceLoadedChunks = array();
+                FatUtils::getInstance()->getServer()->getPluginManager()->registerEvents(new class() implements Listener
+                {
+                    public function onChunkUnload(ChunkUnloadEvent $p_event)
+                    {
+                        if (isset(WorldUtils::$m_ForceLoadedChunks[$p_event->getChunk()->getX()][$p_event->getChunk()->getZ()]) && WorldUtils::$m_ForceLoadedChunks[$p_event->getChunk()->getX()][$p_event->getChunk()->getZ()])
+                        {
+                            $p_event->setCancelled();
+                            FatUtils::getInstance()->getLogger()->debug("Chunk " .$p_event->getChunk()->getX() . "/" . $p_event->getChunk()->getZ() . " cancel unload !");
+                        }
+                    }
+                }, FatUtils::getInstance());
+            }
+            self::$m_ForceLoadedChunks[$chunk->getX()][$chunk->getZ()] =  true;
+        }
+        else
+        {
+            self::$m_ForceLoadedChunks[$chunk->getX()][$chunk->getZ()] = false;
+            unset(self::$m_ForceLoadedChunks[$chunk->getX()][$chunk->getZ()]);
+        }
     }
 
     public static function addStrike(Location $p_Loc, $height = 0){
