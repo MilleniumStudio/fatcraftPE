@@ -9,6 +9,7 @@
 namespace fatutils\powers;
 
 use fatutils\FatUtils;
+use fatutils\pets\PetsManager;
 use fatutils\tools\particles\ParticleBuilder;
 use fatutils\tools\volume\CuboidVolume;
 use pocketmine\command\Command;
@@ -40,7 +41,8 @@ class PowersManager implements Listener, CommandExecutor
         FatUtils::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new PowerChecker(FatUtils::getInstance()), 2);
 
         //todo for debug
-        $this->availablePowers[] = "Boost";
+//        $this->availablePowers[] = "Boost";
+        $this->availablePowers[] = "Shot";
     }
 
     //=======================================================================
@@ -78,9 +80,9 @@ class PowersManager implements Listener, CommandExecutor
         $item = $event->getItem();
         if ($item != null) {
             if (isset($item->getNamedTag()->powerKey)) {
-                if (array_key_exists($item->getNamedTag()->powerKey."", $this->activePowers)) {
+                if (array_key_exists($item->getNamedTag()->powerKey . "", $this->activePowers)) {
                     /** @var APower $power */
-                    $power = $this->activePowers[$item->getNamedTag()->powerKey.""];
+                    $power = $this->activePowers[$item->getNamedTag()->powerKey . ""];
                     if ($power != null) {
                         $event->setCancelled(true);
                         $power->action();
@@ -100,13 +102,19 @@ class PowersManager implements Listener, CommandExecutor
      */
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool
     {
+        if (!($sender instanceof Player)) {
+            echo "need to be a player to execute this command\n";
+            return true;
+        }
         switch ($args[0]) {
             case "add": {
-                if ($sender instanceof Player)
-                    $this->equipPlayer($sender);
-                else
-                    echo "need to be a player to execute this command\n";
+                $this->equipPlayer($sender);
             }
+                break;
+            case "target": {
+                PetsManager::getInstance()->spawnPet($sender, "Zombie", false)->equip();
+            }
+                break;
         }
         return true;
     }

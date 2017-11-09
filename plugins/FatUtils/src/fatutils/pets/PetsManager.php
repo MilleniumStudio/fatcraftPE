@@ -52,13 +52,14 @@ class PetsManager implements Listener, CommandExecutor
         }
     }
 
-    public function spawnPet(Player $player, $petType): ?ShopItem
+    public function spawnPet(Player $player, $petType, bool $equiped = true): ?ShopItem
     {
         if (array_key_exists($petType, PetTypes::ENTITIES)) {
             $fatPlayer = PlayersManager::getInstance()->getFatPlayer($player);
             $pet = new Pet($player, "pets.qqChose", ["type" => $petType, "class" => Pet::class]);
 //            $pet = ShopItem::createShopItem($player, "pet.qqChose", ["type" => $petType, "class" => Pet::class]);
-            $fatPlayer->setSlot(ShopItem::SLOT_PET, $pet);
+            if ($equiped)
+                $fatPlayer->setSlot(ShopItem::SLOT_PET, $pet);
             return $pet;
         }
         echo "Unknown petType ! \n";

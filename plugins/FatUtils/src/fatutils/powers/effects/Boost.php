@@ -69,7 +69,7 @@ class BoostTicker extends PluginTask
     public function onRun(int $currentTick)
     {
         if ($this->timer-- > 0) {
-            echo $this->timer . "  (" . min(max($this->timer / 10, $this->minSpeed), $this->maxSpeed) . ")" . "\n";
+//            echo $this->timer . "  (" . min(max($this->timer / 10, $this->minSpeed), $this->maxSpeed) . ")" . "\n";
             $x = cos(deg2rad($this->player->vehicle->yaw)) * min(max($this->timer / 10, $this->minSpeed), $this->maxSpeed);
             $z = sin(deg2rad($this->player->vehicle->yaw)) * min(max($this->timer / 10, $this->minSpeed), $this->maxSpeed);
             $this->player->vehicle->setMotion($this->player->vehicle->getMotion()->add(new Vector3($x, 0, $z)));
