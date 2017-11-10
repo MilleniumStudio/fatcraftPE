@@ -12,16 +12,22 @@ use fatutils\FatUtils;
 use fatutils\pets\PetsManager;
 use fatutils\tools\particles\ParticleBuilder;
 use fatutils\tools\volume\CuboidVolume;
+use fatutils\tools\WorldUtils;
+use pocketmine\block\BlockIds;
 use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\level\Location;
+use pocketmine\level\particle\Particle;
+use pocketmine\level\Position;
+use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\Player;
 use pocketmine\scheduler\PluginTask;
 use pocketmine\Server;
+use pocketmine\utils\Config;
 
 class PowersManager implements Listener, CommandExecutor
 {
@@ -40,31 +46,47 @@ class PowersManager implements Listener, CommandExecutor
         FatUtils::getInstance()->getServer()->getPluginManager()->registerEvents($this, FatUtils::getInstance());
         FatUtils::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new PowerChecker(FatUtils::getInstance()), 2);
 
+        // load config
+        $config = FatUtils::getInstance()->getTemplateConfig();
+
+        foreach ($config->getNested("powerPlaces") as $item) {
+            $loc = WorldUtils::stringToLocation($item);
+            $loc = Location::fromObject($loc->add(0.5, 0.5, 0.5), $loc->level);
+            $this->placePower($loc);
+        }
+
         //todo for debug
-//        $this->availablePowers[] = "Boost";
+        $this->availablePowers[] = "Boost";
         $this->availablePowers[] = "Shot";
+        $this->availablePowers[] = "Mine";
+        $this->availablePowers[] = "Blindness";
     }
 
     //=======================================================================
+    //=======================================================================
+    const SLOT = 4;
+    const PLACES_SIZE = 2;
 
     private $powersPlaces = [];
     private $availablePowers = [];
     private $activePowers = [];
 
-    public function placePower(Location $location, int $size = 2, bool $stayForever = false)
+    public function placePower(Location $location, int $size = self::PLACES_SIZE, bool $stayForever = false)
     {
         $this->powersPlaces[] = [new CuboidVolume(
             new Location($location->getX() - $size / 2, $location->getY() - $size / 2, $location->getZ() - $size / 2, 0, 0, $location->level),
             new Location($location->getX() + $size / 2, $location->getY() + $size / 2, $location->getZ() + $size / 2, 0, 0, $location->level)
-        ), $stayForever];
+        ), $stayForever, $location];
     }
 
     public function equipPlayer(Player $player)
     {
-        $className = "fatutils\\powers\\effects\\" . $this->availablePowers[array_rand($this->availablePowers)];
-        /** @var APower $power */
-        $power = new $className($player);
-        $this->activePowers[$power->getUniqueId()] = $power;
+        if ($player->getInventory()->getHotbarSlotItem(self::SLOT)->getId() == BlockIds::AIR) {
+            $className = "fatutils\\powers\\effects\\" . $this->availablePowers[array_rand($this->availablePowers)];
+            /** @var APower $power */
+            $power = new $className($player);
+            $this->activePowers[$power->getUniqueId()] = $power;
+        }
     }
 
     public function getPowersPlaces()
@@ -144,7 +166,25 @@ class PowerChecker extends PluginTask
                 }
             }
             // refresh display
-            $volume->display();
+            $base = new Vector3(0, 0, 1);
+//            $particle = ParticleBuilder::fromParticleId(Particle::TYPE_REDSTONE);
+            $particle = ParticleBuilder::fromParticleId(Particle::TYPE_CRITICAL);
+            for ($i = 0; $i < 15; $i++) {
+                $yaw = rand(0, 360);
+                $pitch = rand(0, 360);
+
+                $v1 = $base->asVector3();
+                $v1->x = 0;
+                $v1->y = -sin(deg2rad($pitch));
+                $v1->z = cos(deg2rad($pitch));
+                $v2 = $v1->asVector3();
+                $v2->x = -$v1->z * sin(deg2rad($yaw));
+                $v2->z = $v1->z * cos(deg2rad($yaw));
+
+                $v2 = $v2->multiply(0.7);
+
+                $particle->play(Position::fromObject($place[2]->add($v2), $place[2]->level));
+            }
         }
     }
 }

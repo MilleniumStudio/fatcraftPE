@@ -14,6 +14,7 @@ use pocketmine\Player;
 use pocketmine\plugin\Plugin;
 use pocketmine\scheduler\PluginTask;
 use pocketmine\scheduler\TaskHandler;
+use pocketmine\utils\Config;
 
 /**
  * Created by IntelliJ IDEA.

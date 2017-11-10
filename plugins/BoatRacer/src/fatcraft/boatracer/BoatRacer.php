@@ -12,6 +12,7 @@ use fatcraft\loadbalancer\LoadBalancer;
 use fatutils\FatUtils;
 use fatutils\game\GameManager;
 use fatutils\players\PlayersManager;
+use fatutils\powers\PowersManager;
 use fatutils\scores\ScoresManager;
 use fatutils\spawns\SpawnManager;
 use fatutils\tools\BossbarTimer;
@@ -115,6 +116,8 @@ class BoatRacer extends PluginBase implements Listener
 			{
 				return new TextFormatter("game.waitingForMore", ["amount" => PlayersManager::getInstance()->getMinPlayer() - count($this->getServer()->getOnlinePlayers())]);
 			});
+
+        FatUtils::getInstance()->getCommand("pwr")->setExecutor(PowersManager::getInstance());
 	}
 
 	//------------------------

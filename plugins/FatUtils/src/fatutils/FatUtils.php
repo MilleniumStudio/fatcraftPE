@@ -52,7 +52,6 @@ class FatUtils extends PluginBase
         $this->getCommand("skin")->setExecutor(SkinRepository::getInstance());
         $this->getCommand("npcs")->setExecutor(NpcsManager::getInstance());
         $this->getCommand("sign")->setExecutor(SignsManager::getInstance());
-        $this->getCommand("pwr")->setExecutor(PowersManager::getInstance());
 
 
         WorldUtils::stopWorldsTime();
