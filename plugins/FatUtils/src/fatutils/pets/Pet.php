@@ -30,8 +30,8 @@ class Pet extends ShopItem
 
     /** @var Location $m_nextPosition */
     private $m_nextPosition = null;
-    /** @var  CustomPet $m_entity */
-    private $m_entity;
+    /** @var  CustomPet $m_CustomPet */
+    private $m_CustomPet;
 
     //todo debug
     static $nbCat = 0;
@@ -43,7 +43,7 @@ class Pet extends ShopItem
 
     public function equip()
     {
-        $this->m_fatPlayer = PlayersManager::getInstance()->getFatPlayer($this->getPlayer());
+        $this->m_fatPlayer = PlayersManager::getInstance()->getFatPlayer($this->getEntity());
         $this->m_petTypes = $this->getDataValue("type", "Parrot");
         $this->m_options = $this->getDataValue("options", array_key_exists("options", PetTypes::ENTITIES[$this->m_petTypes])?PetTypes::ENTITIES[$this->m_petTypes]["options"]:[]);
         $this->m_nextPosition = $this->m_fatPlayer->getPlayer()->getLocation();
@@ -67,49 +67,49 @@ class Pet extends ShopItem
             ]
         );
 
-        $this->m_entity = new CustomPet($this->m_fatPlayer->getPlayer()->getLevel(), $tag, $this->m_petTypes, $this->m_options);
+        $this->m_CustomPet = new CustomPet($this->m_fatPlayer->getPlayer()->getLevel(), $tag, $this->m_petTypes, $this->m_options);
 
-        $this->m_entity->setDataProperty(Entity::DATA_FLAG_NO_AI, Entity::DATA_TYPE_BYTE, 1, true);
+        $this->m_CustomPet->setDataProperty(Entity::DATA_FLAG_NO_AI, Entity::DATA_TYPE_BYTE, 1, true);
 
-        $this->m_fatPlayer->getPlayer()->getLocation()->getLevel()->addEntity($this->m_entity);
-        $this->m_entity->spawnToAll();
+        $this->m_fatPlayer->getPlayer()->getLocation()->getLevel()->addEntity($this->m_CustomPet);
+        $this->m_CustomPet->spawnToAll();
     }
 
     public function unequip()
     {
-        $this->m_entity->kill();
+        $this->m_CustomPet->kill();
 //        $this->m_fatPlayer->setSlot(ShopItem::FAT_PLAYER_SHOP_SLOT_PET, null);
     }
 
-    public function getEntity()
+    public function getCustomPet()
     {
-        return $this->m_entity;
+        return $this->m_CustomPet;
     }
 
     public function updatePosition()
     {
-        if ($this->m_entity == null) {
+        if ($this->m_CustomPet == null) {
             echo "entity is null \n";
             return;
         }
 
-        $playerPos = $this->m_fatPlayer->getPlayer()->getLocation()->add(0, $this->m_entity->m_offsetY, 0);
-        $petPos = $this->m_entity->getLocation();
+        $playerPos = $this->m_fatPlayer->getPlayer()->getLocation()->add(0, $this->m_CustomPet->m_offsetY, 0);
+        $petPos = $this->m_CustomPet->getLocation();
         $dist = $petPos->distance($playerPos->asVector3());
         if ($dist > 15) {
-            $this->m_entity->teleport($this->m_fatPlayer->getPlayer());
-            $this->m_entity->spawnToAll();
-        } elseif ($dist > 3 + $this->m_entity->m_distOffset) {
+            $this->m_CustomPet->teleport($this->m_fatPlayer->getPlayer());
+            $this->m_CustomPet->spawnToAll();
+        } elseif ($dist > 3 + $this->m_CustomPet->m_distOffset) {
             // calculate move vector
             $vec = new Vector3($playerPos->getX() - $petPos->getX(), $playerPos->getY() - $petPos->getY(), $playerPos->getZ() - $petPos->getZ());
-            $vec = $vec->normalize()->multiply($this->m_entity->m_speed * 2);
+            $vec = $vec->normalize()->multiply($this->m_CustomPet->m_speed * 2);
             // check if it needs to jump to climb a block
-            $frontPosVec = $this->m_entity->getLocation()->asVector3()->add($this->m_entity->getDirectionVector()->asVector3()->multiply(0.3 + $this->m_entity->width / 2))->add(0, 0, 0);
-            $frontBlockId = $this->m_entity->level->getBlock($frontPosVec)->getId();
-            if ($this->m_entity->isOnGround() || $this->m_entity->m_climb || !$this->m_entity->m_hasGravity) {
+            $frontPosVec = $this->m_CustomPet->getLocation()->asVector3()->add($this->m_CustomPet->getDirectionVector()->asVector3()->multiply(0.3 + $this->m_CustomPet->width / 2))->add(0, 0, 0);
+            $frontBlockId = $this->m_CustomPet->level->getBlock($frontPosVec)->getId();
+            if ($this->m_CustomPet->isOnGround() || $this->m_CustomPet->m_climb || !$this->m_CustomPet->m_hasGravity) {
                 if ($frontBlockId != BlockIds::AIR && $frontBlockId != BlockIds::WATER) {
                     $vec->y = 0.9;
-                } else if ($this->m_entity->m_isJumper) {// if the mob is a jumper
+                } else if ($this->m_CustomPet->m_isJumper) {// if the mob is a jumper
                     $vec->y = 0.3;
                 }
             }
@@ -117,13 +117,13 @@ class Pet extends ShopItem
             $vecOr = new Vector3(0, 0, 1);
             $yaw = rad2deg(atan2($vec->getZ(), $vec->getX()) - atan2($vecOr->getZ(), $vecOr->getX())) % 360;
             // apply everything
-            $this->m_entity->setRotation($yaw, 0);
-            $this->m_entity->setMotion($vec);
-        } elseif (!$this->m_entity->m_hasGravity) {
+            $this->m_CustomPet->setRotation($yaw, 0);
+            $this->m_CustomPet->setMotion($vec);
+        } elseif (!$this->m_CustomPet->m_hasGravity) {
             //to slowdown flyers, and avoid that they turn around the player for nothing
-            $this->m_entity->motionX *= 0.5;
-            $this->m_entity->motionY *= 0.5;
-            $this->m_entity->motionZ *= 0.5;
+            $this->m_CustomPet->motionX *= 0.5;
+            $this->m_CustomPet->motionY *= 0.5;
+            $this->m_CustomPet->motionZ *= 0.5;
         }
     }
 }

@@ -53,9 +53,9 @@ class FunnelParticle extends ShopItem
 			{
 				if (!($this->m_Anim instanceof ShockWaveAnimation) || !$this->m_Anim->isRunning())
 				{
-					$l_Level = $this->getPlayer()->getLevel();
+					$l_Level = $this->getEntity()->getLevel();
 					$i = 0;
-					$this->m_Anim = new ShockWaveAnimation($this->getPlayer()->asLocation());
+					$this->m_Anim = new ShockWaveAnimation($this->getEntity()->asLocation());
 					$this->m_Anim
 						->setNbPointInACircle(15)
 						->setTickDuration(20 * 2)

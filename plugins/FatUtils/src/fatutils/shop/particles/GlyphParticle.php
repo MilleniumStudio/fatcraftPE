@@ -47,8 +47,8 @@ class GlyphParticle extends ShopItem
 			{
 				if (!($this->m_Anim instanceof ShockWaveAnimation) || !$this->m_Anim->isRunning())
 				{
-					$l_Level = $this->getPlayer()->getLevel();
-					$this->m_Anim = new ShockWaveAnimation($this->getPlayer()->asLocation());
+					$l_Level = $this->getEntity()->getLevel();
+					$this->m_Anim = new ShockWaveAnimation($this->getEntity()->asLocation());
 					$this->m_Anim
 						->setNbPointInACircle(10)
 						->setTickDuration(20 * 2)
@@ -61,7 +61,7 @@ class GlyphParticle extends ShopItem
 								{
 									if ($l_Location instanceof Vector3)
 									{
-										$l_ParticleBuilder->play(Position::fromObject($l_Location->add(0, $this->getDataValue("offsetY", 0.1), 0), $this->getPlayer()->getLevel()));
+										$l_ParticleBuilder->play(Position::fromObject($l_Location->add(0, $this->getDataValue("offsetY", 0.1), 0), $this->getEntity()->getLevel()));
 									}
 								}
 							}

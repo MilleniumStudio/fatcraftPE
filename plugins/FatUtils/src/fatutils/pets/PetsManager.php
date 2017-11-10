@@ -90,7 +90,7 @@ class PetsManager implements Listener, CommandExecutor
                 case "pos": {
                     /** @var Pet $pet */
                     $pet = PlayersManager::getInstance()->getFatPlayer($sender)->getSlot(ShopItem::SLOT_PET);
-                    echo "->" . $pet->getEntity()->getLocation() . "\n";
+                    echo "->" . $pet->getCustomPet()->getLocation() . "\n";
                 }
                     break;
                 case "list": {
