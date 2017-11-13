@@ -2,6 +2,7 @@
 
 namespace fatutils\pets;
 
+use fatutils\FatUtils;
 use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
 use fatutils\shop\ShopItem;
@@ -90,7 +91,14 @@ class Pet extends ShopItem
     {
         if ($this->m_CustomPet == null) {
             echo "entity is null \n";
+            FatUtils::getInstance()->getLogger()->debug("[Pet] custom pet is null !");
             return;
+        }
+
+        if (!$this->m_CustomPet->isAlive())
+        {
+            FatUtils::getInstance()->getLogger()->debug("[Pet] " . $this->m_CustomPet->getId . " is dead, reviving !");
+            $this->m_CustomPet->setHealth(20);
         }
 
         $playerPos = $this->m_fatPlayer->getPlayer()->getLocation()->add(0, $this->m_CustomPet->m_offsetY, 0);

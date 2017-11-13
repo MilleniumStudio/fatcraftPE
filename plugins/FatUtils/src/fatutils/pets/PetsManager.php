@@ -15,6 +15,7 @@ use pocketmine\plugin\Plugin;
 use pocketmine\scheduler\PluginTask;
 use pocketmine\scheduler\TaskHandler;
 use pocketmine\utils\Config;
+use pocketmine\event\entity\EntityDamageEvent;
 
 /**
  * Created by IntelliJ IDEA.
@@ -65,6 +66,29 @@ class PetsManager implements Listener, CommandExecutor
         }
         echo "Unknown petType ! \n";
         return null;
+    }
+
+    /**
+        * @param EntityDamageEvent $event
+        * @ignoreCancelled true
+        *
+        * @return void
+        */
+    public function onEntityDamage(EntityDamageEvent $event)
+    {
+//        if(!$event instanceof EntityDamageByEntityEvent) {
+//            return;
+//        }
+//        if(!$event->getDamager() instanceof Player) {
+//            return;
+//        }
+        if(isset($event->getEntity()->namedtag->Invulnerable))
+        {
+            if($event->getEntity()->namedtag->Invulnerable->getValue() == 1)
+            {
+                $event->setCancelled(true);
+            }
+        }
     }
 
     /**
