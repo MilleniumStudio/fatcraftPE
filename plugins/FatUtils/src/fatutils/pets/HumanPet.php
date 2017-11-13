@@ -107,7 +107,7 @@ class HumanPet extends Human
         }
         $this->setDataProperty(self::DATA_SCALE, self::DATA_TYPE_FLOAT, $this->namedtag->Scale->getValue());
         $this->setDataProperty(self::DATA_FLAG_NO_AI, self::DATA_TYPE_BYTE, 1, true);
-        $this->namedtag->Invulnerable = new ByteTag("Invulnerable", 1);
+//        $this->namedtag->Invulnerable = new ByteTag("Invulnerable", 1);
 
         $this->initEntity();
     }
