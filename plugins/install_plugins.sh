@@ -9,6 +9,10 @@ php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
 --out BlockPets.phar
 
 php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
+--make MapAPI/ \
+--out MapAPI.phar
+
+php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
 --make LoadBalancer/ \
 --out LoadBalancer.phar
 
