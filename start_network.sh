@@ -23,16 +23,16 @@ start_docker()
 }
 
 # start lobbies
-start_docker lobby 1 19133 fatcraft/pocketmine:lobby mainLobby
-start_docker lobby 2 19134 fatcraft/pocketmine:lobby mainLobby
-start_docker lobby 3 19135 fatcraft/pocketmine:lobby mainLobby
-start_docker lobby 4 19136 fatcraft/pocketmine:lobby mainLobby
-start_docker lobby 5 19137 fatcraft/pocketmine:lobby mainLobby
-start_docker lobby 6 19138 fatcraft/pocketmine:lobby mainLobby
-start_docker lobby 7 19139 fatcraft/pocketmine:lobby mainLobby
-start_docker lobby 8 19140 fatcraft/pocketmine:lobby mainLobby
-start_docker lobby 9 19141 fatcraft/pocketmine:lobby mainLobby
-start_docker lobby 10 19142 fatcraft/pocketmine:lobby mainLobby
+start_docker lobby 1 19133 fatcraft/pocketmine:lobby lobby/lobby_bones
+start_docker lobby 2 19134 fatcraft/pocketmine:lobby lobby/lobby_bones
+start_docker lobby 3 19135 fatcraft/pocketmine:lobby lobby/lobby_bones
+start_docker lobby 4 19136 fatcraft/pocketmine:lobby lobby/lobby_bones
+start_docker lobby 5 19137 fatcraft/pocketmine:lobby lobby/lobby_bones
+start_docker lobby 6 19138 fatcraft/pocketmine:lobby lobby/lobby_bones
+start_docker lobby 7 19139 fatcraft/pocketmine:lobby lobby/lobby_bones
+start_docker lobby 8 19140 fatcraft/pocketmine:lobby lobby/lobby_bones
+start_docker lobby 9 19141 fatcraft/pocketmine:lobby lobby/lobby_bones
+start_docker lobby 10 19142 fatcraft/pocketmine:lobby lobby/lobby_bones
 
 # start games
 start_docker hg 1 19143 fatcraft/pocketmine:hg-1 hg/HGMapSpaceship
@@ -54,6 +54,9 @@ start_docker bw 4 19155 fatcraft/pocketmine:bw-2 bw/bw-krum
 
 start_docker md 1 19156 fatcraft/pocketmine:md-1 md/murder_krum
 start_docker md 2 19157 fatcraft/pocketmine:md-1 md/murder_krum
+
+start_docker br 1 19158 fatcraft/pocketmine:br-1 br/WipeOut_01_build4
+start_docker br 2 19159 fatcraft/pocketmine:br-1 br/WipeOut_01_build4
 
 screen -dmS FatFoward ./tools/FatForward/startFatForward
 
