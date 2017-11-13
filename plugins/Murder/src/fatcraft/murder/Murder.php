@@ -12,17 +12,17 @@ use fatutils\players\PlayersManager;
 use fatutils\scores\ScoresManager;
 use fatutils\teams\Team;
 use fatutils\teams\TeamsManager;
-use fatutils\tools\DelayedExec;
-use fatutils\tools\DisplayableTimer;
+use fatutils\tools\schedulers\DelayedExec;
+use fatutils\tools\schedulers\DisplayableTimer;
 use fatutils\tools\ItemUtils;
 use fatutils\tools\Sidebar;
 use fatutils\tools\TextFormatter;
-use fatutils\tools\Timer;
-use fatutils\tools\TipsTimer;
+use fatutils\tools\schedulers\Timer;
+use fatutils\tools\schedulers\TipsTimer;
 use fatutils\tools\WorldUtils;
 use fatutils\game\GameManager;
 use fatutils\spawns\SpawnManager;
-use fatutils\tools\BossbarTimer;
+use fatutils\tools\schedulers\BossbarTimer;
 use fatutils\ui\WindowsManager;
 use MSpawns\Commands\SetAlias;
 use MSpawns\Commands\Spawn;
@@ -129,13 +129,12 @@ class Murder extends PluginBase implements Listener
                 if ($this->m_WaitingTimer instanceof Timer)
                     $this->m_WaitingTimer->cancel();
                 $this->startGame();
-            } else if (count($this->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMinPlayer()) {
-                if (is_null($this->m_WaitingTimer)) {
-                    $this->getLogger()->info("MIN PLAYER REACH !");
-                    if ($this->m_WaitingTimer instanceof Timer)
-                        $this->m_WaitingTimer->start();
-                }
-            }
+            } else if (count($this->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMinPlayer())
+			{
+				$this->getLogger()->info("MIN PLAYER REACH !");
+				if ($this->m_WaitingTimer instanceof Timer)
+					$this->m_WaitingTimer->start();
+			}
 //            else if (count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMinPlayer()) {
 //                $l_WaitingFor = PlayersManager::getInstance()->getMinPlayer() - count($this->getServer()->getOnlinePlayers());
 //                foreach ($this->getServer()->getOnlinePlayers() as $l_Player)
@@ -372,11 +371,23 @@ class Murder extends PluginBase implements Listener
 
     public function onPlayerQuit(PlayerQuitEvent $p_Event)
     {
+		PlayersManager::getInstance()->getFatPlayer($p_Event->getPlayer())->setOutOfGame();
+		Sidebar::getInstance()->update();
+
         new DelayedExec(function ()
 		{
-			if (GameManager::getInstance()->isPlaying())
+			if (GameManager::getInstance()->isWaiting())
 			{
-				Sidebar::getInstance()->update();
+				if ($this->m_WaitingTimer instanceof Timer && $this->m_WaitingTimer->getTickLeft() > 0 &&
+					(count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMinPlayer()))
+				{
+					$this->m_WaitingTimer->cancel();
+					$this->m_WaitingTimer = null;
+				}
+			} else if (GameManager::getInstance()->isPlaying())
+			{
+				if (count($this->getServer()->getOnlinePlayers()) == 0)
+					$this->getServer()->shutdown();
 			}
 		}, 1);
     }

@@ -10,7 +10,7 @@ namespace fatutils\tools\animations;
 
 
 use fatutils\tools\GeometryUtils;
-use fatutils\tools\Timer;
+use fatutils\tools\schedulers\Timer;
 use pocketmine\entity\Entity;
 use pocketmine\level\Location;
 use pocketmine\level\Position;

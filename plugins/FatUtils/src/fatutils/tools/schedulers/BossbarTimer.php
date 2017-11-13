@@ -6,11 +6,12 @@
  * Time: 17:27
  */
 
-namespace fatutils\tools;
+namespace fatutils\tools\schedulers;
 
 
 use fatutils\FatUtils;
 use fatutils\tools\bossBarAPI\BossBar;
+use fatutils\tools\TextFormatter;
 
 class BossbarTimer extends DisplayableTimer
 {

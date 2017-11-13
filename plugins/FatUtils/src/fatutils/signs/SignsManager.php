@@ -32,7 +32,7 @@ use pocketmine\nbt\tag\NamedTag;
 use pocketmine\block\BlockIds;
 use pocketmine\block\Block;
 use pocketmine\block\BlockFactory;
-use fatutils\tools\LoopedExec;
+use fatutils\tools\schedulers\LoopedExec;
 
 class SignsManager implements Listener, CommandExecutor
 {

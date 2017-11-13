@@ -6,9 +6,10 @@
  * Time: 10:36
  */
 
-namespace fatutils\tools;
+namespace fatutils\tools\schedulers;
 
 
+use fatutils\tools\TextFormatter;
 use pocketmine\Player;
 
 class DisplayableTimer extends Timer

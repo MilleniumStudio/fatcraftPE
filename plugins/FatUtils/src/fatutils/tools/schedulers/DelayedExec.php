@@ -6,7 +6,7 @@
  * Time: 15:49
  */
 
-namespace fatutils\tools;
+namespace fatutils\tools\schedulers;
 
 
 use fatutils\FatUtils;

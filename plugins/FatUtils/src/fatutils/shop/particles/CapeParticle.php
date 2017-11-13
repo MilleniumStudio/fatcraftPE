@@ -11,7 +11,7 @@ namespace fatutils\shop\particles;
 use fatutils\shop\ShopItem;
 use fatutils\tools\ColorUtils;
 use fatutils\tools\GeometryUtils;
-use fatutils\tools\LoopedExec;
+use fatutils\tools\schedulers\LoopedExec;
 use pocketmine\level\Location;
 use pocketmine\level\particle\DustParticle;
 use pocketmine\math\Vector3;

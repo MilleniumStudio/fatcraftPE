@@ -10,7 +10,7 @@ namespace fatutils\shop\particles;
 
 use fatutils\shop\ShopItem;
 use fatutils\tools\animations\CircleAnimation;
-use fatutils\tools\LoopedExec;
+use fatutils\tools\schedulers\LoopedExec;
 use fatutils\tools\particles\ParticleBuilder;
 use pocketmine\level\particle\Particle;
 use pocketmine\level\Position;

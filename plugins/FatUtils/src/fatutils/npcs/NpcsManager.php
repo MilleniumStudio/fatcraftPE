@@ -5,7 +5,7 @@ namespace fatutils\npcs;
 use fatutils\FatUtils;
 use fatutils\pets\PetTypes;
 use fatutils\tools\WorldUtils;
-use fatutils\tools\LoopedExec;
+use fatutils\tools\schedulers\LoopedExec;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;

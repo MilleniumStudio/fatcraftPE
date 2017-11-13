@@ -7,7 +7,7 @@ use fatutils\game\GameManager;
 use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
 use fatutils\shop\ShopItem;
-use fatutils\tools\DelayedExec;
+use fatutils\tools\schedulers\DelayedExec;
 use fatutils\tools\TextFormatter;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityRegainHealthEvent;

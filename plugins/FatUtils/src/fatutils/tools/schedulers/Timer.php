@@ -6,7 +6,7 @@
  * Time: 11:53
  */
 
-namespace fatutils\tools;
+namespace fatutils\tools\schedulers;
 
 use fatutils\FatUtils;
 use pocketmine\plugin\Plugin;

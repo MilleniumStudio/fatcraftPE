@@ -6,7 +6,7 @@
  * Time: 17:27
  */
 
-namespace fatutils\tools;
+namespace fatutils\tools\schedulers;
 
 use fatutils\FatUtils;
 use pocketmine\Player;

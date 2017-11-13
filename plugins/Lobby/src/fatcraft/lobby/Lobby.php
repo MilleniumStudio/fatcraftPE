@@ -15,7 +15,7 @@ use fatutils\shop\ShopManager;
 use fatutils\tools\Sidebar;
 use fatutils\tools\TextFormatter;
 use fatutils\tools\WorldUtils;
-use fatutils\tools\DelayedExec;
+use fatutils\tools\schedulers\DelayedExec;
 use fatutils\ui\impl\GamesWindow;
 use fatutils\ui\impl\LobbiesWindow;
 use pocketmine\event\entity\EntityDamageEvent;

@@ -11,6 +11,7 @@ namespace fatutils\tools;
 
 use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
+use fatutils\tools\schedulers\DisplayableTimer;
 use pocketmine\Player;
 use ReflectionObject;
 

@@ -10,7 +10,7 @@ namespace fatutils\powers\effects;
 
 
 use fatutils\powers\APower;
-use fatutils\tools\DelayedExec;
+use fatutils\tools\schedulers\DelayedExec;
 use pocketmine\block\Block;
 use pocketmine\block\BlockIds;
 use pocketmine\item\Item;

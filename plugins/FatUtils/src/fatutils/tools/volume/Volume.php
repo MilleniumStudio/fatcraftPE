@@ -9,7 +9,7 @@
 namespace fatutils\tools\volume;
 
 
-use fatutils\tools\LoopedExec;
+use fatutils\tools\schedulers\LoopedExec;
 use pocketmine\block\Block;
 use pocketmine\entity\Entity;
 use pocketmine\event\TimingsHandler;

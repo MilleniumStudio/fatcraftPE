@@ -10,7 +10,7 @@ namespace fatutils\tools\checkpoints;
 
 
 use fatutils\FatUtils;
-use fatutils\tools\LoopedExec;
+use fatutils\tools\schedulers\LoopedExec;
 use fatutils\tools\volume\CuboidVolume;
 use pocketmine\level\sound\GenericSound;
 use pocketmine\network\mcpe\protocol\LevelEventPacket;

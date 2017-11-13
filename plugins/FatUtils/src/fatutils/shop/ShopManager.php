@@ -10,7 +10,7 @@ namespace fatutils\shop;
 
 use fatutils\FatUtils;
 use fatutils\players\PlayersManager;
-use fatutils\tools\DelayedExec;
+use fatutils\tools\schedulers\DelayedExec;
 use fatutils\tools\Sidebar;
 use fatutils\tools\TextFormatter;
 use fatutils\ui\windows\ButtonWindow;
