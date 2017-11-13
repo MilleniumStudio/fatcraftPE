@@ -45,7 +45,7 @@ npcs:
 
   - name: "boatracer"
     displayname: "template.br"
-    location: 13.5/35/-3.5/45/15
+    location: 13.5/35/-2.5/45/15
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -63,7 +63,7 @@ npcs:
 
   - name: "skywar"
     displayname: "template.sw"
-    location: 10.5/35/-10.5/30/15
+    location: 10.5/35/-9.5/30/15
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -81,7 +81,7 @@ npcs:
 
   - name: "parkour"
     displayname: "template.pk"
-    location: 3.5/35/-14.5/10/15
+    location: 4.5/35/-13.5/10/15
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -99,7 +99,7 @@ npcs:
 
   - name: "hungergame"
     displayname: "template.hg"
-    location: -3.5/35/-14.5/350/15
+    location: -3.5/35/-13.5/350/15
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -117,7 +117,7 @@ npcs:
 
   - name: "murder"
     displayname: "template.md"
-    location: -9.5/35/-10.5/320/15
+    location: -9.5/35/-9.5/320/15
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -135,7 +135,7 @@ npcs:
 
   - name: "bedwar"
     displayname: "template.bw"
-    location: -12.5/35/-3.5/270/15
+    location: -12.5/35/-2.5/270/15
     type : "Player"
     size : 1
     skin: "Dryad"
