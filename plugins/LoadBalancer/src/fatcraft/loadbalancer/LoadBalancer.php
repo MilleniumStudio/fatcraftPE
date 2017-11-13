@@ -4,6 +4,7 @@ namespace fatcraft\loadbalancer;
 
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\player\PlayerKickEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\server\QueryRegenerateEvent;
 use pocketmine\event\player\PlayerTransferEvent;
@@ -586,7 +587,33 @@ class LoadBalancer extends PluginBase implements Listener
         }
     }
 
-    public function balancePlayer(Player $p_Player, string $p_Type, int $p_Id = -1, bool $p_Kick = false):bool
+    /**
+     * @param PlayerJoinEvent $p_Event
+     *
+     * @priority HIGH
+     */
+    public function onPlayerKickEvent(PlayerKickEvent $p_Event)
+    {
+        if ($this->getConfig()->getNested("redirect.to_type") != false)
+        {
+            $p_Event->setCancelled(true);
+            try
+            {
+                $this->balancePlayer($p_Event->getPlayer(), $this->getConfig()->getNested("redirect.to_type"), -1, true, $p_Event->getReason());
+            }
+            catch (Exception $ex)
+            {
+                $p_Event->getPlayer()->kick("Problem occured on LoadBalancer !", false);
+            }
+        }
+        else
+        {
+            // TODO check Transfert table
+            $this->insertPlayer($p_Event->getPlayer());
+        }
+    }
+
+    public function balancePlayer(Player $p_Player, string $p_Type, int $p_Id = -1, bool $p_Kick = false, string $p_Reason = ""):bool
     {
         $server = null;
         if ($p_Id == -1)
@@ -613,7 +640,7 @@ class LoadBalancer extends PluginBase implements Listener
             }
             else
             {
-                $this->transferPlayer($p_Player, $l_Event->getIp(), $l_Event->getPort(), $this->getConfig()->getNested("redirect.message"));
+                $this->transferPlayer($p_Player, $l_Event->getIp(), $l_Event->getPort(), $p_Reason != "" ? $p_Reason : $this->getConfig()->getNested("redirect.message"));
             }
 	    return true;
         }
