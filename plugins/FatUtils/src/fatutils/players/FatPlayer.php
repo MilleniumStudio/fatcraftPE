@@ -40,7 +40,7 @@ class FatPlayer
     private $m_Player;
     private $m_Name;
     private $m_State = 0;
-    private $m_HasLost = false;
+    private $m_OutOfGame = false;
 
     private $m_Data = [];
 
@@ -89,14 +89,14 @@ class FatPlayer
         return $this->m_State === FatPlayer::PLAYER_STATE_WAITING;
     }
 
-    public function hasLost()
+    public function isOutOfGame()
     {
-        return $this->m_HasLost;
+        return $this->m_OutOfGame;
     }
 
-    public function setHasLost(bool $p_HasLost = true)
+    public function setOutOfGame(bool $p_OutOfGame = true)
     {
-        $this->m_HasLost = $p_HasLost;
+        $this->m_OutOfGame = $p_OutOfGame;
     }
 
     public function addData(string $p_Key, $value)

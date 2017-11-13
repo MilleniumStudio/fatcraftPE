@@ -162,8 +162,8 @@ class BoatRacer extends PluginBase implements Listener
 
 	public function playerFinish(Player $p_Player)
 	{
-		PlayersManager::getInstance()->getFatPlayer($p_Player)->setHasLost();
-		$l_PlayerPos = GameManager::getInstance()->getPlayerNbrAtStart() - PlayersManager::getInstance()->getAlivePlayerLeft();
+		PlayersManager::getInstance()->getFatPlayer($p_Player)->setOutOfGame();
+		$l_PlayerPos = GameManager::getInstance()->getPlayerNbrAtStart() - PlayersManager::getInstance()->getInGamePlayerLeft();
 		FatUtils::getInstance()->getLogger()->info($p_Player->getName() . " finished at " . $l_PlayerPos);
 
 		// Applying reward
@@ -336,7 +336,7 @@ class BoatRacer extends PluginBase implements Listener
 
 		$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Event->getPlayer());
 		if ($l_FatPlayer != null)
-			$l_FatPlayer->setHasLost();
+			$l_FatPlayer->setOutOfGame();
 
 		Sidebar::getInstance()->update();
 

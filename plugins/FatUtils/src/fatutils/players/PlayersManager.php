@@ -146,23 +146,23 @@ class PlayersManager
 		return null;
 	}
 
-	public function getAlivePlayerLeft(): int
+	public function getInGamePlayerLeft(): int
 	{
 		$i = 0;
 		foreach ($this->m_FatPlayers as $l_FatPlayer)
 		{
-			if ($l_FatPlayer instanceof FatPlayer && !$l_FatPlayer->hasLost())
+			if ($l_FatPlayer instanceof FatPlayer && !$l_FatPlayer->isOutOfGame())
 				$i++;
 		}
 		return $i;
 	}
 
-	public function getAlivePlayers(): array
+	public function getInGamePlayers(): array
 	{
 		$l_Ret = [];
 		foreach ($this->m_FatPlayers as $l_FatPlayer)
 		{
-			if ($l_FatPlayer instanceof FatPlayer && !$l_FatPlayer->hasLost())
+			if ($l_FatPlayer instanceof FatPlayer && !$l_FatPlayer->isOutOfGame())
 				$l_Ret[] = $l_FatPlayer;
 		}
 		return $l_Ret;
