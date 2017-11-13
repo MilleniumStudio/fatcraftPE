@@ -40,8 +40,8 @@ class SaveSubCommand extends SubCommand{
 		foreach (Loader::getMapUtils()->getAllCachedMaps() as $cachedMap){
 			$cachedMap->save();
 //			API::saveMapToImage($cachedMap);
-			API::exportToPNG($cachedMap);
-		};
+			#API::exportToPNG($cachedMap);
+		}
 		$sender->sendMessage(TextFormat::GREEN . 'All maps should be saved to NBT now.');
 		return true;
 	}

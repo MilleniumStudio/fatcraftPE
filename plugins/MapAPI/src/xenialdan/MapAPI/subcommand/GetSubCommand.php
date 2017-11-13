@@ -5,7 +5,7 @@ namespace xenialdan\MapAPI\subcommand;
 use pocketmine\command\CommandSender;
 use pocketmine\item\Item;
 use pocketmine\nbt\tag\CompoundTag;
-use pocketmine\nbt\tag\StringTag;
+use pocketmine\nbt\tag\LongTag;
 use pocketmine\network\mcpe\protocol\ClientboundMapItemDataPacket;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
@@ -50,7 +50,7 @@ class GetSubCommand extends SubCommand{
 		$id = $args[0];
 			$map = Loader::getMapUtils()->getCachedMap($id);
 			$tag = new CompoundTag("", []);
-			$tag->map_uuid = new StringTag("map_uuid", strval($id));
+			$tag->map_uuid = new LongTag("map_uuid", $id);
 			$map->setCompoundTag($tag);
 			$player->getInventory()->addItem($map);
 			$map->update(ClientboundMapItemDataPacket::BITFLAG_TEXTURE_UPDATE);

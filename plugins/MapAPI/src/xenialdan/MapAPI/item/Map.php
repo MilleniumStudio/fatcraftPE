@@ -3,14 +3,7 @@
 namespace xenialdan\MapAPI\item;
 
 use pocketmine\item\Item;
-use pocketmine\nbt\tag\ByteArrayTag;
-use pocketmine\nbt\tag\CompoundTag;
-use pocketmine\nbt\tag\StringTag;
-use pocketmine\nbt\tag\ShortTag;
-use pocketmine\nbt\tag\IntTag;
-use pocketmine\nbt\tag\IntArrayTag;
-use pocketmine\nbt\tag\ListTag;
-use pocketmine\nbt\tag\ByteTag;
+use pocketmine\nbt\tag\LongTag;
 use pocketmine\network\mcpe\protocol\ClientboundMapItemDataPacket;
 use pocketmine\Server;
 use pocketmine\utils\Color;
@@ -41,33 +34,6 @@ class Map extends Item{
 		$this->decorations = $decorations;
 		$this->xOffset = $xOffset;
 		$this->yOffset = $yOffset;
-
-//                $buffer = "";
-//                if (count($colors) > 0)
-//                {
-//                    for($y = 0; $y < $this->height; ++$y){
-//                        for($x = 0; $x < $this->width; ++$x){
-//                            $buffer .= \pocketmine\utils\Binary::writeUnsignedVarInt($this->colors[$y][$x]->toABGR());
-//                        }
-//                    }
-//                }
-//
-//                $this->setCompoundTag(
-//                    new CompoundTag("", [
-//                        new IntTag("map_uuid", $map_id),
-//                        new ByteTag("scale", $scale),
-//                        new ByteTag("dimension", 0),//maybe todo
-//                        new ShortTag("width", $width),
-//                        new ShortTag("height", $height),
-//                        new ByteTag("fullyExplored", 1),//maybe to have transparency instead of the map background
-//                        new ByteTag("trackingPosition", 0),
-//                        new ByteTag("unlimitedTracking", 0),
-//                        new IntTag("xCenter", $xOffset),//maybe todo
-//                        new IntTag("zCenter", $yOffset),//maybe todo
-//                        new ByteArrayTag("colors", $buffer),
-//                        new ListTag("decorations", $decorations)
-//                    ])
-//                );
 		$this->update(ClientboundMapItemDataPacket::BITFLAG_TEXTURE_UPDATE);
 		Loader::getMapUtils()->cacheMap($this);
 	}
@@ -76,12 +42,12 @@ class Map extends Item{
 	 * @return int $id
 	 */
 	public function getMapId(){
-		return intval($this->map_id === -1 ? $this->getNamedTagEntry('map_uuid')->getValue() : $this->map_id);
+		return $this->map_id === -1 ? $this->getNamedTagEntry('map_uuid')->getValue() : $this->map_id;
 	}
 
 	public function setMapId(int $map_id){
 		$this->map_id = $map_id;
-		$this->setNamedTagEntry(new IntTag("map_uuid", $map_id));
+		$this->setNamedTagEntry(new LongTag("map_uuid", $map_id));
 	}
 
 	public function getScale(){
@@ -171,19 +137,11 @@ class Map extends Item{
 
 	public function setColors(array $colors){
 		$this->colors = $colors;
-//                $buffer = "";
-//                for($y = 0; $y < $this->height; ++$y){
-//                    for($x = 0; $x < $this->width; ++$x){
-//                        $buffer .= \pocketmine\utils\Binary::writeUnsignedVarInt($this->colors[$y][$x]->toABGR());
-//                    }
-//                }
-//                $this->setNamedTagEntry(new ByteArrayTag("colors", $buffer));
 		$this->update(ClientboundMapItemDataPacket::BITFLAG_TEXTURE_UPDATE);
 	}
 
 	public function setColorAt(Color $color, int $x, int $y){
 		$this->colors[$y][$x] = $color;
-                $this->setColors($this->colors);
 		$this->update(ClientboundMapItemDataPacket::BITFLAG_TEXTURE_UPDATE);
 	}
 

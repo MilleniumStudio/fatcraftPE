@@ -3,7 +3,7 @@
 namespace xenialdan\MapAPI\task;
 
 use pocketmine\scheduler\PluginTask;
-use xenialdan\MapAPI\Loader;
+use xenialdan\ItemStacks\Loader;
 
 class AsyncGenerateTask extends PluginTask{
 	/** @var Loader $plugin */

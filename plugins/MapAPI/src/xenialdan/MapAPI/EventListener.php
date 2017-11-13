@@ -38,7 +38,7 @@ class EventListener implements Listener{
 		switch ($packet::NETWORK_ID){
 			case MapInfoRequestPacket::NETWORK_ID:
 				/** @var MapInfoRequestPacket $packet */
-				$path = Loader::$path['maps'] . '/map_' . $packet->mapId . ".dat";
+				$path = Loader::$path['maps'] . '/map_' . $packet->mapId;
 				if (!is_null($map = $this->owner::getMapUtils()->getCachedMap($packet->mapId))){
 					$map->update(ClientboundMapItemDataPacket::BITFLAG_TEXTURE_UPDATE);
 				} elseif ($packet->mapId == -1 || !file_exists($path)){
