@@ -4,7 +4,7 @@ MAP_REPOSITORY="`pwd`/worlds"
 source env.sh
 
 # function to quickly start a network container
-# start_docker <name> <port> <image> <map>
+# start_docker <name> <id> <port> <image> <map>
 start_docker()
 {
     docker run \
@@ -22,39 +22,43 @@ start_docker()
  -d $4
 }
 
-# start front load-balancer
-#docker run \
-#--rm --name lb-1 \
-#--hostname lb-1 \
-#--link mysql:mysql \
-#--env MYSQL_HOST=$MYSQL_HOST \
-#--env MYSQL_PORT=$MYSQL_PORT \
-#--env MYSQL_USER=$MYSQL_USER \
-#--env MYSQL_PASS=$MYSQL_PASS \
-#--env MYSQL_DATA=$MYSQL_DATA \
-#--publish 19132:19132 \
-#--publish 19132:19132/udp \
-#-d fatcraft/pocketmine:lb
-
-#cd tools/FatForward/binaries
-#screen -dmS FatForward loadbalancer.sh
-#cd ../../../
-
 # start lobbies
 start_docker lobby 1 19133 fatcraft/pocketmine:lobby lobby/lobby_bones
 start_docker lobby 2 19134 fatcraft/pocketmine:lobby lobby/lobby_bones
+start_docker lobby 3 19135 fatcraft/pocketmine:lobby lobby/lobby_bones
+start_docker lobby 4 19136 fatcraft/pocketmine:lobby lobby/lobby_bones
+start_docker lobby 5 19137 fatcraft/pocketmine:lobby lobby/lobby_bones
+start_docker lobby 6 19138 fatcraft/pocketmine:lobby lobby/lobby_bones
+start_docker lobby 7 19139 fatcraft/pocketmine:lobby lobby/lobby_bones
+start_docker lobby 8 19140 fatcraft/pocketmine:lobby lobby/lobby_bones
+start_docker lobby 9 19141 fatcraft/pocketmine:lobby lobby/lobby_bones
+start_docker lobby 10 19142 fatcraft/pocketmine:lobby lobby/lobby_bones
 
 # start games
-start_docker hg 1 19135 fatcraft/pocketmine:hg-1 hg/HGMapSpaceship
-start_docker pk 1 19136 fatcraft/pocketmine:pk-1 parkour/giantHouse
-start_docker sw 1 19137 fatcraft/pocketmine:sw-1 sw/sw-end
-start_docker sw 2 19138 fatcraft/pocketmine:sw-2 sw/sw-alien
-start_docker sw 3 19139 fatcraft/pocketmine:sw-3 sw/sw-krum-1
-start_docker bw 1 19140 fatcraft/pocketmine:bw-1 bw/map1-4x3
-start_docker bw 2 19141 fatcraft/pocketmine:bw-2 bw/bw-krum
-start_docker md 1 19142 fatcraft/pocketmine:md-1 md/murder_krum
-start_docker br 1 19143 fatcraft/pocketmine:br-1 br/WipeOut_01_build4
+start_docker hg 1 19143 fatcraft/pocketmine:hg-1 hg/HGMapSpaceship
+start_docker hg 2 19144 fatcraft/pocketmine:hg-1 hg/HGMapSpaceship
 
+start_docker pk 1 19145 fatcraft/pocketmine:pk-1 parkour/giantHouse
+
+start_docker sw 1 19146 fatcraft/pocketmine:sw-1 sw/sw-end
+start_docker sw 2 19147 fatcraft/pocketmine:sw-1 sw/sw-end
+start_docker sw 3 19148 fatcraft/pocketmine:sw-2 sw/sw-alien
+start_docker sw 4 19149 fatcraft/pocketmine:sw-2 sw/sw-alien
+#start_docker sw 5 19150 fatcraft/pocketmine:sw-3 sw/sw-alien
+#start_docker sw 6 19151 fatcraft/pocketmine:sw-3 sw/sw-alien
+
+start_docker bw 1 19152 fatcraft/pocketmine:bw-1 bw/map1-4x3
+start_docker bw 2 19153 fatcraft/pocketmine:bw-1 bw/map1-4x3
+start_docker bw 3 19154 fatcraft/pocketmine:bw-2 bw/bw-krum
+start_docker bw 4 19155 fatcraft/pocketmine:bw-2 bw/bw-krum
+
+start_docker md 1 19156 fatcraft/pocketmine:md-1 md/murder_krum
+start_docker md 2 19157 fatcraft/pocketmine:md-1 md/murder_krum
+
+start_docker br 1 19158 fatcraft/pocketmine:br-1 br/WipeOut_01_build4
+start_docker br 2 19159 fatcraft/pocketmine:br-1 br/WipeOut_01_build4
+
+screen -dmS FatFoward ./tools/FatForward/startFatForward
 
 ## DEBUG
 #docker run --rm --name lobby-1 --hostname lobby-1 --env SERVER_NAME=lobby-1 --env SERVER_PORT=19132 --env SERVER_TYPE=lobby --env SERVER_ID=1 --env SERVER_MAP=mainLobby --publish 19132:19132 --publish 19132:19132/udp --link mysql:mysql --volume `pwd`/worlds:/home/minecraft/map_repository:ro -ti fatcraft/pocketmine:lobby

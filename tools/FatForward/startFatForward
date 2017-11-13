@@ -1,0 +1,7 @@
+export MYSQL_PORT=3306
+export MYSQL_USER="balancer"
+export MYSQL_PASS="wd5f64b4vdf654vb5df4bv564dfgb5dfg64bv65dfg4"
+export MYSQL_DATA="fatcraft_pe"
+export SERVER_IP="mysql"
+
+mono ./tools/FatForward/binaries/FatForward.exe
