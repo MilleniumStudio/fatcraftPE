@@ -55,6 +55,8 @@ namespace FatForward
 
             while (true)
             {
+                GlobalVars.g_ServerStatus.Clear();
+
                 //Create Command
                 MySqlCommand cmd = new MySqlCommand(l_Query, l_Connection);
                 //Create a data reader and Execute the command
@@ -72,7 +74,7 @@ namespace FatForward
                     l_debug++;
                 }
                 dataReader.Close();
-                Thread.Sleep(3000);
+                Thread.Sleep(100);
             }
         }
     }
