@@ -163,6 +163,9 @@ class ScoresManager
 			$l_FatPlayer = PlayersManager::getInstance()->getFatPlayerByUUID($p_PlayerUuid);
 
 			$l_Rewards = FatUtils::getInstance()->getTemplateConfig()->get(ScoresManager::OPTION_KEY_REWARDS_ROOT);
+			if ($l_Rewards === false)
+				$l_Rewards = [ScoresManager::OPTION_KEY_MAX_XP_REWARD => 1000, ScoresManager::OPTION_KEY_MAX_FATSILVER_REWARD => 100];
+
 			$l_FatsilverReward = (is_null($this->m_MaxFatsilverReward) ? (array_key_exists(ScoresManager::OPTION_KEY_MAX_FATSILVER_REWARD, $l_Rewards) ? $l_Rewards[ScoresManager::OPTION_KEY_MAX_FATSILVER_REWARD] : 0) : $this->m_MaxFatsilverReward);
 			$l_FatgoldReward = (is_null($this->m_MaxFatgoldReward) ? (array_key_exists(ScoresManager::OPTION_KEY_MAX_FATGOLD_REWARD, $l_Rewards) ? $l_Rewards[ScoresManager::OPTION_KEY_MAX_FATGOLD_REWARD] : 0) : $this->m_MaxFatgoldReward);
 			$l_XpReward = (is_null($this->m_MaxXpReward) ? (array_key_exists(ScoresManager::OPTION_KEY_MAX_XP_REWARD, $l_Rewards) ? $l_Rewards[ScoresManager::OPTION_KEY_MAX_XP_REWARD] : 0) : $this->m_MaxXpReward);
@@ -172,9 +175,9 @@ class ScoresManager
 			$l_XpReward = round($l_XpReward * $p_RewardRatio);
 
 			$this->recordScore($p_PlayerUuid, round($p_RewardRatio * 100), [
-				"fatSilver" => $l_FatsilverReward,
-				"fatGold" => $l_FatgoldReward,
-				"xp" => $l_XpReward,
+				ScoresManager::OPTION_KEY_MAX_FATSILVER_REWARD => $l_FatsilverReward,
+				ScoresManager::OPTION_KEY_MAX_FATGOLD_REWARD => $l_FatgoldReward,
+				ScoresManager::OPTION_KEY_MAX_XP_REWARD => $l_XpReward,
 			]);
 
 			if ($l_Player != null && $l_Player->isOnline() && $l_FatPlayer != null)
