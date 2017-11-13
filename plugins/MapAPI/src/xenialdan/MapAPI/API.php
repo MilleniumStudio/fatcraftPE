@@ -459,17 +459,22 @@ class API{
 		$colors = [];
 		$image = @imagecreatefrompng(Loader::$path['images']. '/' . $png . '.png');
 		if ($image !== false){
-			$ratio = imagesx($image) / imagesy($image);
-			if ($ratio > 1){
-				$width = $max;
-				$height = $max / $ratio;
-			} else{
-				$width = $max * $ratio;
-				$height = $max;
-			}
-			$image = imagescale($image, $width, $height, IMG_NEAREST_NEIGHBOUR);
 			$width = imagesx($image);
 			$height = imagesy($image);
+                        if ($width != $height)
+                        {
+                            Server::getInstance()->getLogger()->error('Wasn\'t able to create the map, image is not a square !');
+                            return false;
+                        }
+//			$ratio = $width / $height;
+//			if ($ratio > 1){
+//				$width = $max;
+//				$height = intval($max / $ratio);
+//			} else{
+//				$width = intval($max * $ratio);
+//				$height = $max;
+//			}
+			$image = imagescale($image, $width, $height, IMG_NEAREST_NEIGHBOUR);
 			for ($y = 0; $y < $height; ++$y){
 				for ($x = 0; $x < $width; ++$x){
 					$color = imagecolorsforindex($image, imagecolorat($image, $x, $y));
