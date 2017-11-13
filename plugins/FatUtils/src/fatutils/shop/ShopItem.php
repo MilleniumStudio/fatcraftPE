@@ -10,6 +10,7 @@ namespace fatutils\shop;
 
 
 use fatutils\tools\ArrayUtils;
+use pocketmine\entity\Entity;
 use pocketmine\Player;
 
 abstract class ShopItem
@@ -17,26 +18,26 @@ abstract class ShopItem
 	const SLOT_PET = "pet";
 	const SLOT_PARTICLE = "particle";
 
-	private $m_Player = null;
+	private $m_Entity = null;
 	private $m_Key = null;
 	private $m_Data = null;
 
-	public static function createShopItem(Player $p_Player, string $p_ShopItemKey, array $p_Data): ShopItem
+	public static function createShopItem(Entity $p_Entity, string $p_ShopItemKey, array $p_Data): ShopItem
 	{
 		$l_Class = $p_Data["class"];
-		return new $l_Class($p_Player, $p_ShopItemKey, $p_Data);
+		return new $l_Class($p_Entity, $p_ShopItemKey, $p_Data);
 	}
 
-	public function __construct(Player $p_Player, string $p_ShopItemKey, array $p_Data = [])
+	public function __construct(Entity $p_Entity, string $p_ShopItemKey, array $p_Data = [])
 	{
-		$this->m_Player = $p_Player;
+		$this->m_Entity = $p_Entity;
 		$this->m_Key = $p_ShopItemKey;
 		$this->m_Data = $p_Data;
 	}
 
-	public function getPlayer(): Player
+	public function getEntity(): Entity
 	{
-		return $this->m_Player;
+		return $this->m_Entity;
 	}
 
 	public function getKey(): string

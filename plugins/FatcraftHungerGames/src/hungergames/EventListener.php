@@ -30,10 +30,10 @@ class EventListener implements Listener
         $p = $e->getEntity();
         if (!GameManager::getInstance()->isWaiting())
         {
-            PlayersManager::getInstance()->getFatPlayer($p)->setHasLost(true);
+            PlayersManager::getInstance()->getFatPlayer($p)->setOutOfGame(true);
 
             WorldUtils::addStrike($p->getLocation());
-            $l_PlayerLeft = PlayersManager::getInstance()->getAlivePlayerLeft();
+            $l_PlayerLeft = PlayersManager::getInstance()->getInGamePlayerLeft();
 
             ScoresManager::getInstance()->giveRewardToPlayer($p->getUniqueId(), ((GameManager::getInstance()->getPlayerNbrAtStart() - $l_PlayerLeft) / GameManager::getInstance()->getPlayerNbrAtStart()));
 
@@ -41,7 +41,7 @@ class EventListener implements Listener
             {
                 $l_Player->sendMessage($e->getDeathMessage());
                 if ($l_PlayerLeft > 1)
-                    $l_Player->sendMessage("Il reste " . TextFormat::YELLOW . PlayersManager::getInstance()->getAlivePlayerLeft() . TextFormat::RESET . " survivants !");
+                    $l_Player->sendMessage("Il reste " . TextFormat::YELLOW . PlayersManager::getInstance()->getInGamePlayerLeft() . TextFormat::RESET . " survivants !");
             }
 
             if ($l_PlayerLeft <= 1 && !GameManager::getInstance()->isGameFinished())

@@ -149,6 +149,9 @@ class NpcsManager implements Listener, CommandExecutor
                         case "NPCFunctionCounter":
                             $entity->function = new functions\NPCFunctionCounter($entity);
                             break;
+                        case "NPCFunctionShop":
+                            $entity->function = new functions\NPCFunctionShop($entity);
+                            break;
 
                         default:
                             break;
@@ -208,6 +211,7 @@ class NpcsManager implements Listener, CommandExecutor
         }
         $entity->namedtag->npcName = $name;
         $entity->setNameTag($displayname);
+        WorldUtils::forceLoadChunk($p_Location);
         $p_Location->getLevel()->addEntity($entity);
         $this->m_RegisteredNPCS[$name] = $entity;
         $entity->spawnToAll();
@@ -226,7 +230,6 @@ class NpcsManager implements Listener, CommandExecutor
 
     public function updateNPC(Entity $p_Entity)
     {
-        FatUtils::getInstance()->getLogger()->info("[NPCS] update " . $p_Entity->getId());
         $p_Entity->sendData($p_Entity->getViewers());
     }
 
@@ -261,7 +264,8 @@ class NpcsManager implements Listener, CommandExecutor
                     }
                 }
                     break;
-                case "stop": {
+                case "reload": {
+                    
                 }
                     break;
             }

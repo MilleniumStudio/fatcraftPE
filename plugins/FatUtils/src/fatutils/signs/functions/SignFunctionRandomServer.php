@@ -68,14 +68,7 @@ class SignFunctionRandomServer extends SignFunction
 
     public function onInterract(Player $player, int $p_Index = -1)
     {
-        if ($this->canJoin and $player->hasPermission("sign.network.serverjoin"))
-        {
-            LoadBalancer::getInstance()->balancePlayer($player, $this->type);
-        }
-        else
-        {
-            $player->sendMessage((new \fatutils\tools\TextFormatter("game.status.joinnotnow"))->asStringForPlayer($player));
-        }
+        LoadBalancer::getInstance()->balancePlayer($player, $this->type);
     }
 }
 

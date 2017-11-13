@@ -157,7 +157,7 @@ class HungerGame extends PluginBase implements Listener
 			->setTitle(new TextFormatter("timer.playing.title"))
 			->addStopCallback(function ()
 			{
-				if (PlayersManager::getInstance()->getAlivePlayerLeft() <= 1)
+				if (PlayersManager::getInstance()->getInGamePlayerLeft() <= 1)
 					$this->endGame();
 				else
 				{
@@ -179,7 +179,7 @@ class HungerGame extends PluginBase implements Listener
 			->addWhiteSpace()
 			->addMutableLine(function ()
 			{
-				return new TextFormatter("hungergame.alivePlayer", ["nbr" => PlayersManager::getInstance()->getAlivePlayerLeft()]);
+				return new TextFormatter("hungergame.alivePlayer", ["nbr" => PlayersManager::getInstance()->getInGamePlayerLeft()]);
 			});
 
 		// FILLING UP CHEST
@@ -217,7 +217,7 @@ class HungerGame extends PluginBase implements Listener
 
 		GameManager::getInstance()->endGame();
 
-		$winners = PlayersManager::getInstance()->getAlivePlayers();
+		$winners = PlayersManager::getInstance()->getInGamePlayers();
 		$winnerName = "";
 		if (count($winners) > 0)
 		{
@@ -242,7 +242,7 @@ class HungerGame extends PluginBase implements Listener
 			->addStopCallback(function ()
 			{
 				foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-					LoadBalancer::getInstance()->balancePlayer($l_Player, "lobby");
+					LoadBalancer::getInstance()->balancePlayer($l_Player, LoadBalancer::TEMPLATE_TYPE_LOBBY);
 
 				new DelayedExec(function ()
 				{
@@ -257,6 +257,12 @@ class HungerGame extends PluginBase implements Listener
 	//---------------------
 	public function playerQuitEvent(PlayerQuitEvent $e)
 	{
+		$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($e->getPlayer());
+		if ($l_FatPlayer != null)
+			$l_FatPlayer->setOutOfGame();
+
+		Sidebar::getInstance()->update();
+
 		new DelayedExec(function ()
 		{
 			if (GameManager::getInstance()->isWaiting())

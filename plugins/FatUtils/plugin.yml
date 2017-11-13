@@ -11,13 +11,13 @@ commands:
     usage: "/fu"
     aliases: ["fu"]
   gps:
-    description: "do stuff"
+    description: "print your position"
     permission: command.gps
   firestorm:
     aliases: ["fs"]
-    description: "do stuff"
+    description: "Merge you fatcraft acount with your firestorm account"
   lang:
-    description: "do stuff"
+    description: "Display the language menu"
   perms:
     permission: perms
     description: "permissions commands"
@@ -32,11 +32,14 @@ commands:
   pet:
       description: "debug commands for pets"
   skin:
-      description: "debug commands for pets"
+      description: "debug commands for skins"
       permission: command.skin
   npcs:
-      description: "debug commands for pets"
+      description: "debug commands for npcs"
       permission: command.npcs
   sign:
-      description: "debug commands for pets"
+      description: "debug commands for signs"
       permission: command.npcs
+  pwr:
+      description: "debug commands for powers"
+      permission: command.powers

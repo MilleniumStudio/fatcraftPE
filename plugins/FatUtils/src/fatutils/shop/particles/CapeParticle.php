@@ -47,36 +47,36 @@ class CapeParticle extends ShopItem
 
 		$this->m_MainLoop = new LoopedExec(function ()
 		{
-			$l_PlayerPosition = $this->getPlayer()->getLocation();
+			$l_PlayerPosition = $this->getEntity()->getLocation();
 
-			$l_PlayerSpeed = $this->getPlayer()->getSpeedVector()->length();
+			$l_PlayerSpeed = $this->getEntity()->getSpeedVector()->length();
 
 			$l_Positions = [];
 
 			$l_Angle = 180;
 			$l_Center = GeometryUtils::relativeToLocation($l_PlayerPosition, 0, 0, 0.5 + ($l_PlayerSpeed * 2));
-			$l_base = GeometryUtils::relativeToLocation(Location::fromObject($l_Center, $this->getPlayer()->getLocation()->getLevel(), $this->getPlayer()->getLocation()->getYaw()), 0, $l_Angle, 0.8);
+			$l_base = GeometryUtils::relativeToLocation(Location::fromObject($l_Center, $this->getEntity()->getLocation()->getLevel(), $this->getEntity()->getLocation()->getYaw()), 0, $l_Angle, 0.8);
 
 			$l_Positions[] = $l_base;
 
 			for ($i = 0; $i < 5; $i++)
 			{
 				$l_Angle -= 6;
-				$l_Positions[] = GeometryUtils::relativeToLocation(Location::fromObject($l_Center, $this->getPlayer()->getLocation()->getLevel(), $this->getPlayer()->getLocation()->getYaw()), 0, $l_Angle, 0.8);
+				$l_Positions[] = GeometryUtils::relativeToLocation(Location::fromObject($l_Center, $this->getEntity()->getLocation()->getLevel(), $this->getEntity()->getLocation()->getYaw()), 0, $l_Angle, 0.8);
 			}
 
 			$l_Angle = 180;
 			for ($i = 0; $i < 5; $i++)
 			{
 				$l_Angle += 6;
-				$l_Positions[] = GeometryUtils::relativeToLocation(Location::fromObject($l_Center, $this->getPlayer()->getLocation()->getLevel(), $this->getPlayer()->getLocation()->getYaw()), 0, $l_Angle, 0.8);
+				$l_Positions[] = GeometryUtils::relativeToLocation(Location::fromObject($l_Center, $this->getEntity()->getLocation()->getLevel(), $this->getEntity()->getLocation()->getYaw()), 0, $l_Angle, 0.8);
 			}
 
 			$l_Level = $l_PlayerPosition->getLevel();
 			foreach ($l_Positions as $l_Pos)
 			{
 				if ($l_Pos instanceof Vector3)
-					$l_Level->addParticle(new DustParticle($l_Pos->add(0, ($this->getPlayer()->isSneaking() ? 1.30 : 1.50)), $this->rColor, $this->gColor, $this->bColor));
+					$l_Level->addParticle(new DustParticle($l_Pos->add(0, ($this->getEntity()->isSneaking() ? 1.30 : 1.50)), $this->rColor, $this->gColor, $this->bColor));
 			}
 		}, 2);
 	}

@@ -203,10 +203,10 @@ class Murder extends PluginBase implements Listener
 			->addTimer($this->m_PlayTimer)
 			->addWhiteSpace()
 			->addMutableLine(function (Player $player) {
-				return (new TextFormatter("murder.nbAlivedPlayers"))->addParam("nb", PlayersManager::getInstance()->getAlivePlayerLeft() - 1)->asStringForPlayer($player);
+				return (new TextFormatter("murder.nbAlivedPlayers"))->addParam("nb", PlayersManager::getInstance()->getInGamePlayerLeft() - 1)->asStringForPlayer($player);
 			})
 			->addMutableLine(function (Player $player) {
-				return ($this->m_murdererUUID != null && $this->m_murdererUUID->equals($player->getUniqueId())) ? (new TextFormatter("murder.youarethemurderer"))->addParam("nb", PlayersManager::getInstance()->getAlivePlayerLeft())->asStringForPlayer($player) : "";
+				return ($this->m_murdererUUID != null && $this->m_murdererUUID->equals($player->getUniqueId())) ? (new TextFormatter("murder.youarethemurderer"))->addParam("nb", PlayersManager::getInstance()->getInGamePlayerLeft())->asStringForPlayer($player) : "";
 			});
 
         foreach (Server::getInstance()->getOnlinePlayers() as $player) {
@@ -220,7 +220,7 @@ class Murder extends PluginBase implements Listener
     {
         if (Server::getInstance()->getTick() % 80 == 0) {
             /** @var FatPlayer $fPlayer */
-            foreach (PlayersManager::getInstance()->getAlivePlayers() as $fPlayer) {
+            foreach (PlayersManager::getInstance()->getInGamePlayers() as $fPlayer) {
                 $hasBow = false;
                 $hasArrow = false;
                 if (!$fPlayer->getPlayer()->isConnected())
@@ -299,7 +299,7 @@ class Murder extends PluginBase implements Listener
             ->setTitle(new TextFormatter("timer.returnToLobby"))
             ->addStopCallback(function () {
                 foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player) {
-                    LoadBalancer::getInstance()->balancePlayer($l_Player, "lobby");
+                    LoadBalancer::getInstance()->balancePlayer($l_Player, LoadBalancer::TEMPLATE_TYPE_LOBBY);
                 }
             })
             ->start();
@@ -387,7 +387,7 @@ class Murder extends PluginBase implements Listener
     public function playerDeathEvent(PlayerDeathEvent $e)
     {
         $p = $e->getEntity();
-        PlayersManager::getInstance()->getFatPlayer($p)->setHasLost();
+        PlayersManager::getInstance()->getFatPlayer($p)->setOutOfGame();
 
         $customDeathMessage = "";
 
@@ -405,7 +405,7 @@ class Murder extends PluginBase implements Listener
             $this->endGameLambdas($killer);
         } else {
             $customDeathMessage = $p->getName() . " a été tué";
-            if (PlayersManager::getInstance()->getAlivePlayerLeft() <= 1) {
+            if (PlayersManager::getInstance()->getInGamePlayerLeft() <= 1) {
                 $this->m_playersKilled++;
                 // endgame, murderer wins
                 $this->endGameMurderer();

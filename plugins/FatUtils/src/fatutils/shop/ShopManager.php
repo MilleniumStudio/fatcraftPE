@@ -191,119 +191,123 @@ class ShopManager
 
 	public function getShopItemMenu(string $p_CategoryName, ShopItem $p_ShopItem): Window
 	{
-		$l_Player = $p_ShopItem->getPlayer();
-		$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_ShopItem->getPlayer());
-
-		$l_Ret = new ButtonWindow($l_Player);
-		$l_Ret->setTitle((new TextFormatter($p_ShopItem->getName()))->asStringForFatPlayer($l_FatPlayer));
-
-		if ($p_ShopItem->getDescription() != null)
-			$l_Ret->setContent((new TextFormatter($p_ShopItem->getDescription()))->asStringForFatPlayer($l_FatPlayer));
-
-		if (!$l_FatPlayer->isBought($p_ShopItem))
+		$l_Player = $p_ShopItem->getEntity();
+		if ($l_Player instanceof Player)
 		{
-			if ($p_ShopItem->getFatsilverPrice() > -1)
+			$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($l_Player);
+
+			$l_Ret = new ButtonWindow($l_Player);
+			$l_Ret->setTitle((new TextFormatter($p_ShopItem->getName()))->asStringForFatPlayer($l_FatPlayer));
+
+			if ($p_ShopItem->getDescription() != null)
+				$l_Ret->setContent((new TextFormatter($p_ShopItem->getDescription()))->asStringForFatPlayer($l_FatPlayer));
+
+			if (!$l_FatPlayer->isBought($p_ShopItem))
 			{
-				$l_Ret->addPart((new Button())
-					->setText((new TextFormatter("shop.buy"))->asStringForFatPlayer($l_FatPlayer) .
-						" (" . $p_ShopItem->getFatsilverPrice() . " " . (new TextFormatter("currency.fatsilver.short"))->asStringForFatPlayer($l_FatPlayer) . TextFormat::DARK_GRAY . ")" .
-						($l_FatPlayer->getFatsilver() - $p_ShopItem->getFatsilverPrice() < 0 ? "\n" . (new TextFormatter("shop.moneyMissing", [
-								"amount" => abs($l_FatPlayer->getFatsilver() - $p_ShopItem->getFatsilverPrice()),
-								"money" => new TextFormatter("currency.fatsilver.short")
-							]))->asStringForFatPlayer($l_FatPlayer) : "")
-					)
-					->setCallback(function () use ($p_CategoryName, $p_ShopItem, $l_FatPlayer)
-					{
-						if ($l_FatPlayer->getFatsilver() - $p_ShopItem->getFatsilverPrice() >= 0)
-						{
-							$l_FatPlayer->addFatsilver(-$p_ShopItem->getFatsilverPrice());
-							$l_FatPlayer->addBoughtShopItem($p_ShopItem);
-							$l_FatPlayer->getPlayer()->sendMessage((new TextFormatter("shop.bought", ["name" => new TextFormatter($p_ShopItem->getName())]))->asStringForFatPlayer($l_FatPlayer));
-							Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());
-						} else
-							$l_FatPlayer->getPlayer()->sendMessage((new TextFormatter("shop.notEnoughtMoney", ["name" => new TextFormatter($p_ShopItem->getName())]))->asStringForFatPlayer($l_FatPlayer));
-
-						$this->getShopItemMenu($p_CategoryName, $p_ShopItem)->open();
-					})
-				);
-			}
-			if ($p_ShopItem->getFatgoldPrice() > -1)
-			{
-				$l_Ret->addPart((new Button())
-					->setText((new TextFormatter("shop.buy"))->asStringForFatPlayer($l_FatPlayer) .
-						" (" . $p_ShopItem->getFatgoldPrice() . " " . (new TextFormatter("currency.fatgold.short"))->asStringForFatPlayer($l_FatPlayer) . TextFormat::DARK_GRAY . ")" .
-						($l_FatPlayer->getFatgold() - $p_ShopItem->getFatgoldPrice() < 0 ? "\n" . (new TextFormatter("shop.moneyMissing", [
-								"amount" => abs($l_FatPlayer->getFatgold() - $p_ShopItem->getFatgoldPrice()),
-								"money" => new TextFormatter("currency.fatgold.short")
-							]))->asStringForFatPlayer($l_FatPlayer) : ""))
-					->setCallback(function () use ($p_CategoryName, $p_ShopItem, $l_FatPlayer)
-					{
-						if ($l_FatPlayer->getFatgold() - $p_ShopItem->getFatgoldPrice() >= 0)
-						{
-							$l_FatPlayer->addFatgold(-$p_ShopItem->getFatgoldPrice());
-							$l_FatPlayer->addBoughtShopItem($p_ShopItem);
-							Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());
-							$l_FatPlayer->getPlayer()->sendMessage((new TextFormatter("shop.bought", ["name" => new TextFormatter($p_ShopItem->getName())]))->asStringForFatPlayer($l_FatPlayer));
-							Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());
-						} else
-							$l_FatPlayer->getPlayer()->sendMessage((new TextFormatter("shop.notEnoughtMoney", ["name" => new TextFormatter($p_ShopItem->getName())]))->asStringForFatPlayer($l_FatPlayer));
-
-						$this->getShopItemMenu($p_CategoryName, $p_ShopItem)->open();
-					})
-				);
-			}
-
-			$l_Ret->addPart((new Button())
-				->setText((new TextFormatter("shop.preview"))->asStringForFatPlayer($l_FatPlayer))
-				->setCallback(function () use ($p_CategoryName, $p_ShopItem, $l_FatPlayer)
+				if ($p_ShopItem->getFatsilverPrice() > -1)
 				{
-					$p_ShopItem->equip();
-					new DelayedExec(function () use ($p_CategoryName, $p_ShopItem)
-					{
-						if ($p_ShopItem->getPlayer()->isOnline())
+					$l_Ret->addPart((new Button())
+						->setText((new TextFormatter("shop.buy"))->asStringForFatPlayer($l_FatPlayer) .
+							" (" . $p_ShopItem->getFatsilverPrice() . " " . (new TextFormatter("currency.fatsilver.short"))->asStringForFatPlayer($l_FatPlayer) . TextFormat::DARK_GRAY . ")" .
+							($l_FatPlayer->getFatsilver() - $p_ShopItem->getFatsilverPrice() < 0 ? "\n" . (new TextFormatter("shop.moneyMissing", [
+									"amount" => abs($l_FatPlayer->getFatsilver() - $p_ShopItem->getFatsilverPrice()),
+									"money" => new TextFormatter("currency.fatsilver.short")
+								]))->asStringForFatPlayer($l_FatPlayer) : "")
+						)
+						->setCallback(function () use ($p_CategoryName, $p_ShopItem, $l_FatPlayer)
 						{
-							$p_ShopItem->unequip();
+							if ($l_FatPlayer->getFatsilver() - $p_ShopItem->getFatsilverPrice() >= 0)
+							{
+								$l_FatPlayer->addFatsilver(-$p_ShopItem->getFatsilverPrice());
+								$l_FatPlayer->addBoughtShopItem($p_ShopItem);
+								$l_FatPlayer->getPlayer()->sendMessage((new TextFormatter("shop.bought", ["name" => new TextFormatter($p_ShopItem->getName())]))->asStringForFatPlayer($l_FatPlayer));
+								Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());
+							} else
+								$l_FatPlayer->getPlayer()->sendMessage((new TextFormatter("shop.notEnoughtMoney", ["name" => new TextFormatter($p_ShopItem->getName())]))->asStringForFatPlayer($l_FatPlayer));
+
 							$this->getShopItemMenu($p_CategoryName, $p_ShopItem)->open();
-						}
-					}, 5 * 20);
-				})
-			);
-		} else
-		{
-			if (!$l_FatPlayer->isEquipped($p_ShopItem))
-			{
+						})
+					);
+				}
+				if ($p_ShopItem->getFatgoldPrice() > -1)
+				{
+					$l_Ret->addPart((new Button())
+						->setText((new TextFormatter("shop.buy"))->asStringForFatPlayer($l_FatPlayer) .
+							" (" . $p_ShopItem->getFatgoldPrice() . " " . (new TextFormatter("currency.fatgold.short"))->asStringForFatPlayer($l_FatPlayer) . TextFormat::DARK_GRAY . ")" .
+							($l_FatPlayer->getFatgold() - $p_ShopItem->getFatgoldPrice() < 0 ? "\n" . (new TextFormatter("shop.moneyMissing", [
+									"amount" => abs($l_FatPlayer->getFatgold() - $p_ShopItem->getFatgoldPrice()),
+									"money" => new TextFormatter("currency.fatgold.short")
+								]))->asStringForFatPlayer($l_FatPlayer) : ""))
+						->setCallback(function () use ($p_CategoryName, $p_ShopItem, $l_FatPlayer)
+						{
+							if ($l_FatPlayer->getFatgold() - $p_ShopItem->getFatgoldPrice() >= 0)
+							{
+								$l_FatPlayer->addFatgold(-$p_ShopItem->getFatgoldPrice());
+								$l_FatPlayer->addBoughtShopItem($p_ShopItem);
+								Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());
+								$l_FatPlayer->getPlayer()->sendMessage((new TextFormatter("shop.bought", ["name" => new TextFormatter($p_ShopItem->getName())]))->asStringForFatPlayer($l_FatPlayer));
+								Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());
+							} else
+								$l_FatPlayer->getPlayer()->sendMessage((new TextFormatter("shop.notEnoughtMoney", ["name" => new TextFormatter($p_ShopItem->getName())]))->asStringForFatPlayer($l_FatPlayer));
+
+							$this->getShopItemMenu($p_CategoryName, $p_ShopItem)->open();
+						})
+					);
+				}
+
 				$l_Ret->addPart((new Button())
-					->setText((new TextFormatter("shop.equip"))->asStringForFatPlayer($l_FatPlayer))
-					->setImage($p_ShopItem->getImage())
-					->setCallback(function () use ($p_ShopItem, $l_Player)
+					->setText((new TextFormatter("shop.preview"))->asStringForFatPlayer($l_FatPlayer))
+					->setCallback(function () use ($p_CategoryName, $p_ShopItem, $l_FatPlayer)
 					{
-						$this->equipShopItem($l_Player, $p_ShopItem);
+						$p_ShopItem->equip();
+						new DelayedExec(function () use ($p_CategoryName, $p_ShopItem, $l_FatPlayer)
+						{
+							if ($l_FatPlayer->getPlayer()->isOnline())
+							{
+								$p_ShopItem->unequip();
+								$this->getShopItemMenu($p_CategoryName, $p_ShopItem)->open();
+							}
+						}, 5 * 20);
 					})
 				);
 			} else
 			{
-				$l_Ret->addPart((new Button())
-					->setText((new TextFormatter("shop.unequip"))->asStringForFatPlayer($l_FatPlayer))
-					->setImage($p_ShopItem->getImage())
-					->setCallback(function () use ($p_ShopItem, $l_Player)
-					{
-						$l_SlotItem = PlayersManager::getInstance()->getFatPlayer($l_Player)->getSlot($p_ShopItem->getSlotName());
-						if ($l_SlotItem instanceof ShopItem)
-							$this->unequipShopItem($l_Player, $p_ShopItem);
-					})
-				);
+				if (!$l_FatPlayer->isEquipped($p_ShopItem))
+				{
+					$l_Ret->addPart((new Button())
+						->setText((new TextFormatter("shop.equip"))->asStringForFatPlayer($l_FatPlayer))
+						->setImage($p_ShopItem->getImage())
+						->setCallback(function () use ($p_ShopItem, $l_Player)
+						{
+							$this->equipShopItem($l_Player, $p_ShopItem);
+						})
+					);
+				} else
+				{
+					$l_Ret->addPart((new Button())
+						->setText((new TextFormatter("shop.unequip"))->asStringForFatPlayer($l_FatPlayer))
+						->setImage($p_ShopItem->getImage())
+						->setCallback(function () use ($p_ShopItem, $l_Player)
+						{
+							$l_SlotItem = PlayersManager::getInstance()->getFatPlayer($l_Player)->getSlot($p_ShopItem->getSlotName());
+							if ($l_SlotItem instanceof ShopItem)
+								$this->unequipShopItem($l_Player, $p_ShopItem);
+						})
+					);
+				}
 			}
+
+			$l_Ret->addPart((new Button())
+				->setText((new TextFormatter("window.return"))->asStringForPlayer($l_Player))
+				->setCallback(function () use ($p_CategoryName, $l_Player)
+				{
+					$this->getGenericCategory($p_CategoryName, $l_Player)->open();
+				})
+			);
+
+			return $l_Ret;
 		}
-
-		$l_Ret->addPart((new Button())
-			->setText((new TextFormatter("window.return"))->asStringForPlayer($l_Player))
-			->setCallback(function () use ($p_CategoryName, $l_Player)
-			{
-				$this->getGenericCategory($p_CategoryName, $l_Player)->open();
-			})
-		);
-
-		return $l_Ret;
+		return null;
 	}
 
 	public function equipShopItem(Player $p_Player, ShopItem $p_ShopItem)

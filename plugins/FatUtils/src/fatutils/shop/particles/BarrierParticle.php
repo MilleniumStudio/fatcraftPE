@@ -50,11 +50,11 @@ class BarrierParticle extends ShopItem
 
 			if (!($this->m_Circle instanceof CircleAnimation) || !$this->m_Circle->isRunning())
 			{
-				$l_Level = $this->getPlayer()->getLevel();
+				$l_Level = $this->getEntity()->getLevel();
 				$i = 0;
 				$this->m_Circle = new CircleAnimation();
 				$this->m_Circle
-					->setEntity($this->getPlayer())
+					->setEntity($this->getEntity())
 					->setNbPoint(200)
 					->setNbSubDivision(6)
 					->setRadius(0.8)

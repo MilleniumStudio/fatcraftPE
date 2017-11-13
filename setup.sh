@@ -1,7 +1,7 @@
 #!/bin/bash
 
 UPDATE_POCKETMINE_CORE="no"
-THREADS=1
+THREADS=8
 COMPILE_BIN="no"
 BUILD_POCKETMINE_CORE="no"
 BUILD_POCKETMINE_DOCKER="no"
@@ -124,5 +124,9 @@ cd bw-2/
 cd ..
 
 cd md-1/
+./docker_build.sh
+cd ..
+
+cd br-1/
 ./docker_build.sh
 cd ..

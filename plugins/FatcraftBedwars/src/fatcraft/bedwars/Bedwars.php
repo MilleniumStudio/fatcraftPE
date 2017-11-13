@@ -35,7 +35,6 @@ use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\item\Item;
 use pocketmine\item\ItemIds;
 use pocketmine\level\Location;
-use pocketmine\network\mcpe\protocol\ContainerSetSlotPacket;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\Server;
@@ -357,7 +356,7 @@ class Bedwars extends PluginBase implements Listener
 			->addTickCallback([$this, "onPlayingTick"])
 			->addStopCallback(function ()
 			{
-				if (TeamsManager::getInstance()->getAliveTeamNbr() <= 1 && !Bedwars::DEBUG)
+				if (TeamsManager::getInstance()->getInGameTeamNbr() <= 1 && !Bedwars::DEBUG)
 					$this->endGame();
 				else
 				{
@@ -392,7 +391,7 @@ class Bedwars extends PluginBase implements Listener
 							$l_State = TextFormat::GREEN . "OK";
 						else
 						{
-							$l_AliveTeamPlayer = $l_Team->getAlivePlayerLeft();
+							$l_AliveTeamPlayer = $l_Team->getInGamePlayerLeft();
 							if ($l_AliveTeamPlayer > 0)
 								$l_State = TextFormat::AQUA . $l_AliveTeamPlayer;
 							else
@@ -459,7 +458,7 @@ class Bedwars extends PluginBase implements Listener
 
 		GameManager::getInstance()->endGame();
 
-        $winnerTeams = TeamsManager::getInstance()->getAliveTeams();
+        $winnerTeams = TeamsManager::getInstance()->getInGameTeams();
         $winnerName = "";
         if (count($winnerTeams) > 0)
         {
@@ -485,7 +484,7 @@ class Bedwars extends PluginBase implements Listener
             ->addStopCallback(function ()
             {
                 foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-                    LoadBalancer::getInstance()->balancePlayer($l_Player, "lobby");
+                    LoadBalancer::getInstance()->balancePlayer($l_Player, LoadBalancer::TEMPLATE_TYPE_LOBBY);
 
                 new DelayedExec(function ()
 				{
@@ -530,6 +529,13 @@ class Bedwars extends PluginBase implements Listener
 
     public function onPlayerQuit(PlayerQuitEvent $p_Event)
     {
+    	$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Event->getPlayer());
+    	if ($l_FatPlayer != null)
+    		$l_FatPlayer->setOutOfGame();
+
+		Sidebar::getInstance()->update();
+		$this->checkGameState();
+
         new DelayedExec(function () use ($p_Event)
 		{
 			if (GameManager::getInstance()->isWaiting())
@@ -548,9 +554,6 @@ class Bedwars extends PluginBase implements Listener
 			{
 				if (count($this->getServer()->getOnlinePlayers()) == 0)
 					$this->getServer()->shutdown();
-
-				Sidebar::getInstance()->update();
-				$this->checkGameState();
 			}
 		}, 1);
     }
@@ -593,12 +596,12 @@ class Bedwars extends PluginBase implements Listener
         if ($bedLoc->getLevel()->getBlockIdAt($bedLoc->getFloorX(), $bedLoc->getFloorY(), $bedLoc->getFloorZ()) == self::BLOCK_ID)
             return;
 
-        PlayersManager::getInstance()->getFatPlayer($p)->setHasLost();
+        PlayersManager::getInstance()->getFatPlayer($p)->setOutOfGame();
 
-        if ($team->getAlivePlayerLeft() == 0)
+        if ($team->getInGamePlayerLeft() == 0)
 		{
 			foreach ($team->getPlayersUuid() as $p_PlayerUuid)
-				ScoresManager::getInstance()->giveRewardToPlayer($p_PlayerUuid, ((GameManager::getInstance()->getPlayerNbrAtStart() - PlayersManager::getInstance()->getAlivePlayerLeft()) / GameManager::getInstance()->getPlayerNbrAtStart()));
+				ScoresManager::getInstance()->giveRewardToPlayer($p_PlayerUuid, ((GameManager::getInstance()->getPlayerNbrAtStart() - PlayersManager::getInstance()->getInGamePlayerLeft()) / GameManager::getInstance()->getPlayerNbrAtStart()));
 		}
 
         WorldUtils::addStrike($p->getLocation());
@@ -616,7 +619,7 @@ class Bedwars extends PluginBase implements Listener
 
     public function checkGameState(): void
     {
-        $l_TeamLeft = TeamsManager::getInstance()->getAliveTeamNbr();
+        $l_TeamLeft = TeamsManager::getInstance()->getInGameTeamNbr();
         if ($l_TeamLeft <= 1)
         {
             if (Bedwars::DEBUG)

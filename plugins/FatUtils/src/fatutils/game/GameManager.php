@@ -56,7 +56,7 @@ class GameManager
         $this->setPlaying();
         $this->m_StartGameTimestamp = time();
         GameDataManager::getInstance()->recordStartGame();
-		$this->m_PlayerNbrAtStart = PlayersManager::getInstance()->getAlivePlayerLeft();
+		$this->m_PlayerNbrAtStart = PlayersManager::getInstance()->getInGamePlayerLeft();
         FatUtils::getInstance()->getLogger()->info("=== GameStarted ===");
 
 		$l_GoMsgFormatter = new TextFormatter("game.start");

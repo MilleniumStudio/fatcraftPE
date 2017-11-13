@@ -9,6 +9,7 @@ use fatutils\loot\ChestsManager;
 use fatutils\permission\PermissionManager;
 use fatutils\pets\PetsManager;
 use fatutils\npcs\NpcsManager;
+use fatutils\powers\PowersManager;
 use fatutils\signs\SignsManager;
 use fatutils\shop\ShopManager;
 use fatutils\tools\WorldUtils;

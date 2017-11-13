@@ -159,16 +159,19 @@ class ParticleBuilder
 
 	public function playForPlayer(Position $p_Position, Player $p_Player)
 	{
-		$p_Player->getLevel()->addParticle(new GenericParticle($p_Position, $this->m_Id, $this->m_Data), [$p_Player]);
+		if ($p_Player->getLevel() != null)
+			$p_Player->getLevel()->addParticle(new GenericParticle($p_Position, $this->m_Id, $this->m_Data), [$p_Player]);
 	}
 
 	public function playForPlayers(Position $p_Position, array $p_Players)
 	{
-		$p_Position->getLevel()->addParticle(new GenericParticle($p_Position, $this->m_Id, $this->m_Data), $p_Players);
+		if ($p_Position->getLevel() != null)
+			$p_Position->getLevel()->addParticle(new GenericParticle($p_Position, $this->m_Id, $this->m_Data), $p_Players);
 	}
 
 	public function play(Position $p_Position)
 	{
-		$p_Position->getLevel()->addParticle(new GenericParticle($p_Position, $this->m_Id, $this->m_Data));
+		if ($p_Position->getLevel() != null)
+			$p_Position->getLevel()->addParticle(new GenericParticle($p_Position, $this->m_Id, $this->m_Data));
 	}
 }

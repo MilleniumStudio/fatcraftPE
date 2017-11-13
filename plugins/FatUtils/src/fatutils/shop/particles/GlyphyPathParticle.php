@@ -40,10 +40,10 @@ class GlyphyPathParticle extends ShopItem
 	{
 		$this->m_MainLoop = new LoopedExec(function ()
 		{
-			if (FatUtils::getInstance()->getServer()->getTick() % 3 == 0 && $this->getPlayer()->isMoving())
+			if (FatUtils::getInstance()->getServer()->getTick() % 3 == 0 && $this->getEntity()->isMoving())
 			{
-				$l_Level = $this->getPlayer()->getLevel();
-				$this->m_Anim = new ShockWaveAnimation($this->getPlayer()->asLocation());
+				$l_Level = $this->getEntity()->getLevel();
+				$this->m_Anim = new ShockWaveAnimation($this->getEntity()->asLocation());
 				$this->m_Anim
 					->setNbPointInACircle(10)
 					->setTickDuration(15)

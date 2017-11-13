@@ -35,11 +35,11 @@ class CrownParticle extends ShopItem
 		{
 			if (!($this->m_Circle instanceof CircleAnimation) || !$this->m_Circle->isRunning())
 			{
-				$l_Level = $this->getPlayer()->getLevel();
+				$l_Level = $this->getEntity()->getLevel();
 				$i = 0;
 				$this->m_Circle = new CircleAnimation();
 				$this->m_Circle
-					->setEntity($this->getPlayer())
+					->setEntity($this->getEntity())
 					->setNbPoint(500)
 					->setNbSubDivision(5)
 					->setRadius(0.5)
@@ -54,7 +54,7 @@ class CrownParticle extends ShopItem
 							{
 								if ($l_Location instanceof Vector3)
 								{
-									$l_ParticleBuilder->play(Position::fromObject($l_Location->add(0, 2 + $l_Var, 0), $this->getPlayer()->getLevel()));
+									$l_ParticleBuilder->play(Position::fromObject($l_Location->add(0, 2 + $l_Var, 0), $this->getEntity()->getLevel()));
 								}
 							}
 						}

@@ -11,3 +11,4 @@ docker stop -t 0 sw-3
 docker stop -t 0 bw-1
 docker stop -t 0 bw-2
 docker stop -t 0 md-1
+docker stop -t 0 br-1

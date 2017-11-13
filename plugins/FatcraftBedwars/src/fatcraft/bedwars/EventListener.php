@@ -25,45 +25,12 @@ use pocketmine\utils\TextFormat;
 
 class EventListener implements Listener
 {
-//	/**
-//	 * @param PlayerDeathEvent $e
-//	 */
-//	public function playerDeathEvent(PlayerDeathEvent $e)
-//	{
-//		$p = $e->getEntity();
-//
-
-
-//		PlayersManager::getInstance()->getFatPlayer($p)->setHasLost(true);
-//
-//        WorldUtils::addStrike($p->getLocation());
-//        $l_PlayerLeft = PlayersManager::getInstance()->getAlivePlayerLeft();
-//
-//        foreach (Bedwars::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-//        {
-//            $l_Player->sendMessage($e->getDeathMessage());
-//            if ($l_PlayerLeft > 1)
-//                $l_Player->sendMessage("Il reste " . TextFormat::YELLOW . PlayersManager::getInstance()->getAlivePlayerLeft() . TextFormat::RESET . " survivants !", "*");
-//        }
-//
-//        if ($l_PlayerLeft <= 1 && !Bedwars::DEBUG)
-//            Bedwars::getInstance()->endGame();
-//
-//        $e->setDeathMessage("");
-//		$p->setGamemode(3);
-//
-//        Sidebar::getInstance()->update();
-//	}
-
     public function onPlayerPickup(InventoryPickupItemEvent $e)
     {
         $l_Viewers = $e->getInventory()->getViewers();
-//        var_dump($l_Viewers);
         if (count($l_Viewers) > 0) {
             $p = array_values($l_Viewers)[0];
-//            FatUtils::getInstance()->getLogger()->info(gettype($p));
             if ($p instanceof Player) {
-//                FatUtils::getInstance()->getLogger()->info("InventoryPickupItemEvent " . $e->getItem() . " from " . $p->getName() . "> " . $e->getItem()->getItem()->getId());
                 switch ($e->getItem()->getItem()->getId()) {
                     case ItemIds::IRON_INGOT:
                         Bedwars::getInstance()->modPlayerIron($p, $e->getItem()->getItem()->getCount());
@@ -162,16 +129,6 @@ class EventListener implements Listener
 //        if ($e->getBlock()->hasMetadata("isCustom"))
 //            echo "Place block with custom meta\n";
     }
-
-//    /**
-//     * @param EntityDamageEvent $e
-//     */
-//    public function onEntityDamageEvent(EntityDamageEvent $e)
-//    {
-//        if (GameManager::getInstance()->getSecondSinceStart() < 30)
-//            $e->setCancelled(true);
-//    }
-
 
     /**
      * @param PlayerJoinEvent $e

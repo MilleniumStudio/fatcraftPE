@@ -14,6 +14,7 @@ use pocketmine\block\Block;
 use pocketmine\entity\Entity;
 use pocketmine\event\TimingsHandler;
 use pocketmine\level\Level;
+use pocketmine\level\Location;
 use pocketmine\math\Vector3;
 
 abstract class Volume
@@ -33,7 +34,7 @@ abstract class Volume
 	/** @var LoopedExec */
 	protected static $m_CollisionTask = null;
 
-	/** @var CuboidVolume[] */
+	/** @var Volume[] */
 	protected static $m_CollidableVolumes = [];
 	protected $m_Timings = null;
 
@@ -55,6 +56,10 @@ abstract class Volume
 	//-----------------------
 	// ABSTRACT
 	//-----------------------
+	/**
+	 * @param int $p_Quantity
+	 * @return Location[]
+	 */
 	public abstract function getRandomLocations(int $p_Quantity = 1): array;
 
 	public abstract function isIn(Vector3 $p_Position): bool;
@@ -174,42 +179,39 @@ abstract class Volume
 				$this->m_Timings->startTiming();
 				foreach (self::$m_CollidableVolumes as $l_Volume)
 				{
-					if ($l_Volume instanceof CuboidVolume)
+					foreach ($l_Volume->getLevel()->getEntities() as $l_Entity)
 					{
-						foreach ($l_Volume->getPos1()->getLevel()->getEntities() as $l_Entity)
+						$l_WasIn = array_key_exists($l_Entity->getId(), $l_Volume->m_EntitiesInside);
+
+						if ($l_Volume->isIn($l_Entity))
 						{
-							$l_WasIn = array_key_exists($l_Entity->getId(), $l_Volume->m_EntitiesInside);
-
-							if ($l_Volume->isIn($l_Entity))
+							if (!$l_WasIn)
 							{
-								if (!$l_WasIn)
-								{
-									$l_Volume->m_EntitiesInside[$l_Entity->getId()] = $l_Entity;
+								$l_Volume->m_EntitiesInside[$l_Entity->getId()] = $l_Entity;
 
-									// ENTERING
-									foreach ($l_Volume->m_EnterVolumeCallbacks as $l_EnterVolumeCallback)
-									{
-										if (is_callable($l_EnterVolumeCallback))
-											$l_EnterVolumeCallback($l_Entity);
-									}
-								}
-
-								// COLLISIONS
-								foreach ($l_Volume->m_CollisionCallbacks as $l_CollisionCallback)
+								// ENTERING
+								foreach ($l_Volume->m_EnterVolumeCallbacks as $l_EnterVolumeCallback)
 								{
-									if (is_callable($l_CollisionCallback))
-										$l_CollisionCallback($l_Entity);
+									if (is_callable($l_EnterVolumeCallback))
+										$l_EnterVolumeCallback($l_Entity);
 								}
-							} else if ($l_WasIn)
+							}
+
+							// COLLISIONS
+							foreach ($l_Volume->m_CollisionCallbacks as $l_CollisionCallback)
 							{
-								unset($l_Volume->m_EntitiesInside[$l_Entity->getId()]);
+								if (is_callable($l_CollisionCallback))
+									$l_CollisionCallback($l_Entity);
+							}
+						} else if ($l_WasIn)
+						{
+							unset($l_Volume->m_EntitiesInside[$l_Entity->getId()]);
 
-								// LEAVING
-								foreach ($l_Volume->m_LeaveVolumeCallbacks as $l_LeaveVolumeCallback)
-								{
-									if (is_callable($l_LeaveVolumeCallback))
-										$l_LeaveVolumeCallback($l_Entity);
-								}
+							// LEAVING
+							foreach ($l_Volume->m_LeaveVolumeCallbacks as $l_LeaveVolumeCallback)
+							{
+								if (is_callable($l_LeaveVolumeCallback))
+									$l_LeaveVolumeCallback($l_Entity);
 							}
 						}
 					}

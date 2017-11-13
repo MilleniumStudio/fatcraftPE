@@ -12,17 +12,17 @@ use fatcraft\loadbalancer\LoadBalancer;
 use fatutils\FatUtils;
 use fatutils\game\GameManager;
 use fatutils\players\PlayersManager;
+use fatutils\powers\PowersManager;
+use fatutils\scores\ScoresManager;
 use fatutils\spawns\SpawnManager;
 use fatutils\tools\BossbarTimer;
 use fatutils\tools\checkpoints\Checkpoint;
 use fatutils\tools\checkpoints\CheckpointsPath;
-use fatutils\tools\checkpoints\VolumeCheckpoint;
 use fatutils\tools\DelayedExec;
 use fatutils\tools\DisplayableTimer;
 use fatutils\tools\Sidebar;
 use fatutils\tools\TextFormatter;
 use fatutils\tools\Timer;
-use fatutils\tools\volume\CuboidVolume;
 use fatutils\tools\WorldUtils;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\player\PlayerExhaustEvent;
@@ -72,16 +72,10 @@ class BoatRacer extends PluginBase implements Listener
 		WorldUtils::setWorldsTime(0);
 		WorldUtils::stopWorldsTime();
 
-		$l_Checkpoints = $this->getConfig()->get("checkpoints");
-		foreach ($l_Checkpoints as $l_RawCheckpointLoc)
-		{
-			if (is_null($this->m_CheckpointPath))
-				$this->m_CheckpointPath = new CheckpointsPath();
 
-			$this->m_CheckpointPath->addCheckpoint(new VolumeCheckpoint(CuboidVolume::createVolumeFromConfig($l_RawCheckpointLoc)));
-		}
-
-		$this->m_CheckpointPath
+		// CheckpointPath Initialization
+		$this->m_CheckpointPath = CheckpointsPath
+			::fromConfig($this->getConfig()->get("checkpoints"))
 			->setLapToFinish($this->getConfig()->get("lapToFinish", 1))
 			->addStartCallback(function (Player $p_Player)
 			{
@@ -97,11 +91,13 @@ class BoatRacer extends PluginBase implements Listener
 				$this->playerFinish($p_Player);
 				Sidebar::getInstance()->updatePlayer($p_Player);
 			})
-			->addLapCompleteCallback(function (Player $p_Player) {
+			->addLapCompleteCallback(function (Player $p_Player, int $p_LastTurnIndex) {
 				Sidebar::getInstance()->updatePlayer($p_Player);
-			})
-			->disable();
+				$p_Player->addTitle("", (new TextFormatter("boatracer.lapFinished", ["nbr" => $p_LastTurnIndex + 1]))->asStringForPlayer($p_Player));
+			});
 
+
+		// Waiting Clock Initialization
 		$this->m_WaitingTimer = new DisplayableTimer(GameManager::getInstance()->getWaitingTickDuration());
 		$this->m_WaitingTimer
 			->setTitle(new TextFormatter("timer.waiting.title"))
@@ -110,6 +106,8 @@ class BoatRacer extends PluginBase implements Listener
 				$this->startGame();
 			});
 
+
+		// Waiting Sidebar Initialization
 		Sidebar::getInstance()
 			->addTranslatedLine(new TextFormatter("template.br"))
 			->addTimer($this->m_WaitingTimer)
@@ -118,6 +116,8 @@ class BoatRacer extends PluginBase implements Listener
 			{
 				return new TextFormatter("game.waitingForMore", ["amount" => PlayersManager::getInstance()->getMinPlayer() - count($this->getServer()->getOnlinePlayers())]);
 			});
+
+        FatUtils::getInstance()->getCommand("pwr")->setExecutor(PowersManager::getInstance());
 	}
 
 	//------------------------
@@ -125,6 +125,11 @@ class BoatRacer extends PluginBase implements Listener
 	//------------------------
 	public function startGame()
 	{
+		GameManager::getInstance()->startGame();
+		LoadBalancer::getInstance()->setServerState(LoadBalancer::SERVER_STATE_CLOSED);
+
+
+		// Playing Sidebar Initialization
 		Sidebar::getInstance()
 			->clearLines()
 			->addTranslatedLine(new TextFormatter("template.br"))
@@ -142,29 +147,29 @@ class BoatRacer extends PluginBase implements Listener
 				return [];
 			});
 
+
+		// Teleport players to playing spawn
 		$l_Spawn = SpawnManager::getInstance()->getSpawnByName("playing");
 		foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-		{
 			$l_Spawn->teleport($l_Player, 1);
-		}
-
-		Sidebar::getInstance()->update();
-		GameManager::getInstance()->startGame();
 
 		new DelayedExec(function ()
 		{
 			$this->m_CheckpointPath->enable();
+			Sidebar::getInstance()->update();
 		}, 5);
-
 	}
 
 	public function playerFinish(Player $p_Player)
 	{
-		PlayersManager::getInstance()->getFatPlayer($p_Player)->setHasLost();
-		$l_PlayerPos = GameManager::getInstance()->getPlayerNbrAtStart() - PlayersManager::getInstance()->getAlivePlayerLeft();
+		PlayersManager::getInstance()->getFatPlayer($p_Player)->setOutOfGame();
+		$l_PlayerPos = GameManager::getInstance()->getPlayerNbrAtStart() - PlayersManager::getInstance()->getInGamePlayerLeft();
+		FatUtils::getInstance()->getLogger()->info($p_Player->getName() . " finished at " . $l_PlayerPos);
 
-		echo $p_Player->getName() . " finished at " . $l_PlayerPos . "\n";
+		// Applying reward
+		ScoresManager::getInstance()->giveRewardToPlayer($p_Player->getUniqueId(), (GameManager::getInstance()->getPlayerNbrAtStart() / $l_PlayerPos) / GameManager::getInstance()->getPlayerNbrAtStart());
 
+		// Displaying player score
 		if ($l_PlayerPos == 1)
 			$l_Message = new TextFormatter("boatracer.raceFinished.first", ["playerName" => $p_Player->getDisplayName()]);
 		else if ($l_PlayerPos == 2)
@@ -173,16 +178,15 @@ class BoatRacer extends PluginBase implements Listener
 			$l_Message = new TextFormatter("boatracer.raceFinished.third", ["playerName" => $p_Player->getDisplayName()]);
 		else
 			$l_Message = new TextFormatter("boatracer.raceFinished.other", ["playerName" => $p_Player->getDisplayName(), "pos" => $l_PlayerPos]);
-
 		foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-		{
 			$l_Player->addTitle("", $l_Message->asStringForPlayer($l_Player));
-		}
+
+		$p_Player->sendMessage((new TextFormatter("boatracer.canQuitGame"))->asStringForPlayer($p_Player));
 
 		$this->destroyPlayerBoat($p_Player);
-
 		$p_Player->setGamemode(3);
 
+		// Shutdown clock
 		if ($l_PlayerPos == GameManager::getInstance()->getPlayerNbrAtStart())
 		{
 			(new BossbarTimer(150))
@@ -190,7 +194,7 @@ class BoatRacer extends PluginBase implements Listener
 				->addStopCallback(function ()
 				{
 					foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-						LoadBalancer::getInstance()->balancePlayer($l_Player, "lobby");
+						LoadBalancer::getInstance()->balancePlayer($l_Player, LoadBalancer::TEMPLATE_TYPE_LOBBY);
 
 					new DelayedExec(function ()
 					{
@@ -203,8 +207,6 @@ class BoatRacer extends PluginBase implements Listener
 
 	public function applyBoat(Player $p_Player)
 	{
-		echo "PlayerYaw" . $p_Player->getYaw() . "\n";
-
 		$nbt = new CompoundTag("", [
 			new ListTag("Pos", [
 				new DoubleTag("", $p_Player->getX()),
@@ -238,7 +240,10 @@ class BoatRacer extends PluginBase implements Listener
 	{
 		$l_Boat = $p_Player->vehicle;
 		if ($l_Boat != null && $l_Boat instanceof BoatEntity)
+		{
+			$l_Boat->dismount($p_Player);
 			$l_Boat->kill();
+		}
 	}
 
 	//------------------------
@@ -299,22 +304,56 @@ class BoatRacer extends PluginBase implements Listener
 
 	public function onEntityDamage(EntityDamageEvent $p_Event)
 	{
-		if ($p_Event->getCause() == EntityDamageEvent::CAUSE_VOID)
-			echo "Void Damages\n";
-		else
-			$p_Event->setCancelled(true);
+		$l_Player = $p_Event->getEntity();
+		if ($l_Player instanceof Player)
+		{
+			if ($p_Event->getCause() == EntityDamageEvent::CAUSE_VOID)
+			{
+				$l_Spawn = null;
+				$l_PlayerData = $this->m_CheckpointPath->getPlayerData($l_Player);
+				if ($l_PlayerData != null && $l_PlayerData->getLastCheckpoint() != null)
+					$l_Spawn = SpawnManager::getInstance()->getSpawnByName("checkpoint" . $l_PlayerData->getLastCheckpoint()->getIndex());
+
+				if ($l_Spawn == null)
+					$l_Spawn = SpawnManager::getInstance()->getSpawnByName("playing");
+
+				FatUtils::getInstance()->getLogger()->info($l_Player->getName() . " fall into the void, respawning to spawn " . $l_Spawn->getName() . "...");
+
+				$this->destroyPlayerBoat($l_Player);
+
+				$l_Spawn->teleport($l_Player, 1);
+				new DelayedExec(function () use ($l_Player) {
+					$this->applyBoat($l_Player);
+				}, 2);
+			}
+		}
+		$p_Event->setCancelled(true);
 	}
 
 	public function onPlayerQuit(PlayerQuitEvent $p_Event)
 	{
-		PlayersManager::getInstance()->getFatPlayer($p_Event->getPlayer())->setHasLost();
 		$this->destroyPlayerBoat($p_Event->getPlayer());
-	}
 
-	public function onPlayerDamage(EntityDamageEvent $e)
-	{
-		$p = $e->getEntity();
-		if ($p instanceof Player)
-			$e->setCancelled(true);
+		$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Event->getPlayer());
+		if ($l_FatPlayer != null)
+			$l_FatPlayer->setOutOfGame();
+
+		Sidebar::getInstance()->update();
+
+		new DelayedExec(function () {
+			if (GameManager::getInstance()->isWaiting())
+			{
+				if ($this->m_WaitingTimer instanceof Timer && $this->m_WaitingTimer->getTickLeft() > 0 &&
+					(count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMinPlayer()))
+				{
+					$this->m_WaitingTimer->cancel();
+					$this->m_WaitingTimer = null;
+				}
+			} else if (GameManager::getInstance()->isPlaying())
+			{
+				if (count($this->getServer()->getOnlinePlayers()) == 0)
+					$this->getServer()->shutdown();
+			}
+		});
 	}
 }

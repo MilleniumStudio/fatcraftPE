@@ -14,6 +14,7 @@ use pocketmine\Player;
 use pocketmine\plugin\Plugin;
 use pocketmine\scheduler\PluginTask;
 use pocketmine\scheduler\TaskHandler;
+use pocketmine\utils\Config;
 
 /**
  * Created by IntelliJ IDEA.
@@ -52,13 +53,14 @@ class PetsManager implements Listener, CommandExecutor
         }
     }
 
-    public function spawnPet(Player $player, $petType): ?ShopItem
+    public function spawnPet(Player $player, $petType, bool $equiped = true): ?ShopItem
     {
         if (array_key_exists($petType, PetTypes::ENTITIES)) {
             $fatPlayer = PlayersManager::getInstance()->getFatPlayer($player);
             $pet = new Pet($player, "pets.qqChose", ["type" => $petType, "class" => Pet::class]);
 //            $pet = ShopItem::createShopItem($player, "pet.qqChose", ["type" => $petType, "class" => Pet::class]);
-            $fatPlayer->setSlot(ShopItem::SLOT_PET, $pet);
+            if ($equiped)
+                $fatPlayer->setSlot(ShopItem::SLOT_PET, $pet);
             return $pet;
         }
         echo "Unknown petType ! \n";
@@ -89,7 +91,7 @@ class PetsManager implements Listener, CommandExecutor
                 case "pos": {
                     /** @var Pet $pet */
                     $pet = PlayersManager::getInstance()->getFatPlayer($sender)->getSlot(ShopItem::SLOT_PET);
-                    echo "->" . $pet->getEntity()->getLocation() . "\n";
+                    echo "->" . $pet->getCustomPet()->getLocation() . "\n";
                 }
                     break;
                 case "list": {

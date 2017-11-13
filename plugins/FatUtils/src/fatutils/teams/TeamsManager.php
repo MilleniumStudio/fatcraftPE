@@ -108,19 +108,19 @@ class TeamsManager
         return null;
     }
 
-    public function getAliveTeamNbr():int
+    public function getInGameTeamNbr():int
     {
-        return count($this->getAliveTeams());
+        return count($this->getInGameTeams());
     }
 
-    public function getAliveTeams():array
+    public function getInGameTeams():array
     {
         $l_Ret = [];
         foreach ($this->m_Teams as $l_Team)
         {
             if ($l_Team instanceof Team)
             {
-                $l_TeamAlivePlayers = $l_Team->getAlivePlayers();
+                $l_TeamAlivePlayers = $l_Team->getInGamePlayers();
                 if (count($l_TeamAlivePlayers) > 0)
                     $l_Ret[] = $l_Team;
             }
@@ -208,7 +208,7 @@ class TeamsManager
     public function balanceTeams()
     {
         // find the ~number of player per teams
-        $maxPlayerPerTeam = ceil((float)(count(PlayersManager::getInstance()->getAlivePlayers())) / (float)(count($this->m_Teams)));
+        $maxPlayerPerTeam = ceil((float)(count(PlayersManager::getInstance()->getInGamePlayers())) / (float)(count($this->m_Teams)));
         /** @var Team $team */
         foreach ($this->m_Teams as $team) {
             while($team->getPlayerCount() > $maxPlayerPerTeam)

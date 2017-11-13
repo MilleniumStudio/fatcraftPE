@@ -46,24 +46,24 @@ class Team
         array_splice($this->m_Players, array_search($p_player->getUniqueId()->toString(), $this->m_Players), 1);
     }
 
-    public function getAlivePlayerLeft(): int
+    public function getInGamePlayerLeft(): int
     {
         $i = 0;
         foreach ($this->getOnlinePlayers() as $l_Player) {
             $l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($l_Player);
-            if (!$l_FatPlayer->hasLost())
+            if (!$l_FatPlayer->isOutOfGame())
                 $i++;
         }
         return $i;
     }
 
 
-    public function getAlivePlayers(): array
+    public function getInGamePlayers(): array
     {
         $l_Ret = [];
         foreach ($this->getOnlinePlayers() as $l_Player) {
             $l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($l_Player);
-            if (!$l_FatPlayer->hasLost())
+            if (!$l_FatPlayer->isOutOfGame())
                 $l_Ret[] = $l_FatPlayer;
         }
         return $l_Ret;

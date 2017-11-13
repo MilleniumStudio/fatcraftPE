@@ -30,12 +30,12 @@ class OrbitParticle extends ShopItem
 	{
 		$this->m_MainLoop = new LoopedExec(function ()
 		{
-			$l_Level = $this->getPlayer()->getLevel();
+			$l_Level = $this->getEntity()->getLevel();
 			if (!($this->m_Circle1 instanceof CircleAnimation) || !$this->m_Circle1->isRunning())
 			{
 				$this->m_Circle1 = new CircleAnimation();
 				$this->m_Circle1
-					->setEntity($this->getPlayer())
+					->setEntity($this->getEntity())
 					->setNbSubDivision(1)
 					->setRadius(1.5)
 					->setTickDuration(100)
@@ -58,7 +58,7 @@ class OrbitParticle extends ShopItem
 			{
 				$this->m_Circle2 = new CircleAnimation();
 				$this->m_Circle2
-					->setEntity($this->getPlayer())
+					->setEntity($this->getEntity())
 					->setNbSubDivision(1)
 					->setRadius(1.1)
 					->setTickDuration(60)
@@ -81,7 +81,7 @@ class OrbitParticle extends ShopItem
 			{
 				$this->m_Circle3 = new CircleAnimation();
 				$this->m_Circle3
-					->setEntity($this->getPlayer())
+					->setEntity($this->getEntity())
 					->setNbSubDivision(1)
 					->setRadius(0.7)
 					->setTickDuration(20)
