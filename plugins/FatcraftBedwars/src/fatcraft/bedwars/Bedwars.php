@@ -35,7 +35,6 @@ use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\item\Item;
 use pocketmine\item\ItemIds;
 use pocketmine\level\Location;
-use pocketmine\network\mcpe\protocol\ContainerSetSlotPacket;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\Server;
@@ -530,6 +529,13 @@ class Bedwars extends PluginBase implements Listener
 
     public function onPlayerQuit(PlayerQuitEvent $p_Event)
     {
+    	$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Event->getPlayer());
+    	if ($l_FatPlayer != null)
+    		$l_FatPlayer->setHasLost();
+
+		Sidebar::getInstance()->update();
+		$this->checkGameState();
+
         new DelayedExec(function () use ($p_Event)
 		{
 			if (GameManager::getInstance()->isWaiting())
@@ -548,9 +554,6 @@ class Bedwars extends PluginBase implements Listener
 			{
 				if (count($this->getServer()->getOnlinePlayers()) == 0)
 					$this->getServer()->shutdown();
-
-				Sidebar::getInstance()->update();
-				$this->checkGameState();
 			}
 		}, 1);
     }

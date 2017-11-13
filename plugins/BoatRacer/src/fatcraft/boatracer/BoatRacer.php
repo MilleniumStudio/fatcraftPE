@@ -332,7 +332,28 @@ class BoatRacer extends PluginBase implements Listener
 
 	public function onPlayerQuit(PlayerQuitEvent $p_Event)
 	{
-		PlayersManager::getInstance()->getFatPlayer($p_Event->getPlayer())->setHasLost();
 		$this->destroyPlayerBoat($p_Event->getPlayer());
+
+		$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Event->getPlayer());
+		if ($l_FatPlayer != null)
+			$l_FatPlayer->setHasLost();
+
+		Sidebar::getInstance()->update();
+
+		new DelayedExec(function () {
+			if (GameManager::getInstance()->isWaiting())
+			{
+				if ($this->m_WaitingTimer instanceof Timer && $this->m_WaitingTimer->getTickLeft() > 0 &&
+					(count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMinPlayer()))
+				{
+					$this->m_WaitingTimer->cancel();
+					$this->m_WaitingTimer = null;
+				}
+			} else if (GameManager::getInstance()->isPlaying())
+			{
+				if (count($this->getServer()->getOnlinePlayers()) == 0)
+					$this->getServer()->shutdown();
+			}
+		});
 	}
 }

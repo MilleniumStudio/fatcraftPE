@@ -257,6 +257,12 @@ class HungerGame extends PluginBase implements Listener
 	//---------------------
 	public function playerQuitEvent(PlayerQuitEvent $e)
 	{
+		$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($e->getPlayer());
+		if ($l_FatPlayer != null)
+			$l_FatPlayer->setHasLost();
+
+		Sidebar::getInstance()->update();
+
 		new DelayedExec(function ()
 		{
 			if (GameManager::getInstance()->isWaiting())
