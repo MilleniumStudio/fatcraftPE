@@ -15,7 +15,6 @@ use pocketmine\level\Level;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\FloatTag;
-use pocketmine\nbt\tag\ByteTag;
 use pocketmine\Player;
 use pocketmine\network\mcpe\protocol\AddPlayerPacket;
 use pocketmine\command\ConsoleCommandSender;
@@ -107,7 +106,6 @@ class HumanPet extends Human
         }
         $this->setDataProperty(self::DATA_SCALE, self::DATA_TYPE_FLOAT, $this->namedtag->Scale->getValue());
         $this->setDataProperty(self::DATA_FLAG_NO_AI, self::DATA_TYPE_BYTE, 1, true);
-//        $this->namedtag->Invulnerable = new ByteTag("Invulnerable", 1);
 
         $this->initEntity();
     }

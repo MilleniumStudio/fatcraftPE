@@ -15,7 +15,6 @@ use pocketmine\level\Level;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\FloatTag;
-use pocketmine\nbt\tag\ByteTag;
 use pocketmine\network\mcpe\protocol\AddEntityPacket;
 use pocketmine\Player;
 use pocketmine\command\ConsoleCommandSender;
@@ -116,7 +115,6 @@ class CustomPet extends Living
         if(!isset($this->namedtag->Scale)) {
                 $this->namedtag->Scale = new FloatTag("Scale", $this->m_scale);
         }
-        $this->namedtag->Invulnerable = new ByteTag("Invulnerable", 1);
     }
 
     public function modifyAttributes(string $attributeName, string $valueType, $value): bool

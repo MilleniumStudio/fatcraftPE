@@ -15,6 +15,7 @@ use pocketmine\plugin\Plugin;
 use pocketmine\scheduler\PluginTask;
 use pocketmine\scheduler\TaskHandler;
 use pocketmine\utils\Config;
+use pocketmine\nbt\tag\ByteTag;
 use pocketmine\event\entity\EntityDamageEvent;
 
 /**
@@ -59,6 +60,7 @@ class PetsManager implements Listener, CommandExecutor
         if (array_key_exists($petType, PetTypes::ENTITIES)) {
             $fatPlayer = PlayersManager::getInstance()->getFatPlayer($player);
             $pet = new Pet($player, "pets.qqChose", ["type" => $petType, "class" => Pet::class]);
+            $pet->namedtag->Invulnerable = new ByteTag("Invulnerable", 1);
 //            $pet = ShopItem::createShopItem($player, "pet.qqChose", ["type" => $petType, "class" => Pet::class]);
             if ($equiped)
                 $fatPlayer->setSlot(ShopItem::SLOT_PET, $pet);

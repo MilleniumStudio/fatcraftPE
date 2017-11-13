@@ -97,7 +97,7 @@ class Pet extends ShopItem
 
         if (!$this->m_CustomPet->isAlive())
         {
-            FatUtils::getInstance()->getLogger()->debug("[Pet] " . $this->m_CustomPet->getId . " is dead, reviving !");
+            FatUtils::getInstance()->getLogger()->debug("[Pet] " . $this->m_CustomPet->getId() . " is dead, reviving !");
             $this->m_CustomPet->setHealth(20);
         }
 
