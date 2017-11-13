@@ -171,7 +171,7 @@ content:
 #      options:
 #       DATA_VARIANT: "DATA_TYPE_INT/2"
     Cat4:
-      name: "shop.items.pets.catWhite#"
+      name: "shop.items.pets.catWhite"
       class: "fatutils\\pets\\Pet"
       priceFS: 1500
       priceFG: 50
