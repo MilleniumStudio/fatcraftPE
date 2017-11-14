@@ -132,6 +132,8 @@ chunk-ticking:
  clear-tick-list: true
  #IDs of blocks not to perform random ticking on.
  disable-block-ticking:
+  18: "leaves"
+  161: "leaves2"
   #- 2 # grass
 
 chunk-generation:
