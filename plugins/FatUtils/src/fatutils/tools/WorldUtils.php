@@ -158,7 +158,7 @@ class WorldUtils
                         if (isset(WorldUtils::$m_ForceLoadedChunks[$p_event->getChunk()->getX()][$p_event->getChunk()->getZ()]) && WorldUtils::$m_ForceLoadedChunks[$p_event->getChunk()->getX()][$p_event->getChunk()->getZ()])
                         {
                             $p_event->setCancelled();
-                            FatUtils::getInstance()->getLogger()->debug("Chunk " .$p_event->getChunk()->getX() . "/" . $p_event->getChunk()->getZ() . " cancel unload !");
+//                            FatUtils::getInstance()->getLogger()->debug("Chunk " .$p_event->getChunk()->getX() . "/" . $p_event->getChunk()->getZ() . " cancel unload !");
                         }
                     }
                 }, FatUtils::getInstance());
