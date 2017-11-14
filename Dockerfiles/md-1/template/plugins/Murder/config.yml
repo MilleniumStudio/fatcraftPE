@@ -1,6 +1,6 @@
 minPlayer: 4
 maxPlayer: 12
-waitingSecDuration: 15
+waitingSecDuration: 30
 playingSecDuration: 600
 
 rewards:
