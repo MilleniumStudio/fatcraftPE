@@ -93,6 +93,7 @@ class Murder extends PluginBase implements Listener
         LoadBalancer::getInstance()->setServerState(LoadBalancer::SERVER_STATE_OPEN);
 //        PlayersManager::getInstance()->displayHealth();
         WorldUtils::stopWorldsTime();
+        WorldUtils::setWorldsTime(15000); // = 12h * 3600 seconds * 20 ticks (day = 864000)
 
 		$this->m_WaitingTimer = new BossbarTimer(GameManager::getInstance()->getWaitingTickDuration());
 		$this->m_WaitingTimer
