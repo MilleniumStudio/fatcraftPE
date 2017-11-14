@@ -29,6 +29,14 @@ class GamesWindow
         );
 
 		$l_Window->addPart((new Button())
+			->setText((new TextFormatter("template.br"))->asStringForPlayer($p_Player))
+			->setCallback(function () use ($l_FatPlayer)
+			{
+				LoadBalancer::getInstance()->balancePlayer($l_FatPlayer->getPlayer(), LoadBalancer::TEMPLATE_TYPE_BOAT_RACER);
+			})
+		);
+
+		$l_Window->addPart((new Button())
 			->setText((new TextFormatter("template.hg"))->asStringForPlayer($p_Player))
 			->setCallback(function () use ($l_FatPlayer)
 			{
