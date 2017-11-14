@@ -57,7 +57,7 @@ class Lobby extends PluginBase implements Listener
         $this->getCommand("spawn")->setExecutor($this);
         FatUtils::getInstance()->setTemplateConfig($this->getConfig());
         WorldUtils::stopWorldsTime();
-        WorldUtils::setWorldsTime(864000); // = 12h * 3600 seconds * 20 ticks
+        WorldUtils::setWorldsTime(15000); // = 12h * 3600 seconds * 20 ticks (day = 864000)
         HologramsManager::getInstance();
 
         if ($this->getConfig()->exists("spawn"))
@@ -131,22 +131,26 @@ class Lobby extends PluginBase implements Listener
     // disable all inventory items move
     public function onInventoryTransaction(InventoryTransactionEvent $p_Event)
     {
-        $p_Event->setCancelled(true);
+        if (!$p_Event->getTransaction()->getSource()->isOp())
+            $p_Event->setCancelled(true);
     }
 
     public function onItemPickup(InventoryPickupItemEvent $p_Event)
     {
-        $p_Event->setCancelled(true);
+        if (!$p_Event->getInventory()->getHolder()->isOp())
+            $p_Event->setCancelled(true);
     }
 
     public function onArrowPickup(InventoryPickupArrowEvent $p_Event)
     {
-        $p_Event->setCancelled(true);
+        if (!$p_Event->getInventory()->getHolder()->isOp())
+            $p_Event->setCancelled(true);
     }
 
     public function onPlayerDropItem(PlayerDropItemEvent $p_Event)
     {
-        $p_Event->setCancelled(true);
+        if (!$p_Event->getPlayer()->isOp())
+            $p_Event->setCancelled(true);
     }
 
     public function onPlayerExhaust(PlayerExhaustEvent $p_Event)
