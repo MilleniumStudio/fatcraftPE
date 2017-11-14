@@ -29,7 +29,6 @@ class PetsManager implements Listener, CommandExecutor
     private static $m_Instance = null;
     /** @var TaskHandler $testTask */
     private $testTask = null;
-    private $caaaaatsss = [];
 
     public static function getInstance(): PetsManager
     {
@@ -60,7 +59,7 @@ class PetsManager implements Listener, CommandExecutor
         if (array_key_exists($petType, PetTypes::ENTITIES)) {
             $fatPlayer = PlayersManager::getInstance()->getFatPlayer($player);
             $pet = new Pet($player, "pets.qqChose", ["type" => $petType, "class" => Pet::class]);
-            $pet->namedtag->Invulnerable = new ByteTag("Invulnerable", 1);
+            $pet->getCustomPet()->namedtag->Invulnerable = new ByteTag("Invulnerable", 1);
 //            $pet = ShopItem::createShopItem($player, "pet.qqChose", ["type" => $petType, "class" => Pet::class]);
             if ($equiped)
                 $fatPlayer->setSlot(ShopItem::SLOT_PET, $pet);
@@ -78,18 +77,9 @@ class PetsManager implements Listener, CommandExecutor
         */
     public function onEntityDamage(EntityDamageEvent $event)
     {
-//        if(!$event instanceof EntityDamageByEntityEvent) {
-//            return;
-//        }
-//        if(!$event->getDamager() instanceof Player) {
-//            return;
-//        }
-        if(isset($event->getEntity()->namedtag->Invulnerable))
+        if ($event->getEntity() instanceof CustomPet)
         {
-            if($event->getEntity()->namedtag->Invulnerable->getValue() == 1)
-            {
-                $event->setCancelled(true);
-            }
+            $event->setCancelled(true);
         }
     }
 
