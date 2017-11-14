@@ -2,7 +2,7 @@
 
 npcs:
   - name: "welcomenpc"
-    displayname: "Welcome"
+    displayname: "Games"
     location: 0.5/55.1/56.5/0/0
     type : "Player"
     size : 1
@@ -45,7 +45,24 @@ npcs:
 
   - name: "boatracer"
     displayname: "template.br"
-    location: 13.5/35/-2.5/45/15
+    location: 13.5/36/-2.5/45/15
+    type : "Player"
+    size : 1
+    skin: "Dryad"
+    equipment:
+      head: "{\"material\": \"GOLDEN_HELMET\"}"
+      chest: "{\"material\": \"CHAINMAIL_CHESTPLATE\"}"
+      pants: "{\"material\": \"IRON_LEGGINGS\"}"
+      boots: "{\"material\": \"LEATHER_BOOTS\"}"
+      held: "{\"material\": \"DIAMOND_PICKAXE\"}"
+    update: true
+    effects: []
+    function: "NPCFunctionTeleport"
+    data:
+      to: 120.5/26/33.5/270/0
+  - name: "server.random.boatracer1"
+    displayname: "template.br"
+    location: 163.5/11/28.5/50/0
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -60,10 +77,57 @@ npcs:
     commands: [
       "server connect {player} br"
     ]
+  - name: "server.random.boatracer2"
+    displayname: "template.br"
+    location: 163.55/11/38.52/117/0
+    type : "Player"
+    size : 1
+    skin: "Dryad"
+    equipment:
+      head: "{\"material\": \"GOLDEN_HELMET\"}"
+      chest: "{\"material\": \"CHAINMAIL_CHESTPLATE\"}"
+      pants: "{\"material\": \"IRON_LEGGINGS\"}"
+      boots: "{\"material\": \"LEATHER_BOOTS\"}"
+      held: "{\"material\": \"DIAMOND_PICKAXE\"}"
+    update: true
+    effects: []
+    commands: [
+      "server connect {player} br"
+    ]
+  - name: "welcomenpc.boatracer"
+    displayname: "Back to spawn"
+    location: 119.5/27/33.5/270/0
+    type : "Player"
+    size : 1
+    skin: "FalloutVaultBoy"
+    equipment:
+      held: "{\"material\": \"TOTEM\"}"
+    update: true
+    effects: []
+    function: "NPCFunctionTeleport"
+    data:
+      to: 0.5/34/8.5/180/0
 
   - name: "skywar"
     displayname: "template.sw"
-    location: 10.5/35/-9.5/30/15
+    location: 10.5/36/-9.5/30/15
+    type : "Player"
+    size : 1
+    skin: "Dryad"
+    equipment:
+      head: "{\"material\": \"GOLDEN_HELMET\"}"
+      chest: "{\"material\": \"CHAINMAIL_CHESTPLATE\"}"
+      pants: "{\"material\": \"IRON_LEGGINGS\"}"
+      boots: "{\"material\": \"LEATHER_BOOTS\"}"
+      held: "{\"material\": \"DIAMOND_PICKAXE\"}"
+    update: true
+    effects: []
+    function: "NPCFunctionTeleport"
+    data:
+      to: 120.5/26/-14.5/270/0
+  - name: "server.random.skywar1"
+    displayname: "template.sw"
+    location: 163.5/11/-9.5/120/0
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -78,10 +142,57 @@ npcs:
     commands: [
       "server connect {player} sw"
     ]
+  - name: "server.random.skywar2"
+    displayname: "template.sw"
+    location: 163.5/11/-19.5/50/0
+    type : "Player"
+    size : 1
+    skin: "Dryad"
+    equipment:
+      head: "{\"material\": \"GOLDEN_HELMET\"}"
+      chest: "{\"material\": \"CHAINMAIL_CHESTPLATE\"}"
+      pants: "{\"material\": \"IRON_LEGGINGS\"}"
+      boots: "{\"material\": \"LEATHER_BOOTS\"}"
+      held: "{\"material\": \"DIAMOND_PICKAXE\"}"
+    update: true
+    effects: []
+    commands: [
+      "server connect {player} sw"
+    ]
+  - name: "welcomenpc.skywar"
+    displayname: "Back to spawn"
+    location: 119.5/27/-14.5/270/0
+    type : "Player"
+    size : 1
+    skin: "FalloutVaultBoy"
+    equipment:
+      held: "{\"material\": \"TOTEM\"}"
+    update: true
+    effects: []
+    function: "NPCFunctionTeleport"
+    data:
+      to: 0.5/34/8.5/180/0
 
   - name: "parkour"
     displayname: "template.pk"
-    location: 4.5/35/-13.5/10/15
+    location: 4.5/36/-13.5/10/15
+    type : "Player"
+    size : 1
+    skin: "Dryad"
+    equipment:
+      head: "{\"material\": \"GOLDEN_HELMET\"}"
+      chest: "{\"material\": \"CHAINMAIL_CHESTPLATE\"}"
+      pants: "{\"material\": \"IRON_LEGGINGS\"}"
+      boots: "{\"material\": \"LEATHER_BOOTS\"}"
+      held: "{\"material\": \"DIAMOND_PICKAXE\"}"
+    update: true
+    effects: []
+    function: "NPCFunctionTeleport"
+    data:
+      to: 120.5/26/-62.5/270/0
+  - name: "server.random.parkour1"
+    displayname: "template.pk"
+    location: 163.5/11/-57.5/120/0
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -96,10 +207,40 @@ npcs:
     commands: [
       "server connect {player} pk"
     ]
+  - name: "server.random.parkour2"
+    displayname: "template.pk"
+    location: 163.5/11/-67.5/50/0
+    type : "Player"
+    size : 1
+    skin: "Dryad"
+    equipment:
+      head: "{\"material\": \"GOLDEN_HELMET\"}"
+      chest: "{\"material\": \"CHAINMAIL_CHESTPLATE\"}"
+      pants: "{\"material\": \"IRON_LEGGINGS\"}"
+      boots: "{\"material\": \"LEATHER_BOOTS\"}"
+      held: "{\"material\": \"DIAMOND_PICKAXE\"}"
+    update: true
+    effects: []
+    commands: [
+      "server connect {player} pk"
+    ]
+  - name: "welcomenpc.parkour"
+    displayname: "Back to spawn"
+    location: 119.5/27/-62.5/270/00
+    type : "Player"
+    size : 1
+    skin: "FalloutVaultBoy"
+    equipment:
+      held: "{\"material\": \"TOTEM\"}"
+    update: true
+    effects: []
+    function: "NPCFunctionTeleport"
+    data:
+      to: 0.5/34/8.5/180/0
 
   - name: "hungergame"
     displayname: "template.hg"
-    location: -3.5/35/-13.5/350/15
+    location: -3.5/36/-13.5/350/15
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -111,13 +252,13 @@ npcs:
       held: "{\"material\": \"DIAMOND_PICKAXE\"}"
     update: true
     effects: []
-    commands: [
-      "server connect {player} hg"
-    ]
+    function: "NPCFunctionTeleport"
+    data:
+      to: -119.5/26/-61.5/90/0
 
   - name: "murder"
     displayname: "template.md"
-    location: -9.5/35/-9.5/320/15
+    location: -9.5/36/-9.5/320/15
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -129,13 +270,13 @@ npcs:
       held: "{\"material\": \"DIAMOND_PICKAXE\"}"
     update: true
     effects: []
-    commands: [
-      "server connect {player} md"
-    ]
+    function: "NPCFunctionTeleport"
+    data:
+      to: -119.5/26/-13.5/90/0
 
   - name: "bedwar"
     displayname: "template.bw"
-    location: -12.5/35/-2.5/270/15
+    location: -12.5/36/-2.5/270/15
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -147,9 +288,9 @@ npcs:
       held: "{\"material\": \"DIAMOND_PICKAXE\"}"
     update: true
     effects: []
-    commands: [
-      "server connect {player} bw"
-    ]
+    function: "NPCFunctionTeleport"
+    data:
+      to: -119.5/26/34.5/90/0
 
   - name: "shopkeeper1"
     displayname: "ShopMan"
