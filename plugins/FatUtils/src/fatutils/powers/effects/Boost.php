@@ -47,7 +47,7 @@ class BoostTicker extends PluginTask
     public $myHandler = null;
     public $timer = 20;
     public $maxSpeed = 2;
-    public $minSpeed = 0.2;
+    public $minSpeed = 0.5;
 
     public function init(Player $player)
     {
