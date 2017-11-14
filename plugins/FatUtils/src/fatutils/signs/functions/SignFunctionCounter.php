@@ -23,7 +23,7 @@ class SignFunctionCounter extends SignFunction
         }
     }
 
-    public function onTick(int $currentTick)
+    public function onTick(int $currentTick): bool
     {
         if ($currentTick % 20 == 0)// update every seconds
         {
@@ -40,6 +40,7 @@ class SignFunctionCounter extends SignFunction
                 $this->sign->updateTexte();
             }
         }
+        return true;
     }
 
     public function onInterract(Player $player, int $p_Index = -1)

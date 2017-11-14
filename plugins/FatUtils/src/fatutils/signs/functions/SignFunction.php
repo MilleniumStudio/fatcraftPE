@@ -15,7 +15,7 @@ abstract class SignFunction
         $this->sign = $sign;
     }
 
-    abstract public function onTick(int $currentTick);
+    abstract public function onTick(int $currentTick): bool;
 
     abstract public function onInterract(Player $player, int $p_Index = -1);
 }

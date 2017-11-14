@@ -26,7 +26,7 @@ class SignFunctionServer extends SignFunction
         $sign->text[0] = (new \fatutils\tools\TextFormatter("template." . $this->type))->asString() . " " . $this->id;
     }
 
-    public function onTick(int $currentTick)
+    public function onTick(int $currentTick): bool
     {
         if ($currentTick % 20 == 0)// update every seconds
         {
@@ -57,6 +57,7 @@ class SignFunctionServer extends SignFunction
             }
             $this->sign->updateTexte();
         }
+        return true;
     }
 
     public function onInterract(Player $player, int $p_Index = -1)

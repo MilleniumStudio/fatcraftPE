@@ -23,15 +23,16 @@ class CustomSign
         $this->sign = $sign;
     }
 
-    public function onTick(int $currentTick)
+    public function onTick(int $currentTick): bool
     {
         if ($this->update)
         {
             if ($this->function !== null)
             {
-                $this->function->onTick($currentTick);
+                return $this->function->onTick($currentTick);
             }
         }
+        return true;
     }
 
     public function updateTexte()

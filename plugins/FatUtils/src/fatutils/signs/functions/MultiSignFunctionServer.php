@@ -4,21 +4,21 @@ namespace fatutils\signs\functions;
 
 use pocketmine\Player;
 
-class SignFunctionMultiServer extends SignFunction
+class MultiSignFunctionServer extends SignFunction
 {
 
     private $type = null;
 
     public function __construct(&$p_MultipleSigns)
     {
-        parent::__construct("SignFunctionMultiServer", $p_MultipleSigns);
+        parent::__construct("MultiSignFunctionServer", $p_MultipleSigns);
         if (isset($this->sign->data["type"]))
         {
             $this->type = $this->sign->data["type"];
         }
         else
         {
-            throw Exception("SignFunctionServer has no server type !");
+            throw Exception("MultiSignFunctionServer has no server type !");
         }
         $offset = $p_MultipleSigns->data["offset"];
         foreach ($p_MultipleSigns->signs as $sign)
@@ -29,12 +29,13 @@ class SignFunctionMultiServer extends SignFunction
         }
     }
 
-    public function onTick(int $currentTick)
+    public function onTick(int $currentTick): bool
     {
         foreach ($this->sign->signs as $sign)
         {
             $sign->onTick($currentTick);
         }
+        return true;
     }
 
     public function onInterract(Player $player, int $p_Index = -1)

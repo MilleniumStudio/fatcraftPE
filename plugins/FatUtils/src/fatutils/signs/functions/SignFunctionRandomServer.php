@@ -13,19 +13,19 @@ class SignFunctionRandomServer extends SignFunction
 
     public function __construct(&$sign)
     {
-        parent::__construct("SignFunctionServer", $sign);
+        parent::__construct("SignFunctionRandomServer", $sign);
         if (isset($this->sign->data["type"]))
         {
             $this->type = $this->sign->data["type"];
         }
         else
         {
-            throw Exception("SignFunctionServer has no server!");
+            throw Exception("SignFunctionRandomServer has no server!");
         }
         $sign->text[0] = (new \fatutils\tools\TextFormatter("template." . $this->type))->asString();
     }
 
-    public function onTick(int $currentTick)
+    public function onTick(int $currentTick): bool
     {
         if ($currentTick % 20 == 0)// update every seconds
         {
@@ -64,6 +64,7 @@ class SignFunctionRandomServer extends SignFunction
             }
             $this->sign->updateTexte();
         }
+        return true;
     }
 
     public function onInterract(Player $player, int $p_Index = -1)

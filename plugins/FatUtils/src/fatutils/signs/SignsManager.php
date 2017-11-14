@@ -211,8 +211,14 @@ class SignsManager implements Listener, CommandExecutor
                 {
                     switch ($function)
                     {
-                        case "SignFunctionMultiServer":
-                            $multipleSign->function = new functions\SignFunctionMultiServer($multipleSign);
+                        case "MultiSignFunctionServer":
+                            $multipleSign->function = new functions\MultiSignFunctionServer($multipleSign);
+                            break;
+                        case "MultiSignFunctionRandomServer":
+                            $multipleSign->function = new functions\MultiSignFunctionRandomServer($multipleSign);
+                            break;
+                        case "MultiSignFunctionTeleport":
+                            $multipleSign->function = new functions\MultiSignFunctionTeleport($multipleSign);
                             break;
 
                         default:

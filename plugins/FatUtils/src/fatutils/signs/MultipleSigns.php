@@ -14,18 +14,22 @@ class MultipleSigns extends CustomSign
         $this->signs = $tiles;
     }
 
-    public function onTick(int $currentTick)
+    public function onTick(int $currentTick): bool
     {
-        if ($this->update)
+        if (!parent::onTick($currentTick))
         {
-            foreach ($this->signs as $sign)
+            if ($this->update)
             {
-                if ($sign->function !== null)
+                foreach ($this->signs as $sign)
                 {
-                    $sign->function->onTick($currentTick);
+                    if ($sign->function !== null)
+                    {
+                        return $sign->function->onTick($currentTick);
+                    }
                 }
             }
         }
+        return true;
     }
 
     public function updateTexte()
