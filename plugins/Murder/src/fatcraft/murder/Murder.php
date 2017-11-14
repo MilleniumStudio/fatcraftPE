@@ -107,7 +107,7 @@ class Murder extends PluginBase implements Listener
 			->addTimer($this->m_WaitingTimer)
 			->addWhiteSpace()
 			->addMutableLine(function () {
-				return new TextFormatter("game.waitingForMore", ["amount" => PlayersManager::getInstance()->getMinPlayer() - count($this->getServer()->getOnlinePlayers())]);
+				return new TextFormatter("game.waitingForMore", ["amount" => max(0, PlayersManager::getInstance()->getMinPlayer() - count($this->getServer()->getOnlinePlayers()))]);
 			});
     }
 

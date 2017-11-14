@@ -114,7 +114,7 @@ class BoatRacer extends PluginBase implements Listener
 			->addWhiteSpace()
 			->addMutableLine(function ()
 			{
-				return new TextFormatter("game.waitingForMore", ["amount" => PlayersManager::getInstance()->getMinPlayer() - count($this->getServer()->getOnlinePlayers())]);
+				return new TextFormatter("game.waitingForMore", ["amount" => max(0, PlayersManager::getInstance()->getMinPlayer() - count($this->getServer()->getOnlinePlayers()))]);
 			});
 
         FatUtils::getInstance()->getCommand("pwr")->setExecutor(PowersManager::getInstance());
