@@ -16,14 +16,15 @@ use pocketmine\scheduler\TaskHandler;
 class Timer
 {
 	private $m_OriginTimeout = 0;
-    private $m_Delay = 0;
-	private $m_TimeLeft = 0;
+    private $m_TickDelay = 0;
+	private $m_TickLeft = 0;
 
 	private $m_Paused = false;
 
 	private $m_StartCallback;
 	private $m_StopCallback;
 	private $m_TickCallback;
+	private $m_SecondCallback;
 
 	private $m_Task = null;
 
@@ -34,12 +35,12 @@ class Timer
 	public function __construct(int $p_Timeout)
 	{
 		$this->m_OriginTimeout = $p_Timeout;
-        $this->m_TimeLeft = $p_Timeout;
+        $this->m_TickLeft = $p_Timeout;
 	}
 
-    public function addDelay(int $p_Delay):Timer
+    public function addTickDelay(int $p_Delay):Timer
     {
-        $this->m_Delay = $p_Delay;
+        $this->m_TickDelay = $p_Delay;
         return $this;
     }
 
@@ -61,9 +62,15 @@ class Timer
         return $this;
     }
 
-    public function getElapsedTimeInTick():int
+	public function addSecondCallback(Callable $p_SecondCallback):Timer
+	{
+		$this->m_SecondCallback[] = $p_SecondCallback;
+		return $this;
+	}
+
+	public function getElapsedTimeInTick():int
     {
-        return $this->m_OriginTimeout - $this->m_TimeLeft;
+        return $this->m_OriginTimeout - $this->m_TickLeft;
     }
 
     public function getTimeSpentRatio():float
@@ -76,34 +83,34 @@ class Timer
 	 */
 	public function getTickLeft(): int
 	{
-		return $this->m_TimeLeft;
+		return $this->m_TickLeft;
 	}
 
     public function getSecondLeft(): int
     {
-        return $this->m_TimeLeft / 20;
+        return $this->m_TickLeft / 20;
     }
 
     public function getDelayLeft(): int
     {
-        return $this->m_Delay;
+        return $this->m_TickDelay;
     }
 
     /* PLEASE DON'T USE THAT, it's intended for package scope */
     function _modTime(int $p_Modifier)
     {
-        $this->m_TimeLeft += $p_Modifier;
+        $this->m_TickLeft += $p_Modifier;
     }
 
     /* PLEASE DON'T USE THAT, it's intended for package scope */
     function _modDelay(int $p_Modifier)
     {
-        $this->m_Delay += $p_Modifier;
+        $this->m_TickDelay += $p_Modifier;
     }
 
     public function addTime(int $p_Modifier)
     {
-        $this->m_TimeLeft += $p_Modifier;
+        $this->m_TickLeft += $p_Modifier;
         $this->m_OriginTimeout += $p_Modifier;
     }
 
@@ -119,6 +126,11 @@ class Timer
     {
         return $this->m_TickCallback;
     }
+
+	public function getSecondCallback()
+	{
+		return $this->m_SecondCallback;
+	}
 
 	/**
 	 * @return mixed
@@ -191,6 +203,10 @@ class Timer
 								$this->m_Started = true;
 							}
 							$this->m_TimerInstance->_onTick();
+
+							if ($this->m_TimerInstance->getTickLeft() % 20 == 0)
+								$this->m_TimerInstance->_onSecond();
+
 							$this->m_TimerInstance->_modTime(-1);
 						}
 					} else
@@ -230,6 +246,19 @@ class Timer
 			}
 		}
     }
+
+	/* PLEASE DON'T USE THAT, it's intended for package scope */
+	public function _onSecond()
+	{
+		if (!is_null($this->getSecondCallback()) && gettype($this->getSecondCallback()) === "array")
+		{
+			foreach ($this->getSecondCallback() as $l_Callback)
+			{
+				if (is_callable($l_Callback))
+					call_user_func($l_Callback);
+			}
+		}
+	}
 
     /* PLEASE DON'T USE THAT, it's intended for package scope */
     public function _onStop()

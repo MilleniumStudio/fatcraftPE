@@ -133,6 +133,22 @@ class Bedwars extends PluginBase implements Listener
 			->addStopCallback(function ()
 			{
 				$this->startGame();
+			})
+			->addSecondCallback(function () {
+				if ($this->m_WaitingTimer instanceof Timer)
+				{
+					$l_SecLeft = $this->m_WaitingTimer->getSecondLeft();
+					$l_Text = "";
+					if ($l_SecLeft == 3)
+						$l_Text = TextFormat::RED . $l_SecLeft;
+					else if ($l_SecLeft == 2)
+						$l_Text = TextFormat::GOLD . $l_SecLeft;
+					else if ($l_SecLeft == 1)
+						$l_Text = TextFormat::YELLOW . $l_SecLeft;
+
+					foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+						$l_Player->addTitle($l_Text, "");
+				}
 			});
 
 		Sidebar::getInstance()
@@ -528,12 +544,16 @@ class Bedwars extends PluginBase implements Listener
 
     public function onPlayerQuit(PlayerQuitEvent $p_Event)
     {
-    	$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Event->getPlayer());
-    	if ($l_FatPlayer != null)
-    		$l_FatPlayer->setOutOfGame();
+		if (GameManager::getInstance()->isPlaying())
+		{
+			$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Event->getPlayer());
+			if ($l_FatPlayer != null)
+				$l_FatPlayer->setOutOfGame();
+
+			$this->checkGameState();
+		}
 
 		Sidebar::getInstance()->update();
-		$this->checkGameState();
 
         new DelayedExec(function () use ($p_Event)
 		{

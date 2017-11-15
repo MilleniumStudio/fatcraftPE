@@ -104,6 +104,22 @@ class BoatRacer extends PluginBase implements Listener
 			->addStopCallback(function ()
 			{
 				$this->startGame();
+			})
+			->addSecondCallback(function () {
+				if ($this->m_WaitingTimer instanceof Timer)
+				{
+					$l_SecLeft = $this->m_WaitingTimer->getSecondLeft();
+					$l_Text = "";
+					if ($l_SecLeft == 3)
+						$l_Text = TextFormat::RED . $l_SecLeft;
+					else if ($l_SecLeft == 2)
+						$l_Text = TextFormat::GOLD . $l_SecLeft;
+					else if ($l_SecLeft == 1)
+						$l_Text = TextFormat::YELLOW . $l_SecLeft;
+
+					foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+						$l_Player->addTitle($l_Text, "");
+				}
 			});
 
 
@@ -332,11 +348,14 @@ class BoatRacer extends PluginBase implements Listener
 
 	public function onPlayerQuit(PlayerQuitEvent $p_Event)
 	{
-		$this->destroyPlayerBoat($p_Event->getPlayer());
+		if (GameManager::getInstance()->isPlaying())
+		{
+			$this->destroyPlayerBoat($p_Event->getPlayer());
 
-		$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Event->getPlayer());
-		if ($l_FatPlayer != null)
-			$l_FatPlayer->setOutOfGame();
+			$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Event->getPlayer());
+			if ($l_FatPlayer != null)
+				$l_FatPlayer->setOutOfGame();
+		}
 
 		Sidebar::getInstance()->update();
 

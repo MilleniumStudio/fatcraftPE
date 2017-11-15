@@ -12,11 +12,13 @@ use fatutils\npcs\NpcsManager;
 use fatutils\powers\PowersManager;
 use fatutils\signs\SignsManager;
 use fatutils\shop\ShopManager;
+use fatutils\tools\particles\ParticleBuilder;
 use fatutils\tools\WorldUtils;
 use fatutils\tools\TextFormatter;
 use fatutils\tools\SkinRepository;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
+use pocketmine\level\Position;
 use pocketmine\level\sound\GenericSound;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
@@ -105,6 +107,7 @@ class FatUtils extends PluginBase
                 case "atest":
                     if ($sender instanceof Player)
                     {
+                    	ParticleBuilder::fromRaw($args[1])->playForPlayer(Position::fromObject($sender->add(1, 0, 0), $sender->getLevel()), $sender);
                     }
                     break;
                 case "fillchests":

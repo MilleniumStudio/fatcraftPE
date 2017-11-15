@@ -100,6 +100,22 @@ class Murder extends PluginBase implements Listener
 			->setTitle(new TextFormatter("timer.waiting.title"))
 			->addStopCallback(function () {
 				$this->startGame();
+			})
+			->addSecondCallback(function () {
+				if ($this->m_WaitingTimer instanceof Timer)
+				{
+					$l_SecLeft = $this->m_WaitingTimer->getSecondLeft();
+					$l_Text = "";
+					if ($l_SecLeft == 3)
+						$l_Text = TextFormat::RED . $l_SecLeft;
+					else if ($l_SecLeft == 2)
+						$l_Text = TextFormat::GOLD . $l_SecLeft;
+					else if ($l_SecLeft == 1)
+						$l_Text = TextFormat::YELLOW . $l_SecLeft;
+
+					foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+						$l_Player->addTitle($l_Text, "");
+				}
 			});
 
 		Sidebar::getInstance()
@@ -372,7 +388,11 @@ class Murder extends PluginBase implements Listener
 
     public function onPlayerQuit(PlayerQuitEvent $p_Event)
     {
-		PlayersManager::getInstance()->getFatPlayer($p_Event->getPlayer())->setOutOfGame();
+		if (GameManager::getInstance()->isPlaying())
+		{
+			PlayersManager::getInstance()->getFatPlayer($p_Event->getPlayer())->setOutOfGame();
+		}
+
 		Sidebar::getInstance()->update();
 
         new DelayedExec(function ()
@@ -398,41 +418,50 @@ class Murder extends PluginBase implements Listener
      */
     public function playerDeathEvent(PlayerDeathEvent $e)
     {
-        $p = $e->getEntity();
-        PlayersManager::getInstance()->getFatPlayer($p)->setOutOfGame();
+		if (GameManager::getInstance()->isPlaying())
+		{
+			$p = $e->getEntity();
+			PlayersManager::getInstance()->getFatPlayer($p)->setOutOfGame();
 
-        $customDeathMessage = "";
+			$customDeathMessage = "";
 
-        $killer = null;
-        $lastDamageEvent = $p->getLastDamageCause();
-        if ($lastDamageEvent instanceof EntityDamageByEntityEvent) {
-            /** @var Player $killer */
-            $killer = $lastDamageEvent->getDamager();
-        }
+			$killer = null;
+			$lastDamageEvent = $p->getLastDamageCause();
+			if ($lastDamageEvent instanceof EntityDamageByEntityEvent)
+			{
+				/** @var Player $killer */
+				$killer = $lastDamageEvent->getDamager();
+			}
 
-        //if it's the murderer
-        if ($p->getUniqueId()->equals($this->m_murdererUUID)) {
-            $customDeathMessage = $p->getName() . " était le meurtrier et a été tué par " . $killer->getName();
-            // endGame, lambdas win
-            $this->endGameLambdas($killer);
-        } else {
-            $customDeathMessage = $p->getName() . " a été tué";
-            if (PlayersManager::getInstance()->getInGamePlayerLeft() <= 1) {
-                $this->m_playersKilled++;
-                // endgame, murderer wins
-                $this->endGameMurderer();
-            } else if ($killer == null || $killer->getUniqueId()->equals($this->m_murdererUUID)) {
-                // else heu... the game continue ^^
-                $this->m_playersKilled++;
-            } else {
-                $killer->sendMessage("You kill an innocent !");
-                $killer->kill();
-            }
-        }
-        $e->setDeathMessage($customDeathMessage);
+			//if it's the murderer
+			if ($p->getUniqueId()->equals($this->m_murdererUUID))
+			{
+				$customDeathMessage = $p->getName() . " était le meurtrier et a été tué par " . $killer->getName();
+				// endGame, lambdas win
+				$this->endGameLambdas($killer);
+			} else
+			{
+				$customDeathMessage = $p->getName() . " a été tué";
+				if (PlayersManager::getInstance()->getInGamePlayerLeft() <= 1)
+				{
+					$this->m_playersKilled++;
+					// endgame, murderer wins
+					$this->endGameMurderer();
+				} else if ($killer == null || $killer->getUniqueId()->equals($this->m_murdererUUID))
+				{
+					// else heu... the game continue ^^
+					$this->m_playersKilled++;
+				} else
+				{
+					$killer->sendMessage("You kill an innocent !");
+					$killer->kill();
+				}
+			}
+			$e->setDeathMessage($customDeathMessage);
 
-        $p->setGamemode(3);
-        Sidebar::getInstance()->update();
+			$p->setGamemode(3);
+			Sidebar::getInstance()->update();
+		}
     }
 
     public function onArrowHit(ProjectileHitEvent $p_event)

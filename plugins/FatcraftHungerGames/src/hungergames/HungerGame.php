@@ -69,6 +69,22 @@ class HungerGame extends PluginBase implements Listener
 			->addStopCallback(function ()
 			{
 				$this->startGame();
+			})
+			->addSecondCallback(function () {
+				if ($this->m_WaitingTimer instanceof Timer)
+				{
+					$l_SecLeft = $this->m_WaitingTimer->getSecondLeft();
+					$l_Text = "";
+					if ($l_SecLeft == 3)
+						$l_Text = TextFormat::RED . $l_SecLeft;
+					else if ($l_SecLeft == 2)
+						$l_Text = TextFormat::GOLD . $l_SecLeft;
+					else if ($l_SecLeft == 1)
+						$l_Text = TextFormat::YELLOW . $l_SecLeft;
+
+					foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+						$l_Player->addTitle($l_Text, "");
+				}
 			});
 
 		if ($this->getHungerGameConfig()->isSkyWars())
@@ -257,9 +273,12 @@ class HungerGame extends PluginBase implements Listener
 	//---------------------
 	public function playerQuitEvent(PlayerQuitEvent $e)
 	{
-		$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($e->getPlayer());
-		if ($l_FatPlayer != null)
-			$l_FatPlayer->setOutOfGame();
+		if (GameManager::getInstance()->isPlaying())
+		{
+			$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($e->getPlayer());
+			if ($l_FatPlayer != null)
+				$l_FatPlayer->setOutOfGame();
+		}
 
 		Sidebar::getInstance()->update();
 
