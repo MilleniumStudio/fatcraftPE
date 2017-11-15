@@ -42,19 +42,27 @@ MySQL:
     cacheLimit: 100
 
 FloatingTops:
+- statName: br_XP
+  name: "Top 10 FormulaBoat"
+  location: map/161/16/25.24/51/0
+  lines: 10
 - statName: sw_XP
-  name: "Top 5 SkyWar"
-  location: map/16/11/-5
-  lines: 5
-- statName: bw_XP
-  name: "Top 5 BedWar"
-  location: map/-5/11/-15
-  lines: 5
-- statName: hg_XP
-  name: "Top 5 HungerGame"
-  location: map/-15/11/6
-  lines: 5
+  name: "Top 10 SkyWar"
+  location: map/161/16/-22.24/51/0
+  lines: 10
 - statName: pk_XP
-  name: "Top 5 Parkour"
-  location: map/7/11/17
-  lines: 5
+  name: "Top 10 Parkour"
+  location: map/161/16/-70.24/51/0
+  lines: 10
+- statName: hg_XP
+  name: "Top 10 HungerGame"
+  location: map/-161/16/-53.95/237/0
+  lines: 10
+- statName: md_XP
+  name: "Top 10 Murder"
+  location: map/-161/16/-5.88/237/0
+  lines: 10
+- statName: bw_XP
+  name: "Top 10 BeaconWar"
+  location: map/-161/16/42.97/237/0
+  lines: 10
