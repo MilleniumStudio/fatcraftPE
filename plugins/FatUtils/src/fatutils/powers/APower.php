@@ -30,6 +30,7 @@ abstract class APower
         $tags->powerKey = new StringTag("powerKey", $this->uniqueId);
         $item->setNamedTag($tags);
         $owner->getInventory()->setItem(PowersManager::SLOT, $item);
+		$owner->getInventory()->setHeldItemIndex(PowersManager::SLOT);
     }
     public function getUniqueId():string {
         return $this->uniqueId;
