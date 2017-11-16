@@ -1,16 +1,20 @@
 default:
+  prefix: ""
+  color: "§7"
   allow:
     - chat.sendMessageTest
 
 VIP:
   extends: default
-  prefix: §dVIP
+  prefix: "§6VIP "
+  color: §f
   allow:
-    - truc.machin
+    - sign.network.serverjoin
 
 Modo:
   extends: VIP
-  prefix: §1modo
+  prefix: "§1Staff "
+  color: §f
   allow:
     - ban.uuid
     - ban.ip
@@ -22,14 +26,15 @@ Modo:
 
 Admin:
   extends: Modo
-  prefix: §4admin
+  prefix: "§4Admin "
+  color: §f
   allow:
     - server.stop
     - op.kick.modo
     - op.ban.modo
     - perms
     - command.gps
-    
+
 Test:
    extends: Admin
    prefix: test

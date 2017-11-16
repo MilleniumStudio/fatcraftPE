@@ -26,6 +26,7 @@ use pocketmine\level\Position;
 use pocketmine\level\particle\Particle;
 use fatutils\tools\particles\ParticleBuilder;
 use pocketmine\event\player\PlayerItemHeldEvent;
+use fatutils\permission\PermissionManager;
 
 class EventListener implements Listener
 {
@@ -101,12 +102,8 @@ class EventListener implements Listener
 				$e->setCancelled(true);
 			} else
 			{
-				if ($l_FatPlayer->getPermissionGroup() === "VIP")
-					$e->setMessage(TextFormat::WHITE . $e->getMessage() . TextFormat::RESET);
-				else if ($l_FatPlayer->getPermissionGroup() === "Admin")
-					$e->setMessage(TextFormat::GOLD . $e->getMessage() . TextFormat::RESET);
-				else
-					$e->setMessage(TextFormat::GRAY . $e->getMessage() . TextFormat::RESET);
+                            $color = PermissionManager::getInstance()->getFatPlayerGroupColor($l_FatPlayer);
+                            $e->setMessage($color . $e->getMessage());
 			}
 		}
 	}
@@ -122,9 +119,9 @@ class EventListener implements Listener
             if (FatPlayer::$m_OptionDisplayHealth)
             {
                 new DelayedExec(function () use ($p)
-				{
-					PlayersManager::getInstance()->getFatPlayer($p)->updatePlayerNames();
-				}, 1);
+                {
+                        PlayersManager::getInstance()->getFatPlayer($p)->updatePlayerNames();
+                }, 1);
             }
         }
     }
@@ -140,9 +137,9 @@ class EventListener implements Listener
             if (FatPlayer::$m_OptionDisplayHealth)
             {
                 new DelayedExec(function () use ($p)
-				{
-					PlayersManager::getInstance()->getFatPlayer($p)->updatePlayerNames();
-				}, 1);
+                {
+                        PlayersManager::getInstance()->getFatPlayer($p)->updatePlayerNames();
+                }, 1);
             }
         }
     }

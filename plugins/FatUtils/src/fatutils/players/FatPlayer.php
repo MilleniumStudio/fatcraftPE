@@ -181,10 +181,10 @@ class FatPlayer
         if (self::$m_OptionDisplayGroupPrefix) {
             $l_GroupPrefix = PermissionManager::getInstance()->getFatPlayerGroupPrefix($this);
             if (strlen($l_GroupPrefix) > 0)
-                $l_Ret .= TextFormat::RESET . TextFormat::GRAY . "[" . TextFormat::WHITE . $l_GroupPrefix . TextFormat::RESET . TextFormat::GRAY . "]";
+                $l_Ret .= TextFormat::RESET . $l_GroupPrefix . TextFormat::RESET;
         }
 
-        $l_Ret .= TextFormat::WHITE . $this->getPlayer()->getName() . TextFormat::RESET . TextFormat::WHITE;
+        $l_Ret .= $this->getPlayer()->getName() . TextFormat::RESET . TextFormat::WHITE;
 
         $this->getPlayer()->setDisplayName($l_Ret);
 

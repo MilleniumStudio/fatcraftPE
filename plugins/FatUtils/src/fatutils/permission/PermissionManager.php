@@ -15,6 +15,7 @@ class PermissionManager
     private $m_permissions = [];
     private $m_processedPerms = [];
     private $m_prefix = [];
+    private $m_Colors = [];
     private $m_activePerms = [];
 
     public static function getInstance(): PermissionManager
@@ -40,7 +41,9 @@ class PermissionManager
             foreach ($value as $k => $v) {
                 if ($k == "prefix") {
                     $this->m_prefix[$key] = $v;
-                } else if ($k == "extends") {
+                } else if ($k == "color") {
+                    $this->m_Colors[$key] = $v;
+                }  else if ($k == "extends") {
                     $this->m_processedPerms[$key] = $this->m_processedPerms[$v];
                 } else if ($k == "allow") {
                     foreach ($v as $item) {
@@ -86,6 +89,15 @@ class PermissionManager
 		$groupName = $p_player->getPermissionGroup();
 		if (array_key_exists($groupName, $this->m_prefix))
 			return $this->m_prefix[$groupName];
+
+		return "";
+	}
+
+	public function getFatPlayerGroupColor(FatPlayer $p_player)
+	{
+		$groupName = $p_player->getPermissionGroup();
+		if (array_key_exists($groupName, $this->m_Colors))
+			return $this->m_Colors[$groupName];
 
 		return "";
 	}
