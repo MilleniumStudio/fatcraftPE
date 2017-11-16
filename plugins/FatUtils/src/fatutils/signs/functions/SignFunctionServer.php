@@ -10,6 +10,7 @@ class SignFunctionServer extends SignFunction
 
     private $type = null;
     private $id = -1;
+    private $onlyVIP = false;
 
     public function __construct(&$sign)
     {
@@ -22,6 +23,10 @@ class SignFunctionServer extends SignFunction
         else
         {
             throw Exception("SignFunctionServer has no server!");
+        }
+        if (isset($this->sign->data["onlyVIP"]))
+        {
+            $this->onlyVIP = $this->sign->data["onlyVIP"];
         }
         $sign->text[0] = (new \fatutils\tools\TextFormatter("template." . $this->type))->asString() . " " . $this->id;
     }
@@ -41,7 +46,14 @@ class SignFunctionServer extends SignFunction
                 if ($server["status"] == "open")
                 {
                     $this->sign->text[2] = (new \fatutils\tools\TextFormatter("game.status.open"))->asString() . $players;
-                    $this->sign->text[3] = (new \fatutils\tools\TextFormatter("game.status.join"))->asString();
+                    if ($this->onlyVIP)
+                    {
+                        $this->sign->text[3] = (new \fatutils\tools\TextFormatter("game.status.joinvip"))->asString();
+                    }
+                    else
+                    {
+                        $this->sign->text[3] = (new \fatutils\tools\TextFormatter("game.status.join"))->asString();
+                    }
                 }
                 else if ($server["status"] == "closed")
                 {

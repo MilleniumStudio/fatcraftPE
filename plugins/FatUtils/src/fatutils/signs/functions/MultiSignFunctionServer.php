@@ -8,6 +8,7 @@ class MultiSignFunctionServer extends SignFunction
 {
 
     private $type = null;
+    private $onlyVIP = false;
 
     public function __construct(&$p_MultipleSigns)
     {
@@ -20,11 +21,16 @@ class MultiSignFunctionServer extends SignFunction
         {
             throw Exception("MultiSignFunctionServer has no server type !");
         }
+        if (isset($this->sign->data["onlyVIP"]))
+        {
+            $this->onlyVIP = $this->sign->data["onlyVIP"];
+        }
         $offset = $p_MultipleSigns->data["offset"];
         foreach ($p_MultipleSigns->signs as $sign)
         {
             $sign->data["type"] = $this->type;
             $sign->data["id"] = $sign->sign->namedtag->index + $offset;
+            $sign->data["onlyVIP"] = $this->onlyVIP;
             $sign->function = new SignFunctionServer($sign);
         }
     }
