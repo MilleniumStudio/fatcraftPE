@@ -1,7 +1,7 @@
 #Holograms config
 
 holograms:
-  - name: "test"
-    location: map/-7.5347/13/13.7712
+  - name: "welcom.message"
+    location: map/0/61/54
     title : "hologram.lobby.welcome.title"
     text: "hologram.lobby.welcome.text"
