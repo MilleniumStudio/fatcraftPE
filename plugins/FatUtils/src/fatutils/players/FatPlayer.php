@@ -36,8 +36,9 @@ class FatPlayer
     public static $m_OptionDisplayHealth = true;
     public static $m_OptionDisplayGroupPrefix = true;
     public static $m_OptionDisplayTeamPrefix = true;
+	public static $m_OptionDisplayNameTag = true;
 
-    private $m_Player;
+	private $m_Player;
     private $m_Name;
     private $m_State = 0;
     private $m_OutOfGame = false;
@@ -172,37 +173,44 @@ class FatPlayer
     {
         $l_Ret = "";
 
-        // TEAM PREFIX
-        $l_Team = TeamsManager::getInstance()->getPlayerTeam($this->getPlayer());
-        if (self::$m_OptionDisplayTeamPrefix && isset($l_Team))
-            $l_Ret .= $l_Team->getPrefix() . TextFormat::WHITE . TextFormat::RESET;
+        if (self::$m_OptionDisplayNameTag)
+		{
+			// TEAM PREFIX
+			$l_Team = TeamsManager::getInstance()->getPlayerTeam($this->getPlayer());
+			if (self::$m_OptionDisplayTeamPrefix && isset($l_Team))
+				$l_Ret .= $l_Team->getPrefix() . TextFormat::WHITE . TextFormat::RESET;
 
-        // GROUP PREFIX
-        if (self::$m_OptionDisplayGroupPrefix) {
-            $l_GroupPrefix = PermissionManager::getInstance()->getFatPlayerGroupPrefix($this);
-            if (strlen($l_GroupPrefix) > 0)
-                $l_Ret .= TextFormat::RESET . $l_GroupPrefix . TextFormat::RESET;
-        }
+			// GROUP PREFIX
+			if (self::$m_OptionDisplayGroupPrefix)
+			{
+				$l_GroupPrefix = PermissionManager::getInstance()->getFatPlayerGroupPrefix($this);
+				if (strlen($l_GroupPrefix) > 0)
+					$l_Ret .= TextFormat::RESET . $l_GroupPrefix . TextFormat::RESET;
+			}
 
-        $l_Ret .= $this->getPlayer()->getName() . TextFormat::RESET . TextFormat::WHITE;
+			$l_Ret .= $this->getPlayer()->getName() . TextFormat::RESET . TextFormat::WHITE;
 
-        $this->getPlayer()->setDisplayName($l_Ret);
+			$this->getPlayer()->setDisplayName($l_Ret);
 
-        // HEALTH BAR
-        if (self::$m_OptionDisplayHealth) {
-            $l_HealthBar = "\n[" . TextFormat::RED;
-            $l_PlayerHealth = $this->getPlayer()->getHealth() * 10 / $this->getPlayer()->getMaxHealth();
-            for ($i = 0; $i < 10; $i++) {
-                if ($l_PlayerHealth > 0) {
-                    $l_HealthBar .= "█";
-                    $l_PlayerHealth--;
-                } else
-                    $l_HealthBar .= " ";
-            }
-            $l_HealthBar .= TextFormat::RESET . "]";
+			// HEALTH BAR
+			if (self::$m_OptionDisplayHealth)
+			{
+				$l_HealthBar = "\n[" . TextFormat::RED;
+				$l_PlayerHealth = $this->getPlayer()->getHealth() * 10 / $this->getPlayer()->getMaxHealth();
+				for ($i = 0; $i < 10; $i++)
+				{
+					if ($l_PlayerHealth > 0)
+					{
+						$l_HealthBar .= "█";
+						$l_PlayerHealth--;
+					} else
+						$l_HealthBar .= " ";
+				}
+				$l_HealthBar .= TextFormat::RESET . "]";
 
-            $l_Ret .= $l_HealthBar;
-        }
+				$l_Ret .= $l_HealthBar;
+			}
+		}
 
         $this->getPlayer()->setNameTag($l_Ret);
     }

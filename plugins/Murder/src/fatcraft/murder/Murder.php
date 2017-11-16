@@ -95,7 +95,9 @@ class Murder extends PluginBase implements Listener
         WorldUtils::stopWorldsTime();
         WorldUtils::setWorldsTime(15000); // = 12h * 3600 seconds * 20 ticks (day = 864000)
 
-		$this->m_WaitingTimer = new BossbarTimer(GameManager::getInstance()->getWaitingTickDuration());
+		FatPlayer::$m_OptionDisplayNameTag = false;
+
+		$this->m_WaitingTimer = new DisplayableTimer(GameManager::getInstance()->getWaitingTickDuration());
 		$this->m_WaitingTimer
 			->setTitle(new TextFormatter("timer.waiting.title"))
 			->addStopCallback(function () {
