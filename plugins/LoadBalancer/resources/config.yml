@@ -15,6 +15,7 @@ node:
   type: entry
   id: 1
   state: open
+  name: example_name
 
 ## Max players management
 ## max        : if set to -1, the type based is used

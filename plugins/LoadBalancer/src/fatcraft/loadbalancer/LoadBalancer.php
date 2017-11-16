@@ -39,6 +39,7 @@ class LoadBalancer extends PluginBase implements Listener
     private $m_ServerUUID;
     private $m_ServerType;
     private $m_ServerId;
+    private $m_ServerName = "missing name";
     private $m_ServerState = LoadBalancer::SERVER_STATE_CLOSED; // open / closed
 
     /** @var \mysqli */
@@ -69,9 +70,11 @@ class LoadBalancer extends PluginBase implements Listener
         $this->m_ServerUUID = $this->m_Mysql->escape_string($this->getServer()->getServerUniqueId());
         $this->m_ServerType = (getenv("SERVER_TYPE") !== null) ? getenv("SERVER_TYPE") : $this->getConfig()->getNested("node.type");
         $this->m_ServerId = (getenv("SERVER_ID") !== null) ? getenv("SERVER_ID") : $this->getConfig()->getNested("node.id");
+        $this->m_ServerName = /*(getenv("TEMPLATE_NAME") !== null) ? getenv("TEMPLATE_NAME") :*/ $this->getConfig()->getNested("node.name");
 
         $this->getLogger()->info("Config : node -> " . $this->m_ServerType . "-" . $this->m_ServerId);
         $this->getLogger()->info("Server uinique ID : " . $this->m_ServerUUID);
+        $this->getLogger()->info("Server name : " . $this->m_ServerName);
 
         //init database
         $this->initDatabase();
@@ -165,6 +168,11 @@ class LoadBalancer extends PluginBase implements Listener
         return $this->m_ServerId;
     }
 
+    public function getServerName()
+    {
+        return $this->m_ServerName;
+    }
+
     public function setServerState(String $p_State)
     {
         $this->m_ServerState = $p_State;
@@ -215,6 +223,7 @@ class LoadBalancer extends PluginBase implements Listener
         {
             $server["sid"] = $result->rows[0]["sid"];
             $server["type"] = $result->rows[0]["type"];
+            $server["name"] = $result->rows[0]["name"];
             $server["id"] = $result->rows[0]["id"];
             $server["ip"] = $result->rows[0]["ip"];
             $server["port"] = $result->rows[0]["port"];
@@ -233,6 +242,7 @@ class LoadBalancer extends PluginBase implements Listener
             sid CHAR(36) PRIMARY KEY,
             type VARCHAR(20),
             id INT(11),
+            name VARCHAR(25),
             ip VARCHAR(15),
             port SMALLINT,
             status VARCHAR(63) DEFAULT closed,
@@ -256,10 +266,11 @@ class LoadBalancer extends PluginBase implements Listener
 //        $this->getLogger()->critical("Update me Task ");
         $this::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
             new DirectQueryMysqlTask($this::getInstance()->getCredentials(),
-                "INSERT INTO servers (sid, type, id, ip, port, status, online, max) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE online = ?, status = ?, max = ?, laston=CURRENT_TIMESTAMP", [
+                "INSERT INTO servers (sid, type, id, name, ip, port, status, online, max) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE online = ?, status = ?, max = ?, laston=CURRENT_TIMESTAMP", [
                 ["s", $this::getInstance()->m_ServerUUID],
                 ["s", $this->m_ServerType],
                 ["i", $this->m_ServerId],
+                ["s", $this->m_ServerName],
                 ["s", $this->m_Mysql->escape_string($this->getConfig()->getNested("external_ip"))],
                 ["i", $this::getInstance()->getServer()->getPort()],
                 ["s", $this->m_ServerState],
@@ -316,6 +327,7 @@ class LoadBalancer extends PluginBase implements Listener
             $server["sid"] = $result->rows[0]["sid"];
             $server["type"] = $result->rows[0]["type"];
             $server["id"] = $result->rows[0]["id"];
+            $server["name"] = $result->rows[0]["name"];
             $server["ip"] = $result->rows[0]["ip"];
             $server["port"] = $result->rows[0]["port"];
             $server["status"] = $result->rows[0]["status"];
@@ -386,6 +398,7 @@ class LoadBalancer extends PluginBase implements Listener
                 $server["sid"] = $row["sid"];
                 $server["type"] = $row["type"];
                 $server["id"] = $row["id"];
+                $server["name"] = $row["name"];
                 $server["ip"] = $row["ip"];
                 $server["port"] = $row["port"];
                 $server["status"] = $row["status"];
@@ -445,6 +458,7 @@ class LoadBalancer extends PluginBase implements Listener
                 $server["sid"] = $row["sid"];
                 $server["type"] = $row["type"];
                 $server["id"] = $row["id"];
+                $server["name"] = $row["name"];
                 $server["ip"] = $row["ip"];
                 $server["port"] = $row["port"];
                 $server["status"] = $row["status"];
@@ -472,6 +486,7 @@ class LoadBalancer extends PluginBase implements Listener
             $server["sid"] = $result->rows[0]["sid"];
             $server["type"] = $result->rows[0]["type"];
             $server["id"] = $result->rows[0]["id"];
+            $server["name"] = $result->rows[0]["name"];
             $server["ip"] = $result->rows[0]["ip"];
             $server["port"] = $result->rows[0]["port"];
             $server["status"] = $result->rows[0]["status"];
