@@ -15,7 +15,7 @@ node:
   type: bw
   id: 1
   state: open
-  name: Chineese dreams
+  name: Chineese Dreams
 
 ## Max players management
 ## max        : if set to -1, the type based is used
