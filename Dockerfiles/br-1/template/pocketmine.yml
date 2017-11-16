@@ -62,13 +62,13 @@ memory:
   chunk-radius: 4
 
   #Do chunk garbage collection on trigger
-  trigger-chunk-collect: true
+  trigger-chunk-collect: false
 
   #Trigger on low memory
   low-memory-trigger: true
 
  world-caches:
-  disable-chunk-cache: true
+  disable-chunk-cache: false
   low-memory-trigger: true
 
 
@@ -116,18 +116,18 @@ level-settings:
 chunk-sending:
  #To change server normal render distance, change view-distance in server.properties.
  #Amount of chunks sent to players per tick
- per-tick: 4
+ per-tick: 16
  #Radius of chunks that need to be sent before spawning the player
  spawn-radius: 4
  #Save a serialized copy of the chunk in memory for faster sending
  #Useful in mostly-static worlds where lots of players join at the same time
- cache-chunks: false
+ cache-chunks: true
 
 chunk-ticking:
  #Max amount of chunks processed each tick
  per-tick: 40
  #Radius of chunks around a player to tick
- tick-radius: 3
+ tick-radius: 6
  light-updates: false
  clear-tick-list: true
  #IDs of blocks not to perform random ticking on.
