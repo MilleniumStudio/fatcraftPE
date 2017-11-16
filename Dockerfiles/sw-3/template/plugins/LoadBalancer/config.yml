@@ -12,9 +12,10 @@ mysql:
 ## type : is the server type, ex : entry, main_lobby, parkour_lobby...
 ## id   : is the server id, different server types can have the same server id
 node:
-  type: hg
+  type: sw
   id: 1
   state: open
+  name: Maya Islands
 
 ## Max players management
 ## max        : if set to -1, the type based is used
