@@ -36,19 +36,20 @@ class SignFunctionServer extends SignFunction
             $this->sign->text[3] = "";
             if ($server !== null)
             {
-                $this->sign->text[1] = "§r    " . $server["online"] . "/" . $server["max"];
+                $this->sign->text[1] = "Map: " . $server["name"];
+                $players = "§r   " . $server["online"] . "/" . $server["max"];
                 if ($server["status"] == "open")
                 {
-                    $this->sign->text[2] = (new \fatutils\tools\TextFormatter("game.status.open"))->asString();
+                    $this->sign->text[2] = (new \fatutils\tools\TextFormatter("game.status.open"))->asString() . $players;
                     $this->sign->text[3] = (new \fatutils\tools\TextFormatter("game.status.join"))->asString();
                 }
                 else if ($server["status"] == "closed")
                 {
-                    $this->sign->text[2] = (new \fatutils\tools\TextFormatter("game.status.closed"))->asString();
+                    $this->sign->text[2] = (new \fatutils\tools\TextFormatter("game.status.closed"))->asString() . $players;
                 }
                 else
                 {
-                    $this->sign->text[2] = $server["status"];
+                    $this->sign->text[2] = $server["status"] . $players;
                 }
             }
             else
