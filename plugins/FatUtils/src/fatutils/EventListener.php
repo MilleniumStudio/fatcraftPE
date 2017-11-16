@@ -20,6 +20,12 @@ use pocketmine\Player;
 use pocketmine\event\player\PlayerDeathEvent;
 use fatutils\gamedata\GameDataManager;
 use pocketmine\utils\TextFormat;
+use pocketmine\plugin\Plugin;
+use pocketmine\block\BlockIds;
+use pocketmine\level\Position;
+use pocketmine\level\particle\Particle;
+use fatutils\tools\particles\ParticleBuilder;
+use pocketmine\event\player\PlayerItemHeldEvent;
 
 class EventListener implements Listener
 {
@@ -154,5 +160,63 @@ class EventListener implements Listener
     public function onPlayerTransfert(\pocketmine\event\player\PlayerTransferEvent $p_Event)
     {
         \SalmonDE\StatsPE\Base::getInstance()->getDataProvider()->savePlayer($p_Event->getPlayer());
+    }
+
+    const bedrockViewDistance = 10; // ~ the redius
+    public function onInvisibleBedrockHeld(PlayerItemHeldEvent $event)
+    {
+        FatUtils::getInstance()->getLogger()->info("PlayerItemHeldEvent");
+        if($event->getItem()->getId() == BlockIds::INVISIBLE_BEDROCK && !array_key_exists($event->getPlayer()->getUniqueId()->toString(), InvisibleBlockTask::$playerInvisibleBedrockTasks)) {
+            InvisibleBlockTask::$playerInvisibleBedrockTasks[$event->getPlayer()->getUniqueId()->toString()] =
+                FatUtils::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new InvisibleBlockTask(FatUtils::getInstance(), $event), 20);
+        }
+    }
+}
+
+class InvisibleBlockTask extends \pocketmine\scheduler\PluginTask
+{
+    public $event;
+    public static $playerInvisibleBedrockTasks = [];
+
+    public function __construct(Plugin $owner, PlayerItemHeldEvent $event)
+    {
+        parent::__construct($owner);
+        $this->event = $event;
+        FatUtils::getInstance()->getLogger()->info("construct task");
+    }
+
+    /**
+     * Actions to execute when run
+     *
+     * @param int $currentTick
+     *
+     * @return void
+     */
+    public function onRun(int $currentTick)
+    {
+        if($this->event->getPlayer()->getInventory()->getItemInHand()->getId() == BlockIds::INVISIBLE_BEDROCK) {
+            $player = $this->event->getPlayer();
+            FatUtils::getInstance()->getLogger()->info("onRun " . $player->getName());
+            for ($x = -EventListener::bedrockViewDistance; $x < EventListener::bedrockViewDistance; $x++) {
+                for ($y = -EventListener::bedrockViewDistance; $y < EventListener::bedrockViewDistance; $y++) {
+                    for ($z = -EventListener::bedrockViewDistance; $z < EventListener::bedrockViewDistance; $z++) {
+                        $block = $player->level->getBlock(Position::fromObject($player->add($x, $y, $z), $player->level));
+                        if($block->getId() == BlockIds::INVISIBLE_BEDROCK)
+                        {
+                            ParticleBuilder::fromParticleId(Particle::TYPE_REDSTONE)->playForPlayer(Position::fromObject($block->add(0.5, 0.5, 0.5), $player->level), $player);
+                            FatUtils::getInstance()->getLogger()->info("display particle");
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            /** @var PluginTask $task */
+            $task = InvisibleBlockTask::$playerInvisibleBedrockTasks[$this->event->getPlayer()->getUniqueId()->toString()];
+            FatUtils::getInstance()->getServer()->getScheduler()->cancelTask($task->getTaskId());
+            unset(InvisibleBlockTask::$playerInvisibleBedrockTasks[$this->event->getPlayer()->getUniqueId()->toString()]);
+            FatUtils::getInstance()->getLogger()->info("destroy task");
+        }
     }
 }
