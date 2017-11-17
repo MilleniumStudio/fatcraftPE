@@ -162,7 +162,6 @@ class EventListener implements Listener
     const bedrockViewDistance = 10; // ~ the redius
     public function onInvisibleBedrockHeld(PlayerItemHeldEvent $event)
     {
-        FatUtils::getInstance()->getLogger()->info("PlayerItemHeldEvent");
         if($event->getItem()->getId() == BlockIds::INVISIBLE_BEDROCK && !array_key_exists($event->getPlayer()->getUniqueId()->toString(), InvisibleBlockTask::$playerInvisibleBedrockTasks)) {
             InvisibleBlockTask::$playerInvisibleBedrockTasks[$event->getPlayer()->getUniqueId()->toString()] =
                 FatUtils::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new InvisibleBlockTask(FatUtils::getInstance(), $event), 20);
