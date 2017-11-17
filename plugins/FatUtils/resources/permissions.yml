@@ -10,6 +10,7 @@ VIP:
   color: §f
   allow:
     - sign.network.serverjoin
+    - lobby.items
 
 Modo:
   extends: VIP

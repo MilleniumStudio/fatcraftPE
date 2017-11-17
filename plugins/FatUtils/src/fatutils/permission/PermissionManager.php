@@ -75,6 +75,7 @@ class PermissionManager
                 $attachement = $this->m_activePerms[$p->getUniqueId()->toString()];
                 $attachement->clearPermissions();
                 $attachement->setPermissions($this->m_processedPerms[$groupName]);
+                FatUtils::getInstance()->getLogger()->info("Permissions injected in player " . $p->getName());
             } else {
                 echo "Unknown permissionGroup " . $groupName . "\n";
             }
