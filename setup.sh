@@ -99,6 +99,10 @@ cd hg-1/
 ./docker_build.sh
 cd ../
 
+cd hg-2/
+./docker_build.sh
+cd ../
+
 cd pk-1/
 ./docker_build.sh
 cd ../
