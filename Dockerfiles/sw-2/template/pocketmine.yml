@@ -89,7 +89,7 @@ debug:
   #Warn if assertions are enabled in php.ini, due to assertions may impact on runtime performance if enabled.
   warn-if-enabled: true
  #If > 1, it will show debug messages in the console
- level: 1
+ level: 5
  #Enables /status, /gc
  commands: false
 
@@ -125,16 +125,16 @@ chunk-sending:
 
 chunk-ticking:
  #Max amount of chunks processed each tick
- per-tick: 40
+ per-tick: 10
  #Radius of chunks around a player to tick
  tick-radius: 3
  light-updates: false
  clear-tick-list: true
  #IDs of blocks not to perform random ticking on.
  disable-block-ticking:
+  2: "grass"
   18: "leaves"
   161: "leaves2"
-  #- 2 # grass
 
 chunk-generation:
  #Max. amount of chunks in the waiting queue to be generated

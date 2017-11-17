@@ -7,6 +7,8 @@ cp -r template/* install
 
 source ../../env.sh
 
+cp ../../cores/PocketMine-MP.phar install/
+
 cp ../../plugins/AllSigns.phar install/plugins
 cp ../../plugins/StatsPE.phar install/plugins
 cp ../../plugins/FatUtils.phar install/plugins
