@@ -3,6 +3,7 @@ maxPlayer: 12
 waitingSecDuration: 30
 playingSecDuration: 600
 deathArenaLoc: 0.55/77/6.49
+fixTime: 13000
 
 isSkywar: false
 
