@@ -22,6 +22,8 @@ docker stop -t 0 lobby-10
 
 docker stop -t 0 hg-1
 docker stop -t 0 hg-2
+docker stop -t 0 hg-3
+docker stop -t 0 hg-4
 docker stop -t 0 pk-1
 docker stop -t 0 sw-1
 docker stop -t 0 sw-2
