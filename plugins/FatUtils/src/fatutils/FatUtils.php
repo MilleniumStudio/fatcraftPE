@@ -27,6 +27,8 @@ use pocketmine\utils\TextFormat;
 
 class FatUtils extends PluginBase
 {
+	const CONFIG_FIX_TIME_KEY = "fixTime";
+
     private $m_TemplateConfig = null;
     private static $m_Instance;
     public $rpcServer;
@@ -65,6 +67,16 @@ class FatUtils extends PluginBase
 
 		ShopManager::getInstance();
     }
+
+    public function onTemplateConfigSet()
+	{
+		// Fix template Time quick hack
+		if ($this->getTemplateConfig()->exists(FatUtils::CONFIG_FIX_TIME_KEY))
+		{
+			$this->getServer()->getLevel(1)->setTime($this->getTemplateConfig()->get(FatUtils::CONFIG_FIX_TIME_KEY, 0));
+			$this->getServer()->getLevel(1)->stopTime();
+		}
+	}
 
     public function onDisable()
     {
@@ -107,7 +119,12 @@ class FatUtils extends PluginBase
                 case "atest":
                     if ($sender instanceof Player)
                     {
-                    	ParticleBuilder::fromRaw($args[1])->playForPlayer(Position::fromObject($sender->add(1, 0, 0), $sender->getLevel()), $sender);
+                    	if (count($args) > 2)
+                    		$l_Pos = WorldUtils::stringToLocation($args[2]);
+                    	else
+							$l_Pos = Position::fromObject($sender->add(1, 0, 0), $sender->getLevel());
+
+                    	ParticleBuilder::fromRaw($args[1])->playForPlayer($l_Pos, $sender);
                     }
                     break;
                 case "fillchests":
@@ -124,6 +141,7 @@ class FatUtils extends PluginBase
     public function setTemplateConfig(Config $p_Config)
     {
         $this->m_TemplateConfig = $p_Config;
+		$this->onTemplateConfigSet();
     }
 
     /**
