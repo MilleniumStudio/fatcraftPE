@@ -27,15 +27,15 @@ class LobbiesWindow
 		{
 			foreach ($l_Servers as $l_Server)
 			{
-                            $thisServer = $l_Server["id"] !== LoadBalancer::getInstance()->getServerId();
+				$thisServer = intval($l_Server["id"]) == intval(LoadBalancer::getInstance()->getServerId());
 				$l_Window->addPart((new Button())
 					->setText(($thisServer ? (TextFormat::GREEN . "✔ " . TextFormat::RESET . TextFormat::DARK_GRAY) : "") . (new TextFormatter("template.lobby"))->asStringForPlayer($p_Player) . " " . $l_Server["id"] . " (" . $l_Server["online"] . "/" . $l_Server["max"] . " players)")
 					->setCallback(function () use ($l_FatPlayer, $thisServer, $l_Server)
 					{
-                                            if (!$thisServer)
-                                            {
-						LoadBalancer::getInstance()->transferPlayer($l_FatPlayer->getPlayer(), $l_Server["ip"], $l_Server["port"], "plop");
-                                            }
+						if (!$thisServer)
+						{
+							LoadBalancer::getInstance()->transferPlayer($l_FatPlayer->getPlayer(), $l_Server["ip"], $l_Server["port"], "plop");
+						}
 					})
 				);
 			}
