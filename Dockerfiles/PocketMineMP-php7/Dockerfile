@@ -33,12 +33,12 @@ RUN rm -rf /tmp/* /var/tmp/* /var/cache/apk/*
 WORKDIR /home/minecraft
 
 RUN apt-get -y update && \
- apt-get -y install curl make bison libtool-bin autoconf bzip2 g++ inetutils-ping screen netcat && \
+ apt-get -y install curl make bison libtool-bin autoconf bzip2 g++ inetutils-ping screen netcat git && \
  apt-get clean
 
 ADD install /home/minecraft
 
 RUN ./compile.sh -j 8
-RUN bin/php7/bin/php bin/composer.phar install
+RUN bin/php7/bin/php ./composer.phar install
 
 CMD ./restarter.sh
