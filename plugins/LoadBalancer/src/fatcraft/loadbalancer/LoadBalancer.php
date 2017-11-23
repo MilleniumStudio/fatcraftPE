@@ -796,9 +796,13 @@ class LoadBalancer extends PluginBase implements Listener
         }
         else if ($cmd->getName() === "hub" or $cmd->getName() === LoadBalancer::TEMPLATE_TYPE_LOBBY) //   /lobby ...
         {
+            if (!($sender instanceof Player))
+	    {
+                return false;    
+	    }
             if (count($p_Param) == 0)// /lobby
             {
-                if ($sender instanceof Player and $this->getConfig()->getNested("redirect.to_type") !== $this->m_ServerType)
+                if ($this->getConfig()->getNested("redirect.to_type") !== $this->m_ServerType)
                 {
                     $l_Player = $sender;
                     $l_Server = $this->getBest($this->getConfig()->getNested("redirect.to_type"));
@@ -809,7 +813,8 @@ class LoadBalancer extends PluginBase implements Listener
                 }
                 else
                 {
-                    $sender->sendMessage('Pour êtes sur ' . $l_Server["type"] . ' ' . $l_Server["id"]);
+                    return true;
+                    //$sender->sendMessage('you\'re already in a lobby'); TODO replace with locale
                 }
             }
             else if (count($p_Param) == 1)//    /lobby list/<id>
