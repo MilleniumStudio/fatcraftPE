@@ -2,6 +2,6 @@
 
 ./install.sh
 
-docker build -t fatcraft/pocketmine:base .
+docker build --no-cache -t fatcraft/pocketmine:base .
 
 rm -rf install/
