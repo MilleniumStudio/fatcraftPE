@@ -60,7 +60,7 @@ if [ "$UPDATE_POCKETMINE_CORE" == "yes" ]; then
 fi
 
 if [ "$BUILD_POCKETMINE_CORE" == "yes" ]; then
-    rm cores/PocketMine-MP.phar
+    rm -f cores/PocketMine-MP.phar
 fi
 
 if [ "$COMPILE_BIN" == "yes" ]; then
