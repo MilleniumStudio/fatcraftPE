@@ -10,6 +10,7 @@ namespace fatutils\powers;
 
 use fatutils\FatUtils;
 use fatutils\pets\PetsManager;
+use fatutils\powers\effects\Boost;
 use fatutils\tools\particles\ParticleBuilder;
 use fatutils\tools\volume\CuboidVolume;
 use fatutils\tools\WorldUtils;
@@ -55,8 +56,14 @@ class PowersManager implements Listener, CommandExecutor
             $this->placePower($loc);
         }
 
+		foreach ($config->getNested("boostPlaces") as $item) {
+			$loc = WorldUtils::stringToLocation($item);
+			$loc = Location::fromObject($loc->add(0.5, 0.5, 0.5), $loc->level);
+			$this->placeBoost($loc);
+		}
+
         //todo for debug
-        $this->availablePowers[] = "Boost";
+        //$this->availablePowers[] = "Boost";
         $this->availablePowers[] = "Shot";
         $this->availablePowers[] = "Mine";
         $this->availablePowers[] = "Blindness";
@@ -68,6 +75,7 @@ class PowersManager implements Listener, CommandExecutor
     const PLACES_SIZE = 2;
 
     private $powersPlaces = [];
+    private $boostPlaces = [];
     private $availablePowers = [];
     private $activePowers = [];
 
@@ -79,6 +87,14 @@ class PowersManager implements Listener, CommandExecutor
         ), $stayForever, $location];
     }
 
+	public function placeBoost(Location $location, int $size = self::PLACES_SIZE, bool $stayForever = false)
+	{
+		$this->boostPlaces[] = [new CuboidVolume(
+			new Location($location->getX() - $size / 2, $location->getY() - $size / 2, $location->getZ() - $size / 2, 0, 0, $location->level),
+			new Location($location->getX() + $size / 2, $location->getY() + $size / 2, $location->getZ() + $size / 2, 0, 0, $location->level)
+		), $stayForever, $location];
+	}
+
     public function equipPlayer(Player $player)
     {
         if ($player->getInventory()->getHotbarSlotItem(self::SLOT)->getId() == BlockIds::AIR) {
@@ -89,10 +105,15 @@ class PowersManager implements Listener, CommandExecutor
         }
     }
 
-    public function getPowersPlaces()
-    {
-        return $this->powersPlaces;
-    }
+	public function getPowersPlaces()
+	{
+		return $this->powersPlaces;
+	}
+
+	public function getBoostsPlaces()
+	{
+		return $this->boostPlaces;
+	}
 
     //==================================================================
     // Events
@@ -156,6 +177,41 @@ class PowerChecker extends PluginTask
     public function onRun(int $currentTick)
     {
         $places = PowersManager::getInstance()->getPowersPlaces();
+        $boosts = PowersManager::getInstance()->getBoostsPlaces();
+
+        foreach ($boosts as $boost)
+		{
+			$volume = $boost[0];
+			foreach (Server::getInstance()->getOnlinePlayers() as $player)
+			{
+				if ($volume->isIn($player))
+				{
+					$effect = new Boost($player);
+					$effect->action();
+				}
+			}
+			// refresh display
+			$base = new Vector3(0, 0, 1);
+            $particle = ParticleBuilder::fromParticleId(Particle::TYPE_REDSTONE);
+			for ($i = 0; $i < 15; $i++)
+			{
+				$yaw = rand(0, 360);
+				$pitch = rand(0, 360);
+
+				$v1 = $base->asVector3();
+				$v1->x = 0;
+				$v1->y = -sin(deg2rad($pitch));
+				$v1->z = cos(deg2rad($pitch));
+				$v2 = $v1->asVector3();
+				$v2->x = -$v1->z * sin(deg2rad($yaw));
+				$v2->z = $v1->z * cos(deg2rad($yaw));
+
+				$v2 = $v2->multiply(0.7);
+
+				$particle->play(Position::fromObject($boost[2]->add($v2), $boost[2]->level));
+			}
+		}
+
         foreach ($places as $place) {
             /** @var CuboidVolume $volume */
             $volume = $place[0];

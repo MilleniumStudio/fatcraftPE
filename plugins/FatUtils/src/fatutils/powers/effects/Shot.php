@@ -31,7 +31,7 @@ class Shot extends APower
 
     function action(): bool
     {
-        $this->destroy();
+        $this->destroyItem();
         /** @var Position $loc */
         $loc = $this->owner->vehicle->asPosition();
         $vec = new Vector3(cos(deg2rad($this->owner->vehicle->yaw)), 0, sin(deg2rad($this->owner->vehicle->yaw)));

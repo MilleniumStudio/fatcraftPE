@@ -35,7 +35,7 @@ abstract class APower
     public function getUniqueId():string {
         return $this->uniqueId;
     }
-    public function destroy(){
+    public function destroyItem(){
         foreach ($this->owner->getInventory()->getContents() as $item){
             if($item instanceof Item){
                 if(isset($item->getNamedTag()->powerKey) && $item->getNamedTag()->powerKey == $this->uniqueId){
