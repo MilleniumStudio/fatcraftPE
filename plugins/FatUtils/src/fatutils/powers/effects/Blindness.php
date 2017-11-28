@@ -24,7 +24,7 @@ class Blindness extends APower
 
     function action(): bool
     {
-        $this->destroyItem();
+        $this->destroy();
         $effect = Effect::getEffect(Effect::BLINDNESS);//new Effect(Effect::BLINDNESS, "text ?", 10, 10, 10, true, 5*20);
         $effect->setDuration(2 * 20);
         $effect->setAmplifier(0);

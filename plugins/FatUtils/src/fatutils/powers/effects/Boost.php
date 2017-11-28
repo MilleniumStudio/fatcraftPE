@@ -27,7 +27,8 @@ class Boost extends \fatutils\powers\APower
 
     function action(): bool
     {
-        $this->destroyItem();
+        $this->owner->sendMessage("L'Aigle de la route !"); //lol
+        $this->destroy();
 
         $task = new BoostTicker(FatUtils::getInstance());
         $task->init($this->owner);
@@ -45,7 +46,7 @@ class BoostTicker extends PluginTask
     /** @var TaskHandler $myHandler */
     public $myHandler = null;
     public $timer = 20;
-    public $maxSpeed = 5;
+    public $maxSpeed = 2;
     public $minSpeed = 0.5;
 
     public function init(Player $player)

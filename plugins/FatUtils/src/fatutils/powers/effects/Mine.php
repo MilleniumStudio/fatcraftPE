@@ -26,7 +26,7 @@ class Mine extends APower
 
     function action(): bool
     {
-        $this->destroyItem();
+        $this->destroy();
         /** @var Block[] $blocks */
         $blocks = [];
         $loc = $this->owner->asVector3()->add(new Vector3(-cos(deg2rad($this->owner->vehicle->yaw)) * 3, 0, -sin(deg2rad($this->owner->vehicle->yaw)) * 3));
