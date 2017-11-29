@@ -130,7 +130,7 @@ class NpcsManager implements Listener, CommandExecutor
                     }
                     if (isset($equipment["boots"]) && $equipment["boots"] !== "")
                     {
-                        $entity->getInventory()->setItemInHand(\fatutils\tools\ItemUtils::getItemFromRaw($equipment["boots"]));
+                        $entity->getInventory()->setBoots(\fatutils\tools\ItemUtils::getItemFromRaw($equipment["boots"]));
                     }
                     if (isset($equipment["held"]) && $equipment["held"] !== "")
                     {
