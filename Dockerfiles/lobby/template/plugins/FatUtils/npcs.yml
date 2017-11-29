@@ -16,13 +16,17 @@ npcs:
       to: 0.5/35/8.5/180/0
 
   - name: "shopnpc1"
-    displayname: "shop.title"
+    displayname: "kits.kits"
     location: -4.5/55.1/57.5/342/0
     type : "Player"
     size : 1
     skin: "Fallout1AlbertColev2"
     equipment:
-      held: "{\"material\": \"CARROTONASTICK\"}"
+      head: "{\"material\": \"GOLDEN_HELMET\"}"
+      chest: "{\"material\": \"GOLDEN_CHESTPLATE\"}"
+      pants: "{\"material\": \"GOLDEN_LEGGINGS\"}"
+      boots: "{\"material\": \"GOLDEN_BOOTS\"}"
+      held: "{\"material\": \"DIAMOND_SWORD\"}"
     update: true
     effects: []
     function: "NPCFunctionTeleport"
@@ -432,6 +436,37 @@ npcs:
     function: "NPCFunctionTeleport"
     data:
       to: 0.5/34/8.5/180/0
+
+  - name: "kitkeeper1"
+    displayname: "kits.bowman"
+    location: -59.5/54/55.5/180/0
+    type : "Player"
+    size : 1
+    skin: "Fallout4TheMechanist"
+    equipment:
+      head: "{\"material\": \"LEATHER_HELMET\"}"
+      chest: "{\"material\": \"LEATHER_CHESTPLATE\"}"
+      held: "{\"material\": \"BOW\"}"
+    update: true
+    effects: []
+    commands: []
+    function: "NPCFunctionKits"
+
+  - name: "kitkeeper2"
+    displayname: "kits.tank"
+    location: -49.5/54/31.5/45/0
+    type : "Player"
+    size : 1
+    skin: "Fallout4TheMechanist"
+    equipment:
+      head: "{\"material\": \"DIAMOND_HELMET\"}"
+      chest: "{\"material\": \"IRON_CHESTPLATE\"}"
+      pants: "{\"material\": \"IRON_LEGGINGS\"}"
+      boots: "{\"material\": \"IRON_BOOTS\"}"
+    update: true
+    effects: []
+    commands: []
+    function: ""
 
   - name: "shopkeeper1"
     displayname: "ShopMan"

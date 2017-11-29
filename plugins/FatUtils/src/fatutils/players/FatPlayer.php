@@ -28,6 +28,15 @@ use fatutils\events\LanguageUpdatedEvent;
 use libasynql\result\MysqlResult;
 use libasynql\DirectQueryMysqlTask;
 
+class Kit
+{
+	const SLOT_KIT_HEAD = "kit_head";
+	const SLOT_KIT_CHEST = "kit_chest";
+	const SLOT_KIT_PANTS = "kit_pants";
+	const SLOT_KIT_BOOTS = "kit_boots";
+	const SLOT_KIT_HELD = "kit_held";
+}
+
 class FatPlayer
 {
     const PLAYER_STATE_WAITING = 0;
@@ -58,6 +67,8 @@ class FatPlayer
 
     private $m_slots = [];
 	private $m_BoughtShopItems = [];
+
+	private $m_KitItems = [];
 
     /**
      * FatPlayer constructor.
@@ -243,7 +254,7 @@ class FatPlayer
 				if (ShopManager::$m_OptionAutoEquipSavedItems)
 				{
 					$l_RawEquippedItem = $result->rows[0]["shop_equipped"];
-					new DelayedExec(function () use ($l_RawEquippedItem)
+					new DelayedExec( function() use ($l_RawEquippedItem)
 					{
 						$this->reequipRawShopItems($l_RawEquippedItem);
 					}, 5);
@@ -422,6 +433,22 @@ class FatPlayer
 			]);
 	}
 
+	private function updateSqlLitSlots()
+	{
+		$l_EquippedItemKeys = [];
+
+		foreach ($this->m_KitItems as $l_KitItem)
+		{
+			$l_EquippedItemKeys[] = $this->m_KitItems ;
+		}
+
+		MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(),
+			"UPDATE players SET shop_equipped = ? WHERE uuid = ?", [
+				["s", json_encode($l_EquippedItemKeys)],
+				["s", $this->getPlayer()->getUniqueId()]
+			]);
+	}
+
 	public function emptySlot(string $slotName)
 	{
 		if (array_key_exists($slotName, $this->m_slots))
@@ -429,6 +456,40 @@ class FatPlayer
 			unset($this->m_slots[$slotName]);
 			$this->updateSqlEquippedSlot();
 		}
+	}
+
+	public function setKitItem(string $p_kitSlot, string $p_item) : bool
+	{
+		switch ($p_kitSlot)
+		{
+			case Kit::SLOT_KIT_HEAD:
+				$this->m_KitItems[Kit::SLOT_KIT_HEAD] = $p_item;
+				break;
+			case Kit::SLOT_KIT_CHEST:
+				$this->m_KitItems[Kit::SLOT_KIT_CHEST] = $p_item;
+				break;
+			case Kit::SLOT_KIT_PANTS:
+				$this->m_KitItems[Kit::SLOT_KIT_PANTS] = $p_item;
+				break;
+			case Kit::SLOT_KIT_BOOTS:
+				$this->m_KitItems[Kit::SLOT_KIT_BOOTS] = $p_item;
+				break;
+			case Kit::SLOT_KIT_HELD:
+				$this->m_KitItems[Kit::SLOT_KIT_HELD] = $p_item;
+				break;
+			default:
+				return false;
+		}
+		return true;
+	}
+
+	public function syncKitItems()
+	{
+		MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(),
+			"UPDATE players SET kit_items = ? WHERE uuid = ?", [
+				["s", json_encode($this->m_KitItems)],
+				["s", $this->getPlayer()->getUniqueId()]
+			]);
 	}
 
     public function setSlot(string $slotName, ShopItem $p_value, bool $p_SaveDb = true)

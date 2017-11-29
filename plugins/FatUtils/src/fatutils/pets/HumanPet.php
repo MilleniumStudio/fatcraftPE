@@ -42,6 +42,7 @@ class HumanPet extends Human
 
     public $function = null;
     public $data = array();
+    public $equipment = array();
 
     public function __construct(Level $level, CompoundTag $nbt, string $petType, array $options = [])
     {
