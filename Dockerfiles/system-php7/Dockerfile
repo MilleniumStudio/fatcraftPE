@@ -21,6 +21,7 @@ ADD settings/motd /etc/motd
 
 # Link vi to vim (otherwise ric no happy)
 RUN mkdir /home/minecraft/ && ln -sf vim /usr/bin/vi
+RUN mkdir /home/minecraft/.composer && chmod 777 /home/minecraft/.composer/
 
 # Set Root to bash not ash and overwrite .bashrc
 RUN sed -i 's/root:\/bin\/ash/root:\/bin\/bash/' /etc/passwd && \
@@ -39,6 +40,6 @@ RUN apt-get -y update && \
 ADD install /home/minecraft
 
 RUN ./compile.sh -j 8
-RUN bin/php7/bin/php ./composer.phar install
+RUN bin/php7/bin/php ./bin/composer.phar install
 
 #CMD ./restarter.sh
