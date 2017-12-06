@@ -39,10 +39,8 @@ class NPCFunctionKits extends NPCFunction
 		$l_FatPlayer->emptySlot("bootsItem");
 		$l_FatPlayer->emptySlot("heldItem");
 
-		var_dump($this->equipment);
-			var_dump($this->equipment["head"]);
 		if (isset($this->equipment["head"]))
-			$l_FatPlayer->setKitItem(Kit::SLOT_KIT_HEAD, ItemUtils::getItemFromRaw($this->equipment["held"]));
+			$l_FatPlayer->setKitItem(Kit::SLOT_KIT_HEAD, ItemUtils::getItemFromRaw($this->equipment["head"]));
 		if (isset($this->equipment["chest"]))
 			$l_FatPlayer->setKitItem(Kit::SLOT_KIT_CHEST, ItemUtils::getItemFromRaw($this->equipment["chest"]));
 		if (isset($this->equipment["pants"]))
@@ -53,5 +51,4 @@ class NPCFunctionKits extends NPCFunction
 			$l_FatPlayer->setKitItem(Kit::SLOT_KIT_HELD, ItemUtils::getItemFromRaw($this->equipment["held"]));
 		$l_FatPlayer->syncKitItems();
     }
-
 }

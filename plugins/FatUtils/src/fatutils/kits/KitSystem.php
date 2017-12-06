@@ -17,8 +17,6 @@ use pocketmine\Player;
 
 class enumKits implements Listener
 {
-	const kit0 = "kit1";
-
 	const weapon = "weapon";
 	const chest = "chest";
 	const lega = "legs";
