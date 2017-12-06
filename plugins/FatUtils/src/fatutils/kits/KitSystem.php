@@ -33,18 +33,15 @@ class KitSystem extends PluginBase
 		$this->kits[enumKits::kit0] = array(enumKits::weapon => ItemIds::IRON_SHOVEL, enumKits::helmet => ItemIds::IRON_HELMET);
 	}
 
-	public function equipPlayer(Player $player, string $kitName)
+	static public function equipPlayer(Player $player)
 	{
 		if ($player == null)
 		{
-			$this->getLogger()->error("KitSystem::equipPlayer : player == null");
+			$this->getLogger()->error("KitSystem::equipPlayer : player is null");
 			return;
 		}
-		if (!isset($this->kits[$kitName]))
-		{
-			$this->getLogger()->error("KitSystem::equipPlayer : kit <" . $kitName . "> does not exist.");
-			return;
-		}
+
+		$player->getUniqueId()
 
 		if (isset($this->kits[$kitName][enumKits::helmet]))
 			$player->getInventory()->setHelmet($this->kits[$kitName][enumKits::helmet]);

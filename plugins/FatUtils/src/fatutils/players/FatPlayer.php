@@ -67,6 +67,7 @@ class FatPlayer
 
     private $m_slots = [];
 	private $m_BoughtShopItems = [];
+	private $m_KitItems = [];
 
 	private $m_KitItems = [];
 
@@ -259,7 +260,7 @@ class FatPlayer
 						$this->reequipRawShopItems($l_RawEquippedItem);
 					}, 5);
 				}
-
+				$this->m_KitItems = $result->rows[0]["kit_items"];
 				$l_Exist = true;
                 FatUtils::getInstance()->getLogger()->info("[FatPlayer] " . $this->getPlayer()->getName() . " exist in database, loading took " . (($l_EndMillisec - $l_StartMillisec) * 1000) . "ms");
             }
