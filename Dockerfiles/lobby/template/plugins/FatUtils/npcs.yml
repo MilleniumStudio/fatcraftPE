@@ -442,7 +442,7 @@ npcs:
     location: -59.5/54/55.5/180/0
     type : "Player"
     size : 1
-    skin: "Fallout4TheMechanist"
+    skin: "Jake"
     equipment:
       head: "{\"material\": \"LEATHER_HELMET\"}"
       chest: "{\"material\": \"LEATHER_CHESTPLATE\"}"
@@ -457,12 +457,84 @@ npcs:
     location: -49.5/54/31.5/45/0
     type : "Player"
     size : 1
-    skin: "Fallout4TheMechanist"
+    skin: "Jake"
     equipment:
-      head: "{\"material\": \"DIAMOND_HELMET\"}"
-      chest: "{\"material\": \"IRON_CHESTPLATE\"}"
-      pants: "{\"material\": \"IRON_LEGGINGS\"}"
-      boots: "{\"material\": \"IRON_BOOTS\"}"
+      head: "{\"material\": \"CHAIN_HELMET\"}"
+      chest: "{\"material\": \"CHAIN_CHESTPLATE\"}"
+      pants: "{\"material\": \"CHAIN_LEGGINGS\"}"
+    update: true
+    effects: []
+    commands: []
+    function: "NPCFunctionKits"
+
+  - name: "kitkeeper3"
+    displayname: "kits.swordman"
+    location: -49.5/54/51.5/135/0
+    type : "Player"
+    size : 1
+    skin: "Jake"
+    equipment:
+      chest: "{\"material\": \"LEATHER_CHESTPLATE\"}"
+      pants: "{\"material\": \"LEATHER_LEGGINGS\"}"
+      held: "{\"material\": \"IRON_SWORD\"}"
+    update: true
+    effects: []
+    commands: []
+    function: "NPCFunctionKits"
+
+  - name: "kitkeeper4"
+    displayname: "kits.elytra"
+    location: -59.5/54/27.5/0/0
+    type : "Player"
+    size : 1
+    skin: "Jake"
+    equipment:
+      head: "{\"material\": \"CHAIN_HELMET\"}"
+      chest: "{\"material\": \"ELYTRA\"}"
+    update: true
+    effects: []
+    commands: []
+    function: "NPCFunctionKits"
+
+  - name: "kitkeeper5"
+    displayname: "kits.cominglater"
+    location: -69.5/54/31.5/315/0
+    type : "Player"
+    size : 1
+    skin: "Putty"
+    update: true
+    effects: []
+    commands: []
+    function: ""
+
+  - name: "kitkeeper6"
+    displayname: "kits.cominglater"
+    location: -45.5/54/41.5/90/0
+    type : "Player"
+    size : 1
+    skin: "Putty"
+    update: true
+    effects: []
+    commands: []
+    function: ""
+
+  - name: "kitkeeper7"
+    displayname: "kits.cominglater"
+    location: -69.5/54/51.5/225/0
+    type : "Player"
+    size : 1
+    skin: "Putty"
+    update: true
+    effects: []
+    commands: []
+    function: ""
+
+  - name: "kitkeeper8"
+    displayname: "kits.cominglater"
+    location: -73.5/54/41.5/270/0
+    type : "Player"
+    size : 1
+    skin: "Putty"
     update: true
     effects: []
     commands: []
