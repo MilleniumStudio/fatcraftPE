@@ -42,7 +42,10 @@ class LoadBalancer extends PluginBase implements Listener
     private $m_ServerName = "missing name";
     private $m_ServerState = LoadBalancer::SERVER_STATE_CLOSED; // open / closed
 
-    /** @var \mysqli */
+	private $m_Cache_ServerByType = null;
+	private $m_Cache_ServerByTypeTime = 0;
+
+	/** @var \mysqli */
     private $m_Mysql;
 
     /** @var MysqlCredentials */
@@ -423,23 +426,38 @@ class LoadBalancer extends PluginBase implements Listener
         $this->m_MaxPlayers = $l_MaxPlayers;
     }
 
+    private function updateCacheServersByType()
+	{
+		$currentTime = microtime(true);
+
+		//echo "requesting ?\n";
+		//echo "current time : " . $currentTime . "\ncache time   : " . ($this->m_Cache_ServerByTypeTime + 250) . "\n";
+		// cache each type of server for 250 ms
+		if ($this->m_Cache_ServerByType != null && ($currentTime < $this->m_Cache_ServerByTypeTime + 0.250))
+		{
+			//echo "nope !\n";
+			return;
+		}
+		//echo "request for all server types\n*\n*\n*\n*\n";
+		$this->m_Cache_ServerByTypeTime = $currentTime;
+		if ($this->m_Cache_ServerByType != null)
+			$this->m_Cache_ServerByType = null;
+
+		$result = MysqlResult::executeQuery($this->connectMainThreadMysql(),
+			"SELECT *, (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) AS diff FROM servers", []);
+
+		if (($result instanceof MysqlSelectResult) and count($result->rows) > 0)
+		{
+
+			foreach ($result->rows as $row)
+				$this->m_Cache_ServerByType[$row["type"]][] = $row;
+		}
+	}
+
     public function getServersByType($type = LoadBalancer::TEMPLATE_TYPE_LOBBY)
-    {
-        $result = MysqlResult::executeQuery($this->connectMainThreadMysql(),
-            "SELECT *, (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) AS diff FROM servers WHERE `type` = ?", [
-                ["s", $type]
-            ]
-        );
-        if (($result instanceof MysqlSelectResult) and count($result->rows) > 0)
-        {
-            $server = array();
-            foreach ($result->rows as $row)
-            {
-                $server[] = $row;
-            }
-            return $server;
-        }
-        return null;
+	{
+		$this->updateCacheServersByType();
+		return $this->m_Cache_ServerByType[$type];
     }
 
     public function getServers($type = LoadBalancer::TEMPLATE_TYPE_LOBBY, $p_State = LoadBalancer::SERVER_STATE_OPEN)
@@ -475,26 +493,16 @@ class LoadBalancer extends PluginBase implements Listener
 
     public function getNetworkServer($type = LoadBalancer::TEMPLATE_TYPE_LOBBY, $id = -1)
     {
-        $result = MysqlResult::executeQuery($this->connectMainThreadMysql(),
-            "SELECT *, (UNIX_TIMESTAMP() - UNIX_TIMESTAMP(laston)) AS diff FROM servers WHERE `type` = ? AND `max` > `online` AND `id` = ? LIMIT 1", [
-                ["s", $type],
-                ["i", $id]
-            ]
-        );
-        if (($result instanceof MysqlSelectResult) and isset($result->rows[0]))
-        {
-            $server["sid"] = $result->rows[0]["sid"];
-            $server["type"] = $result->rows[0]["type"];
-            $server["id"] = $result->rows[0]["id"];
-            $server["name"] = $result->rows[0]["name"];
-            $server["ip"] = $result->rows[0]["ip"];
-            $server["port"] = $result->rows[0]["port"];
-            $server["status"] = $result->rows[0]["status"];
-            $server["online"] = $result->rows[0]["online"];
-            $server["max"] = $result->rows[0]["max"];
-            $server["diff"] = $result->rows[0]["diff"];
-            return $server;
-        }
+		foreach ($this->m_Cache_ServerByType[$type] as $serverRow)
+		{
+			if ($serverRow["id"] == $id)
+			{
+				//var_dump($serverRow);
+				//echo "\n";
+				return $serverRow;
+			}
+		}
+
         return null;
     }
 

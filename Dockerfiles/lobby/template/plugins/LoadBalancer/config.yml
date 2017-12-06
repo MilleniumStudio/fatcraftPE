@@ -32,9 +32,9 @@ network:
 ## cleaner : cleaner delay (20 for 1 second)
 ## timeout : max diff before clean server (& players in it) /!\ TIME IN SECONDS
 timers:
-  self: 20
-  others: 20
-  cleaner: 50
+  self: 5
+  others: 5
+  cleaner: 20
   timeout: 10
 
 ## Players section
