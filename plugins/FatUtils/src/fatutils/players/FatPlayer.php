@@ -59,6 +59,8 @@ class FatPlayer
     private $m_slots = [];
 	private $m_BoughtShopItems = [];
 
+	private $m_KitItems = [];
+
     /**
      * FatPlayer constructor.
      * @param Player $p_Player
