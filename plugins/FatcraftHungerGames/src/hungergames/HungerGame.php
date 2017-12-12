@@ -118,6 +118,7 @@ class HungerGame extends PluginBase implements Listener
 		}
 
 		$l_Spawn = SpawnManager::getInstance()->getRandomEmptySpawn();
+		var_dump($l_Spawn);
 		if (GameManager::getInstance()->isWaiting() && isset($l_Spawn))
 		{
 			$l_Spawn->teleport($p_Player);
@@ -178,13 +179,17 @@ class HungerGame extends PluginBase implements Listener
 				else
 				{
 					$l_ArenaLoc = Location::fromObject($this->getHungerGameConfig()->getDeathArenaLoc());
-
+					$l_ArenaLocType = $this->getHungerGameConfig()->getMDeathArenaLocType();
+					$l_ArenaLocRadius = $this->getHungerGameConfig()->getMDeathArenaLocRadius();
 					foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
 					{
-						$l_Player->addTitle("", (new TextFormatter("hungergame.deathMatch"))->asStringForPlayer($l_Player));
-						$l_Player->teleport(WorldUtils::getRandomizedLocation($l_ArenaLoc, 3, 0, 3));
-						$l_Player->sendTip((new TextFormatter("hungergame.invulnerable", ["timesec" => 5]))->asStringForPlayer($l_Player));
-						$l_Player->addEffect(Effect::getEffect(Effect::DAMAGE_RESISTANCE)->setAmplifier(10)->setDuration(5 * 20));
+ 						$l_Player->addTitle("", (new TextFormatter("hungergame.deathMatch"))->asStringForPlayer($l_Player));
+ 						if ($l_ArenaLocType == HungerGameConfig::DEATH_ARENA_TYPE_PERIMETER)
+ 						    $l_Player->teleport(WorldUtils::getRandomizedLocationOnAreaEdge($l_ArenaLoc, floatval($l_ArenaLocRadius), 0, floatval($l_ArenaLocRadius)));
+ 						else
+ 						    $l_Player->teleport(WorldUtils::getRandomizedLocationWithinArea($l_ArenaLoc, floatval($l_ArenaLocRadius), 0, floatval($l_ArenaLocRadius)));
+ 						$l_Player->sendTip((new TextFormatter("hungergame.invulnerable", ["timesec" => 5]))->asStringForPlayer($l_Player));
+ 						$l_Player->addEffect(Effect::getEffect(Effect::DAMAGE_RESISTANCE)->setAmplifier(10)->setDuration(5 * 20));
 					}
 				}
 			});

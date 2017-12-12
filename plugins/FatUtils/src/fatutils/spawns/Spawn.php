@@ -134,7 +134,7 @@ class Spawn
         if ($p_HRandomize === 0)
             $p_Player->teleport($this->getLocation(), $this->getLocation()->getYaw(), $this->getLocation()->getPitch());
         else
-            $p_Player->teleport(WorldUtils::getRandomizedLocation($this->getLocation(), $p_HRandomize, 0, $p_HRandomize), $this->getLocation()->getYaw(), $this->getLocation()->getPitch());
+            $p_Player->teleport(WorldUtils::getRandomizedLocationWithinArea($this->getLocation(), $p_HRandomize, 0, $p_HRandomize), $this->getLocation()->getYaw(), $this->getLocation()->getPitch());
     }
 
     public function getLocation(): Location

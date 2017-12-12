@@ -101,7 +101,7 @@ class WorldUtils
         return pow($p_Loc1->getX() - $p_Loc2->getX(), 2) + pow($p_Loc1->getY() - $p_Loc2->getY(), 2) + pow($p_Loc1->getZ() - $p_Loc2->getZ(), 2);
     }
 
-	public static function getRandomizedLocation(Location $p_StartLocation, float $p_XBound, float $p_YBound, float $p_ZBound)
+	public static function getRandomizedLocationWithinArea(Location $p_StartLocation, float $p_XBound, float $p_YBound, float $p_ZBound)
     {
         $l_NewX = MathUtils::rand(-$p_XBound, $p_XBound);
         $l_NewY = MathUtils::rand(-$p_YBound, $p_YBound);
@@ -109,6 +109,32 @@ class WorldUtils
 
         return new Location($p_StartLocation->getX() + $l_NewX, $p_StartLocation->getY() + $l_NewY, $p_StartLocation->getZ() + $l_NewZ, $p_StartLocation->getYaw(), $p_StartLocation->getPitch(), $p_StartLocation->getLevel());
     }
+
+	public static function getRandomizedLocationOnAreaEdge(Location $p_StartLocation, float $p_XBound, float $p_YBound, float $p_ZBound)
+	{
+		$l_xVal = $p_XBound;
+		$l_yVal = $p_YBound;
+
+		$val = rand(0, 1);
+		if ($val == 0)
+			$l_yVal = rand(0, $p_YBound);
+		else
+			$l_xVal = rand(0, $p_XBound);
+
+		// randomize positive or negative for X...
+		$val = rand(0, 1);
+		if ($val == 0)
+			$l_xVal = -$l_xVal;
+		// ... and for Y
+		$val = rand(0, 1);
+		if ($val == 0)
+			$l_yVal = -$l_yVal;
+
+		// Z not handled, not necessary yet
+		$l_NewZ = MathUtils::rand(-$p_ZBound, $p_ZBound);
+
+		return new Location($p_StartLocation->getX() + $l_xVal, $p_StartLocation->getY() + $l_yVal, $p_StartLocation->getZ() + $l_NewZ, $p_StartLocation->getYaw(), $p_StartLocation->getPitch(), $p_StartLocation->getLevel());
+	}
 
 	public static function setBlocksId(array $p_Blocks, int $p_Id)
 	{
