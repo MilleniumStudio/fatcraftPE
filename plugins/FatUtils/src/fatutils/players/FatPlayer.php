@@ -432,22 +432,6 @@ class FatPlayer
 			]);
 	}
 
-	private function updateSqlLitSlots()
-	{
-		$l_EquippedItemKeys = [];
-
-		foreach ($this->m_KitItems as $l_KitItem)
-		{
-			$l_EquippedItemKeys[] = $this->m_KitItems ;
-		}
-
-		MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(),
-			"UPDATE players SET shop_equipped = ? WHERE uuid = ?", [
-				["s", json_encode($l_EquippedItemKeys)],
-				["s", $this->getPlayer()->getUniqueId()]
-			]);
-	}
-
 	public function emptySlot(string $slotName)
 	{
 		if (array_key_exists($slotName, $this->m_slots))
