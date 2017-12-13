@@ -17,6 +17,7 @@ use fatutils\teams\TeamsManager;
 use fatutils\tools\schedulers\DelayedExec;
 use fatutils\tools\TextFormatter;
 use fatutils\ui\impl\LanguageWindow;
+use pocketmine\item\ItemFactory;
 use pocketmine\level\Position;
 use pocketmine\Player;
 use pocketmine\scheduler\PluginTask;
@@ -258,7 +259,7 @@ class FatPlayer
 						$this->reequipRawShopItems($l_RawEquippedItem);
 					}, 5);
 				}
-				$this->m_KitItems = $result->rows[0]["kit_items"];
+				$this->m_KitItems = json_decode($result->rows[0]["kit_items"], true);
 				$l_Exist = true;
                 FatUtils::getInstance()->getLogger()->info("[FatPlayer] " . $this->getPlayer()->getName() . " exist in database, loading took " . (($l_EndMillisec - $l_StartMillisec) * 1000) . "ms");
             }
@@ -284,6 +285,41 @@ class FatPlayer
         PermissionManager::getInstance()->updatePermissions($this);
     }
 
+    public function equipKitToPlayer()
+	{
+		foreach ($this->m_KitItems as $item => $value)
+		{
+			$itemName = $value;
+			$itemName = explode('(', $itemName)[0];
+			$itemName = substr($itemName, 5, -1);
+			$itemName = str_replace(" ", "_", $itemName);
+			$itemName = strtoupper($itemName);
+
+			$tempItem = ItemFactory::fromString($itemName);
+			$tempItem->setCount(1);
+
+			if ($item == Kit::SLOT_KIT_HEAD)
+				$this->m_Player->getInventory()->setHelmet($tempItem);
+			if ($item == Kit::SLOT_KIT_CHEST)
+				$this->m_Player->getInventory()->setChestplate($tempItem);
+			if ($item == Kit::SLOT_KIT_PANTS)
+				$this->m_Player->getInventory()->setLeggings($tempItem);
+			if ($item == Kit::SLOT_KIT_BOOTS)
+				$this->m_Player->getInventory()->setBoots($tempItem);
+			if ($item == Kit::SLOT_KIT_HELD)
+			{
+				$this->m_Player->getInventory()->setItemInHand($tempItem);
+				if ($itemName == "BOW")
+				{
+					$arrows = ItemFactory::fromString("arrow");
+					$arrows->setCount(10);
+					$this->m_Player->getInventory()->addItem(clone $arrows);
+				}
+			}
+		}
+		$this->clearKitItems();
+		$this->syncKitItems();
+	}
     public function getEmail()
     {
         return $this->m_Email;
@@ -432,17 +468,26 @@ class FatPlayer
 			]);
 	}
 
+	public function clearKitItems()
+	{
+		unset($this->m_KitItems);
+		$this->m_KitItems = array();
+		// KEEP IN MIND that at this moment, it's not sync with database, you need to do it after you're done
+		// changing kits items
+	}
+
 	public function emptySlot(string $slotName)
 	{
 		if (array_key_exists($slotName, $this->m_slots))
 		{
-			unset($this->m_slots[$slotName]);
+			unset($this->m_sltos[$slotName]);
 			$this->updateSqlEquippedSlot();
 		}
 	}
 
 	public function setKitItem(string $p_kitSlot, string $p_item) : bool
 	{
+		// by the end of this function, kit items are not sync with DB, you need to do it afterward
 		switch ($p_kitSlot)
 		{
 			case Kit::SLOT_KIT_HEAD:

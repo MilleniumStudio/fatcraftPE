@@ -33,11 +33,7 @@ class NPCFunctionKits extends NPCFunction
     {
 		$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($player);
 
-		$l_FatPlayer->emptySlot("headItem");
-		$l_FatPlayer->emptySlot("chestItem");
-		$l_FatPlayer->emptySlot("pantsItem");
-		$l_FatPlayer->emptySlot("bootsItem");
-		$l_FatPlayer->emptySlot("heldItem");
+		$l_FatPlayer->clearKitItems();
 
 		if (isset($this->equipment["head"]))
 			$l_FatPlayer->setKitItem(Kit::SLOT_KIT_HEAD, ItemUtils::getItemFromRaw($this->equipment["head"]));

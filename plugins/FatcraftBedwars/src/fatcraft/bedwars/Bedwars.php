@@ -362,6 +362,8 @@ class Bedwars extends PluginBase implements Listener
 						$l_Player->getInventory()->setLeggings(ItemUtils::getColoredItemIfColorable(Item::get(ItemIds::LEATHER_LEGGINGS), $l_Team->getColor()));
 						$l_Player->getInventory()->addItem(Item::get(ItemIds::WOODEN_SWORD));
 
+						PlayersManager::getInstance()->getFatPlayer($l_Player)->equipKitToPlayer();
+
 						$l_Player->addTitle($l_GoMsgFormatter->asStringForPlayer($l_Player));
 					}
 				}
