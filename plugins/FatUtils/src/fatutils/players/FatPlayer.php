@@ -285,15 +285,22 @@ class FatPlayer
         PermissionManager::getInstance()->updatePermissions($this);
     }
 
+    private function parseKitItemFromDb(string $p_strItem) : string
+	{
+		$itemName = $p_strItem;
+		$itemName = explode('(', $itemName)[0];
+		$itemName = substr($itemName, 5, -1);
+		$itemName = str_replace(" ", "_", $itemName);
+		$itemName = strtoupper($itemName);
+
+		return $itemName;
+	}
+
     public function equipKitToPlayer()
 	{
 		foreach ($this->m_KitItems as $item => $value)
 		{
-			$itemName = $value;
-			$itemName = explode('(', $itemName)[0];
-			$itemName = substr($itemName, 5, -1);
-			$itemName = str_replace(" ", "_", $itemName);
-			$itemName = strtoupper($itemName);
+			$itemName = $this->parseKitItemFromDb($value);
 
 			$tempItem = ItemFactory::fromString($itemName);
 			$tempItem->setCount(1);
@@ -483,6 +490,12 @@ class FatPlayer
 			unset($this->m_sltos[$slotName]);
 			$this->updateSqlEquippedSlot();
 		}
+	}
+
+	public function getKitItemAtSlot(string $p_kitSlot) : string
+	{
+		echo $this->m_KitItems[$p_kitSlot] . "\n";
+		return "";
 	}
 
 	public function setKitItem(string $p_kitSlot, string $p_item) : bool

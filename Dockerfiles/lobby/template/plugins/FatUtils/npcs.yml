@@ -451,6 +451,7 @@ npcs:
     effects: []
     commands: []
     function: "NPCFunctionKits"
+    phraseTemplate: "kits.equiped.archer"
 
   - name: "kitkeeper2"
     displayname: "kits.tank"
@@ -466,6 +467,7 @@ npcs:
     effects: []
     commands: []
     function: "NPCFunctionKits"
+    phraseTemplate: "kits.equiped.tank"
 
   - name: "kitkeeper3"
     displayname: "kits.swordman"
@@ -481,6 +483,7 @@ npcs:
     effects: []
     commands: []
     function: "NPCFunctionKits"
+    phraseTemplate: "kits.equiped.swordman"
 
   - name: "kitkeeper4"
     displayname: "kits.elytra"
@@ -495,6 +498,7 @@ npcs:
     effects: []
     commands: []
     function: "NPCFunctionKits"
+    phraseTemplate: "kits.equiped.elytra"
 
   - name: "kitkeeper5"
     displayname: "kits.cominglater"
