@@ -16,13 +16,17 @@ npcs:
       to: 0.5/35/8.5/180/0
 
   - name: "shopnpc1"
-    displayname: "shop.title"
+    displayname: "kits.kits"
     location: -4.5/55.1/57.5/342/0
     type : "Player"
     size : 1
     skin: "Fallout1AlbertColev2"
     equipment:
-      held: "{\"material\": \"CARROTONASTICK\"}"
+      head: "{\"material\": \"GOLDEN_HELMET\"}"
+      chest: "{\"material\": \"GOLDEN_CHESTPLATE\"}"
+      pants: "{\"material\": \"GOLDEN_LEGGINGS\"}"
+      boots: "{\"material\": \"GOLDEN_BOOTS\"}"
+      held: "{\"material\": \"DIAMOND_SWORD\"}"
     update: true
     effects: []
     function: "NPCFunctionTeleport"
@@ -432,6 +436,113 @@ npcs:
     function: "NPCFunctionTeleport"
     data:
       to: 0.5/34/8.5/180/0
+
+  - name: "kitkeeper1"
+    displayname: "kits.bowman"
+    location: -59.5/54/55.5/180/0
+    type : "Player"
+    size : 1
+    skin: "Jake"
+    equipment:
+      head: "{\"material\": \"LEATHER_HELMET\"}"
+      chest: "{\"material\": \"LEATHER_CHESTPLATE\"}"
+      held: "{\"material\": \"BOW\"}"
+    update: true
+    effects: []
+    commands: []
+    function: "NPCFunctionKits"
+    phraseTemplate: "kits.equiped.archer"
+
+  - name: "kitkeeper2"
+    displayname: "kits.tank"
+    location: -49.5/54/31.5/45/0
+    type : "Player"
+    size : 1
+    skin: "Jake"
+    equipment:
+      head: "{\"material\": \"CHAIN_HELMET\"}"
+      chest: "{\"material\": \"CHAIN_CHESTPLATE\"}"
+      pants: "{\"material\": \"CHAIN_LEGGINGS\"}"
+    update: true
+    effects: []
+    commands: []
+    function: "NPCFunctionKits"
+    phraseTemplate: "kits.equiped.tank"
+
+  - name: "kitkeeper3"
+    displayname: "kits.swordman"
+    location: -49.5/54/51.5/135/0
+    type : "Player"
+    size : 1
+    skin: "Jake"
+    equipment:
+      chest: "{\"material\": \"LEATHER_CHESTPLATE\"}"
+      pants: "{\"material\": \"LEATHER_LEGGINGS\"}"
+      held: "{\"material\": \"IRON_SWORD\"}"
+    update: true
+    effects: []
+    commands: []
+    function: "NPCFunctionKits"
+    phraseTemplate: "kits.equiped.swordman"
+
+  - name: "kitkeeper4"
+    displayname: "kits.elytra"
+    location: -59.5/54/27.5/0/0
+    type : "Player"
+    size : 1
+    skin: "Jake"
+    equipment:
+      head: "{\"material\": \"CHAIN_HELMET\"}"
+      chest: "{\"material\": \"ELYTRA\"}"
+    update: true
+    effects: []
+    commands: []
+    function: "NPCFunctionKits"
+    phraseTemplate: "kits.equiped.elytra"
+
+  - name: "kitkeeper5"
+    displayname: "kits.cominglater"
+    location: -69.5/54/31.5/315/0
+    type : "Player"
+    size : 1
+    skin: "Putty"
+    update: true
+    effects: []
+    commands: []
+    function: ""
+
+  - name: "kitkeeper6"
+    displayname: "kits.cominglater"
+    location: -45.5/54/41.5/90/0
+    type : "Player"
+    size : 1
+    skin: "Putty"
+    update: true
+    effects: []
+    commands: []
+    function: ""
+
+  - name: "kitkeeper7"
+    displayname: "kits.cominglater"
+    location: -69.5/54/51.5/225/0
+    type : "Player"
+    size : 1
+    skin: "Putty"
+    update: true
+    effects: []
+    commands: []
+    function: ""
+
+  - name: "kitkeeper8"
+    displayname: "kits.cominglater"
+    location: -73.5/54/41.5/270/0
+    type : "Player"
+    size : 1
+    skin: "Putty"
+    update: true
+    effects: []
+    commands: []
+    function: ""
 
   - name: "shopkeeper1"
     displayname: "ShopMan"

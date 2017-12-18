@@ -219,6 +219,9 @@ class HungerGame extends PluginBase implements Listener
 				$l_Player->setGamemode(Player::ADVENTURE);
 				$l_Player->addEffect(Effect::getEffect(Effect::DAMAGE_RESISTANCE)->setAmplifier(10)->setDuration(30 * 20));
 			}
+
+			PlayersManager::getInstance()->getFatPlayer($l_Player)->equipKitToPlayer();
+
 			$l_Player->addTitle(TextFormat::GREEN . "GO !");
 		}
 
