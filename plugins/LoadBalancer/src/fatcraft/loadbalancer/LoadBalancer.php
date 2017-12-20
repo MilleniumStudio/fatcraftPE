@@ -457,7 +457,9 @@ class LoadBalancer extends PluginBase implements Listener
     public function getServersByType($type = LoadBalancer::TEMPLATE_TYPE_LOBBY)
 	{
 		$this->updateCacheServersByType();
-		return $this->m_Cache_ServerByType[$type];
+		if (isset($this->m_Cache_ServerByType[$type]))
+			return $this->m_Cache_ServerByType[$type];
+		return null;
     }
 
     public function getServers($type = LoadBalancer::TEMPLATE_TYPE_LOBBY, $p_State = LoadBalancer::SERVER_STATE_OPEN)
@@ -493,6 +495,8 @@ class LoadBalancer extends PluginBase implements Listener
 
     public function getNetworkServer($type = LoadBalancer::TEMPLATE_TYPE_LOBBY, $id = -1)
     {
+    	if (!isset($this->m_Cache_ServerByType[$type]))
+    		return null;
 		foreach ($this->m_Cache_ServerByType[$type] as $serverRow)
 		{
 			if ($serverRow["id"] == $id)
@@ -502,7 +506,6 @@ class LoadBalancer extends PluginBase implements Listener
 				return $serverRow;
 			}
 		}
-
         return null;
     }
 
