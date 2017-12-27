@@ -1,0 +1,16 @@
+minPlayer: 2
+maxPlayer: 8
+# waitingSecDuration: 30 # default value will be used, defined in GameManager::getInstance()->getWaitingTickDuration());
+playingSecDuration: 1200
+
+endGameTime: 50
+
+rewards:
+  xp: 1000
+  fatSilver: 100
+
+spawns:
+  1:
+    location: -1.5/5.5/5.5
+  2:
+    location: -1.5/5.5/20.5

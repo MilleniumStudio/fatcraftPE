@@ -1,0 +1,7 @@
+name: FatcraftBuildBattle
+version: 0.1
+main: buildbattle\BuildBattle
+description: "BuildBattleHey"
+depend: [FatUtils]
+api: [3.0.0-ALPHA10]
+load: POSTWORLD
