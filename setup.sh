@@ -138,3 +138,7 @@ cd ..
 cd br-2/
 ./docker_build.sh
 cd ..
+
+cd bb-1/
+./docker_build.sh
+cd ..
