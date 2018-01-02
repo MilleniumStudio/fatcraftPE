@@ -29,6 +29,13 @@ class BuildBattle extends PluginBase implements Listener
 	private $m_buildBattleConfig;
 	private $m_WaitingTimer;
 	private $m_gameStarted;
+	private $m_challengeList = [];
+	private $m_currentChallenge;
+
+	private $m_challenges;
+
+	const CHALLENGE_LIST_CONF_STR = "challengeList";
+	const CHALLENGE_CONF_STR = "challenge";
 
 	public static function getInstance(): BuildBattle
 	{
@@ -62,6 +69,8 @@ class BuildBattle extends PluginBase implements Listener
 		$this->m_gameStarted = false;
 
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
+		$this->loadChallengeList();
+		$this->m_currentChallenge = $this->getRandomChallenge();
 
 		$this->m_WaitingTimer = new DisplayableTimer(GameManager::getInstance()->getWaitingTickDuration());
 		$this->m_WaitingTimer
@@ -125,8 +134,8 @@ class BuildBattle extends PluginBase implements Listener
 			} else
 			{
 				$p_Player->setGamemode(Player::CREATIVE);
-				$p_Player->sendMessage(TextFormat::YELLOW . "You've been automatically set to SPECTATOR");
-				$this->getServer()->getLogger()->info($p_Player->getName() . " has been set to SPECTATOR");
+				//$p_Player->sendMessage(TextFormat::YELLOW . "You've been automatically set to CREATIVE");
+				$this->getServer()->getLogger()->info($p_Player->getName() . " has been set to CREATIVE");
 			}
 		}
 
@@ -182,12 +191,37 @@ class BuildBattle extends PluginBase implements Listener
 
 		// PREPARING PLAYERS
 		foreach ($this->getServer()->getOnlinePlayers() as $l_Player) {
-			PlayersManager::getInstance()->getFatPlayer($l_Player)->setPlaying();
-			$l_Player->addTitle(TextFormat::GREEN . "GO !");
+			foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+			$l_Player->addTitle("", "Theme is : " . TextFormat::YELLOW . $this->m_currentChallenge);
 		}
 
 		$this->m_gameStarted= true;
+
+		// UNBLOCKING SPAWNS
+		SpawnManager::getInstance()->unblockSpawns();
 	}
+
+	private function loadChallengeList()
+	{
+		FatUtils::getInstance()->getLogger()->info("Build Battle loading challenges...");
+		foreach (FatUtils::getInstance()->getTemplateConfig()->get(BuildBattle::CHALLENGE_LIST_CONF_STR) as $l_challengesKey => $l_challengesValue)
+		{
+			if (is_array($l_challengesValue) && array_key_exists(BuildBattle::CHALLENGE_CONF_STR, $l_challengesValue))
+			{
+				echo ("challenge : " . $l_challengesValue[BuildBattle::CHALLENGE_CONF_STR] . "\n");
+				$this->m_challengeList[] = $l_challengesValue[BuildBattle::CHALLENGE_CONF_STR];
+			}
+		}
+
+	}
+
+	private function getRandomChallenge() : String
+	{
+		$value = rand(0, count($this->m_challengeList));
+
+		return $this->m_challengeList[$value];
+	}
+
 
 	/**
 	 * @param BlockBreakEvent $e

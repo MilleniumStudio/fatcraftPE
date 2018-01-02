@@ -9,6 +9,12 @@ rewards:
   xp: 1000
   fatSilver: 100
 
+challengeList:
+  1:
+    challenge: "ca marche bien !"
+  2:
+    challenge: "peut etre ?"
+
 spawns:
   1:
     location: 0.5/65/0.5
