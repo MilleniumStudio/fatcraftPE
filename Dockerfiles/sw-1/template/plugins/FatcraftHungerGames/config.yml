@@ -1,4 +1,4 @@
-minPlayer: 4
+minPlayer: 2
 maxPlayer: 12
 waitingSecDuration: 30
 playingSecDuration: 600
