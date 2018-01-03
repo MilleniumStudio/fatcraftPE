@@ -32,7 +32,7 @@ class LobbiesWindow
 					->setText(($thisServer ? (TextFormat::GREEN . "✔ " . TextFormat::RESET . TextFormat::DARK_GRAY) : "") . (new TextFormatter("template.lobby"))->asStringForPlayer($p_Player) . " " . $l_Server["id"] . " (" . $l_Server["online"] . "/" . $l_Server["max"] . " players)")
 					->setCallback(function () use ($l_FatPlayer, $thisServer, $l_Server)
 					{
-						if (!$thisServer)
+						if (!$thisServer && ($l_Server["online"] < $l_Server["max"]))
 						{
 							LoadBalancer::getInstance()->transferPlayer($l_FatPlayer->getPlayer(), $l_Server["ip"], $l_Server["port"], "plop");
 						}

@@ -1,7 +1,7 @@
 minPlayer: 2
 maxPlayer: 8
-# waitingSecDuration: 30 # default value will be used, defined in GameManager::getInstance()->getWaitingTickDuration());
-playingSecDuration: 1200
+# waitingSecDuration: 30 # default value will be used, getting it from GameManager::getInstance()->getWaitingTickDuration());
+playingSecDuration: 30
 
 endGameTime: 50
 
@@ -14,6 +14,8 @@ challengeList:
     challenge: "ca marche bien !"
   2:
     challenge: "peut etre ?"
+  3:
+    challenge: "oui oui"
 
 spawns:
   1:
