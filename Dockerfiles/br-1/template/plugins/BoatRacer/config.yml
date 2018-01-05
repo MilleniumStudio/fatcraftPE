@@ -1,6 +1,6 @@
 minPlayer: 2
 maxPlayer: 18
-waitingSecDuration: 2
+waitingSecDuration: 30
 
 lapToFinish: 2
 
