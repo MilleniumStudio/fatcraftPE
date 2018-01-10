@@ -1,6 +1,6 @@
 minPlayer: 2
 maxPlayer: 8
-# waitingSecDuration: 30 # default value will be used, getting it from GameManager::getInstance()->getWaitingTickDuration());
+waitingSecDuration: 60
 playingSecDuration: 30
 
 endGameTime: 50

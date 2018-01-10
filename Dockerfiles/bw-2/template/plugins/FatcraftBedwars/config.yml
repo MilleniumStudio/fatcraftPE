@@ -1,6 +1,6 @@
 minPlayer: 2
 maxPlayer: 8
-waitingSecDuration: 30
+waitingSecDuration: 60
 playingSecDuration: 1200
 deathArenaLoc: 0.5/6.1/60.5
 
