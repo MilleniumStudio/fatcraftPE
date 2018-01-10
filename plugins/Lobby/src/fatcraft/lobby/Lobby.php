@@ -18,6 +18,7 @@ use fatutils\tools\WorldUtils;
 use fatutils\tools\schedulers\DelayedExec;
 use fatutils\ui\impl\GamesWindow;
 use fatutils\ui\impl\LobbiesWindow;
+use pocketmine\entity\Effect;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\inventory\InventoryPickupItemEvent;
 use pocketmine\event\inventory\InventoryPickupArrowEvent;
@@ -111,6 +112,7 @@ class Lobby extends PluginBase implements Listener
 		$e->getPlayer()->getInventory()->setItem(6, $l_LobbyChooser);
 
 		$e->getPlayer()->getInventory()->sendContents($e->getPlayer());
+		$e->getPlayer()->addEffect(Effect::getEffect(Effect::SPEED)->setAmplifier(2)->setDuration(INT32_MAX));
 
         if ($this->m_SpawnPoint != null)
         {

@@ -259,7 +259,8 @@ class FatPlayer
 						$this->reequipRawShopItems($l_RawEquippedItem);
 					}, 5);
 				}
-				$this->m_KitItems = json_decode($result->rows[0]["kit_items"], true);
+				if ($result->rows[0]["kit_items"] != null)
+					$this->m_KitItems = json_decode($result->rows[0]["kit_items"], true);
 				$l_Exist = true;
                 FatUtils::getInstance()->getLogger()->info("[FatPlayer] " . $this->getPlayer()->getName() . " exist in database, loading took " . (($l_EndMillisec - $l_StartMillisec) * 1000) . "ms");
             }

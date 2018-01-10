@@ -77,7 +77,7 @@ network:
  #Set to 0 to compress everything, -1 to disable.
  batch-threshold: 256
  #Compression level used when sending batched packets. Higher = more CPU, less bandwidth usage
- compression-level: 7
+ compression-level: 1
  #Use AsyncTasks for compression. Adds half/one tick delay, less CPU load on main thread
  async-compression: false
  #Experimental, only for Windows. Tries to use UPnP to automatically port forward
@@ -89,7 +89,7 @@ debug:
   #Warn if assertions are enabled in php.ini, due to assertions may impact on runtime performance if enabled.
   warn-if-enabled: true
  #If > 1, it will show debug messages in the console
- level: 1
+ level: 7
  #Enables /status, /gc
  commands: false
 
@@ -124,6 +124,7 @@ chunk-sending:
  cache-chunks: true
 
 chunk-ticking:
+ disableLoadChunk: true
  #Max amount of chunks processed each tick
  per-tick: 40
  #Radius of chunks around a player to tick
