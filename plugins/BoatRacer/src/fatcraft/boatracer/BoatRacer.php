@@ -281,8 +281,10 @@ class BoatRacer extends PluginBase implements Listener
 			if (count($this->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMaxPlayer())
 			{
 				$this->getLogger()->info("MAX PLAYER REACH !");
-				if ($this->m_WaitingTimer instanceof Timer)
+				if ($this->m_WaitingTimer instanceof Timer) {
 					$this->m_WaitingTimer->cancel();
+					$this->resetGameWaiting();
+				}
 				$this->startGame();
 			} else if (count($this->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMinPlayer())
 			{
@@ -414,11 +416,9 @@ class BoatRacer extends PluginBase implements Listener
 					$this->m_WaitingTimer = null;
 					$this->resetGameWaiting();
 				}
-			} else if (GameManager::getInstance()->isPlaying())
-			{
-				if (count($this->getServer()->getOnlinePlayers()) == 0)
-					$this->getServer()->shutdown();
+			} else if (GameManager::getInstance()->isPlaying() || count($this->getServer()->getOnlinePlayers()) == 0) {
+				$this->getServer()->shutdown();
 			}
-		});
+		}, 1);
 	}
 }

@@ -134,10 +134,7 @@ class HungerGame extends PluginBase implements Listener
 			{
 				$this->getLogger()->info("MIN PLAYER REACH !");
 				if ($this->m_WaitingTimer instanceof Timer)
-				{
-					if (!$this->m_WaitingTimer->isRunning())
-						$this->m_WaitingTimer->start();
-				}
+					$this->m_WaitingTimer->start();
 			}
 //            else if (count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMinPlayer())
 //            {

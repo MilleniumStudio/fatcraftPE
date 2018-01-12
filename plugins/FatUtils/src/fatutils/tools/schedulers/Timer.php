@@ -150,6 +150,7 @@ class Timer
 	public function pause()
 	{
 		$this->m_Paused = true;
+		$this->m_isRuning = false;
 	}
 
 	public function cancel()
@@ -169,6 +170,8 @@ class Timer
 
 	public function start():Timer
 	{
+		if ($this->m_isRuning == true)
+			return $this;
 		$this->m_isRuning = true;
 		if (!is_null($this->m_Task) && $this->isPaused())
 			$this->m_Paused = false;
