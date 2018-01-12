@@ -130,8 +130,8 @@ class ShopKeeper extends ClickableNPC
             );
         }
 
-//        if (Bedwars::DEBUG && $p_Player->isOp())
-//        {
+        if (Bedwars::DEBUG && $p_Player->isOp())
+        {
             $l_Window->addPart((new Button())
                 ->setText(TextFormat::GOLD . "★★★ GIVE ME MONEY ★★★")
                 ->setCallback(function () use ($p_Player, $l_Window)
@@ -142,7 +142,7 @@ class ShopKeeper extends ClickableNPC
                     $l_Window->open();
                 })
             );
-//        }
+        }
 
         return $l_Window;
     }
