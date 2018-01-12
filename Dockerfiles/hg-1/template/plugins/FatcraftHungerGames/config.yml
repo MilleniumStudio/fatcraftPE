@@ -1,7 +1,7 @@
 minPlayer: 2
 maxPlayer: 12
-waitingSecDuration: 5
-playingSecDuration: 5
+waitingSecDuration: 60
+playingSecDuration: 600
 deathArenaLoc: 0.55/51/6.49
 deathArenaLocType: deathArenaTypePerimeter
 deathArenaLocRadius: 16
