@@ -63,6 +63,9 @@ namespace FatForward
                MySqlDataReader dataReader = cmd.ExecuteReader();
 
                 int l_debug = 0;
+                if (dataReader.HasRows)
+                    ServerStatus.WipeServerList();
+
                 while (dataReader.Read())
                 {
                     ServerStatus l_SerververStatus = new ServerStatus(dataReader["ip"].ToString(), int.Parse(dataReader["port"].ToString()), dataReader["status"].ToString(), int.Parse(dataReader["online"].ToString()), int.Parse(dataReader["max"].ToString()));
