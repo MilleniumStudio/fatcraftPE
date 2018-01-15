@@ -79,6 +79,7 @@ class Pet extends ShopItem
     public function unequip()
     {
         $this->m_CustomPet->kill();
+        $this->m_CustomPet->flagForDespawn();
 //        $this->m_fatPlayer->setSlot(ShopItem::FAT_PLAYER_SHOP_SLOT_PET, null);
     }
 

@@ -70,6 +70,8 @@ class FatPlayer
 	private $m_BoughtShopItems = [];
 	private $m_KitItems = [];
 
+	private $m_isPreviewing = false;
+
     /**
      * FatPlayer constructor.
      * @param Player $p_Player
@@ -588,5 +590,15 @@ class FatPlayer
 				["i", $this->m_Fatgold],
 				["s", $this->getPlayer()->getUniqueId()]
 			]);
+	}
+
+	public function setPreviewing(bool $p_Value)
+	{
+		$this->m_isPreviewing = $p_Value;
+	}
+
+	public function isPreviewing()
+	{
+		return $this->m_isPreviewing;
 	}
 }

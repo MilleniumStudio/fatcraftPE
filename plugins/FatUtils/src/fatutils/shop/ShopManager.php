@@ -260,14 +260,20 @@ class ShopManager
 					->setCallback(function () use ($p_CategoryName, $p_ShopItem, $l_FatPlayer)
 					{
 						$p_ShopItem->equip();
+						$l_FatPlayer->setPreviewing(true);
 						new DelayedExec(function () use ($p_CategoryName, $p_ShopItem, $l_FatPlayer)
 						{
 							if ($l_FatPlayer->getPlayer()->isOnline())
 							{
 								$p_ShopItem->unequip();
-								$this->getShopItemMenu($p_CategoryName, $p_ShopItem)->open();
+								if ($l_FatPlayer->isPreviewing())
+								{
+									$this->getShopItemMenu($p_CategoryName, $p_ShopItem)->open();
+									$l_FatPlayer->setPreviewing(false);
+									return;
+								}
 							}
-						}, 5 * 20);
+						}, 4 * 20);
 					})
 				);
 			} else
