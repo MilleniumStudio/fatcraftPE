@@ -10,9 +10,13 @@ namespace surva\allsigns;
 
 use surva\allsigns\tasks\SignUpdate;
 use pocketmine\plugin\PluginBase;
+use fatutils\tools\WorldUtils;
+
 
 class AllSigns extends PluginBase {
     public function onEnable() {
+		WorldUtils::stopWorldsTime();
+		WorldUtils::setWorldsTime(0);
         $this->saveDefaultConfig();
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
 

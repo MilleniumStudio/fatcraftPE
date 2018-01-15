@@ -9,6 +9,7 @@
 
 namespace surva\allsigns;
 
+use fatutils\players\PlayersManager;
 use pocketmine\block\Block;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
@@ -142,7 +143,10 @@ class EventListener implements Listener
 
                     case $configFile->get("addCheckpoint"):
                         $tile->setText($configFile->get("Obf") . "checkpoint", $configFile->get("checkpoint"), "", "");
-                        break;
+                        $l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($player);
+                        // $player->sendMessage(new TextFormatter("parkour.checkpoint.message"))->asStringForPlayer($l_FatPlayer);
+                        // message on checkpoint need to be made
+						break;
 
                     case $configFile->get("endgame"):
                         $location = $block->x."/".$block->y."/".$block->z;
@@ -230,8 +234,9 @@ class EventListener implements Listener
                             // rewards
                             if ($this->allSigns->getServer()->getPluginManager()->getPlugin("StatsPE") != null)
                             {
-                                \SalmonDE\StatsPE\CustomEntries::getInstance()->modIntEntry("Money", $player, $reward["money"]);
-                                \SalmonDE\StatsPE\CustomEntries::getInstance()->modIntEntry("XP", $player, $reward["xp"]);
+								$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($player);
+								$l_FatPlayer->addFatsilver($reward["money"]);
+								\SalmonDE\StatsPE\CustomEntries::getInstance()->modIntEntry("XP", $player, $reward["xp"]);
                                 if ($this->allSigns->getServer()->getPluginManager()->getPlugin("LoadBalancer") != null and \fatcraft\loadbalancer\LoadBalancer::getInstance()->getServerType() != "" and $reward["xp"] != "")
                                 {
                                     $l_ServerType = \fatcraft\loadbalancer\LoadBalancer::getInstance()->getServerType();

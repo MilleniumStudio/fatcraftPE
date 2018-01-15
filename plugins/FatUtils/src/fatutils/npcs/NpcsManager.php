@@ -130,7 +130,7 @@ class NpcsManager implements Listener, CommandExecutor
                     }
                     if (isset($equipment["boots"]) && $equipment["boots"] !== "")
                     {
-                        $entity->getInventory()->setItemInHand(\fatutils\tools\ItemUtils::getItemFromRaw($equipment["boots"]));
+                        $entity->getInventory()->setBoots(\fatutils\tools\ItemUtils::getItemFromRaw($equipment["boots"]));
                     }
                     if (isset($equipment["held"]) && $equipment["held"] !== "")
                     {
@@ -139,6 +139,7 @@ class NpcsManager implements Listener, CommandExecutor
                 }
 
                 $entity->data = $data;
+                $entity->equipment = $equipment;
                 try
                 {
                     switch ($function)
@@ -152,7 +153,9 @@ class NpcsManager implements Listener, CommandExecutor
                         case "NPCFunctionShop":
                             $entity->function = new functions\NPCFunctionShop($entity);
                             break;
-
+                        case "NPCFunctionKits":
+                            $entity->function = new functions\NPCFunctionKits($entity);
+							break;
                         default:
                             break;
                     }

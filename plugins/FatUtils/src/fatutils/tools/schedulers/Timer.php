@@ -28,6 +28,8 @@ class Timer
 
 	private $m_Task = null;
 
+	private $m_isRuning = false;
+
 	/**
 	 * Timer constructor.
 	 * @param int $p_Timeout
@@ -148,6 +150,7 @@ class Timer
 	public function pause()
 	{
 		$this->m_Paused = true;
+		$this->m_isRuning = false;
 	}
 
 	public function cancel()
@@ -156,11 +159,20 @@ class Timer
 		{
             $this->m_Task->cancel();
 			$this->m_Task = null;
+			$this->m_isRuning = false;
 		}
     }
 
+	public function isRunning()
+	{
+		return $this->m_isRuning;
+	}
+
 	public function start():Timer
 	{
+		if ($this->m_isRuning == true)
+			return $this;
+		$this->m_isRuning = true;
 		if (!is_null($this->m_Task) && $this->isPaused())
 			$this->m_Paused = false;
 		else

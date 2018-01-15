@@ -60,7 +60,7 @@ if [ "$UPDATE_POCKETMINE_CORE" == "yes" ]; then
 fi
 
 if [ "$BUILD_POCKETMINE_CORE" == "yes" ]; then
-    rm cores/PocketMine-MP.phar
+    rm -f cores/PocketMine-MP.phar
 fi
 
 if [ "$COMPILE_BIN" == "yes" ]; then
@@ -132,5 +132,13 @@ cd md-1/
 cd ..
 
 cd br-1/
+./docker_build.sh
+cd ..
+
+cd br-2/
+./docker_build.sh
+cd ..
+
+cd bb-1/
 ./docker_build.sh
 cd ..

@@ -56,7 +56,7 @@ class PowersManager implements Listener, CommandExecutor
         }
 
         //todo for debug
-        $this->availablePowers[] = "Boost";
+//        $this->availablePowers[] = "Boost";
         $this->availablePowers[] = "Shot";
         $this->availablePowers[] = "Mine";
         $this->availablePowers[] = "Blindness";

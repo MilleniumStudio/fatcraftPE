@@ -18,6 +18,7 @@ use fatutils\tools\WorldUtils;
 use fatutils\tools\schedulers\DelayedExec;
 use fatutils\ui\impl\GamesWindow;
 use fatutils\ui\impl\LobbiesWindow;
+use pocketmine\entity\Effect;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\inventory\InventoryPickupItemEvent;
 use pocketmine\event\inventory\InventoryPickupArrowEvent;
@@ -102,15 +103,17 @@ class Lobby extends PluginBase implements Listener
             $e->getPlayer()->getInventory()->setItem(1, $l_Shop);
 
             $l_MainMenu = Item::get(ItemIds::COMPASS);
-                    $l_MainMenu->setCustomName((new TextFormatter("lobby.hotbar.mainMenu"))->asStringForPlayer($e->getPlayer()));
+			$l_MainMenu->setCustomName((new TextFormatter("lobby.hotbar.mainMenu"))->asStringForPlayer($e->getPlayer()));
             $e->getPlayer()->getInventory()->setItem(2, $l_MainMenu);
+		}
 
-                    $l_LobbyChooser = Item::get(ItemIds::NETHERSTAR);
-                    $l_LobbyChooser->setCustomName((new TextFormatter("lobby.hotbar.lobbyChooser"))->asStringForPlayer($e->getPlayer()));
-                    $e->getPlayer()->getInventory()->setItem(6, $l_LobbyChooser);
+		$l_LobbyChooser = Item::get(ItemIds::NETHERSTAR);
+		$l_LobbyChooser->setCustomName((new TextFormatter("lobby.hotbar.lobbyChooser"))->asStringForPlayer($e->getPlayer()));
+		$e->getPlayer()->getInventory()->setItem(6, $l_LobbyChooser);
 
-            $e->getPlayer()->getInventory()->sendContents($e->getPlayer());
-        }
+		$e->getPlayer()->getInventory()->sendContents($e->getPlayer());
+		$e->getPlayer()->addEffect(Effect::getEffect(Effect::SPEED)->setAmplifier(2)->setDuration(INT32_MAX));
+
         if ($this->m_SpawnPoint != null)
         {
             $e->getPlayer()->teleport($this->m_SpawnPoint, $this->m_SpawnPoint->yaw, $this->m_SpawnPoint->pitch);

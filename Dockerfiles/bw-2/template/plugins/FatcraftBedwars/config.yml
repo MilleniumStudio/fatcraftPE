@@ -1,6 +1,6 @@
 minPlayer: 2
-maxPlayer: 4
-waitingSecDuration: 15
+maxPlayer: 8
+waitingSecDuration: 60
 playingSecDuration: 1200
 deathArenaLoc: 0.5/6.1/60.5
 
@@ -96,72 +96,72 @@ forges:
     location: -9.5/55/-64.5
     itemType: GOLD_INGOT
     popDelay:
-      - 8
-      - 6
-      - 4
+      - 16
+      - 12
+      - 9
   g2:
     location: -51.5/55/-48.5
     itemType: GOLD_INGOT
     popDelay:
-      - 8
-      - 6
-      - 4
+      - 16
+      - 12
+      - 9
   g3:
     location: -69.5/55/-5.5
     itemType: GOLD_INGOT
     popDelay:
-      - 8
-      - 6
-      - 4
+      - 16
+      - 12
+      - 9
   g4:
     location: -53.5/55/36.5
     itemType: GOLD_INGOT
     popDelay:
-      - 8
-      - 6
-      - 4
+      - 16
+      - 12
+      - 9
   g5:
     location: -10.5/55/55.5
     itemType: GOLD_INGOT
     popDelay:
-      - 8
-      - 6
-      - 4
+      - 16
+      - 12
+      - 9
   g6:
     location: 31.5/55/38.5
     itemType: GOLD_INGOT
     popDelay:
-      - 8
-      - 6
-      - 4
+      - 16
+      - 12
+      - 9
   g7:
     location: 50.5/55/-3.5
     itemType: GOLD_INGOT
     popDelay:
-      - 8
-      - 6
-      - 4
+      - 16
+      - 12
+      - 9
   g8:
     location: 33.5/55/-45.5
     itemType: GOLD_INGOT
     popDelay:
-      - 8
-      - 6
-      - 4
+      - 16
+      - 12
+      - 9
   d1:
     location: -9.5/55/-13.5
     itemType: DIAMOND
     popDelay:
-      - 12
-      - 10
-      - 8
+      - 23
+      - 18
+      - 15
   d2:
     location: -9.5/55/4.5
     itemType: DIAMOND
     popDelay:
-      - 12
-      - 10
-      - 8
+      - 23
+      - 18
+      - 15
 
 teams:
   Red:
@@ -228,9 +228,9 @@ shop:
       imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/Oak_Wood_Planks.png"
       goldPrice: 3
     obsidian:
-      rawItem: '{"material": "OBSIDIAN", "amount": 2}'
+      rawItem: '{"material": "OBSIDIAN", "amount": 4}'
       imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/Obsidian.png"
-      goldPrice: 10
+      diamondPrice: 7
   weapons:
     stoneSword:
       rawItem: '{"material": "STONE_SWORD"}'
@@ -243,7 +243,7 @@ shop:
     diamondSword:
       rawItem: '{"material": "DIAMOND_SWORD"}'
       imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/Diamond_Sword.png"
-      goldPrice: 15
+      diamondPrice: 15
     bow:
       rawItem: '{"material": "BOW"}'
       imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/Bow.png"
@@ -266,14 +266,14 @@ shop:
       leggings: '{"material": "IRON_LEGGINGS"}'
       boots: '{"material": "IRON_BOOTS"}'
       imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/Iron_chestplate.png"
-      ironPrice: 50
+      ironPrice: 40
     diamondSet:
       helmet: '{"material": "DIAMOND_HELMET"}'
       chestplate: '{"material": "DIAMOND_CHESTPLATE"}'
       leggings: '{"material": "DIAMOND_LEGGINGS"}'
       boots: '{"material": "DIAMOND_BOOTS"}'
       imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/Diamond_chestplate.png"
-      diamondPrice: 10
+      diamondPrice: 20
   tools:
     stonePickaxe:
       rawItem: '{"material": "STONE_PICKAXE"}'
@@ -286,11 +286,11 @@ shop:
     diamondPickaxe:
       rawItem: '{"material": "DIAMOND_PICKAXE"}'
       imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/Diamond_Pickaxe.png"
-      diamondPrice: 3
+      diamondPrice: 7
     ironAxe:
       rawItem: '{"material": "IRON_AXE"}'
       imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/Iron_Axe.png"
-      ironPrice: 40
+      goldPrice: 20
   others:
     snowBalls:
       rawItem: '{"material": "SNOWBALL", "amount": 5}'
@@ -299,7 +299,7 @@ shop:
     ladders:
       rawItem: '{"material": "LADDER", "amount": 3}'
       imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/Ladder.png"
-      ironPrice: 10
+      goldPrice: 5
 #    spiderWebs:
 #      rawItem: '{"material": "COBWEB", "amount": 1}'
 #      goldPrice: 2

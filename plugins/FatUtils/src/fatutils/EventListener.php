@@ -9,6 +9,7 @@ use fatutils\players\PlayersManager;
 use fatutils\shop\ShopItem;
 use fatutils\tools\schedulers\DelayedExec;
 use fatutils\tools\TextFormatter;
+use pocketmine\event\block\LeavesDecayEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityRegainHealthEvent;
 use pocketmine\event\Listener;
@@ -30,6 +31,11 @@ use fatutils\permission\PermissionManager;
 
 class EventListener implements Listener
 {
+	public function onLeavesDecay(LeavesDecayEvent $e)
+	{
+		$e->setCancelled(true);
+	}
+
     public function onLogin(PlayerLoginEvent $e)
     {
         if (BanManager::getInstance()->isBanned($e->getPlayer()))

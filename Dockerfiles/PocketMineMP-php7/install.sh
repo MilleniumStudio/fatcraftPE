@@ -6,6 +6,4 @@ mkdir install
 cp -r template/* install/
 
 cp ../../cores/PocketMine-MP.phar install/
-cp ../../PocketMine-MP/compile.sh install/
-cp ../../PocketMine-MP/composer.json install/
-cp ../../PocketMine-MP/composer.lock install/
+cp ../../plugins/FatUtils.phar install/plugins

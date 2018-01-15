@@ -1,0 +1,26 @@
+minPlayer: 2
+maxPlayer: 8
+waitingSecDuration: 60
+playingSecDuration: 30
+
+endGameTime: 50
+
+rewards:
+  xp: 1000
+  fatSilver: 100
+
+challengeList:
+  1:
+    challenge: "ca marche bien !"
+  2:
+    challenge: "peut etre ?"
+  3:
+    challenge: "oui oui"
+
+spawns:
+  1:
+    location: 0.5/65/0.5
+  2:
+    location: 0.5/65/-128.5
+  3:
+    location: 0.5/65/-256.5

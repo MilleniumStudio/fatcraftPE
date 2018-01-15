@@ -362,6 +362,8 @@ class Bedwars extends PluginBase implements Listener
 						$l_Player->getInventory()->setLeggings(ItemUtils::getColoredItemIfColorable(Item::get(ItemIds::LEATHER_LEGGINGS), $l_Team->getColor()));
 						$l_Player->getInventory()->addItem(Item::get(ItemIds::WOODEN_SWORD));
 
+						PlayersManager::getInstance()->getFatPlayer($l_Player)->equipKitToPlayer();
+
 						$l_Player->addTitle($l_GoMsgFormatter->asStringForPlayer($l_Player));
 					}
 				}
@@ -568,16 +570,55 @@ class Bedwars extends PluginBase implements Listener
 				{
 					$this->m_WaitingTimer->cancel();
 					$this->m_WaitingTimer = null;
+					$this->resetGameWaiting();
 				}
-			} else if (GameManager::getInstance()->isPlaying())
-			{
-				if (count($this->getServer()->getOnlinePlayers()) == 0)
-					$this->getServer()->shutdown();
+			} else if (GameManager::getInstance()->isPlaying() || count($this->getServer()->getOnlinePlayers()) == 0) {
+				$this->getServer()->shutdown();
 			}
 		}, 1);
     }
 
-    public function dropPlayerMoney(Player $p_Player)
+	private function resetGameWaiting()
+	{
+		// Waiting Clock Initialization
+		$this->m_WaitingTimer = new DisplayableTimer(GameManager::getInstance()->getWaitingTickDuration());
+		$this->m_WaitingTimer
+			->setTitle(new TextFormatter("timer.waiting.title"))
+			->addStopCallback(function ()
+			{
+				$this->startGame();
+			})
+			->addSecondCallback(function () {
+				if ($this->m_WaitingTimer instanceof Timer)
+				{
+					$l_SecLeft = $this->m_WaitingTimer->getSecondLeft();
+					$l_Text = "";
+					if ($l_SecLeft == 3)
+						$l_Text = TextFormat::RED . $l_SecLeft;
+					else if ($l_SecLeft == 2)
+						$l_Text = TextFormat::GOLD . $l_SecLeft;
+					else if ($l_SecLeft == 1)
+						$l_Text = TextFormat::YELLOW . $l_SecLeft;
+
+					foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+						$l_Player->addTitle($l_Text, "");
+				}
+			});
+
+		Sidebar::getInstance()->clearLines();
+		// Waiting Sidebar Initialization
+		Sidebar::getInstance()
+			->addTranslatedLine(new TextFormatter("template.br"))
+			->addTimer($this->m_WaitingTimer)
+			->addWhiteSpace()
+			->addMutableLine(function ()
+			{
+				return new TextFormatter("game.waitingForMore", ["amount" => max(0, PlayersManager::getInstance()->getMinPlayer() - count($this->getServer()->getOnlinePlayers()))]);
+			});
+		Sidebar::getInstance()->update();
+	}
+
+	public function dropPlayerMoney(Player $p_Player)
     {
         if ($this->getPlayerIron($p_Player) > 0)
         {
