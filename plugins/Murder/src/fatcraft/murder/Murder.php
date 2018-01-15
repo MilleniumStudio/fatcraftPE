@@ -256,7 +256,7 @@ class Murder extends PluginBase implements Listener
                 }
             }
         }
-        if (Server::getInstance()->getTick() % 200 == 0) {
+        if (Server::getInstance()->getTick() % (300 / (PlayersManager::getInstance()->getInGamePlayerLeft() - 1)) == 0) {
             if (rand(0, 100) > 50) {
                 /** @var Location $loc */
                 $loc = $this->getMurderConfig()->gunPartsLocs[array_rand($this->getMurderConfig()->gunPartsLocs)];
@@ -390,31 +390,36 @@ class Murder extends PluginBase implements Listener
 
     public function onPlayerQuit(PlayerQuitEvent $p_Event)
     {
+		$l_Player = $p_Event->getPlayer();
 		if (GameManager::getInstance()->isPlaying())
 		{
-			PlayersManager::getInstance()->getFatPlayer($p_Event->getPlayer())->setOutOfGame();
+			PlayersManager::getInstance()->getFatPlayer($l_Player)->setOutOfGame();
 		}
 
 		Sidebar::getInstance()->update();
 
-        new DelayedExec(function ()
+		if (GameManager::getInstance()->isWaiting())
 		{
-			if (GameManager::getInstance()->isWaiting())
+			if ($this->m_WaitingTimer instanceof Timer && $this->m_WaitingTimer->getTickLeft() > 0 &&
+				(count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMinPlayer()))
 			{
-				if ($this->m_WaitingTimer instanceof Timer && $this->m_WaitingTimer->getTickLeft() > 0 &&
-					(count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMinPlayer()))
-				{
-					$this->m_WaitingTimer->cancel();
-					$this->m_WaitingTimer = null;
-					$this->resetGameWaiting();
-				}
-			} else if (GameManager::getInstance()->isPlaying())
-			{
-				if (count($this->getServer()->getOnlinePlayers()) == 0)
-					$this->getServer()->shutdown();
+				$this->m_WaitingTimer->cancel();
+				$this->m_WaitingTimer = null;
+				$this->resetGameWaiting();
 			}
-		}, 1);
-    }
+		} else if (GameManager::getInstance()->isPlaying())
+		{
+			if (PlayersManager::getInstance()->getInGamePlayerLeft() <= 1)
+			{
+				if ($l_Player->getUniqueId()->equals($this->m_murdererUUID))
+					$this->endGameLambdas();
+				else
+					$this->endGameMurderer();
+			}
+			if (count($this->getServer()->getOnlinePlayers()) == 0)
+				$this->getServer()->shutdown();
+		}
+}
 
     /**
      * @param PlayerDeathEvent $e
@@ -423,13 +428,13 @@ class Murder extends PluginBase implements Listener
     {
 		if (GameManager::getInstance()->isPlaying())
 		{
-			$p = $e->getEntity();
-			PlayersManager::getInstance()->getFatPlayer($p)->setOutOfGame();
+			$l_Player = $e->getPlayer();
+			PlayersManager::getInstance()->getFatPlayer($l_Player)->setOutOfGame();
 
 			$customDeathMessage = "";
 
 			$killer = null;
-			$lastDamageEvent = $p->getLastDamageCause();
+			$lastDamageEvent = $l_Player->getLastDamageCause();
 			if ($lastDamageEvent instanceof EntityDamageByEntityEvent)
 			{
 				/** @var Player $killer */
@@ -437,14 +442,14 @@ class Murder extends PluginBase implements Listener
 			}
 
 			//if it's the murderer
-			if ($p->getUniqueId()->equals($this->m_murdererUUID))
+			if ($l_Player->getUniqueId()->equals($this->m_murdererUUID))
 			{
-				$customDeathMessage = $p->getName() . " était le meurtrier et a été tué par " . $killer->getName();
+				$customDeathMessage = $l_Player->getName() . " était le meurtrier et a été tué par " . $killer->getName();
 				// endGame, lambdas win
 				$this->endGameLambdas($killer);
 			} else
 			{
-				$customDeathMessage = $p->getName() . " a été tué";
+				$customDeathMessage = $l_Player->getName() . " a été tué";
 				if (PlayersManager::getInstance()->getInGamePlayerLeft() <= 1)
 				{
 					$this->m_playersKilled++;
@@ -462,7 +467,7 @@ class Murder extends PluginBase implements Listener
 			}
 			$e->setDeathMessage($customDeathMessage);
 
-			$p->setGamemode(3);
+			$l_Player->setGamemode(3);
 			Sidebar::getInstance()->update();
 		}
     }
