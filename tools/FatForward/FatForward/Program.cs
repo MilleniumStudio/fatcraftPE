@@ -28,6 +28,11 @@ namespace FatForward
         public string m_Status;
         public int m_Online;
         public int m_Max;
+
+        static public void WipeServerList()
+        {
+            GlobalVars.g_ServerStatus.Clear();
+        }
     }
 
     class GlobalVars
