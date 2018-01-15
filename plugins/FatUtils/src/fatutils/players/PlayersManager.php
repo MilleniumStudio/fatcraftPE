@@ -198,4 +198,12 @@ class PlayersManager
                 if ($p_MaxPlayer != 0)
                     \fatcraft\loadbalancer\LoadBalancer::getInstance()->setMaxPlayers($p_MaxPlayer);
 	}
+
+	public function removeFatPlayer(Player $p_Player)
+	{
+		$key = $p_Player->getUniqueId()->toString();
+
+		if (isset($this->m_FatPlayers[$key]))
+			unset($this->m_FatPlayers[$key]);
+	}
 }

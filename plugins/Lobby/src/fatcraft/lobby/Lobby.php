@@ -29,6 +29,7 @@ use pocketmine\event\player\PlayerExhaustEvent;
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\item\Item;
 use pocketmine\item\ItemIds;
 use pocketmine\Player;
@@ -119,6 +120,16 @@ class Lobby extends PluginBase implements Listener
             $e->getPlayer()->teleport($this->m_SpawnPoint, $this->m_SpawnPoint->yaw, $this->m_SpawnPoint->pitch);
         }
     }
+
+    public function onPlayerQuit(PlayerQuitEvent $p_Event)
+	{
+		$l_PlayerManager = PlayersManager::getInstance();
+		$l_FatPlayer = $l_PlayerManager->getFatPlayer($p_Event->getPlayer());
+
+		$l_FatPlayer->getSlot(ShopItem::SLOT_PET)->unequip();
+
+		$l_PlayerManager->removeFatPlayer($p_Event->getPlayer());
+	}
 
     // actions on item select / touch
     public function onPlayerUseItem(PlayerInteractEvent $p_Event)
