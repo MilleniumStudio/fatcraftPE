@@ -17,7 +17,6 @@ start_docker()
 --env SERVER_MAP="$5" \
 --publish $3:$3 \
 --publish $3:$3/udp \
---link mysql:mysql \
 --volume $MAP_REPOSITORY:/home/minecraft/map_repository:ro \
  -d $4
 }

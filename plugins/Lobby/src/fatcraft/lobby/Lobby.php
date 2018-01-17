@@ -18,6 +18,7 @@ use fatutils\tools\WorldUtils;
 use fatutils\tools\schedulers\DelayedExec;
 use fatutils\ui\impl\GamesWindow;
 use fatutils\ui\impl\LobbiesWindow;
+use fatutils\shop\ShopItem;
 use pocketmine\entity\Effect;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\inventory\InventoryPickupItemEvent;
@@ -126,7 +127,10 @@ class Lobby extends PluginBase implements Listener
 		$l_PlayerManager = PlayersManager::getInstance();
 		$l_FatPlayer = $l_PlayerManager->getFatPlayer($p_Event->getPlayer());
 
-		$l_FatPlayer->getSlot(ShopItem::SLOT_PET)->unequip();
+		$l_Slot = $l_FatPlayer->getSlot(ShopItem::SLOT_PET);
+
+		if ($l_Slot != null)
+		    $l_Slot->unequip();
 
 		$l_PlayerManager->removeFatPlayer($p_Event->getPlayer());
 	}
