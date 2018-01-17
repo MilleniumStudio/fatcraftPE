@@ -1,10 +1,8 @@
-minPlayer: 2
+minPlayer: 4
 maxPlayer: 12
-waitingSecDuration: 60
+waitingSecDuration: 30
 playingSecDuration: 600
-deathArenaLoc: 0.55/51/6.49
-deathArenaLocType: deathArenaTypePerimeter
-deathArenaLocRadius: 16
+deathArenaLoc: 0.55/77/6.49
 
 isSkywar: false
 
@@ -34,273 +32,280 @@ spawns:
 chests:
   1:
     location: 0/73/-71
-    total-item-value: 70
+    total-item-value: 40
+    max-item-value: 15
   2:
     location: -8/70/-69
-    total-item-value: 20
+    total-item-value: 15
     max-item-value: 7
   3:
     location: 8/70/-69
-    total-item-value: 20
+    total-item-value: 15
     max-item-value: 7
   4:
     location: -8/71/-54
-    total-item-value: 20
+    total-item-value: 15
     max-item-value: 7
   5:
     location: 8/71/-54
-    total-item-value: 20
+    total-item-value: 15
     max-item-value: 7
   6:
     location: -8/69/-41
-    total-item-value: 35
+    total-item-value: 25
     max-item-value: 7
   7:
     location: 8/69/-41
-    total-item-value: 35
+    total-item-value: 25
     max-item-value: 7
   8:
     location: -22/77/-47
-    total-item-value: 35
-    max-item-value: 7
+    total-item-value: 20
+    max-item-value: 15
   9:
     location: 22/77/-47
-    total-item-value: 35
-    max-item-value: 7
+    total-item-value: 20
+    max-item-value: 15
   10:
     location: 0/76/-50
-    total-item-value: 20
+    total-item-value: 12
     max-item-value: 7
   11:
     location: -7/64/-75
-    total-item-value: 20
+    total-item-value: 10
     max-item-value: 7
   12:
     location: 7/64/-75
-    total-item-value: 20
+    total-item-value: 10
     max-item-value: 7
   13:
     location: 0/65/-62
-    total-item-value: 50
+    total-item-value: 30
+    max-item-value: 15
   14:
     location: -15/67/-84
-    total-item-value: 20
+    total-item-value: 9
     max-item-value: 7
   15:
     location: 15/67/-84
-    total-item-value: 20
+    total-item-value: 9
     max-item-value: 7
   16:
     location: -28/63/-60
-    total-item-value: 20
+    total-item-value: 15
     max-item-value: 7
   17:
     location: 28/63/-60
-    total-item-value: 20
+    total-item-value: 15
     max-item-value: 7
   18:
     location: -36/63/-45
-    total-item-value: 35
-    max-item-value: 7
+    total-item-value: 20
+    max-item-value: 15
   19:
     location: 36/63/-45
-    total-item-value: 35
-    max-item-value: 7
+    total-item-value: 20
+    max-item-value: 15
   20:
-    location: -46/64/30
-    total-item-value: 20
-    max-item-value: 7
+    location: -46/64/-30
+    total-item-value: 16
+    max-item-value: 15
   21:
-    location: 46/64/30
-    total-item-value: 20
-    max-item-value: 7
+    location: 46/64/-30
+    total-item-value: 16
+    max-item-value: 15
   22:
     location: -47/63/-22
-    total-item-value: 50
+    total-item-value: 30
+    max-item-value: 15
   23:
     location: 47/63/-22
-    total-item-value: 50
+    total-item-value: 30
+    max-item-value: 15
   24:
     location: -47/66/50
-    total-item-value: 35
-    max-item-value: 8
+    total-item-value: 10
+    max-item-value: 7
   25:
     location: 47/66/50
-    total-item-value: 35
-    max-item-value: 8
+    total-item-value: 10
+    max-item-value: 7
   26:
     location: -17/66/50
-    total-item-value: 35
-    max-item-value: 8
+    total-item-value: 10
+    max-item-value: 7
   26:
     location: 17/66/50
-    total-item-value: 35
-    max-item-value: 8
+    total-item-value: 10
+    max-item-value: 7
   27:
     location: -32/63/44
-    total-item-value: 20
+    total-item-value: 8
     max-item-value: 7
   28:
     location: 32/63/44
-    total-item-value: 20
+    total-item-value: 8
     max-item-value: 7
   29:
     location: -33/64/39
-    total-item-value: 20
+    total-item-value: 8
     max-item-value: 7
   30:
     location: 33/64/39
-    total-item-value: 20
+    total-item-value: 8
     max-item-value: 7
   31:
     location: -13/65/43
-    total-item-value: 100
+    total-item-value: 45
+    max-item-value: 15
   32:
     location: 13/65/43
-    total-item-value: 100
+    total-item-value: 45
+    max-item-value: 15
   33:
     location: 0/71/65
-    total-item-value: 45
-    max-item-value: 8
+    total-item-value: 35
+    max-item-value: 15
   34:
     location: -48/71/-20
-    total-item-value: 20
+    total-item-value: 10
     max-item-value: 7
   35:
     location: 48/71/-20
-    total-item-value: 20
+    total-item-value: 10
     max-item-value: 7
   36:
     location: -40/71/-7
-    total-item-value: 20
+    total-item-value: 12
     max-item-value: 7
   37:
     location: 40/71/-7
-    total-item-value: 20
+    total-item-value: 12
     max-item-value: 7
   38:
     location: -47/71/13
-    total-item-value: 20
+    total-item-value: 8
     max-item-value: 7
   39:
     location: 47/71/13
-    total-item-value: 20
+    total-item-value: 8
     max-item-value: 7
   40:
-    location: -39/5/-47
-    total-item-value: 20
+    location: -49/71/-5
+    total-item-value: 8
     max-item-value: 7
   41:
-    location: -49/71/-5
-    total-item-value: 35
+    location: 49/71/-5
+    total-item-value: 8
     max-item-value: 7
   42:
-    location: 49/71/-5
-    total-item-value: 35
-    max-item-value: 7
-  43:
     location: -36/75/24
     total-item-value: 35
     max-item-value: 7
-  44:
+  43:
     location: 36/75/24
     total-item-value: 35
     max-item-value: 7
-  45:
+  44:
     location: -36/75/20
-    total-item-value: 100
-  46:
+    total-item-value: 40
+    max-item-value: 7
+  45:
     location: 36/75/20
-    total-item-value: 100
-  47:
+    total-item-value: 40
+    max-item-value: 7
+  46:
     location: -4/62/-46
-    total-item-value: 20
+    total-item-value: 8
+    max-item-value: 7
+  47:
+    location: 4/62/-46
+    total-item-value: 8
     max-item-value: 7
   48:
-    location: 4/62/-46
-    total-item-value: 20
+    location: -12/60/-51
+    total-item-value: 10
     max-item-value: 7
   49:
-    location: -12/60/-51
-    total-item-value: 20
+    location: 12/60/-51
+    total-item-value: 10
     max-item-value: 7
   50:
-    location: 12/60/-51
-    total-item-value: 20
-    max-item-value: 7
-  51:
     location: 0/60/-66
-    total-item-value: 50
-  52:
+    total-item-value: 35
+    max-item-value: 15
+  51:
     location: -11/70/48
-    total-item-value: 20
-    max-item-value: 7
-  53:
+    total-item-value: 17
+    max-item-value: 15
+  52:
     location: 11/70/48
-    total-item-value: 20
-    max-item-value: 7
-  54:
+    total-item-value: 17
+    max-item-value: 15
+  53:
     location: 5/75/62
-    total-item-value: 100
-  55:
+    total-item-value: 35
+    max-item-value: 15
+  54:
     location: -5/75/62
-    total-item-value: 100
-  56:
+    total-item-value: 35
+    max-item-value: 15
+  55:
     location: 7/73/44
-    total-item-value: 20
-    max-item-value: 7
-  57:
+    total-item-value: 6
+    max-item-value: 3
+  56:
     location: 7/73/50
-    total-item-value: 20
-    max-item-value: 7
-  58:
+    total-item-value: 6
+    max-item-value: 3
+  57:
     location: 7/73/56
-    total-item-value: 20
-    max-item-value: 7
-  59:
+    total-item-value: 6
+    max-item-value: 3
+  58:
     location: -7/73/44
-    total-item-value: 20
-    max-item-value: 7
-  60:
+    total-item-value: 6
+    max-item-value: 3
+  59:
     location: -7/73/50
-    total-item-value: 20
-    max-item-value: 7
-  61:
+    total-item-value: 6
+    max-item-value: 3
+  60:
     location: -7/73/56
-    total-item-value: 20
-    max-item-value: 7
-  62:
+    total-item-value: 6
+    max-item-value: 3
+  61:
     location: 0/65/7
-    total-item-value: 20
-    max-item-value: 7
-  63:
+    total-item-value: 5
+    max-item-value: 3
+  62:
     location: -5/65/5
-    total-item-value: 20
-    max-item-value: 7
-  64:
+    total-item-value: 5
+    max-item-value: 3
+  63:
     location: 5/65/5
-    total-item-value: 20
-    max-item-value: 7
-  65:
+    total-item-value: 5
+    max-item-value: 3
+  64:
     location: -7/65/0
-    total-item-value: 20
-    max-item-value: 7
-  66:
+    total-item-value: 5
+    max-item-value: 3
+  65:
     location: 7/65/0
-    total-item-value: 20
-    max-item-value: 7
-  67:
+    total-item-value: 5
+    max-item-value: 3
+  66:
     location: -5/65/-5
-    total-item-value: 20
-    max-item-value: 7
-  68:
+    total-item-value: 5
+    max-item-value: 3
+  67:
     location: 5/65/-5
-    total-item-value: 20
-    max-item-value: 7
-  69:
+    total-item-value: 5
+    max-item-value: 3
+  68:
     location: 0/65/-7
-    total-item-value: 20
-    max-item-value: 7
+    total-item-value: 5
+    max-item-value: 3
 
 loots:
   level-1:
