@@ -167,8 +167,10 @@ class BoatRacer extends PluginBase implements Listener
 		// Teleport players to playing spawn
 		$l_Spawn = SpawnManager::getInstance()->getSpawnByName("playing");
 		foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-			$l_Spawn->teleport($l_Player, 1);
-
+		{
+		    $this->destroyPlayerBoat($l_Player);
+            $l_Spawn->teleport($l_Player, 1);
+        }
 		new DelayedExec(function ()
 		{
 			$this->m_CheckpointPath->enable();
