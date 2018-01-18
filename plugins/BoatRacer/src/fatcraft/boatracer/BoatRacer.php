@@ -292,8 +292,11 @@ class BoatRacer extends PluginBase implements Listener
 				if ($this->m_WaitingTimer instanceof Timer)
 					$this->m_WaitingTimer->start();
 			}
-
 			$l_Player->setGamemode(2);
+
+            new DelayedExec(function () use ($l_Player) {
+                $this->applyBoat($l_Player);
+            }, 2);
 		} else
 		{
 			$l_Player->setGamemode(3);

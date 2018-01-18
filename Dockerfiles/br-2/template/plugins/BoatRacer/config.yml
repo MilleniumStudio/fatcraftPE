@@ -24,7 +24,7 @@ checkpoints:
 
 spawns:
   waiting:
-    location: 289.5/64/15.5
+    location: -331/70/-436
   playing:
     location: -349.5/70/-373.5
   checkpoint1:
