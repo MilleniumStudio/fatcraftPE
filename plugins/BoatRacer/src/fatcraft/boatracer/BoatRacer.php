@@ -45,6 +45,7 @@ class BoatRacer extends PluginBase implements Listener
 {
 	private static $m_Instance;
 	private $m_WaitingTimer;
+	private $m_TeleportState = false;
 
 	/** @var CheckpointsPath */
 	private $m_CheckpointPath = null;
@@ -165,12 +166,14 @@ class BoatRacer extends PluginBase implements Listener
 
 
 		// Teleport players to playing spawn
+        $this->m_TeleportState = true;
 		$l_Spawn = SpawnManager::getInstance()->getSpawnByName("playing");
 		foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
 		{
 		    $this->destroyPlayerBoat($l_Player);
             $l_Spawn->teleport($l_Player, 1);
         }
+        $this->m_TeleportState = false;
 		new DelayedExec(function ()
 		{
 			$this->m_CheckpointPath->enable();
@@ -314,6 +317,9 @@ class BoatRacer extends PluginBase implements Listener
 		if ($p_Event->getEntity() instanceof Player && $p_Event->getEntity()->isOp())
 			return;
 
+		if ($this->m_TeleportState)
+		    return;
+
 		new DelayedExec(function () use ($p_Event)
 		{
 			$p_Event->getVehicle()->mountEntity($p_Event->getEntity());
@@ -421,7 +427,7 @@ class BoatRacer extends PluginBase implements Listener
 					$this->m_WaitingTimer = null;
 					$this->resetGameWaiting();
 				}
-			} else if (GameManager::getInstance()->isPlaying() || count($this->getServer()->getOnlinePlayers()) == 0) {
+			} else if (GameManager::getInstance()->isPlaying() && count($this->getServer()->getOnlinePlayers()) == 0) {
 				$this->getServer()->shutdown();
 			}
 		}, 1);

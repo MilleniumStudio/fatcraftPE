@@ -572,7 +572,7 @@ class Bedwars extends PluginBase implements Listener
 					$this->m_WaitingTimer = null;
 					$this->resetGameWaiting();
 				}
-			} else if (GameManager::getInstance()->isPlaying() || count($this->getServer()->getOnlinePlayers()) == 0) {
+			} else if (GameManager::getInstance()->isPlaying() && count($this->getServer()->getOnlinePlayers()) == 0) {
 				$this->getServer()->shutdown();
 			}
 		}, 1);
