@@ -119,6 +119,10 @@ cd sw-3/
 ./docker_build.sh
 cd ../
 
+cd sw-4/
+./docker_build.sh
+cd ../
+
 cd bw-1/
 ./docker_build.sh
 cd ..
