@@ -534,6 +534,7 @@ class Bedwars extends PluginBase implements Listener
     public function onPlayerRespawn(PlayerRespawnEvent $p_Event)
     {
         $l_PlayerTeam = TeamsManager::getInstance()->getPlayerTeam($p_Event->getPlayer());
+
         if (!is_null($l_PlayerTeam) && !is_null($l_PlayerTeam->getSpawn()))
             $p_Event->setRespawnPosition($l_PlayerTeam->getSpawn()->getLocation());
     }

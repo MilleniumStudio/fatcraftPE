@@ -331,10 +331,10 @@ class BoatRacer extends PluginBase implements Listener
 		$p_Event->setCancelled(true);
 	}
 
-        public function onChunkUnload(\pocketmine\event\level\ChunkUnloadEvent $p_event)
-        {
-            $p_event->setCancelled();
-        }
+    public function onChunkUnload(\pocketmine\event\level\ChunkUnloadEvent $p_event)
+    {
+        $p_event->setCancelled();
+    }
 
 	public function onEntityDamage(EntityDamageEvent $p_Event)
 	{
