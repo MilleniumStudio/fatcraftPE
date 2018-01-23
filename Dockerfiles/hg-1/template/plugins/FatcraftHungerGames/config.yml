@@ -1,9 +1,10 @@
-minPlayer: 4
+minPlayer: 3
 maxPlayer: 12
 waitingSecDuration: 30
 playingSecDuration: 600
-deathArenaLoc: 0.55/77/6.49
-
+deathArenaLoc: 0.55/51/6.49
+deathArenaLocType: deathArenaTypePerimeter
+deathArenaLocRadius: 16
 isSkywar: false
 
 #Max rewards for the first player, divided by place un score
