@@ -5,6 +5,7 @@ namespace hungergames;
 use fatutils\game\GameManager;
 use fatutils\players\PlayersManager;
 use fatutils\scores\ScoresManager;
+use fatutils\tools\schedulers\DelayedExec;
 use fatutils\tools\Sidebar;
 use fatutils\tools\WorldUtils;
 use fatutils\spawns\SpawnManager;
@@ -93,6 +94,13 @@ class EventListener implements Listener
             $position = \pocketmine\level\Position::fromObject($spawn->getLocation()->add(-0.5, 0.1, -0.5), $spawn->getLocation()->getLevel());
             $p_Event->setRespawnPosition($position);
             HungerGame::getInstance()->getLogger()->info("Player " . $p_Event->getPlayer()->getName() . " respawn at " . $position->__toString());
+        }
+        else{
+            new DelayedExec(function () use ($p_Event)
+            {
+                echo("should have tp \n");
+                $p_Event->getPlayer()->teleport(HungerGame::getInstance()->getHungerGameConfig()->getDeathArenaLoc());
+            }, 5);
         }
     }
 }
