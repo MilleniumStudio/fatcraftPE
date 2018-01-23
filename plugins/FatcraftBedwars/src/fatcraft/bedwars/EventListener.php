@@ -140,4 +140,9 @@ class EventListener implements Listener
 
         Bedwars::getInstance()->handlePlayerConnection($p);
     }
+
+    public function onChunkUnload(\pocketmine\event\level\ChunkUnloadEvent $p_event)
+    {
+        $p_event->setCancelled();
+    }
 }
