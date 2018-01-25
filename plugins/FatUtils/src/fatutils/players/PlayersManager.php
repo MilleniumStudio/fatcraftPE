@@ -13,6 +13,9 @@ use fatutils\tools\TextFormatter;
 use pocketmine\Player;
 use pocketmine\utils\UUID;
 use fatutils\gamedata\GameDataManager;
+use libasynql\DirectQueryMysqlTask;
+use fatcraft\loadbalancer\LoadBalancer;
+
 
 class PlayersManager
 {
@@ -67,13 +70,23 @@ class PlayersManager
             `shop_equipped` TEXT DEFAULT NULL,
             PRIMARY KEY (`id`));
        	");
-	}
+
+    }
 
 	public function addPlayer(Player $p_Player)
 	{
 		FatUtils::getInstance()->getLogger()->info("Creating FatPlayer for " . $p_Player->getName() . "(" . $p_Player->getUniqueId()->toString() . ")");
 		$this->m_FatPlayers[$p_Player->getUniqueId()->toString()] = new FatPlayer($p_Player);
 		GameDataManager::getInstance()->recordJoin($p_Player->getUniqueId(), $p_Player->getAddress());
+
+        FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
+            new DirectQueryMysqlTask(LoadBalancer::getInstance()->getCredentials(),
+                "INSERT INTO players_connection_log (player_uuid, player_name, server_type, time) VALUES(?, ?, ?, ?);", [
+                    ["s", $p_Player->getUniqueId()],
+                    ["s", $p_Player->getName()],
+                    ["s", LoadBalancer::getInstance()->getServerType()],
+                    ["s", date("Y-m-d H:i:s")]
+                ]));
 	}
 
 	public function removePlayer(Player $p_Player)
