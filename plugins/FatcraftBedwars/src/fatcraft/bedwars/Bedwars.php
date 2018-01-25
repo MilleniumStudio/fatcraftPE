@@ -609,7 +609,7 @@ class Bedwars extends PluginBase implements Listener
 		Sidebar::getInstance()->clearLines();
 		// Waiting Sidebar Initialization
 		Sidebar::getInstance()
-			->addTranslatedLine(new TextFormatter("template.br"))
+			->addTranslatedLine(new TextFormatter("template.bw"))
 			->addTimer($this->m_WaitingTimer)
 			->addWhiteSpace()
 			->addMutableLine(function ()

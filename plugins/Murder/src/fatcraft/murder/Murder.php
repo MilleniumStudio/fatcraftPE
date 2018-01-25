@@ -444,12 +444,12 @@ class Murder extends PluginBase implements Listener
 			//if it's the murderer
 			if ($l_Player->getUniqueId()->equals($this->m_murdererUUID))
 			{
-				$customDeathMessage = $l_Player->getName() . " était le meurtrier et a été tué par " . $killer->getName();
+				$customDeathMessage = $l_Player->getName() . new TextFormatter("murder.murderHasBeenKilled") . $killer->getName();
 				// endGame, lambdas win
 				$this->endGameLambdas($killer);
 			} else
 			{
-				$customDeathMessage = $l_Player->getName() . " a été tué";
+				$customDeathMessage = $l_Player->getName() . new TextFormatter("murder.hasBeenKilled");
 				if (PlayersManager::getInstance()->getInGamePlayerLeft() <= 1)
 				{
 					$this->m_playersKilled++;
@@ -551,7 +551,7 @@ class Murder extends PluginBase implements Listener
 		Sidebar::getInstance()->clearLines();
 		// Waiting Sidebar Initialization
 		Sidebar::getInstance()
-			->addTranslatedLine(new TextFormatter("template.br"))
+			->addTranslatedLine(new TextFormatter("template.md"))
 			->addTimer($this->m_WaitingTimer)
 			->addWhiteSpace()
 			->addMutableLine(function ()
