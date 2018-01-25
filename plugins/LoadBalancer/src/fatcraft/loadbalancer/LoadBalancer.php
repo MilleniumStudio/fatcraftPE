@@ -261,6 +261,13 @@ class LoadBalancer extends PluginBase implements Listener
             ip VARCHAR(63),
             updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )");
+
+        $this->m_Mysql->query("CREATE TABLE IF NOT EXISTS 'players_connection_log' (
+            player_uuid varchar(255),
+            player_name varchar(255),
+            server_type varchar(255),
+            time DATETIME)"
+            );
     }
 
     // update this server row in mysql
