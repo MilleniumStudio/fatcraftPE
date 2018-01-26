@@ -281,7 +281,7 @@ class LoadBalancer extends PluginBase implements Listener
                 ["s", $this->m_ServerType],
                 ["i", $this->m_ServerId],
                 ["s", $this->m_ServerName],
-                ["s", $this->m_Mysql->escape_string($this->getConfig()->getNested("external_ip"))],
+                ["s", $this->m_Mysql->escape_string(getenv("SERVER_IP"))],
                 ["i", $this::getInstance()->getServer()->getPort()],
                 ["s", $this->m_ServerState],
                 ["i", count($this::getInstance()->getServer()->getOnlinePlayers())],
