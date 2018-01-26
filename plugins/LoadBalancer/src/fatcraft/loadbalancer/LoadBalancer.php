@@ -276,7 +276,7 @@ class LoadBalancer extends PluginBase implements Listener
 //        $this->getLogger()->critical("Update me Task ");
         $this::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
             new DirectQueryMysqlTask($this::getInstance()->getCredentials(),
-                "INSERT INTO servers (sid, type, id, name, ip, port, status, online, max) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE online = ?, status = ?, max = ?, laston=CURRENT_TIMESTAMP", [
+                "INSERT INTO servers (sid, type, id, name, ip, port, status, online, max) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE ip = ?, online = ?, status = ?, max = ?, laston=CURRENT_TIMESTAMP", [
                 ["s", $this::getInstance()->m_ServerUUID],
                 ["s", $this->m_ServerType],
                 ["i", $this->m_ServerId],
@@ -286,6 +286,7 @@ class LoadBalancer extends PluginBase implements Listener
                 ["s", $this->m_ServerState],
                 ["i", count($this::getInstance()->getServer()->getOnlinePlayers())],
                 ["i", $this::getInstance()->getServer()->getMaxPlayers()],
+                ["s", $this->m_Mysql->escape_string(getenv("SERVER_IP"))],
                 ["i", count($this::getInstance()->getServer()->getOnlinePlayers())],
                 ["s", $this->m_ServerState],
                 ["i", $this::getInstance()->getServer()->getMaxPlayers()]
