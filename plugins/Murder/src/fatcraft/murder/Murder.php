@@ -444,12 +444,12 @@ class Murder extends PluginBase implements Listener
 			//if it's the murderer
 			if ($l_Player->getUniqueId()->equals($this->m_murdererUUID))
 			{
-				$customDeathMessage = $l_Player->getName() . new TextFormatter("murder.murderHasBeenKilled") . $killer->getName();
+				$customDeathMessage = $l_Player->getName() . " was murderer and was killed by " . $killer->getName();
 				// endGame, lambdas win
 				$this->endGameLambdas($killer);
 			} else
 			{
-				$customDeathMessage = $l_Player->getName() . new TextFormatter("murder.hasBeenKilled");
+				$customDeathMessage = $l_Player->getName() . " was killed.";
 				if (PlayersManager::getInstance()->getInGamePlayerLeft() <= 1)
 				{
 					$this->m_playersKilled++;
