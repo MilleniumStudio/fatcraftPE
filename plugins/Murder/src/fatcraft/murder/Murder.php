@@ -64,6 +64,7 @@ class Murder extends PluginBase implements Listener
     private $m_PlayTimer;
 
     private $m_murdererUUID;
+    private $m_murderName = "";
     private $m_playersKilled = 0;
 
 
@@ -194,8 +195,9 @@ class Murder extends PluginBase implements Listener
 				$this->m_murdererUUID = $murderer->getUniqueId();
 				$murderer->getInventory()->addItem(Item::get(ItemIds::IRON_SWORD));
 				$murderer->sendMessage("You are the MURDERER !");
+                $this->m_murderName = $murderer->getName();
 
-				//random cop
+                //random cop
 				if (count(Server::getInstance()->getOnlinePlayers()) > 1) {
 					$cop = null;
 					do {
@@ -256,6 +258,8 @@ class Murder extends PluginBase implements Listener
                 }
             }
         }
+        if (PlayersManager::getInstance()->getInGamePlayerLeft() <= 1)
+            return;
         if (Server::getInstance()->getTick() % (300 / (PlayersManager::getInstance()->getInGamePlayerLeft() - 1)) == 0) {
             if (rand(0, 100) > 50) {
                 /** @var Location $loc */
@@ -285,19 +289,26 @@ class Murder extends PluginBase implements Listener
         $this->endGame();
     }
 
-    public function endGameLambdas(player $killer)
+    public function endGameLambdas(bool $murdererLeft = false)
     {
         foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player) {
+            $subtitle = "";
+            if ($murdererLeft)
+                $subtitle = (new TextFormatter("murder.murderLeft"))->addParam("name", $this->m_murderName)->asStringForPlayer($l_Player);
+            else
+                $subtitle = (new TextFormatter("murder.lambdasWin.named"))->addParam("name", $this->m_murderName)->asStringForPlayer($l_Player);
+
             $l_Player->addTitle(
                 (new TextFormatter("murder.lambdasWin"))->asStringForPlayer($l_Player),
-                (new TextFormatter("murder.lambdasWin.named"))->addParam("name", $killer->getName())->asStringForPlayer($l_Player),
+                $subtitle,
                 30, 100, 30);
         }
+
         //rewards
         foreach (Server::getInstance()->getOnlinePlayers() as $player) {
             if ($player->getUniqueId()->equals($this->m_murdererUUID))
 				ScoresManager::getInstance()->giveRewardToPlayer($player->getUniqueId(), 0.3 + ($this->m_playersKilled * 0.1));
-            else if ($player->getUniqueId()->equals($killer->getUniqueId()))
+            else if ($player->getUniqueId()->equals($this->m_murdererUUID))
 				ScoresManager::getInstance()->giveRewardToPlayer($player->getUniqueId(), 1.1);
             else if ($player->getGamemode() == Player::SPECTATOR)
             	ScoresManager::getInstance()->giveRewardToPlayer($player->getUniqueId(), 0.5);
@@ -328,7 +339,7 @@ class Murder extends PluginBase implements Listener
             })
             ->start();
 
-        GameManager::getInstance()->endGame();
+        GameManager::getInstance()->endGame(false);
     }
 
     //---------------------
@@ -394,32 +405,37 @@ class Murder extends PluginBase implements Listener
 		if (GameManager::getInstance()->isPlaying())
 		{
 			PlayersManager::getInstance()->getFatPlayer($l_Player)->setOutOfGame();
+			$murdererUUID = $l_Player->getUniqueId();
+            new DelayedExec(function () use ($murdererUUID) {
+                if (PlayersManager::getInstance()->getInGamePlayerLeft() <= 1) {
+                    if ($murdererUUID->equals($this->m_murdererUUID))
+                        $this->endGameLambdas(true);
+                    else
+                        $this->endGameMurderer();
+                    return;
+                }
+                if (count($this->getServer()->getOnlinePlayers()) == 0)
+                    $this->getServer()->shutdown();
+            }, 5);
 		}
 
 		Sidebar::getInstance()->update();
 
-		if (GameManager::getInstance()->isWaiting())
-		{
-			if ($this->m_WaitingTimer instanceof Timer && $this->m_WaitingTimer->getTickLeft() > 0 &&
-				(count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMinPlayer()))
-			{
-				$this->m_WaitingTimer->cancel();
-				$this->m_WaitingTimer = null;
-				$this->resetGameWaiting();
-			}
-		} else if (GameManager::getInstance()->isPlaying())
-		{
-			if (PlayersManager::getInstance()->getInGamePlayerLeft() <= 1)
-			{
-				if ($l_Player->getUniqueId()->equals($this->m_murdererUUID))
-					$this->endGameLambdas();
-				else
-					$this->endGameMurderer();
-			}
-			if (count($this->getServer()->getOnlinePlayers()) == 0)
-				$this->getServer()->shutdown();
-		}
-}
+        new DelayedExec(function () {
+            if (GameManager::getInstance()->isWaiting())
+            {
+                if ($this->m_WaitingTimer instanceof Timer && $this->m_WaitingTimer->getTickLeft() > 0 &&
+                    (count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMinPlayer()))
+                {
+                    $this->m_WaitingTimer->cancel();
+                    $this->m_WaitingTimer = null;
+                    $this->resetGameWaiting();
+                }
+            } else if (GameManager::getInstance()->isPlaying() && count($this->getServer()->getOnlinePlayers()) == 0) {
+                $this->getServer()->shutdown();
+            }
+        }, 1);
+    }
 
     /**
      * @param PlayerDeathEvent $e
@@ -444,12 +460,12 @@ class Murder extends PluginBase implements Listener
 			//if it's the murderer
 			if ($l_Player->getUniqueId()->equals($this->m_murdererUUID))
 			{
-				$customDeathMessage = $l_Player->getName() . " was murderer and was killed by " . $killer->getName();
+				$customDeathMessage = $l_Player->getName() . " " . (new TextFormatter("murder.murderHasBeenKilled"))->asString() . $killer->getName();
 				// endGame, lambdas win
-				$this->endGameLambdas($killer);
+				$this->endGameLambdas();
 			} else
 			{
-				$customDeathMessage = $l_Player->getName() . " was killed.";
+				$customDeathMessage = $l_Player->getName() . " " . (new TextFormatter("murder.hasBeenKilled"))->asString();
 				if (PlayersManager::getInstance()->getInGamePlayerLeft() <= 1)
 				{
 					$this->m_playersKilled++;
@@ -479,44 +495,67 @@ class Murder extends PluginBase implements Listener
 
     public function onLoot(InventoryPickupItemEvent $p_event)
     {
+        echo ("picking up stuff\n");
         $holder = $p_event->getInventory()->getHolder();
         if ($holder instanceof Player) {
-            if (!$holder->getUniqueId()->equals($this->m_murdererUUID)) {
-                if ($p_event->getItem()->getItem()->getId() == ItemIds::IRON_INGOT) {
+            if ($p_event->getItem()->getItem()->getId() == ItemIds::IRON_INGOT) {
+                new DelayedExec(function () use ($p_event, $holder)
+                {
+                    if ($holder->getUniqueId()->equals($this->m_murdererUUID))
+                    {
+                        foreach ($p_event->getInventory()->getContents() as $content) {
+                            if ($content->getId() == ItemIds::IRON_INGOT) {
+                                $content->setCount(0);
 
-                    new DelayedExec(function () use ($p_event)
-					{ //delayed to allow the loot of the ingot before making this computation
-						$nbIngots = 0;
-						foreach ($p_event->getInventory()->getContents() as $content)
-						{
-							if ($content->getId() == ItemIds::IRON_INGOT)
-								$nbIngots += $content->getCount();
-						}
-						if ($nbIngots >= 6)
-						{
-							$nbRemove = 6;
-							foreach ($p_event->getInventory()->getContents() as $content)
-							{
-								if ($content->getId() == ItemIds::IRON_INGOT)
-								{
-									if ($content->getCount() >= $nbRemove)
-									{
-										$content->setCount($content->getCount() - $nbRemove);
-										break;
-									} else
-									{
-										$nbRemove -= $content->getCount();
-										$content->setCount(0);
-									}
-								}
-							}
-							$p_event->getInventory()->addItem(Item::get(ItemIds::BOW));
-							$p_event->getInventory()->sendContents($p_event->getInventory()->getHolder());
-						}
-					}, 1);
-                }
-            } else {
-                $p_event->setCancelled(true);
+                                echo ("suppose to set count 0\n");
+                            }
+                        }
+                        return;
+                    }
+
+                    $nbIngots = 0;
+                    foreach ($p_event->getInventory()->getContents() as $content)
+                    {
+                        if ($content->getId() == ItemIds::IRON_INGOT)
+                            $nbIngots += $content->getCount();
+
+                        // if player already possess the Bow, just remove Ingots from inventory
+                        if ($content->getId() == ItemIds::BOW)
+                        {
+                            foreach ($p_event->getInventory()->getContents() as $content)
+                            {
+                                if ($content->getId() == ItemIds::IRON_INGOT)
+                                {
+                                    $content->setCount(0);
+                                    echo ("suppose to set count 0 2\n");
+
+                                }
+                            }
+                        }
+                    }
+                    if ($nbIngots >= 6)
+                    {
+                        $nbRemove = 6;
+                        foreach ($p_event->getInventory()->getContents() as $content)
+                        {
+                            if ($content->getId() == ItemIds::IRON_INGOT)
+                            {
+                                if ($content->getCount() >= $nbRemove)
+                                {
+                                    $content->setCount($content->getCount() - $nbRemove);
+                                    break;
+                                }
+                                else
+                                {
+                                    $nbRemove -= $content->getCount();
+                                    $content->setCount(0);
+                                }
+                            }
+                        }
+                        $p_event->getInventory()->addItem(Item::get(ItemIds::BOW));
+                        $p_event->getInventory()->sendContents($p_event->getInventory()->getHolder());
+                    }
+                }, 1);
             }
         }
     }
