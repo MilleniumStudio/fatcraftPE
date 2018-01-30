@@ -407,15 +407,10 @@ class Murder extends PluginBase implements Listener
 			PlayersManager::getInstance()->getFatPlayer($l_Player)->setOutOfGame();
 			$murdererUUID = $l_Player->getUniqueId();
             new DelayedExec(function () use ($murdererUUID) {
-                if (PlayersManager::getInstance()->getInGamePlayerLeft() <= 1) {
-                    if ($murdererUUID->equals($this->m_murdererUUID))
-                        $this->endGameLambdas(true);
-                    else
-                        $this->endGameMurderer();
-                    return;
-                }
-                if (count($this->getServer()->getOnlinePlayers()) == 0)
-                    $this->getServer()->shutdown();
+                if ($murdererUUID->equals($this->m_murdererUUID))
+                    $this->endGameLambdas(true);
+                else if (PlayersManager::getInstance()->getInGamePlayerLeft() <= 1)
+                    $this->endGameMurderer();
             }, 5);
 		}
 
