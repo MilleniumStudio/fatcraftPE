@@ -65,15 +65,18 @@ class GameManager
 
     }
 
-    public function endGame()
+    public function endGame(bool $printGameOver = true)
     {
         $this->m_EndGameTimestamp = time();
         GameDataManager::getInstance()->recordStopGame("end_game");
         FatUtils::getInstance()->getLogger()->info("=== GameFinished ===");
 
-		$l_EndMsgFormatter = new TextFormatter("game.end");
-		foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-			$l_Player->addTitle($l_EndMsgFormatter->asStringForPlayer($l_Player));
+        if ($printGameOver)
+        {
+            $l_EndMsgFormatter = new TextFormatter("game.end");
+            foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+			    $l_Player->addTitle($l_EndMsgFormatter->asStringForPlayer($l_Player));
+        }
     }
 
 	public function getPlayerNbrAtStart()
