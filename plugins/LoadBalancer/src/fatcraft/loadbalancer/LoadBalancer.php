@@ -45,6 +45,8 @@ class LoadBalancer extends PluginBase implements Listener
 	private $m_Cache_ServerByType = null;
 	private $m_Cache_ServerByTypeTime = 0;
 
+	private $m_currentlyUpdatingServerList = false;
+
 	/** @var \mysqli */
     private $m_Mysql;
 
@@ -460,14 +462,35 @@ class LoadBalancer extends PluginBase implements Listener
 			foreach ($result->rows as $row)
 				$this->m_Cache_ServerByType[$row["type"]][] = $row;
 		}
-	}
+    }
 
-    public function getServersByType($type = LoadBalancer::TEMPLATE_TYPE_LOBBY)
+    public function getServersByType($type = LoadBalancer::TEMPLATE_TYPE_LOBBY, $p_State = LoadBalancer::SERVER_STATE_OPEN)
 	{
-		$this->updateCacheServersByType();
+        $this->updateCacheServersByType();
 		if (isset($this->m_Cache_ServerByType[$type]))
 			return $this->m_Cache_ServerByType[$type];
 		return null;
+    }
+
+    public function getBestServerByType($type = LoadBalancer::TEMPLATE_TYPE_LOBBY):?array
+    {
+        $serverToReturn = null;
+        echo("getBestServerByType\n");
+        if (!isset($this->m_Cache_ServerByType[$type][0]))
+            echo ("LoadBalance : no server of type : " . $type . " !\n");
+        else
+        {
+            foreach ($this->m_Cache_ServerByType[$type] as $current)
+            {
+                $currentServerTimestamp = (new \DateTime($current["laston"]))->getTimestamp();
+                $bestServerTimestamp = (new \DateTime($serverToReturn["laston"]))->getTimestamp();
+                if ($serverToReturn == null ||
+                    ($currentServerTimestamp < $bestServerTimestamp &&
+                        $serverToReturn["online"] + 3 < $serverToReturn["max"]))
+                    $serverToReturn = $current;
+            }
+        }
+        return $serverToReturn;
     }
 
     public function getServers($type = LoadBalancer::TEMPLATE_TYPE_LOBBY, $p_State = LoadBalancer::SERVER_STATE_OPEN)
@@ -603,6 +626,8 @@ class LoadBalancer extends PluginBase implements Listener
         else
         {
             $p_Event->setJoinMessage("");
+            echo ("online player = " . count($this->getServer()->getOnlinePlayers()) . "\n");
+            echo ("redirect limit = " . $this->getConfig()->getNested("redirect.limit") . "\n");
             if ($this->getConfig()->getNested("redirect.to_type") != false && count($this->getServer()->getOnlinePlayers()) > $this->getConfig()->getNested("redirect.limit"))
             {
                 try
@@ -654,7 +679,9 @@ class LoadBalancer extends PluginBase implements Listener
         if ($p_Id == -1)
         {
             // select random server
-            $server = $this->getBest($p_Type, "open");
+
+            //$server = $this->getBest($p_Type, "open");
+            $server = $this->getBestServerByType($p_Type);
         }
         else
         {
