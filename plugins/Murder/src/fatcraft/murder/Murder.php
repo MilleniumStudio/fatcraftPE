@@ -550,8 +550,13 @@ class Murder extends PluginBase implements Listener
                         $p_event->getInventory()->addItem(Item::get(ItemIds::BOW));
                         $p_event->getInventory()->sendContents($p_event->getInventory()->getHolder());
                     }
-                }, 1);
+                }, 10);
             }
+        }
+        if ($p_event->getItem()->getItem()->getId() == ItemIds::BOW || $p_event->getItem()->getItem()->getId() == ItemIds::ARROW)
+        {
+            if ($holder->getUniqueId()->equals($this->m_murdererUUID))
+                $p_event->setCancelled(true);
         }
     }
 
