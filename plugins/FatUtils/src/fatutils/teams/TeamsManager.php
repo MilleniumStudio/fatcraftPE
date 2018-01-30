@@ -238,7 +238,7 @@ class TeamsManager
     public function clearNPCs(){
         /** @var ClickableNPC $npc */
         foreach ($this->m_NPCSelectors as $npc) {
-            $npc->villager->kill();
+            $npc->villager->despawnFromAll();
         }
         $this->m_NPCSelectors = [];
     }
