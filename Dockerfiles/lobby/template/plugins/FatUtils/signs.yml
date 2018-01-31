@@ -49,7 +49,7 @@ signsareas:
     data:
       type : "br"
       offset : 1
-      onlyVIP: true
+      onlyVIP: false
 
   - name: "room_skywar"
     locations: [
@@ -97,7 +97,7 @@ signsareas:
     data:
       type : "sw"
       offset : 1
-      onlyVIP: true
+      onlyVIP: false
 
   - name: "room_parkour"
     locations: [
@@ -146,7 +146,7 @@ signsareas:
     data:
       type : "pk"
       offset : 1
-      onlyVIP: true
+      onlyVIP: false
 
   - name: "room_hungergames"
     locations: [
@@ -192,7 +192,7 @@ signsareas:
     data:
       type : "hg"
       offset : 1
-      onlyVIP: true
+      onlyVIP: false
 
   - name: "room_murder"
     locations: [
@@ -238,7 +238,7 @@ signsareas:
     data:
       type : "md"
       offset : 1
-      onlyVIP: true
+      onlyVIP: false
 
   - name: "room_bedwars"
     locations: [
@@ -284,4 +284,4 @@ signsareas:
     data:
       type : "bw"
       offset : 1
-      onlyVIP: true
+      onlyVIP: false
