@@ -73,7 +73,10 @@ class CapeParticle extends ShopItem
 			}
 
 			$l_Level = $l_PlayerPosition->getLevel();
-			foreach ($l_Positions as $l_Pos)
+            if ($l_Level == null) // this is a hack fix to prevent a crash, i didn't check why it happened
+                return;
+
+            foreach ($l_Positions as $l_Pos)
 			{
 				if ($l_Pos instanceof Vector3)
 					$l_Level->addParticle(new DustParticle($l_Pos->add(0, ($this->getEntity()->isSneaking() ? 1.30 : 1.50)), $this->rColor, $this->gColor, $this->bColor));

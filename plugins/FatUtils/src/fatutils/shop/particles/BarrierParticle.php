@@ -69,6 +69,8 @@ class BarrierParticle extends ShopItem
 							{
 								if ($l_Location instanceof Vector3)
 								{
+								    if ($l_Level == null) // this is a hack fix to prevent a crash, i didn't check why it happened
+								        return;
 									$l_Level->addParticle(new DustParticle($l_Location->add(0, 1.95 + (0.1 * $l_Var), 0), $rVar * $l_Var, $gVar * $l_Var, $bVar * $l_Var));
 								}
 							}

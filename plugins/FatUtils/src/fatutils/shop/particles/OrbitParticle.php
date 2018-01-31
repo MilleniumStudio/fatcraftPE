@@ -47,7 +47,10 @@ class OrbitParticle extends ShopItem
 							{
 								if ($l_Location instanceof Vector3)
 								{
-									$l_Level->addParticle(new RedstoneParticle($l_Location));
+                                    if ($l_Level == null) // this is a hack fix to prevent a crash, i didn't check why it happened
+                                        return;
+
+                                    $l_Level->addParticle(new RedstoneParticle($l_Location));
 								}
 							}
 						}
