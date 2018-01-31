@@ -113,6 +113,9 @@ class LoadBalancer extends PluginBase implements Listener
                 LoadBalancer::getInstance()->cleanOrphaned();
             }
         }, 0, $this->getConfig()->getNested("timers.cleaner"));
+
+        $this->updateCacheServersByType();
+
         $this->getLogger()->info("Enabled");
     }
 
@@ -477,7 +480,11 @@ class LoadBalancer extends PluginBase implements Listener
         $serverToReturn = null;
         echo("getBestServerByType\n");
         if (!isset($this->m_Cache_ServerByType[$type][0]))
-            echo ("LoadBalance : no server of type : " . $type . " !\n");
+        {
+            echo("LoadBalance : no server of type : " . $type . " !\n");
+            $this->updateCacheServersByType();
+            usleep(200);
+        }
         else
         {
             foreach ($this->m_Cache_ServerByType[$type] as $current)
