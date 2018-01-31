@@ -289,14 +289,14 @@ class Murder extends PluginBase implements Listener
         $this->endGame();
     }
 
-    public function endGameLambdas(bool $murdererLeft = false)
+    public function endGameLambdas(bool $murdererLeft = false, string $p_killerName = "")
     {
         foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player) {
             $subtitle = "";
             if ($murdererLeft)
                 $subtitle = (new TextFormatter("murder.murderLeft"))->addParam("name", $this->m_murderName)->asStringForPlayer($l_Player);
             else
-                $subtitle = (new TextFormatter("murder.lambdasWin.named"))->addParam("name", $this->m_murderName)->asStringForPlayer($l_Player);
+                $subtitle = (new TextFormatter("murder.lambdasWin.named"))->addParam("name", $p_killerName)->asStringForPlayer($l_Player);
 
             $l_Player->addTitle(
                 (new TextFormatter("murder.lambdasWin"))->asStringForPlayer($l_Player),
@@ -308,8 +308,6 @@ class Murder extends PluginBase implements Listener
         foreach (Server::getInstance()->getOnlinePlayers() as $player) {
             if ($player->getUniqueId()->equals($this->m_murdererUUID))
 				ScoresManager::getInstance()->giveRewardToPlayer($player->getUniqueId(), 0.3 + ($this->m_playersKilled * 0.1));
-            else if ($player->getUniqueId()->equals($this->m_murdererUUID))
-				ScoresManager::getInstance()->giveRewardToPlayer($player->getUniqueId(), 1.1);
             else if ($player->getGamemode() == Player::SPECTATOR)
             	ScoresManager::getInstance()->giveRewardToPlayer($player->getUniqueId(), 0.5);
             else
@@ -324,7 +322,7 @@ class Murder extends PluginBase implements Listener
         if ($this->m_PlayTimer instanceof Timer)
             $this->m_PlayTimer->cancel();
 
-        (new TipsTimer(150))
+        (new TipsTimer(200))
             ->setTitle(new TextFormatter("timer.returnToLobby"))
             ->addStopCallback(function () {
                 foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player) {
@@ -333,7 +331,7 @@ class Murder extends PluginBase implements Listener
             })
             ->start();
 
-        (new Timer(200))
+        (new Timer(300))
             ->addStopCallback(function () {
                 $this->getServer()->shutdown();
             })
@@ -457,7 +455,8 @@ class Murder extends PluginBase implements Listener
 			{
 				$customDeathMessage = $l_Player->getName() . " " . (new TextFormatter("murder.murderHasBeenKilled"))->asString() . $killer->getName();
 				// endGame, lambdas win
-				$this->endGameLambdas();
+                if ($killer != null)
+    				$this->endGameLambdas(false, $killer->getName());
 			} else
 			{
 				$customDeathMessage = $l_Player->getName() . " " . (new TextFormatter("murder.hasBeenKilled"))->asString();

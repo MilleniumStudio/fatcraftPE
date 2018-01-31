@@ -1,32 +1,32 @@
 minPlayer: 4
-maxPlayer: 12
-waitingSecDuration: 30
+maxPlayer: 19
+waitingSecDuration: 60
 playingSecDuration: 600
 
 rewards:
   xp: 1000
-  money: 100
+  fatSilver: 100
 
 spawns:
+  - 30/8/10
   - -20/8/-94
-  - 36/7/-94
   - 39/7/-26
   - 76/7/13
   - 60/7/100
   - -1/7/98
-  - -65/7/36
   - -65/7/16
+  - -21/7/7
   - -62/7/-50
   - 2/7/-50
   - -14/7/-23
   - 0/8/31
-  - 30/8/10
+  - 36/7/-94
+  - 46/7/51
   - 39/7/77
   - -4/18/31
-  - 46/7/51
   - 45/7/10
-  - -21/7/7
   - -17/7/47
+  - -65/7/36
 
 gunPartsLoc:
   - 12/7/67
