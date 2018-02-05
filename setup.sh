@@ -131,6 +131,10 @@ cd bw-2/
 ./docker_build.sh
 cd ..
 
+cd bw-3/
+./docker_build.sh
+cd ..
+
 cd md-1/
 ./docker_build.sh
 cd ..

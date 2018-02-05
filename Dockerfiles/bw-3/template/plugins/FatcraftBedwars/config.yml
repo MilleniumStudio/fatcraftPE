@@ -1,0 +1,211 @@
+minPlayer: 2
+maxPlayer: 12
+waitingSecDuration: 60
+playingSecDuration: 1200
+deathArenaLoc: 0.5/6.1/60.5
+
+rewards:
+  xp: 1000
+  fatSilver: 100
+
+spawns:
+  blueSpawn:
+    location: 0.5/54/-78.5
+  redSpawn:
+    location: -78.5/54/0.5
+  greenSpawn:
+    location: 79.5/54/0.5
+  yellowSpawn:
+    location: 0.5/54/79.5
+
+forges:
+  i1:
+    location: 0.5/55/-117.5
+    itemType: IRON_INGOT
+    team: Blue
+    popDelay:
+      - 3
+      - 2
+      - 1
+  i2:
+    location: -117.5/55/0.5
+    itemType: IRON_INGOT
+    team: Red
+    popDelay:
+      - 3
+      - 2
+      - 1
+  i3:
+    location: 0.5/55/118.5
+    itemType: IRON_INGOT
+    team: Yellow
+    popDelay:
+      - 3
+      - 2
+      - 1
+  i4:
+    location: 118.5/55/0.5
+    itemType: IRON_INGOT
+    team: Green
+    popDelay:
+      - 3
+      - 2
+      - 1
+
+  g1:
+    location: 39.5/57/39.5
+    itemType: GOLD_INGOT
+    popDelay:
+      - 16
+      - 12
+      - 9
+  g2:
+    location: 39.5/57/-38.5
+    itemType: GOLD_INGOT
+    popDelay:
+      - 16
+      - 12
+      - 9
+  g3:
+    location: -38.5/57/39.5
+    itemType: GOLD_INGOT
+    popDelay:
+      - 16
+      - 12
+      - 9
+  g4:
+    location: -38.5/57/-38.5
+    itemType: GOLD_INGOT
+    popDelay:
+      - 16
+      - 12
+      - 9
+  d1:
+    location: 0.5/58/0.5
+    itemType: DIAMOND
+    popDelay:
+      - 23
+      - 18
+      - 15
+
+teams:
+  Blue:
+    color: BLUE
+    spawn: blueSpawn
+  Red:
+    color: RED
+    spawn: redSpawn
+  Green:
+    color: GREEN
+    spawn: greenSpawn
+  Yellow:
+    color: YELLOW
+    spawn: yellowSpawn
+
+
+npcTeamSelector:
+  1: 4.5/37/0.5
+  2: -1.5/37/0.5
+
+npcShop:
+  1: 18.5/55/-99.5/90/0
+  2: -99.5/55/-17.5/0/0
+  3: -18.5/55/100.5/-90/0
+  4: 100.5/55/18.5/-180/0
+
+beds:
+  Blue: 0.5/55/-88.5
+  Red: -88.5/55/0.5
+  Green: 89.5/55/0.5
+  Yellow: 0.5/55/89.5
+
+shop:
+  blocks:
+    wool:
+      rawItem: '{"material": "WOOL", "amount": 4}'
+      imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/Wool.png"
+      ironPrice: 2
+    endStone:
+      rawItem: '{"material": "END_STONE", "amount": 4}'
+      imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/End_Stone.png"
+      ironPrice: 7
+    wood:
+      rawItem: '{"material": "WOOD", "amount": 6}'
+      imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/Oak_Wood_Planks.png"
+      goldPrice: 3
+    obsidian:
+      rawItem: '{"material": "OBSIDIAN", "amount": 4}'
+      imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/Obsidian.png"
+      diamondPrice: 7
+  weapons:
+    stoneSword:
+      rawItem: '{"material": "STONE_SWORD"}'
+      imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/Stone_Sword.png"
+      ironPrice: 10
+    ironSword:
+      rawItem: '{"material": "IRON_SWORD"}'
+      imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/Iron_Sword.png"
+      ironPrice: 35
+    diamondSword:
+      rawItem: '{"material": "DIAMOND_SWORD"}'
+      imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/Diamond_Sword.png"
+      diamondPrice: 15
+    bow:
+      rawItem: '{"material": "BOW"}'
+      imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/Bow.png"
+      goldPrice: 3
+    arrow:
+      rawItem: '{"material": "ARROW", "amount": 4}'
+      imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/Arrow.png"
+      ironPrice: 7
+  armors:
+    chainmailSet:
+      helmet: '{"material": "CHAINMAIL_HELMET"}'
+      chestplate: '{"material": "CHAINMAIL_CHESTPLATE"}'
+      leggings: '{"material": "CHAINMAIL_LEGGINGS"}'
+      boots: '{"material": "CHAINMAIL_BOOTS"}'
+      imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/Chainmail_chestplate.png"
+      ironPrice: 25
+    ironSet:
+      helmet: '{"material": "IRON_HELMET"}'
+      chestplate: '{"material": "IRON_CHESTPLATE"}'
+      leggings: '{"material": "IRON_LEGGINGS"}'
+      boots: '{"material": "IRON_BOOTS"}'
+      imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/Iron_chestplate.png"
+      ironPrice: 40
+    diamondSet:
+      helmet: '{"material": "DIAMOND_HELMET"}'
+      chestplate: '{"material": "DIAMOND_CHESTPLATE"}'
+      leggings: '{"material": "DIAMOND_LEGGINGS"}'
+      boots: '{"material": "DIAMOND_BOOTS"}'
+      imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/Diamond_chestplate.png"
+      diamondPrice: 20
+  tools:
+    stonePickaxe:
+      rawItem: '{"material": "STONE_PICKAXE"}'
+      imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/Stone_Pickaxe.png"
+      ironPrice: 10
+    ironPickaxe:
+      rawItem: '{"material": "IRON_PICKAXE"}'
+      imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/Iron_Pickaxe.png"
+      ironPrice: 25
+    diamondPickaxe:
+      rawItem: '{"material": "DIAMOND_PICKAXE"}'
+      imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/Diamond_Pickaxe.png"
+      diamondPrice: 7
+    ironAxe:
+      rawItem: '{"material": "IRON_AXE"}'
+      imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/Iron_Axe.png"
+      goldPrice: 20
+  others:
+    snowBalls:
+      rawItem: '{"material": "SNOWBALL", "amount": 5}'
+      imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/Snow_Ball.png"
+      ironPrice: 15
+    ladders:
+      rawItem: '{"material": "LADDER", "amount": 3}'
+      imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/Ladder.png"
+      goldPrice: 5
+#    spiderWebs:
+#      rawItem: '{"material": "COBWEB", "amount": 1}'
+#      goldPrice: 2
