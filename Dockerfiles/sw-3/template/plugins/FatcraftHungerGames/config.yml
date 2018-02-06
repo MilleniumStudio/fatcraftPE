@@ -1,7 +1,7 @@
 minPlayer: 2
 maxPlayer: 8
-waitingSecDuration: 60
-playingSecDuration: 600
+waitingSecDuration: 45
+playingSecDuration: 1800
 deathArenaLoc: -214/62/640
 
 isSkywar: true
