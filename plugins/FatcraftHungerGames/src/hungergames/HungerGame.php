@@ -174,7 +174,7 @@ class HungerGame extends PluginBase implements Listener
 			->setTitle(new TextFormatter("timer.playing.title"))
 			->addStopCallback(function ()
 			{
-				if (PlayersManager::getInstance()->getInGamePlayerLeft() <= 1)
+				if (PlayersManager::getInstance()->getInGamePlayerLeft() <= 1 || $this->getHungerGameConfig()->isSkyWars())
 					$this->endGame();
 				else
 				{
@@ -235,33 +235,40 @@ class HungerGame extends PluginBase implements Listener
 	}
 
 	public function endGame()
-	{
-		if ($this->m_PlayTimer instanceof Timer)
-			$this->m_PlayTimer->cancel();
+    {
+        if ($this->m_PlayTimer instanceof Timer)
+            $this->m_PlayTimer->cancel();
 
-		GameManager::getInstance()->endGame();
+        GameManager::getInstance()->endGame();
 
-		$winners = PlayersManager::getInstance()->getInGamePlayers();
-		$winnerName = "";
-		if (count($winners) > 0)
-		{
-			$winner = $winners[0];
-			if ($winner instanceof FatPlayer)
-			{
-				$winnerName = $winner->getPlayer()->getName();
-				ScoresManager::getInstance()->giveRewardToPlayer($winner->getPlayer()->getUniqueId(), 1);
-			}
-		}
+        $winners = PlayersManager::getInstance()->getInGamePlayers();
+        $winnerName = "";
+        if ($this->getHungerGameConfig()->isSkyWars()) {
+            foreach ($winners as $fatPlayer)
+            {
+                if ($fatPlayer instanceof FatPlayer)
+                    ScoresManager::getInstance()->giveRewardToPlayer($fatPlayer->getPlayer()->getUniqueId(), 1);
+            }
+        }
+        else
+        { // hunger game situation
+            if (count($winners) > 0) {
+                $winner = $winners[0];
+                if ($winner instanceof FatPlayer) {
+                    $winnerName = $winner->getPlayer()->getName();
+                    ScoresManager::getInstance()->giveRewardToPlayer($winner->getPlayer()->getUniqueId(), 1);
+                }
+            }
 
-		foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-		{
-			$l_Player->addTitle(
-				(new TextFormatter("game.end"))->asStringForPlayer($l_Player),
-				(new TextFormatter("game.winner.single"))->addParam("name", $winnerName)->asStringForPlayer($l_Player),
-				30, 100, 30);
-		}
+            foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player) {
+                $l_Player->addTitle(
+                    (new TextFormatter("game.end"))->asStringForPlayer($l_Player),
+                    (new TextFormatter("game.winner.single"))->addParam("name", $winnerName)->asStringForPlayer($l_Player),
+                    30, 100, 30);
+            }
+        }
 
-		(new BossbarTimer(150))
+		(new BossbarTimer(200))
 			->setTitle(new TextFormatter("timer.returnToLobby"))
 			->addStopCallback(function ()
 			{
@@ -303,7 +310,10 @@ class HungerGame extends PluginBase implements Listener
 				}
 			} else if (GameManager::getInstance()->isPlaying())
 			{
-				if (count($this->getServer()->getOnlinePlayers()) == 0)
+			    $nbPlayer = count($this->getServer()->getOnlinePlayers());
+				if ($nbPlayer == 1)
+				    $this->endGame();
+                if ($nbPlayer == 0)
 					$this->getServer()->shutdown();
 			}
 		}, 1);
