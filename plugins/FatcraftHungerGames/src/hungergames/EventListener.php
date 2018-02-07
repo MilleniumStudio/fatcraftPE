@@ -79,6 +79,22 @@ class EventListener implements Listener
      */
     public function onSpawn(PlayerJoinEvent $e)
     {
+        $p_Player = $e->getPlayer();
+
+        if (GameManager::getInstance()->isPlaying()) {
+            if ($p_Player->isOp()) {
+                $p_Player->setGamemode(3);
+                PlayersManager::getInstance()->getFatPlayer($p_Player)->setOutOfGame();
+                return;
+            }
+            else
+            {
+                LoadBalancer::getInstance()->balancePlayer($p_Player, LoadBalancer::TEMPLATE_TYPE_LOBBY);
+                $e->setCancelled();
+                return;
+            }
+        }
+
         $p = $e->getPlayer();
         $p->setGamemode(2);
         $p->getInventory()->clearAll();
@@ -98,7 +114,7 @@ class EventListener implements Listener
         else{
             new DelayedExec(function () use ($p_Event)
             {
-                echo("should have tp \n");
+                $p_Event->getPlayer()->setGamemode(3);
                 $p_Event->getPlayer()->teleport(HungerGame::getInstance()->getHungerGameConfig()->getDeathArenaLoc());
             }, 5);
         }

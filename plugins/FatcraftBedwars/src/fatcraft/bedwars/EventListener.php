@@ -135,6 +135,23 @@ class EventListener implements Listener
      */
     public function onSpawn(PlayerJoinEvent $e)
     {
+        $p_Player = $e->getPlayer();
+
+        if (GameManager::getInstance()->isPlaying()) {
+            if ($p_Player->isOp()) {
+                $p_Player->setGamemode(3);
+                PlayersManager::getInstance()->getFatPlayer($p_Player)->setOutOfGame();
+                return;
+            }
+            else
+            {
+                LoadBalancer::getInstance()->balancePlayer($p_Player, LoadBalancer::TEMPLATE_TYPE_LOBBY);
+                $e->setCancelled();
+                return;
+            }
+        }
+
+
         $p = $e->getPlayer();
         $p->getInventory()->clearAll();
 

@@ -135,6 +135,20 @@ class Murder extends PluginBase implements Listener
     {
         $p_Player = $p_event->getPlayer();
 
+        if (GameManager::getInstance()->isPlaying()) {
+            if ($p_Player->isOp()) {
+                $p_Player->setGamemode(3);
+                PlayersManager::getInstance()->getFatPlayer($p_Player)->setOutOfGame();
+                return;
+            }
+            else
+            {
+                LoadBalancer::getInstance()->balancePlayer($p_Player, LoadBalancer::TEMPLATE_TYPE_LOBBY);
+                $p_event->setCancelled();
+                return;
+            }
+        }
+
 		$p_Player->sendMessage((new TextFormatter("template.info.template", [
 			"gameName" => new TextFormatter("template.md"),
 			"text" => new TextFormatter("template.info.md")
