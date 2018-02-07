@@ -8,6 +8,7 @@ use fatutils\tools\ArrayUtils;
 use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
+use pocketmine\scheduler\PluginTask;
 
 /**
  * Class BanCommand
@@ -20,9 +21,9 @@ class BanCommand implements CommandExecutor
 {
 	public function onCommand(CommandSender $sender, Command $cmd, $p_Label, array $p_Args): bool
     {
-		if (($p_Label === "ban" && $sender->hasPermission("ban.uuid")) || ($p_Label === "banip" && $sender->hasPermission("ban.ip")))
+        if (($p_Label === "ban" && $sender->hasPermission("ban.uuid")) || ($p_Label === "banip" && $sender->hasPermission("ban.ip")))
 		{
-			$p_Player = FatUtils::getInstance()->getServer()->getPlayer($p_Args[0]);
+            $p_Player = FatUtils::getInstance()->getServer()->getPlayer($p_Args[0]);
 			if (!is_null($p_Player))
 			{
 				$l_ExpirationTime = null;
@@ -52,14 +53,8 @@ class BanCommand implements CommandExecutor
 					BanManager::getInstance()->banIp($p_Player->getAddress(), $l_ExpirationTime, $l_Reason);
 
 				$p_Player->kick($l_Reason);
-				$sender->sendMessage("Banned " . $p_Player->getName());
 			}
-		} else if ($p_Label === "banreload" && $sender->hasPermission("ban.reload"))
-		{
-			BanManager::getInstance()->reload();
-			$sender->sendMessage("BanManager reloaded");
 		}
-
         return true;
     }
 

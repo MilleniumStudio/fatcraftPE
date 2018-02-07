@@ -14,8 +14,11 @@ use fatutils\FatUtils;
 use libasynql\result\MysqlResult;
 use libasynql\result\MysqlSelectResult;
 use libasynql\result\MysqlSuccessResult;
+use pocketmine\event\server\ServerCommandEvent;
 use pocketmine\Player;
+use pocketmine\Server;
 use pocketmine\utils\UUID;
+use pocketmine\scheduler\PluginTask;
 
 class BanManager
 {
@@ -78,6 +81,8 @@ class BanManager
             }
         }
 
+        Server::getInstance()->getScheduler()->scheduleDelayedRepeatingTask(new BanRefreshTask(FatUtils::getInstance()), 60, -1);
+
         // Ban address
 //		foreach ($this->m_IpBans as $l_IpBan)
 //		{
@@ -88,6 +93,7 @@ class BanManager
 
     public function reload()
 	{
+	    //echo ("Ban manager reloaded\n");
 		$this->init();
 	}
 
@@ -231,5 +237,15 @@ class BanManager
         }
 
         return false;
+    }
+}
+
+
+
+class BanRefreshTask extends PluginTask
+{
+    public function onRun(int $tick)
+    {
+        BanManager::getInstance()->reload();
     }
 }
