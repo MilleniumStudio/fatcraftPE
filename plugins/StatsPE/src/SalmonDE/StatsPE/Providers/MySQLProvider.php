@@ -1,6 +1,9 @@
 <?php
 namespace SalmonDE\StatsPE\Providers;
 
+use fatutils\FatUtils;
+use pocketmine\scheduler\PluginTask;
+use pocketmine\Server;
 use SalmonDE\StatsPE\Base;
 use SalmonDE\StatsPE\Utils;
 use SalmonDE\StatsPE\Events\EntryEvent;
@@ -11,6 +14,8 @@ class MySQLProvider implements DataProvider
     private $entries = [];
     private $db = null;
 
+    private static $m_Instance = null;
+
     private $changes = [
         'amount' => 0,
         'data' => []
@@ -18,8 +23,16 @@ class MySQLProvider implements DataProvider
 
     private $cacheLimit = 0;
 
+    public static function getInstance(): MySQLProvider
+    {
+        if (is_null(self::$m_Instance))
+            self::$m_Instance = new MySQLProvider();
+        return self::$m_Instance;
+    }
+
     public function __construct($host, $username, $pw, $db, $cacheLimit)
     {
+        self::$m_Instance = $this;
         $this->initialize(['host' => $host, 'username' => $username, 'pw' => $pw, 'db' => $db, 'cacheLimit' => $cacheLimit]);
     }
 
@@ -41,12 +54,21 @@ class MySQLProvider implements DataProvider
             return false;
         }
         Base::getInstance()->getLogger()->notice('Successfully connected to the MySQL server!');
+        Server::getInstance()->getScheduler()->scheduleRepeatingTask(new MysqlPingTask(Base::getInstance()), 200);
+
         return true;
     }
 
     public function getName(): string
     {
         return 'MySQLProvider';
+    }
+
+    public function pingMysql()
+    {
+        if ($this->db instanceof \mysqli) {
+            $this->db->ping();
+        }
     }
 
     public function prepareTable()
@@ -427,5 +449,14 @@ class MySQLProvider implements DataProvider
             Base::getInstance()->getLogger()->error($this->db->error);
             return false;
         }
+    }
+}
+
+
+class MysqlPingTask extends PluginTask
+{
+    public function onRun(int $tick)
+    {
+        MySQLProvider::getInstance()->pingMysql();
     }
 }
