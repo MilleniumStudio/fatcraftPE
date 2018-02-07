@@ -485,16 +485,33 @@ class LoadBalancer extends PluginBase implements Listener
             $this->updateCacheServersByType();
             usleep(200);
         }
-        else
-        {
-            foreach ($this->m_Cache_ServerByType[$type] as $current)
-            {
-                $currentServerTimestamp = (new \DateTime($current["laston"]))->getTimestamp();
-                $bestServerTimestamp = (new \DateTime($serverToReturn["laston"]))->getTimestamp();
+        else {
+            if ($type == LoadBalancer::TEMPLATE_TYPE_LOBBY) {
+                $beginAtLobby = 2;
+                foreach ($this->m_Cache_ServerByType[$type] as $current) {
+                    //$currentServerTimestamp = (new \DateTime($current["laston"]))->getTimestamp();
+                    //$bestServerTimestamp = (new \DateTime($serverToReturn["laston"]))->getTimestamp();
                 if ($serverToReturn == null ||
-                    ($currentServerTimestamp < $bestServerTimestamp &&
+                    //($currentServerTimestamp < $bestServerTimestamp &&
+                    ($current["id"] == $beginAtLobby &&
+                    $serverToReturn["online"] + 3 < $serverToReturn["max"]))
+                    {
+                        return $current;
+                    }
+                    $beginAtLobby++;
+                }
+            } else
+            {
+                foreach ($this->m_Cache_ServerByType[$type] as $current)
+                {
+                    //$currentServerTimestamp = (new \DateTime($current["laston"]))->getTimestamp();
+                    //$bestServerTimestamp = (new \DateTime($serverToReturn["laston"]))->getTimestamp();
+                if ($serverToReturn == null ||
+                    //($currentServerTimestamp < $bestServerTimestamp &&
+                    (
                         $serverToReturn["online"] + 3 < $serverToReturn["max"]))
                     $serverToReturn = $current;
+                }
             }
         }
         return $serverToReturn;
