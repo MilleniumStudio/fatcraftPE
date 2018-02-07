@@ -219,7 +219,7 @@ class ShopManager
 							if ($l_FatPlayer->getFatsilver() - $p_ShopItem->getFatsilverPrice() >= 0)
 							{
 								$l_FatPlayer->addFatsilver(-$p_ShopItem->getFatsilverPrice());
-								$l_FatPlayer->addBoughtShopItem($p_ShopItem);
+								$l_FatPlayer->addBoughtShopItem($p_ShopItem, $p_ShopItem->getFatsilverPrice());
 								$l_FatPlayer->getPlayer()->sendMessage((new TextFormatter("shop.bought", ["name" => new TextFormatter($p_ShopItem->getName())]))->asStringForFatPlayer($l_FatPlayer));
 								Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());
 							} else
@@ -243,7 +243,7 @@ class ShopManager
 							if ($l_FatPlayer->getFatgold() - $p_ShopItem->getFatgoldPrice() >= 0)
 							{
 								$l_FatPlayer->addFatgold(-$p_ShopItem->getFatgoldPrice());
-								$l_FatPlayer->addBoughtShopItem($p_ShopItem);
+								$l_FatPlayer->addBoughtShopItem($p_ShopItem, 0, $p_ShopItem->getFatgoldPrice());
 								Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());
 								$l_FatPlayer->getPlayer()->sendMessage((new TextFormatter("shop.bought", ["name" => new TextFormatter($p_ShopItem->getName())]))->asStringForFatPlayer($l_FatPlayer));
 								Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());

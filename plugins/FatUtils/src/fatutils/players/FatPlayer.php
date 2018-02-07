@@ -445,16 +445,27 @@ class FatPlayer
 		return $this->m_slots;
 	}
 
-	public function addBoughtShopItem(ShopItem $p_ShopItem)
+	public function addBoughtShopItem(ShopItem $p_ShopItem, $p_spentFS = 0, $p_spentFG = 0)
 	{
 		$this->m_BoughtShopItems[] = $p_ShopItem->getKey();
 
-		MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(),
-			"UPDATE players SET shop_possessed = ? WHERE uuid = ?", [
-				["s", json_encode($this->m_BoughtShopItems)],
-				["s", $this->getPlayer()->getUniqueId()]
-			]);
-	}
+        MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(),
+            "UPDATE players SET shop_possessed = ? WHERE uuid = ?", [
+                ["s", json_encode($this->m_BoughtShopItems)],
+                ["s", $this->getPlayer()->getUniqueId()]
+            ]);
+
+        FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
+            new DirectQueryMysqlTask(LoadBalancer::getInstance()->getCredentials(),
+                "INSERT INTO shop_history (uuid, name, item, spentFS, spentFG) VALUES (?, ?, ?, ?, ?)", [
+                    ["s", $this->getPlayer()->getUniqueId()],
+                    ["s", $this->getPlayer()->getName()],
+                    ["s", $p_ShopItem->getName()],
+                    ["i", $p_spentFS],
+                    ["i", $p_spentFG]
+                ]
+            ));
+    }
 
 	public function isBought(ShopItem $p_ShopItem)
 	{
