@@ -78,6 +78,8 @@ class CapeParticle extends ShopItem
 
             foreach ($l_Positions as $l_Pos)
 			{
+			    if ($l_Level == null)
+			        return;
 				if ($l_Pos instanceof Vector3)
 					$l_Level->addParticle(new DustParticle($l_Pos->add(0, ($this->getEntity()->isSneaking() ? 1.30 : 1.50)), $this->rColor, $this->gColor, $this->bColor));
 			}

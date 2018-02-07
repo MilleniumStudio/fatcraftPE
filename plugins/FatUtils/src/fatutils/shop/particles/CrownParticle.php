@@ -54,6 +54,8 @@ class CrownParticle extends ShopItem
 							{
 								if ($l_Location instanceof Vector3)
 								{
+                                    if ($this->getEntity()->getLevel() == null)
+                                        return;
                                     $l_ParticleBuilder->play(Position::fromObject($l_Location->add(0, 2 + $l_Var, 0), $this->getEntity()->getLevel()));
 								}
 							}

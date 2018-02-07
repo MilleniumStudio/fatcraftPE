@@ -41,8 +41,9 @@ class GlyphyPathParticle extends ShopItem
 		{
 			if (FatUtils::getInstance()->getServer()->getTick() % 3 == 0 && $this->getEntity()->isMoving())
 			{
-				$l_Level = $this->getEntity()->getLevel();
-				$this->m_Anim = new ShockWaveAnimation($this->getEntity()->asLocation());
+                $l_Level = $this->getEntity()->getLevel();
+
+                $this->m_Anim = new ShockWaveAnimation($this->getEntity()->asLocation());
 				$this->m_Anim
 					->setNbPointInACircle(10)
 					->setTickDuration(15)
@@ -58,7 +59,6 @@ class GlyphyPathParticle extends ShopItem
 								{
                                     if ($l_Level == null) // this is a hack fix to prevent a crash, i didn't check why it happened
                                         return;
-
                                     $l_Level->addParticle(new EnchantmentTableParticle($l_Location->add(0, 0.1, 0)));
 								}
 							}

@@ -55,13 +55,16 @@ class GlyphParticle extends ShopItem
 						->setFinalRadius(2)
 						->setCallback(function ($data) use ($l_Level, $l_ParticleBuilder)
 						{
+                            $l_Level = $this->getEntity()->getLevel();
 							if (gettype($data) === "array")
 							{
 								foreach ($data as $l_Location)
 								{
 									if ($l_Location instanceof Vector3)
 									{
-										$l_ParticleBuilder->play(Position::fromObject($l_Location->add(0, $this->getDataValue("offsetY", 0.1), 0), $this->getEntity()->getLevel()));
+                                        if ($l_Level == null) // this is a hack fix to prevent a crash, i didn't check why it happened
+                                            return;
+										$l_ParticleBuilder->play(Position::fromObject($l_Location->add(0, $this->getDataValue("offsetY", 0.1), 0), $l_Level));
 									}
 								}
 							}

@@ -42,6 +42,8 @@ class PathParticle extends ShopItem
 
 		$this->m_MainLoop = new LoopedExec(function () use ($l_ParticleBuilder)
 		{
+            if ($this->getEntity()->getLevel() == null)
+                return;
 			if (FatUtils::getInstance()->getServer()->getTick() % 3 == 0 && $this->getEntity()->isMoving())
 				$l_ParticleBuilder->play(Position::fromObject($this->getEntity()->asLocation()->add(0, $this->getDataValue("offsetY", 0.1), 0), $this->getEntity()->getLevel()));
 		});

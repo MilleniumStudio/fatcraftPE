@@ -70,6 +70,8 @@ class FunnelParticle extends ShopItem
 								{
 									if ($l_Location instanceof Vector3)
 									{
+									    if ($l_Level == null)
+									        return;
 										$l_Level->addParticle(new DustParticle($l_Location->add(0, $this->getDataValue("offsetY", 1.95) + (0.1 * $l_Var), 0), $rVar * $l_Var, $gVar * $l_Var, $bVar * $l_Var));
 									}
 								}

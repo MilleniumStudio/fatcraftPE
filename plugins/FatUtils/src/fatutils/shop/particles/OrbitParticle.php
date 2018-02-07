@@ -31,6 +31,7 @@ class OrbitParticle extends ShopItem
 		$this->m_MainLoop = new LoopedExec(function ()
 		{
 			$l_Level = $this->getEntity()->getLevel();
+
 			if (!($this->m_Circle1 instanceof CircleAnimation) || !$this->m_Circle1->isRunning())
 			{
 				$this->m_Circle1 = new CircleAnimation();
@@ -49,7 +50,6 @@ class OrbitParticle extends ShopItem
 								{
                                     if ($l_Level == null) // this is a hack fix to prevent a crash, i didn't check why it happened
                                         return;
-
                                     $l_Level->addParticle(new RedstoneParticle($l_Location));
 								}
 							}
