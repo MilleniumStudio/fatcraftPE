@@ -274,7 +274,21 @@ class BoatRacer extends PluginBase implements Listener
 	{
 		$l_Player = $p_Event->getPlayer();
 
-		$l_Player->sendMessage((new TextFormatter("template.info.template", [
+        if (GameManager::getInstance()->isPlaying()) {
+            if ($l_Player->isOp()) {
+                $l_Player->setGamemode(3);
+                PlayersManager::getInstance()->getFatPlayer($l_Player)->setOutOfGame();
+                return;
+            }
+            else
+            {
+                LoadBalancer::getInstance()->balancePlayer($l_Player, LoadBalancer::TEMPLATE_TYPE_LOBBY);
+                $p_Event->setCancelled();
+                return;
+            }
+        }
+
+        $l_Player->sendMessage((new TextFormatter("template.info.template", [
 			"gameName" => new TextFormatter("template.br"),
 			"text" => new TextFormatter("template.info.br")
 		]))->asStringForPlayer($l_Player));
