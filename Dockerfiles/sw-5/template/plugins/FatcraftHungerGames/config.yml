@@ -203,7 +203,7 @@ loots:
     chance: 30
     items:
       - '{"material": "SNOWBALL", "amount": 10}'
-      - '{"material": "ARROW", "amount": 6}’
+      - '{"material": "ARROW", "amount": 6}'
       - '{"material": "STRING", "amount": 5}'
       - '{"material": "SHEARS"}'
       - '{"material": "GOLD_HELMET"}'
