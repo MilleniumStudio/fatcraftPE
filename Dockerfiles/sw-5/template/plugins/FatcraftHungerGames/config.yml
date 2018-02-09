@@ -1,0 +1,259 @@
+minPlayer: 2
+maxPlayer: 8
+waitingSecDuration: 30
+playingSecDuration: 600
+deathArenaLoc: 11.5/7/4.5
+
+isSkywar: true
+
+#Max rewards for the first player, divided by place un score
+rewards:
+  xp: 1000
+  fatSilver: 100
+
+spawns:
+  1:
+    location: -68.5/61/-83.5
+    barrierType: GLASS
+  2:
+    location: -109.5/60/6.5
+    barrierType: GLASS
+  3:
+    location: -54.5/60/85.5
+    barrierType: GLASS
+  4:
+    location: -8.5/60/117.5
+    barrierType: GLASS
+  5:
+    location: 87.5/60/86.5
+    barrierType: GLASS
+  6:
+    location: 112.5/60/2.5
+    barrierType: GLASS
+  7:
+    location: 72.5/60/-88.5
+    barrierType: GLASS
+  8:
+    location: 30.5/60/-105.5
+    barrierType: GLASS
+
+chests:
+  1:
+    location: -74.5/60/-84.5
+    total-item-value: 4
+    max-item-value: 1
+  2:
+    location: -108.5/60/-0.5
+    total-item-value: 4
+    max-item-value: 1
+  3:
+    location: -59.5/60/85.5
+    total-item-value: 4
+    max-item-value: 1
+  4:
+    location: -6.5/60/113.5
+    total-item-value: 4
+    max-item-value: 1
+  5:
+    location: 82.5/60/85.5
+    total-item-value: 4
+    max-item-value: 1
+  6:
+    location: 110.5/60/6.5
+    total-item-value: 4
+    max-item-value: 1
+  7:
+    location: 77.5/60/-87.5
+    total-item-value: 4
+    max-item-value: 1
+  8:
+    location: 27.5/60/-100.5
+    total-item-value: 4
+    max-item-value: 1
+  9:
+    location: 11.5/62/10.5
+    total-item-value: 25
+    max-item-value: 5
+  10:
+    location: -5.5/61/19.5
+    total-item-value: 12
+    max-item-value: 3
+  11:
+    location: 0.5/58/5.5
+    total-item-value: 21
+    max-item-value: 7
+  12:
+    location: 11.5/63/-1.5
+    total-item-value: 12
+    max-item-value: 3
+  13:
+    location: -8.5/60/-19.5
+    total-item-value: 15
+    max-item-value: 5
+  14:
+    location: -3.5/62/-23
+    total-item-value: 12
+    max-item-value: 3
+  15:
+    location: 5.5/60/-18.5
+    total-item-value: 15
+    max-item-value: 5
+  16:
+    location: -9.5/66/-6.5
+    total-item-value: 21
+    max-item-value: 7
+  17:
+    location: -8.5/66/1.5
+    total-item-value: 12
+    max-item-value: 3
+  18:
+    location: 0.5/67/4.5
+    total-item-value: 12
+    max-item-value: 3
+  19:
+    location: -8.5/71/4.5
+    total-item-value: 28
+    max-item-value: 7
+  20:
+    location: 0.5/70/-5.5
+    total-item-value: 21
+    max-item-value: 7
+  21:
+    location: 6.5/71/-19.5
+    total-item-value: 35
+    max-item-value: 15
+  22:
+    location: -3.5/79/-15.5
+    total-item-value: 35
+    max-item-value: 15
+  23:
+    location: 1.5/96/-4.5
+    total-item-value: 50
+    max-item-value: 15
+  24:
+    location: 9.5/75/-3.5
+    total-item-value: 35
+    max-item-value: 15
+  25:
+    location: -5.5/70/19.5
+    total-item-value: 14
+    max-item-value: 7
+  26:
+    location: -8.5/79/4.5
+    total-item-value: 30
+    max-item-value: 15
+  27:
+    location: 1.5/83.5/16.5
+    total-item-value: 50
+    max-item-value: 15
+
+
+
+  28:
+    location: -55.5/63/-18.5
+    total-item-value: 12
+    max-item-value: 3
+  29:
+    location: -24.5/65/-70.5
+    total-item-value: 12
+    max-item-value: 3
+  30:
+    location: 29.5/66/-61.5
+    total-item-value: 12
+    max-item-value: 3
+  31:
+    location: 57.5/59/-24.5
+    total-item-value: 12
+    max-item-value: 3
+  32:
+    location: 60.5/70/20.5
+    total-item-value: 12
+    max-item-value: 3
+  33:
+    location: 26.5/55/57.5
+    total-item-value: 12
+    max-item-value: 3
+  34:
+    location: -21.5/66/69.5
+    total-item-value: 12
+    max-item-value: 3
+  35:
+    location: -53.5/58/35.5
+    total-item-value: 12
+    max-item-value: 3
+
+loots:
+  level-1:
+    item-value: 1
+    chance: 40
+    items:
+      - '{"material": "ARROW", "amount": 4}'
+      - '{"material": "STRING", "amount": 2}'
+      - '{"material": "MELON_BLOCK", "amount": 4}'
+      - '{"material": "APPLE", "amount": 3}'
+      - '{"material": "LEATHER_HELMET"}'
+      - '{"material": "LEATHER_CHESTPLATE"}'
+      - '{"material": "LEATHER_LEGGINGS"}'
+      - '{"material": "LEATHER_BOOTS"}'
+      - '{"material": "STICK", "amount": 7}'
+
+
+  level-2:
+    item-value: 3
+    chance: 30
+    items:
+      - '{"material": "SNOWBALL", "amount": 10}'
+      - '{"material": "ARROW", "amount": 6}’
+      - '{"material": "STRING", "amount": 5}'
+      - '{"material": "SHEARS"}'
+      - '{"material": "GOLD_HELMET"}'
+      - '{"material": "GOLD_CHESTPLATE"}'
+      - '{"material": "GOLD_LEGGINGS"}'
+      - '{"material": "GOLD_BOOTS"}'
+      - '{"material": "RAW_BEEF", "amount": 4}'
+      - '{"material": "COOKED_CHICKEN", "amount": 2}'
+
+
+  level-3:
+    item-value: 5
+    chance: 15
+    items:
+      - '{"material": "GOLD_SWORD"}'
+      - '{"material": "FLINT_AND_STEEL"}'
+      - '{"material": "ARROW", "amount": 8}'
+      - '{"material": "BOW"}'
+      - '{"material": "CHAINMAIL_HELMET"}'
+      - '{"material": "CHAINMAIL_CHESTPLATE"}'
+      - '{"material": "CHAINMAIL_BOOTS"}'
+      - '{"material": "COOKED_PORKCHOP", "amount": 3}'
+      - '{"material": "COOKED_BEEF", "amount": 2}'
+
+  level-4:
+    item-value: 7
+    chance: 10
+    items:
+      - '{"material": "BOW"}'
+      - '{"material": "ARROW", "amount": 10}'
+      - '{"material": "IRON_SWORD"}'
+      - '{"material": "IRON_AXE"}'
+      - '{"material": "IRON_HELMET"}'
+      - '{"material": "IRON_CHESTPLATE"}'
+      - '{"material": "IRON_LEGGINGS"}'
+      - '{"material": "IRON_BOOTS"}'
+      - '{"material": "GOLDEN_APPLE", "amount": 2}'
+      - '{"material": "MUSHROOM_STEW"}'
+
+  level-5:
+    item-value: 15
+    chance: 5
+    items:
+      - '{"material": "BOW"}'
+      - '{"material": "ARROW", "amount": 15}'
+      - '{"material": "TNT », "amount": 4}'
+      - '{"material": "DIAMOND_SWORD"}'
+      - '{"material": "DIAMOND_HELMET"}'
+      - '{"material": "DIAMOND_CHESTPLATE"}'
+      - '{"material": "DIAMOND_LEGGINGS"}'
+      - '{"material": "DIAMOND_BOOTS"}'
+
+
