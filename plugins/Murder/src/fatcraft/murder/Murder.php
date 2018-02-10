@@ -144,7 +144,6 @@ class Murder extends PluginBase implements Listener
             else
             {
                 LoadBalancer::getInstance()->balancePlayer($p_Player, LoadBalancer::TEMPLATE_TYPE_LOBBY);
-                $p_event->setCancelled();
                 return;
             }
         }
