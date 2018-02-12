@@ -131,9 +131,11 @@ class PlayersManager
 		return $this->m_FatPlayers;
 	}
 
-	public function getFatPlayer(Player $p_Player): FatPlayer
+	public function getFatPlayer(Player $p_Player): ?FatPlayer
 	{
 		$key = $p_Player->getUniqueId()->toString();
+		if ($p_Player->getLevel() == null)
+		    return null;
 		if (!isset($this->m_FatPlayers[$key]))
 			$this->addPlayer($p_Player);
 

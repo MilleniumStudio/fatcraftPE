@@ -80,7 +80,7 @@ class Pet extends ShopItem
     {
         $this->m_CustomPet->kill();
         $this->m_CustomPet->flagForDespawn();
-//        $this->m_fatPlayer->setSlot(ShopItem::FAT_PLAYER_SHOP_SLOT_PET, null);
+        //$this->m_fatPlayer->emptySlot(ShopItem::SLOT_PET);
     }
 
     public function getCustomPet()
@@ -95,9 +95,14 @@ class Pet extends ShopItem
             FatUtils::getInstance()->getLogger()->debug("[Pet] custom pet is null !");
             return;
         }
-
+        if ($this->m_CustomPet->level == null)
+        {
+            return;
+        }
         if (!$this->m_CustomPet->isAlive())
         {
+            if ($this->m_fatPlayer->getSlot(ShopItem::SLOT_PET) == null)
+                return;
             FatUtils::getInstance()->getLogger()->debug("[Pet] " . $this->m_CustomPet->getId() . " is dead, reviving !");
             $this->m_CustomPet->setHealth(20);
         }

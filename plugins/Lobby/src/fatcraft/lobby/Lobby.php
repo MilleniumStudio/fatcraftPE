@@ -125,12 +125,12 @@ class Lobby extends PluginBase implements Listener
     public function onPlayerQuit(PlayerQuitEvent $p_Event)
 	{
 		$l_PlayerManager = PlayersManager::getInstance();
-		$l_FatPlayer = $l_PlayerManager->getFatPlayer($p_Event->getPlayer());
+		/*$l_FatPlayer = $l_PlayerManager->getFatPlayer($p_Event->getPlayer());
 
 		$l_Slot = $l_FatPlayer->getSlot(ShopItem::SLOT_PET);
 
 		if ($l_Slot != null)
-		    $l_Slot->unequip();
+		    $l_Slot->unequip();*/
 
 		$l_PlayerManager->removeFatPlayer($p_Event->getPlayer());
 	}

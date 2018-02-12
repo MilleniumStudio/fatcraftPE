@@ -6,19 +6,19 @@ content:
       class: "fatutils\\shop\\particles\\OrbitParticle"
       priceFS: 1500
       priceFG: 50
-    crown:
-      name: "shop.items.particles.crown"
-      desc: "shop.items.particles.crown.desc"
-      class: "fatutils\\shop\\particles\\CrownParticle"
-      priceFS: 1500
-      priceFG: 50
-    barrierYellow:
-      name: "shop.items.particles.barrierYellow"
-      desc: "shop.items.particles.barrierYellow.desc"
-      class: "fatutils\\shop\\particles\\BarrierParticle"
-      priceFS: 1500
-      priceFG: 50
-      rgbColor: "#FFFF20"
+#    crown:
+#      name: "shop.items.particles.crown"
+#      desc: "shop.items.particles.crown.desc"
+#      class: "fatutils\\shop\\particles\\CrownParticle"
+#      priceFS: 1500
+#      priceFG: 50
+#    barrierYellow:
+#      name: "shop.items.particles.barrierYellow"
+#      desc: "shop.items.particles.barrierYellow.desc"
+#      class: "fatutils\\shop\\particles\\BarrierParticle"
+#      priceFS: 1500
+#      priceFG: 50
+#      rgbColor: "#FFFF20"
 #    barrierRandom:
 #      name: "shop.items.particles.barrierRandom"
 #      desc: "shop.items.particles.barrierRandom.desc"
@@ -52,7 +52,7 @@ content:
       name: "shop.items.particles.glyphyPath"
       desc: "shop.items.particles.glyphyPath.desc"
       class: "fatutils\\shop\\particles\\GlyphyPathParticle"
-      priceFS: 1500
+#      priceFS: 1500
       priceFG: 50
 #    heartPath:
 #      name: "shop.items.particles.heartPath"
@@ -91,8 +91,8 @@ content:
     Pig:
       name: "shop.items.pets.Pig"
       class: "fatutils\\pets\\Pet"
-      priceFS: 1500
-      priceFG: 50
+#      priceFS: 1500
+#      priceFG: 50
       type: "Pig"
 #    Sheep:
 #      name: "shop.items.pets.Sheep"
@@ -133,7 +133,7 @@ content:
     Bat:
       name: "shop.items.pets.Bat"
       class: "fatutils\\pets\\Pet"
-      priceFS: 2000
+#      priceFS: 2000
       priceFG: 70
       type: "Bat"
 #    IronGolem:
@@ -184,12 +184,12 @@ content:
 #      priceFS: 1500
 #      priceFG: 50
 #      type: "Horse"
-    Donkey:
-      name: "shop.items.pets.Donkey"
-      class: "fatutils\\pets\\Pet"
-      priceFS: 1500
-      priceFG: 50
-      type: "Donkey"
+#    Donkey:
+#      name: "shop.items.pets.Donkey"
+#      class: "fatutils\\pets\\Pet"
+#      priceFS: 1500
+#      priceFG: 50
+#      type: "Donkey"
 #    Mule:
 #      name: "shop.items.pets.Mule"
 #      class: "fatutils\\pets\\Pet"
@@ -226,12 +226,12 @@ content:
 #      priceFS:# 1500
 #      priceFG: 50
 #      type: "Parrot"
-    Zombie:
-      name: "shop.items.pets.Zombie"
-      class: "fatutils\\pets\\Pet"
-      priceFS: 1500
-      priceFG: 50
-      type: "Zombie"
+#    Zombie:
+#      name: "shop.items.pets.Zombie"
+#      class: "fatutils\\pets\\Pet"
+#      priceFS: 1500
+#      priceFG: 50
+#      type: "Zombie"
 #    Creeper:
 #      name: "shop.items.pets.Creeper"
 #      class: "fatutils\\pets\\Pet"
@@ -244,12 +244,12 @@ content:
 #      priceFS: 1500
 #      priceFG: 50
 #      type: "Skeleton"
-    Spider:
-      name: "shop.items.pets.Spider"
-      class: "fatutils\\pets\\Pet"
-      priceFS: 1500
-      priceFG: 50
-      type: "Spider"
+#    Spider:
+#      name: "shop.items.pets.Spider"
+#      class: "fatutils\\pets\\Pet"
+#      priceFS: 1500
+#      priceFG: 50
+#      type: "Spider"
 #    ZombiePigman:
 #      name: "shop.items.pets.ZombiePigman"
 #      class: "fatutils\\pets\\Pet"
@@ -298,11 +298,11 @@ content:
 #      priceFS: 1500
 #      priceFG: 50
 #      type: "Blaze"
-    ZombieVillager:
-      name: "shop.items.pets.ZombieVillager"
-      class: "fatutils\\pets\\Pet"
-      priceFG: 70
-      type: "ZombieVillager"
+#    ZombieVillager:
+#      name: "shop.items.pets.ZombieVillager"
+#      class: "fatutils\\pets\\Pet"
+#      priceFG: 70
+#      type: "ZombieVillager"
 #    Witch:#
 #      name: "shop.items.pets.Witch"
 #      class: "fatutils\\pets\\Pet"

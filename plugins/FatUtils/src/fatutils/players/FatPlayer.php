@@ -285,6 +285,37 @@ class FatPlayer
 			}, 40);
         }
 
+
+        //////// handle Gifts to players ////////
+
+        $giftResult = MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(),
+            "SELECT * FROM player_gift WHERE name = ?" , [
+                ["s", $this->getPlayer()->getName()]
+            ]);
+        if ($giftResult instanceof MysqlErrorResult)
+        {
+            echo ($giftResult->getException());
+            return;
+        }
+        if ($giftResult instanceof \libasynql\result\MysqlSelectResult) {
+        foreach ($giftResult->rows as $row)
+            {
+                $lGift = ShopManager::getInstance()->getShopItemByKey($this->getPlayer(), $row["gift_type"]);
+                if ($lGift != null)
+                {
+                    $this->addBoughtShopItem($lGift, -1, -1);
+
+                    MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(),
+                        "DELETE FROM player_gift WHERE name = ? AND gift_type = ?", [
+                            ["s", $this->getPlayer()->getName()],
+                            ["s", $row["gift_type"]]
+                        ]
+                    );
+                    echo ($row["gift_type"] . " given to " . $this->getPlayer()->getName() . "\n");
+                }
+            }
+        }
+
         PermissionManager::getInstance()->updatePermissions($this);
     }
 
@@ -501,9 +532,9 @@ class FatPlayer
 	{
 		if (array_key_exists($slotName, $this->m_slots))
 		{
-			unset($this->m_sltos[$slotName]);
+			unset($this->m_slots[$slotName]);
 			$this->updateSqlEquippedSlot();
-		}
+        }
 	}
 
 	public function getKitItemAtSlot(string $p_kitSlot) : string
