@@ -218,7 +218,7 @@ shop:
     wool:
       rawItem: '{"material": "WOOL", "amount": 4}'
       imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/Wool.png"
-      ironPrice: 2
+      ironPrice: 1
     endStone:
       rawItem: '{"material": "END_STONE", "amount": 4}'
       imageUrl: "https://fatcraft.com/img/mcpe_assets/bedwars/End_Stone.png"
