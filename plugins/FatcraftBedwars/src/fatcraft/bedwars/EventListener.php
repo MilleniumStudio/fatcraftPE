@@ -3,7 +3,9 @@
 namespace fatcraft\bedwars;
 
 use fatcraft\bedwars\Bedwars;
+use fatcraft\loadbalancer\LoadBalancer;
 use fatutils\FatUtils;
+use fatutils\game\GameManager;
 use fatutils\players\PlayersManager;
 use fatutils\teams\TeamsManager;
 use fatutils\tools\schedulers\DelayedExec;
@@ -146,7 +148,6 @@ class EventListener implements Listener
             else
             {
                 LoadBalancer::getInstance()->balancePlayer($p_Player, LoadBalancer::TEMPLATE_TYPE_LOBBY);
-                $e->setCancelled();
                 return;
             }
         }

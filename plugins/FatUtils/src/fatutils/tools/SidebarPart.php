@@ -47,6 +47,9 @@ class SidebarPart
 		$l_Ret = [];
 		$l_LineGetter = $this->m_LineGetter;
 
+        if ($p_Player == null || PlayersManager::getInstance()->fatPlayerExist($p_Player) == null)
+            return;
+
 		if (is_callable($l_LineGetter))
 		{
 			$l_LineGetterRet = null;

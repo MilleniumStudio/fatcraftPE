@@ -2,6 +2,8 @@
 
 namespace fatcraft\loadbalancer;
 
+use fatutils\game\GameManager;
+use fatutils\players\PlayersManager;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerKickEvent;
@@ -652,7 +654,7 @@ class LoadBalancer extends PluginBase implements Listener
             $p_Event->setJoinMessage("");
             echo ("online player = " . count($this->getServer()->getOnlinePlayers()) . "\n");
             echo ("redirect limit = " . $this->getConfig()->getNested("redirect.limit") . "\n");
-            if ($this->getConfig()->getNested("redirect.to_type") != false && count($this->getServer()->getOnlinePlayers()) > $this->getConfig()->getNested("redirect.limit"))
+            if (($this->getConfig()->getNested("redirect.to_type") != false && count($this->getServer()->getOnlinePlayers()) > $this->getConfig()->getNested("redirect.limit")) || GameManager::getInstance()->isPlaying())
             {
                 try
                 {

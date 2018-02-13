@@ -204,14 +204,14 @@ class Bedwars extends PluginBase implements Listener
 //                        $l_Player->addTitle("", (new TextFormatter("game.waitingForMore", ["amount" => $l_WaitingFor]))->asStringForPlayer($l_Player), 1, 60, 1);
 //                }
             }
+            Sidebar::getInstance()->update();
         } else
         {
-            $p_Player->setGamemode(3);
+/*            $p_Player->setGamemode(3);
             $p_Player->sendMessage((new TextFormatter("player.autoSwitchToSpec"))->asStringForFatPlayer($l_FatPlayer));
-            $this->getServer()->getLogger()->info($p_Player->getName() . " has been automatically set to SPECTATOR");
+            $this->getServer()->getLogger()->info($p_Player->getName() . " has been automatically set to SPECTATOR");*/
         }
 
-        Sidebar::getInstance()->update();
     }
 
     //---------------------

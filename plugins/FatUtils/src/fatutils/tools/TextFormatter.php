@@ -152,7 +152,7 @@ class TextFormatter
 
     public function asStringForPlayer(Player $p_Player = null):string
     {
-        if (!is_null($p_Player) && PlayersManager::getInstance()->fatPlayerExist($p_Player))
+        if (!is_null($p_Player) && PlayersManager::getInstance()->fatPlayerExist($p_Player) && PlayersManager::getInstance()->getFatPlayer($p_Player) != null)
             return $this->asString(PlayersManager::getInstance()->getFatPlayer($p_Player)->getLanguage());
         else
             return $this->asString();
