@@ -100,14 +100,14 @@ class Lobby extends PluginBase implements Listener
         {
             $e->getPlayer()->getInventory()->setHeldItemIndex(4);
 
-            $l_Shop = Item::get(ItemIds::EMERALD);
-            $l_Shop->setCustomName((new TextFormatter("shop.title"))->asStringForPlayer($e->getPlayer()));
-            $e->getPlayer()->getInventory()->setItem(1, $l_Shop);
-
             $l_MainMenu = Item::get(ItemIds::COMPASS);
 			$l_MainMenu->setCustomName((new TextFormatter("lobby.hotbar.mainMenu"))->asStringForPlayer($e->getPlayer()));
             $e->getPlayer()->getInventory()->setItem(2, $l_MainMenu);
 		}
+
+		$l_Shop = Item::get(ItemIds::EMERALD);
+		$l_Shop->setCustomName((new TextFormatter("shop.title"))->asStringForPlayer($e->getPlayer()));
+		$e->getPlayer()->getInventory()->setItem(1, $l_Shop);
 
 		$l_LobbyChooser = Item::get(ItemIds::NETHERSTAR);
 		$l_LobbyChooser->setCustomName((new TextFormatter("lobby.hotbar.lobbyChooser"))->asStringForPlayer($e->getPlayer()));
