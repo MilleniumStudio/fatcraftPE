@@ -259,20 +259,26 @@ class Bedwars extends PluginBase implements Listener
         Sidebar::getInstance()->updatePlayer($p_Player);
     }
 
-    public function getPlayerIron(Player $p_Player)
+    public function getPlayerIron(Player $p_Player) : int
     {
+        if (PlayersManager::getInstance()->getFatPlayer($p_Player) == null)
+            return 0;
         return PlayersManager::getInstance()->getFatPlayer($p_Player)
             ->getData(Bedwars::PLAYER_DATA_CURRENCY_IRON, 0);
     }
 
-    public function getPlayerGold(Player $p_Player)
+    public function getPlayerGold(Player $p_Player) : int
     {
+        if (PlayersManager::getInstance()->getFatPlayer($p_Player) == null)
+            return 0;
         return PlayersManager::getInstance()->getFatPlayer($p_Player)
             ->getData(Bedwars::PLAYER_DATA_CURRENCY_GOLD, 0);
     }
 
-    public function getPlayerDiamond(Player $p_Player)
+    public function getPlayerDiamond(Player $p_Player) : int
     {
+        if (PlayersManager::getInstance()->getFatPlayer($p_Player) == null)
+            return 0;
         return PlayersManager::getInstance()->getFatPlayer($p_Player)
             ->getData(Bedwars::PLAYER_DATA_CURRENCY_DIAMOND, 0);
     }
@@ -621,6 +627,8 @@ class Bedwars extends PluginBase implements Listener
 
 	public function dropPlayerMoney(Player $p_Player)
     {
+        if ($p_Player == null || PlayersManager::getInstance()->getFatPlayer($p_Player))
+            return;
         if ($this->getPlayerIron($p_Player) > 0)
         {
             $p_Player->getLevel()->dropItem($p_Player, Item::get(ItemIds::IRON_INGOT, 0, $this->getPlayerIron($p_Player)));
