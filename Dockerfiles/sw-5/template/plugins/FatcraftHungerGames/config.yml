@@ -200,7 +200,7 @@ loots:
 
   level-2:
     item-value: 3
-    chance: 30
+    chance: 40
     items:
       - '{"material": "SNOWBALL", "amount": 10}'
       - '{"material": "ARROW", "amount": 6}'
@@ -216,7 +216,7 @@ loots:
 
   level-3:
     item-value: 5
-    chance: 15
+    chance: 40
     items:
       - '{"material": "GOLD_SWORD"}'
       - '{"material": "FLINT_AND_STEEL"}'
@@ -230,7 +230,7 @@ loots:
 
   level-4:
     item-value: 7
-    chance: 10
+    chance: 40
     items:
       - '{"material": "BOW"}'
       - '{"material": "ARROW", "amount": 10}'
@@ -245,7 +245,7 @@ loots:
 
   level-5:
     item-value: 15
-    chance: 5
+    chance: 40
     items:
       - '{"material": "BOW"}'
       - '{"material": "ARROW", "amount": 15}'
