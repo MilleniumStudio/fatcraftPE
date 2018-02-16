@@ -489,14 +489,14 @@ class LoadBalancer extends PluginBase implements Listener
         }
         else {
             if ($type == LoadBalancer::TEMPLATE_TYPE_LOBBY) {
-                $beginAtLobby = 2;
+                $beginAtLobby = 1;
                 foreach ($this->m_Cache_ServerByType[$type] as $current) {
                     //$currentServerTimestamp = (new \DateTime($current["laston"]))->getTimestamp();
                     //$bestServerTimestamp = (new \DateTime($serverToReturn["laston"]))->getTimestamp();
                 if ($serverToReturn == null ||
                     //($currentServerTimestamp < $bestServerTimestamp &&
                     ($current["id"] == $beginAtLobby &&
-                    $serverToReturn["online"] + 3 < $serverToReturn["max"]))
+                    $serverToReturn["online"] + 10 < $serverToReturn["max"]))
                     {
                         return $current;
                     }

@@ -3,7 +3,7 @@
 npcs:
   - name: "welcomenpc"
     displayname: "Games"
-    location: 0.5/55.1/56.5/0/0
+    location: -3.5/55.1/56.5/0/0
     type : "Player"
     size : 1
     skin: "FalloutVaultBoy"
@@ -13,11 +13,11 @@ npcs:
     effects: []
     function: "NPCFunctionTeleport"
     data:
-      to: 0.5/35/8.5/180/0
+      to: 0.5/15/1.5/180/0
 
   - name: "shopnpc1"
     displayname: "kits.kits"
-    location: -4.5/55.1/57.5/342/0
+    location: 3.5/55.1/56.5/342/0
     type : "Player"
     size : 1
     skin: "Fallout1AlbertColev2"
@@ -32,10 +32,27 @@ npcs:
     function: "NPCFunctionTeleport"
     data:
       to: -49.5/53/49.5/132/-19
+  - name: "shopnpc2"
+    displayname: "kits.kits"
+    location: -3.5/14/-13.5/342/0
+    type : "Player"
+    size : 1
+    skin: "Fallout1AlbertColev2"
+    equipment:
+      head: "{\"material\": \"GOLDEN_HELMET\"}"
+      chest: "{\"material\": \"GOLDEN_CHESTPLATE\"}"
+      pants: "{\"material\": \"GOLDEN_LEGGINGS\"}"
+      boots: "{\"material\": \"GOLDEN_BOOTS\"}"
+      held: "{\"material\": \"DIAMOND_SWORD\"}"
+    update: true
+    effects: []
+    function: "NPCFunctionTeleport"
+    data:
+      to: -3.5/13/-88.5/132/-19
 
   - name: "shopnpc2"
     displayname: "shop.title"
-    location: 5.5/55.1/57.5/19/0
+    location: 5.5/55.1/56.5/19/0
     type : "Player"
     size : 1
     skin: "Fallout1AlbertColev2"
@@ -45,11 +62,24 @@ npcs:
     effects: []
     function: "NPCFunctionTeleport"
     data:
-      to: 49.5/53/49.5/241/-19
+      to: -5.5/13/-88.5/241/-19
+  - name: "shopnpc2"
+    displayname: "shop.title"
+    location: 4.5/14/-13.5/19/0
+    type : "Player"
+    size : 1
+    skin: "Fallout1AlbertColev2"
+    equipment:
+      held: "{\"material\": \"CARROTONASTICK\"}"
+    update: true
+    effects: []
+    function: "NPCFunctionTeleport"
+    data:
+      to: 0.5/13/-86.5/241/-19
 
   - name: "boatracer"
     displayname: "template.br"
-    location: 13.5/36/-2.5/45/15
+    location: 13.5/14/5.5/140/15
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -63,10 +93,10 @@ npcs:
     effects: []
     function: "NPCFunctionTeleport"
     data:
-      to: 120.5/26/33.5/270/0
+      to: 54.5/8/18.5/270/0
   - name: "server.random.boatracer1"
     displayname: "template.br"
-    location: 163.5/11/28.5/50/0
+    location: 77.5/7.5/13.5/50/0
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -83,7 +113,7 @@ npcs:
     ]
   - name: "server.random.boatracer2"
     displayname: "template.br"
-    location: 163.55/11/38.52/117/0
+    location: 77.55/7.5/23.5/117/0
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -100,7 +130,7 @@ npcs:
     ]
   - name: "welcomenpc.boatracer"
     displayname: "Back to spawn"
-    location: 119.5/27/33.5/270/0
+    location: 54.5/8/14.5/270/0
     type : "Player"
     size : 1
     skin: "FalloutVaultBoy"
@@ -110,11 +140,11 @@ npcs:
     effects: []
     function: "NPCFunctionTeleport"
     data:
-      to: 0.5/34/8.5/180/0
+      to: 0.5/15/1.5/180/0
 
   - name: "skywar"
     displayname: "template.sw"
-    location: 10.5/36/-9.5/30/15
+    location: 13.5/14/-2.5/110/15
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -128,10 +158,10 @@ npcs:
     effects: []
     function: "NPCFunctionTeleport"
     data:
-      to: 120.5/26/-14.5/270/0
+      to: 54.5/8/-32.5/270/0
   - name: "server.random.skywar1"
     displayname: "template.sw"
-    location: 163.5/11/-9.5/120/0
+    location: 77.5/7.5/-37.5/120/0
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -148,7 +178,7 @@ npcs:
     ]
   - name: "server.random.skywar2"
     displayname: "template.sw"
-    location: 163.5/11/-19.5/50/0
+    location: 77.5/7.5/-27.5/50/0
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -165,7 +195,7 @@ npcs:
     ]
   - name: "welcomenpc.skywar"
     displayname: "Back to spawn"
-    location: 119.5/27/-14.5/270/0
+    location: 54.5/8/-36.5/270/0
     type : "Player"
     size : 1
     skin: "FalloutVaultBoy"
@@ -175,11 +205,11 @@ npcs:
     effects: []
     function: "NPCFunctionTeleport"
     data:
-      to: 0.5/34/8.5/180/0
+      to: 0.5/15/1.5/180/0
 
   - name: "parkour"
     displayname: "template.pk"
-    location: 4.5/36/-13.5/10/15
+    location: 10.5/14/-9.5/80/15
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -193,10 +223,10 @@ npcs:
     effects: []
     function: "NPCFunctionTeleport"
     data:
-      to: 120.5/26/-62.5/270/0
+      to: 37.5/8/-57.5/180/0
   - name: "server.random.parkour1"
     displayname: "template.pk"
-    location: 163.5/11/-57.5/120/0
+    location: 32.5/7.5/-80.5/0/0
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -213,7 +243,7 @@ npcs:
     ]
   - name: "server.random.parkour2"
     displayname: "template.pk"
-    location: 163.5/11/-67.5/50/0
+    location: 42.5/7.5/-80.5/0/0
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -230,7 +260,7 @@ npcs:
     ]
   - name: "welcomenpc.parkour"
     displayname: "Back to spawn"
-    location: 119.5/27/-62.5/270/00
+    location: 33.5/8/-57.5/180/00
     type : "Player"
     size : 1
     skin: "FalloutVaultBoy"
@@ -240,11 +270,11 @@ npcs:
     effects: []
     function: "NPCFunctionTeleport"
     data:
-      to: 0.5/34/8.5/180/0
+      to: 0.5/15/1.5/180/0
 
   - name: "hungergame"
     displayname: "template.hg"
-    location: -3.5/36/-13.5/350/15
+    location: -9.5/14/-9.5/320/15
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -258,10 +288,10 @@ npcs:
     effects: []
     function: "NPCFunctionTeleport"
     data:
-      to: -119.5/26/-61.5/90/0
+      to: -36.5/8/-57.5/180/0
   - name: "server.random.hungergame1"
     displayname: "template.hg"
-    location: -162.5/11.5/-66.5/302/0
+    location: -41.5/7.5/-80.5/0/0
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -278,7 +308,7 @@ npcs:
     ]
   - name: "server.random.hungergame2"
     displayname: "template.hg"
-    location: -162.5/11.5/-56.5/235/0
+    location: -31.5/7.5/-80.5/0/0
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -295,7 +325,7 @@ npcs:
     ]
   - name: "welcomenpc.hungergame"
     displayname: "Back to spawn"
-    location: -118.5/27/-61.5/90/0
+    location: -40.5/8/-57.5/180/0
     type : "Player"
     size : 1
     skin: "FalloutVaultBoy"
@@ -305,11 +335,11 @@ npcs:
     effects: []
     function: "NPCFunctionTeleport"
     data:
-      to: 0.5/34/8.5/180/0
+      to: 0.5/15/1.5/180/0
 
   - name: "murder"
     displayname: "template.md"
-    location: -9.5/36/-9.5/320/15
+    location: -12.5/14/-2.5/270/15
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -323,10 +353,10 @@ npcs:
     effects: []
     function: "NPCFunctionTeleport"
     data:
-      to: -119.5/26/-13.5/90/0
+      to: -53.5/8/-32.5/90/0
   - name: "server.random.murder1"
     displayname: "template.md"
-    location: -162.5/11.5/-18.5/305/0
+    location: -75.5/7.5/-27.5/270/0
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -343,7 +373,7 @@ npcs:
     ]
   - name: "server.random.murder2"
     displayname: "template.md"
-    location: -162.5/11.5/-8.5/248/00
+    location: -75.5/7.5/-37.5/270/00
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -360,7 +390,7 @@ npcs:
     ]
   - name: "welcomenpc.murder"
     displayname: "Back to spawn"
-    location: -118.5/27/-13.5/90/0
+    location: -53.5/8/-28.5/90/0
     type : "Player"
     size : 1
     skin: "FalloutVaultBoy"
@@ -370,11 +400,11 @@ npcs:
     effects: []
     function: "NPCFunctionTeleport"
     data:
-      to: 0.5/34/8.5/180/0
+      to: 0.5/15/1.5/180/0
 
   - name: "bedwar"
     displayname: "template.bw"
-    location: -12.5/36/-2.5/270/15
+    location: -12.5/14/5.5/290/15
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -388,10 +418,10 @@ npcs:
     effects: []
     function: "NPCFunctionTeleport"
     data:
-      to: -119.5/26/34.5/90/0
+      to: -53.5/8/18.5/90/0
   - name: "server.random.bedwar1"
     displayname: "template.bw"
-    location: -162.5/11.5/29.5/307/0
+    location: -75.5/7.5/23.5/307/0
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -408,7 +438,7 @@ npcs:
     ]
   - name: "server.random.bedwar2"
     displayname: "template.bw"
-    location: -162.5/11.5/39.5/239/0
+    location: -75.5/7.5/13.5/239/0
     type : "Player"
     size : 1
     skin: "Dryad"
@@ -425,7 +455,7 @@ npcs:
     ]
   - name: "welcomenpc.bedwar"
     displayname: "Back to spawn"
-    location: -118.5/27/34.5/90/0
+    location: -53.5/8/22.5/90/0
     type : "Player"
     size : 1
     skin: "FalloutVaultBoy"
@@ -435,11 +465,26 @@ npcs:
     effects: []
     function: "NPCFunctionTeleport"
     data:
-      to: 0.5/34/8.5/180/0
+      to: 0.5/15/1.5/180/0
 
   - name: "kitkeeper1"
     displayname: "kits.bowman"
     location: -59.5/54/55.5/180/0
+    type : "Player"
+    size : 1
+    skin: "Jake"
+    equipment:
+      head: "{\"material\": \"LEATHER_HELMET\"}"
+      chest: "{\"material\": \"LEATHER_CHESTPLATE\"}"
+      held: "{\"material\": \"BOW\"}"
+    update: true
+    effects: []
+    commands: []
+    function: "NPCFunctionKits"
+    phraseTemplate: "kits.equiped.archer"
+  - name: "kitkeeper11"
+    displayname: "kits.bowman"
+    location: -9.5/15/-82.5/270/0
     type : "Player"
     size : 1
     skin: "Jake"
@@ -468,10 +513,40 @@ npcs:
     commands: []
     function: "NPCFunctionKits"
     phraseTemplate: "kits.equiped.tank"
+  - name: "kitkeeper12"
+    displayname: "kits.tank"
+    location: -9.5/15/-85.5/45/0
+    type : "Player"
+    size : 1
+    skin: "Jake"
+    equipment:
+      head: "{\"material\": \"CHAIN_HELMET\"}"
+      chest: "{\"material\": \"CHAIN_CHESTPLATE\"}"
+      pants: "{\"material\": \"CHAIN_LEGGINGS\"}"
+    update: true
+    effects: []
+    commands: []
+    function: "NPCFunctionKits"
+    phraseTemplate: "kits.equiped.tank"
 
   - name: "kitkeeper3"
     displayname: "kits.swordman"
     location: -49.5/54/51.5/135/0
+    type : "Player"
+    size : 1
+    skin: "Jake"
+    equipment:
+      chest: "{\"material\": \"LEATHER_CHESTPLATE\"}"
+      pants: "{\"material\": \"LEATHER_LEGGINGS\"}"
+      held: "{\"material\": \"IRON_SWORD\"}"
+    update: true
+    effects: []
+    commands: []
+    function: "NPCFunctionKits"
+    phraseTemplate: "kits.equiped.swordman"
+  - name: "kitkeeper13"
+    displayname: "kits.swordman"
+    location: -9.5/15/-88.5/135/0
     type : "Player"
     size : 1
     skin: "Jake"
@@ -499,10 +574,34 @@ npcs:
     commands: []
     function: "NPCFunctionKits"
     phraseTemplate: "kits.equiped.elytra"
+  - name: "kitkeeper14"
+    displayname: "kits.elytra"
+    location: -9.5/15/-91.5/0/0
+    type : "Player"
+    size : 1
+    skin: "Jake"
+    equipment:
+      head: "{\"material\": \"CHAIN_HELMET\"}"
+      chest: "{\"material\": \"ELYTRA\"}"
+    update: true
+    effects: []
+    commands: []
+    function: "NPCFunctionKits"
+    phraseTemplate: "kits.equiped.elytra"
 
   - name: "kitkeeper5"
     displayname: "kits.cominglater"
     location: -69.5/54/31.5/315/0
+    type : "Player"
+    size : 1
+    skin: "Putty"
+    update: true
+    effects: []
+    commands: []
+    function: ""
+  - name: "kitkeeper15"
+    displayname: "kits.cominglater"
+    location: -9.5/15/-94.5/315/0
     type : "Player"
     size : 1
     skin: "Putty"
@@ -624,3 +723,44 @@ npcs:
     effects: []
     commands: []
     function: "NPCFunctionShop"
+  - name: "shopkeeper9"
+    displayname: "ShopMan"
+    location: 5.5/14/-83.5/130/-4
+    type : "Player"
+    size : 1
+    skin: "Fallout4TheMechanist"
+    update: true
+    effects: []
+    commands: []
+    function: "NPCFunctionShop"
+  - name: "shopkeeper10"
+    displayname: "ShopMan"
+    location: 5.5/14/-86.5/90/-4
+    type : "Player"
+    size : 1
+    skin: "Fallout4TheMechanist"
+    update: true
+    effects: []
+    commands: []
+    function: "NPCFunctionShop"
+  - name: "shopkeeper11"
+    displayname: "ShopMan"
+    location: 5.5/14/-89.5/105/-4
+    type : "Player"
+    size : 1
+    skin: "Fallout4TheMechanist"
+    update: true
+    effects: []
+    commands: []
+    function: "NPCFunctionShop"
+  - name: "yolopig"
+    displayname: "un pig"
+    location: -6.5/55/62.5/0/0
+    type : "Pig"
+    skin: "customPig"
+    size : 1
+    update: true
+    effects: []
+    commands: [
+      "tell {player} I'm a PIG !!! OUINK!!!!"
+    ]
