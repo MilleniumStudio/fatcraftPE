@@ -754,11 +754,11 @@ npcs:
     commands: []
     function: "NPCFunctionShop"
   - name: "yolopig"
-    displayname: "un pig"
-    location: -6.5/55/62.5/0/0
+    displayname: "Fat Pig"
+    location: -7.5/14/-21.5/280/-5
     type : "Pig"
     skin: "customPig"
-    size : 1
+    size : 1.5
     update: true
     effects: []
     commands: [

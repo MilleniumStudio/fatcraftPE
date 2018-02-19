@@ -2,6 +2,10 @@
 
 holograms:
   - name: "welcom.message"
-    location: map/0/61/54
+    location: map/0/12/-8
     title : "hologram.lobby.welcome.title"
     text: "hologram.lobby.welcome.text"
+  - name: "getapig.message"
+    location: map/-5/18/-25
+    title : "hologram.lobby.pig.title"
+    text: "hologram.lobby.pig.text"
