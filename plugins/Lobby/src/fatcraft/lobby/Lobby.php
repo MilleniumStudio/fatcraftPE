@@ -222,4 +222,10 @@ class Lobby extends PluginBase implements Listener
         }
         return true;
     }
+
+
+    public function onChunkUnload(ChunkUnloadEvent $p_event)
+    {
+        $p_event->setCancelled();
+    }
 }
