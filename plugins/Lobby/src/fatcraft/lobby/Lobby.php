@@ -24,6 +24,7 @@ use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\inventory\InventoryPickupItemEvent;
 use pocketmine\event\inventory\InventoryPickupArrowEvent;
 use pocketmine\event\inventory\InventoryTransactionEvent;
+use pocketmine\event\level\ChunkUnloadEvent;
 use pocketmine\event\player\PlayerDropItemEvent;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerExhaustEvent;
