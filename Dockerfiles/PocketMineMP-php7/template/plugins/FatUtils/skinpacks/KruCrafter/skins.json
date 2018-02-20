@@ -1,0 +1,20 @@
+{
+  "geometry": "skinpacks/skins.json",
+  "skins": [
+    {
+      "localization_name": "KruGame",
+      "texture": "game.png",
+      "type": "Free"
+    },
+    {
+      "localization_name": "KruLobby",
+      "texture": "lobby.png",
+      "type": "Free"
+    },
+    {
+      "localization_name": "KruShop",
+      "texture": "shop.png",
+      "type": "Free"
+    }
+  ]
+}

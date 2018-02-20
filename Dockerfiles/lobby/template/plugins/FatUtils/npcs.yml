@@ -6,7 +6,7 @@ npcs:
     location: -3.5/55.1/56.5/0/0
     type : "Player"
     size : 1
-    skin: "FalloutVaultBoy"
+    skin: "KruLobby"
     equipment:
       held: "{\"material\": \"TOTEM\"}"
     update: true
@@ -20,7 +20,7 @@ npcs:
     location: 3.5/55.1/56.5/342/0
     type : "Player"
     size : 1
-    skin: "Fallout1AlbertColev2"
+    skin: "KruShop"
     equipment:
       head: "{\"material\": \"GOLDEN_HELMET\"}"
       chest: "{\"material\": \"GOLDEN_CHESTPLATE\"}"
@@ -37,7 +37,7 @@ npcs:
     location: -3.5/14/-13.5/342/0
     type : "Player"
     size : 1
-    skin: "Fallout1AlbertColev2"
+    skin: "KruShop"
     equipment:
       head: "{\"material\": \"GOLDEN_HELMET\"}"
       chest: "{\"material\": \"GOLDEN_CHESTPLATE\"}"
@@ -55,7 +55,7 @@ npcs:
     location: 5.5/55.1/56.5/19/0
     type : "Player"
     size : 1
-    skin: "Fallout1AlbertColev2"
+    skin: "KruShop"
     equipment:
       held: "{\"material\": \"CARROTONASTICK\"}"
     update: true
@@ -68,7 +68,7 @@ npcs:
     location: 4.5/14/-13.5/19/0
     type : "Player"
     size : 1
-    skin: "Fallout1AlbertColev2"
+    skin: "KruShop"
     equipment:
       held: "{\"material\": \"CARROTONASTICK\"}"
     update: true
@@ -82,7 +82,7 @@ npcs:
     location: 13.5/14/5.5/140/15
     type : "Player"
     size : 1
-    skin: "Dryad"
+    skin: "KruGame"
     equipment:
       head: "{\"material\": \"GOLDEN_HELMET\"}"
       chest: "{\"material\": \"CHAINMAIL_CHESTPLATE\"}"
@@ -99,7 +99,7 @@ npcs:
     location: 77.5/7.5/13.5/50/0
     type : "Player"
     size : 1
-    skin: "Dryad"
+    skin: "KruGame"
     equipment:
       head: "{\"material\": \"GOLDEN_HELMET\"}"
       chest: "{\"material\": \"CHAINMAIL_CHESTPLATE\"}"
@@ -116,7 +116,7 @@ npcs:
     location: 77.55/7.5/23.5/117/0
     type : "Player"
     size : 1
-    skin: "Dryad"
+    skin: "KruGame"
     equipment:
       head: "{\"material\": \"GOLDEN_HELMET\"}"
       chest: "{\"material\": \"CHAINMAIL_CHESTPLATE\"}"
@@ -133,7 +133,7 @@ npcs:
     location: 54.5/8/14.5/270/0
     type : "Player"
     size : 1
-    skin: "FalloutVaultBoy"
+    skin: "KruLobby"
     equipment:
       held: "{\"material\": \"TOTEM\"}"
     update: true
@@ -147,7 +147,7 @@ npcs:
     location: 13.5/14/-2.5/110/15
     type : "Player"
     size : 1
-    skin: "Dryad"
+    skin: "KruGame"
     equipment:
       head: "{\"material\": \"GOLDEN_HELMET\"}"
       chest: "{\"material\": \"CHAINMAIL_CHESTPLATE\"}"
@@ -164,7 +164,7 @@ npcs:
     location: 77.5/7.5/-37.5/120/0
     type : "Player"
     size : 1
-    skin: "Dryad"
+    skin: "KruGame"
     equipment:
       head: "{\"material\": \"GOLDEN_HELMET\"}"
       chest: "{\"material\": \"CHAINMAIL_CHESTPLATE\"}"
@@ -181,7 +181,7 @@ npcs:
     location: 77.5/7.5/-27.5/50/0
     type : "Player"
     size : 1
-    skin: "Dryad"
+    skin: "KruGame"
     equipment:
       head: "{\"material\": \"GOLDEN_HELMET\"}"
       chest: "{\"material\": \"CHAINMAIL_CHESTPLATE\"}"
@@ -198,7 +198,7 @@ npcs:
     location: 54.5/8/-36.5/270/0
     type : "Player"
     size : 1
-    skin: "FalloutVaultBoy"
+    skin: "KruLobby"
     equipment:
       held: "{\"material\": \"TOTEM\"}"
     update: true
@@ -212,7 +212,7 @@ npcs:
     location: 10.5/14/-9.5/80/15
     type : "Player"
     size : 1
-    skin: "Dryad"
+    skin: "KruGame"
     equipment:
       head: "{\"material\": \"GOLDEN_HELMET\"}"
       chest: "{\"material\": \"CHAINMAIL_CHESTPLATE\"}"
@@ -229,7 +229,7 @@ npcs:
     location: 32.5/7.5/-80.5/0/0
     type : "Player"
     size : 1
-    skin: "Dryad"
+    skin: "KruGame"
     equipment:
       head: "{\"material\": \"GOLDEN_HELMET\"}"
       chest: "{\"material\": \"CHAINMAIL_CHESTPLATE\"}"
@@ -246,7 +246,7 @@ npcs:
     location: 42.5/7.5/-80.5/0/0
     type : "Player"
     size : 1
-    skin: "Dryad"
+    skin: "KruGame"
     equipment:
       head: "{\"material\": \"GOLDEN_HELMET\"}"
       chest: "{\"material\": \"CHAINMAIL_CHESTPLATE\"}"
@@ -263,7 +263,7 @@ npcs:
     location: 33.5/8/-57.5/180/00
     type : "Player"
     size : 1
-    skin: "FalloutVaultBoy"
+    skin: "KruLobby"
     equipment:
       held: "{\"material\": \"TOTEM\"}"
     update: true
@@ -277,7 +277,7 @@ npcs:
     location: -9.5/14/-9.5/320/15
     type : "Player"
     size : 1
-    skin: "Dryad"
+    skin: "KruGame"
     equipment:
       head: "{\"material\": \"GOLDEN_HELMET\"}"
       chest: "{\"material\": \"CHAINMAIL_CHESTPLATE\"}"
@@ -294,7 +294,7 @@ npcs:
     location: -41.5/7.5/-80.5/0/0
     type : "Player"
     size : 1
-    skin: "Dryad"
+    skin: "KruGame"
     equipment:
       head: "{\"material\": \"GOLDEN_HELMET\"}"
       chest: "{\"material\": \"CHAINMAIL_CHESTPLATE\"}"
@@ -311,7 +311,7 @@ npcs:
     location: -31.5/7.5/-80.5/0/0
     type : "Player"
     size : 1
-    skin: "Dryad"
+    skin: "KruGame"
     equipment:
       head: "{\"material\": \"GOLDEN_HELMET\"}"
       chest: "{\"material\": \"CHAINMAIL_CHESTPLATE\"}"
@@ -328,7 +328,7 @@ npcs:
     location: -40.5/8/-57.5/180/0
     type : "Player"
     size : 1
-    skin: "FalloutVaultBoy"
+    skin: "KruLobby"
     equipment:
       held: "{\"material\": \"TOTEM\"}"
     update: true
@@ -342,7 +342,7 @@ npcs:
     location: -12.5/14/-2.5/270/15
     type : "Player"
     size : 1
-    skin: "Dryad"
+    skin: "KruGame"
     equipment:
       head: "{\"material\": \"GOLDEN_HELMET\"}"
       chest: "{\"material\": \"CHAINMAIL_CHESTPLATE\"}"
@@ -359,7 +359,7 @@ npcs:
     location: -75.5/7.5/-27.5/270/0
     type : "Player"
     size : 1
-    skin: "Dryad"
+    skin: "KruGame"
     equipment:
       head: "{\"material\": \"GOLDEN_HELMET\"}"
       chest: "{\"material\": \"CHAINMAIL_CHESTPLATE\"}"
@@ -376,7 +376,7 @@ npcs:
     location: -75.5/7.5/-37.5/270/00
     type : "Player"
     size : 1
-    skin: "Dryad"
+    skin: "KruGame"
     equipment:
       head: "{\"material\": \"GOLDEN_HELMET\"}"
       chest: "{\"material\": \"CHAINMAIL_CHESTPLATE\"}"
@@ -393,7 +393,7 @@ npcs:
     location: -53.5/8/-28.5/90/0
     type : "Player"
     size : 1
-    skin: "FalloutVaultBoy"
+    skin: "KruLobby"
     equipment:
       held: "{\"material\": \"TOTEM\"}"
     update: true
@@ -407,7 +407,7 @@ npcs:
     location: -12.5/14/5.5/290/15
     type : "Player"
     size : 1
-    skin: "Dryad"
+    skin: "KruGame"
     equipment:
       head: "{\"material\": \"GOLDEN_HELMET\"}"
       chest: "{\"material\": \"CHAINMAIL_CHESTPLATE\"}"
@@ -424,7 +424,7 @@ npcs:
     location: -75.5/7.5/23.5/307/0
     type : "Player"
     size : 1
-    skin: "Dryad"
+    skin: "KruGame"
     equipment:
       head: "{\"material\": \"GOLDEN_HELMET\"}"
       chest: "{\"material\": \"CHAINMAIL_CHESTPLATE\"}"
@@ -441,7 +441,7 @@ npcs:
     location: -75.5/7.5/13.5/239/0
     type : "Player"
     size : 1
-    skin: "Dryad"
+    skin: "KruGame"
     equipment:
       head: "{\"material\": \"GOLDEN_HELMET\"}"
       chest: "{\"material\": \"CHAINMAIL_CHESTPLATE\"}"
@@ -458,7 +458,7 @@ npcs:
     location: -53.5/8/22.5/90/0
     type : "Player"
     size : 1
-    skin: "FalloutVaultBoy"
+    skin: "KruLobby"
     equipment:
       held: "{\"material\": \"TOTEM\"}"
     update: true
@@ -648,7 +648,7 @@ npcs:
     location: 59.3/53/46.7/19/7
     type : "Player"
     size : 1
-    skin: "Fallout4TheMechanist"
+    skin: "KruShop"
     update: true
     effects: []
     commands: []
@@ -658,7 +658,7 @@ npcs:
     location: 56.3/53/44.7/63/23
     type : "Player"
     size : 1
-    skin: "Fallout4TheMechanist"
+    skin: "KruShop"
     update: true
     effects: []
     commands: []
@@ -668,7 +668,7 @@ npcs:
     location: 55.35/53/41.49/97/3
     type : "Player"
     size : 1
-    skin: "Fallout4TheMechanist"
+    skin: "KruShop"
     update: true
     effects: []
     commands: []
@@ -678,7 +678,7 @@ npcs:
     location: 56.3/53/38.3/136/-11
     type : "Player"
     size : 1
-    skin: "Fallout4TheMechanist"
+    skin: "KruShop"
     update: true
     effects: []
     commands: []
@@ -688,7 +688,7 @@ npcs:
     location: 60.57/53/36.46/175/-4
     type : "Player"
     size : 1
-    skin: "Fallout4TheMechanist"
+    skin: "KruShop"
     update: true
     effects: []
     commands: []
@@ -698,7 +698,7 @@ npcs:
     location: 64.7/53/38.3/224/-19
     type : "Player"
     size : 1
-    skin: "Fallout4TheMechanist"
+    skin: "KruShop"
     update: true
     effects: []
     commands: []
@@ -708,7 +708,7 @@ npcs:
     location: 65.7/53/41.64/267/-11
     type : "Player"
     size : 1
-    skin: "Fallout4TheMechanist"
+    skin: "KruShop"
     update: true
     effects: []
     commands: []
@@ -718,7 +718,7 @@ npcs:
     location: 64.65/53/44.7/328/-4
     type : "Player"
     size : 1
-    skin: "Fallout4TheMechanist"
+    skin: "KruShop"
     update: true
     effects: []
     commands: []
@@ -728,7 +728,7 @@ npcs:
     location: 5.5/14/-83.5/130/-4
     type : "Player"
     size : 1
-    skin: "Fallout4TheMechanist"
+    skin: "KruShop"
     update: true
     effects: []
     commands: []
@@ -738,7 +738,7 @@ npcs:
     location: 5.5/14/-86.5/90/-4
     type : "Player"
     size : 1
-    skin: "Fallout4TheMechanist"
+    skin: "KruShop"
     update: true
     effects: []
     commands: []
@@ -748,7 +748,7 @@ npcs:
     location: 5.5/14/-89.5/105/-4
     type : "Player"
     size : 1
-    skin: "Fallout4TheMechanist"
+    skin: "KruShop"
     update: true
     effects: []
     commands: []
