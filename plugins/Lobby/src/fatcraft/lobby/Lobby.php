@@ -19,6 +19,7 @@ use fatutils\tools\schedulers\DelayedExec;
 use fatutils\ui\impl\GamesWindow;
 use fatutils\ui\impl\LobbiesWindow;
 use fatutils\shop\ShopItem;
+use fatutils\ui\impl\ScaleWindow;
 use pocketmine\entity\Effect;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\inventory\InventoryPickupItemEvent;
@@ -33,7 +34,9 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\item\Item;
+use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
+use pocketmine\math\Vector3;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\command\Command;
@@ -88,6 +91,8 @@ class Lobby extends PluginBase implements Listener
 
     public function onPlayerJoin(PlayerJoinEvent $e)
     {
+        $l_Player = $e->getPlayer();
+
         new DelayedExec(function () use ($e)
 		{
 			$e->getPlayer()->addTitle(
@@ -97,29 +102,45 @@ class Lobby extends PluginBase implements Listener
 		}, 5);
 
         // Items in player bar
-        if ($e->getPlayer()->hasPermission("lobby.items"))
+        if ($l_Player->hasPermission("lobby.quickgameselection"))
         {
-            $e->getPlayer()->getInventory()->setHeldItemIndex(4);
+            $l_Player->getInventory()->setHeldItemIndex(4);
 
             $l_MainMenu = Item::get(ItemIds::COMPASS);
-			$l_MainMenu->setCustomName((new TextFormatter("lobby.hotbar.mainMenu"))->asStringForPlayer($e->getPlayer()));
-            $e->getPlayer()->getInventory()->setItem(2, $l_MainMenu);
+			$l_MainMenu->setCustomName((new TextFormatter("lobby.hotbar.mainMenu"))->asStringForPlayer($l_Player));
+            $l_Player->getInventory()->setItem(2, $l_MainMenu);
 		}
+        if ($l_Player->hasPermission("lobby.fly"))
+        {
+            $l_FlyItem = Item::get(ItemIds::ELYTRA);
+            $l_FlyItem->setCustomName((new TextFormatter("lobby.hotbar.lobbyFly"))->asStringForPlayer($l_Player));
+            $l_Player->getInventory()->setItem(8, $l_FlyItem);
+        }
+		if ($l_Player->hasPermission("effect.superjump"))
+        {
+            $l_Player->addEffect(Effect::getEffect(Effect::JUMP_BOOST)->setAmplifier(2)->setDuration(INT32_MAX));
+        }
+        if ($l_Player->hasPermission("lobby.setscale"))
+        {
+            $l_FlyItem = Item::get(ItemIds::TOTEM);
+            $l_FlyItem->setCustomName((new TextFormatter("lobby.hotbar.setscale"))->asStringForPlayer($l_Player));
+            $l_Player->getInventory()->setItem(4, $l_FlyItem);
+        }
 
 		$l_Shop = Item::get(ItemIds::EMERALD);
-		$l_Shop->setCustomName((new TextFormatter("shop.title"))->asStringForPlayer($e->getPlayer()));
-		$e->getPlayer()->getInventory()->setItem(1, $l_Shop);
+		$l_Shop->setCustomName((new TextFormatter("shop.title"))->asStringForPlayer($l_Player));
+        $l_Player->getInventory()->setItem(1, $l_Shop);
 
 		$l_LobbyChooser = Item::get(ItemIds::NETHERSTAR);
 		$l_LobbyChooser->setCustomName((new TextFormatter("lobby.hotbar.lobbyChooser"))->asStringForPlayer($e->getPlayer()));
-		$e->getPlayer()->getInventory()->setItem(6, $l_LobbyChooser);
+        $l_Player->getInventory()->setItem(6, $l_LobbyChooser);
 
-		$e->getPlayer()->getInventory()->sendContents($e->getPlayer());
-		$e->getPlayer()->addEffect(Effect::getEffect(Effect::SPEED)->setAmplifier(2)->setDuration(INT32_MAX));
+        $l_Player->getInventory()->sendContents($e->getPlayer());
+        $l_Player->addEffect(Effect::getEffect(Effect::SPEED)->setAmplifier(2)->setDuration(INT32_MAX));
 
         if ($this->m_SpawnPoint != null)
         {
-            $e->getPlayer()->teleport($this->m_SpawnPoint, $this->m_SpawnPoint->yaw, $this->m_SpawnPoint->pitch);
+            $l_Player->teleport($this->m_SpawnPoint, $this->m_SpawnPoint->yaw, $this->m_SpawnPoint->pitch);
         }
     }
 
@@ -139,12 +160,25 @@ class Lobby extends PluginBase implements Listener
     // actions on item select / touch
     public function onPlayerUseItem(PlayerInteractEvent $p_Event)
     {
-        if ($p_Event->getItem()->getId() == ItemIds::COMPASS)
-            new GamesWindow($p_Event->getPlayer());
-        elseif ($p_Event->getItem()->getId() == ItemIds::NETHERSTAR)
-			new LobbiesWindow($p_Event->getPlayer());
-		if ($p_Event->getItem()->getId() == ItemIds::EMERALD)
-			ShopManager::getInstance()->getShopMenu($p_Event->getPlayer())->open();
+        switch ($p_Event->getItem()->getId())
+        {
+            case ItemIds::COMPASS:
+                new GamesWindow($p_Event->getPlayer());
+                break;
+            case ItemIds::NETHERSTAR:
+                new LobbiesWindow($p_Event->getPlayer());
+                break;
+            case ItemIds::EMERALD:
+                ShopManager::getInstance()->getShopMenu($p_Event->getPlayer())->open();
+                break;
+            case ItemIds::ELYTRA:
+                $p_Event->getPlayer()->getInventory()->setChestplate(ItemFactory::get(ItemIds::ELYTRA));
+                $p_Event->getPlayer()->teleport(new Vector3(0.5, 56, 66.5), 180);
+                break;
+            case ItemIds::TOTEM:
+                new ScaleWindow($p_Event->getPlayer());
+                break;
+        }
     }
 
     // disable all inventory items move

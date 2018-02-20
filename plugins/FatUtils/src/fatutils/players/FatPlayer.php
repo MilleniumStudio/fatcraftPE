@@ -17,6 +17,7 @@ use fatutils\teams\TeamsManager;
 use fatutils\tools\schedulers\DelayedExec;
 use fatutils\tools\TextFormatter;
 use fatutils\ui\impl\LanguageWindow;
+use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\item\ItemFactory;
 use pocketmine\level\Position;
 use pocketmine\Player;
@@ -643,4 +644,15 @@ class FatPlayer
 	{
 		return $this->m_isPreviewing;
 	}
+
+	public function getVipRank()
+    {
+        $group = $this->getPermissionGroup();
+
+        if ($group == "Commander")
+            return 1;
+        if ($group == "Veteran")
+            return 2;
+        return 0;
+    }
 }

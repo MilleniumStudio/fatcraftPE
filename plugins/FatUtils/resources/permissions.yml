@@ -4,6 +4,28 @@ default:
   allow:
     - chat.sendMessageTest
 
+Rookie:
+  extends: default
+  prefix: "§2Rookie "
+  color: §f
+  allow:
+    - effect.superjump
+
+Commander:
+  extends: Rookie
+  prefix: "§4Commander "
+  color: §4
+  allow:
+    - lobby.quickgameselection
+    - reset.kit.disabled
+    - lobby.fly
+
+Veteran:
+  extends: Commander
+  prefix: "§6Veteran "
+  color: §6
+    - lobby.setscale
+
 VIP:
   extends: default
   prefix: "§6VIP "
@@ -27,7 +49,7 @@ Modo:
 
 Admin:
   extends: Modo
-  prefix: "§4Admin "
+  prefix: "§5Admin "
   color: §f
   allow:
     - server.stop
