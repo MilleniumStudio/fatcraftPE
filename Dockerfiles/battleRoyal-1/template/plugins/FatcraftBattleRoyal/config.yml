@@ -1,0 +1,696 @@
+minPlayer: 2
+maxPlayer: 12
+waitingSecDuration: 10
+playingSecDuration: 45
+spawnLocation: 
+startGameLocation: 256/140/256
+
+
+#Max rewards for the first player, divided by place un score
+rewards:
+  xp: 1000
+  fatSilver: 100
+
+chests:
+  1:
+    location: 504/75/27
+    total-item-value: 15
+    max-item-value: 5
+  2:
+    location: 483/80/59
+    total-item-value: 15
+    max-item-value: 5
+  3:
+    location: 481/81/125
+    total-item-value: 15
+    max-item-value: 5
+  4:
+    location: 500/80/236
+    total-item-value: 15
+    max-item-value: 5
+  5:
+    location: 481/80/293
+    total-item-value: 15
+    max-item-value: 5
+  6:
+    location: 467/88/382
+    total-item-value: 15
+    max-item-value: 5
+  7:
+    location: 497/89/453
+    total-item-value: 15
+    max-item-value: 5
+  8:
+    location: 504/86/465
+    total-item-value: 15
+    max-item-value: 5
+  9:
+    location: 467/89/475
+    total-item-value: 15
+    max-item-value: 5
+  10:
+    location: 382/81/492
+    total-item-value: 15
+    max-item-value: 5
+  11:
+    location: 333/81/498
+    total-item-value: 15
+    max-item-value: 5
+  12:
+    location: 279/81/481
+    total-item-value: 15
+    max-item-value: 5
+  13:
+    location: 229/80/482
+    total-item-value: 15
+    max-item-value: 5
+  14:
+    location: 178/76/451
+    total-item-value: 15
+    max-item-value: 5
+  15:
+    location: 106/69/506
+    total-item-value: 15
+    max-item-value: 5
+  16:
+    location: 84/71/507
+    total-item-value: 15
+    max-item-value: 5
+  17:
+    location: 86/71/489
+    total-item-value: 15
+    max-item-value: 5
+  18:
+    location: 55/72/485
+    total-item-value: 15
+    max-item-value: 5
+  19:
+    location: 10/65/443
+    total-item-value: 15
+    max-item-value: 5
+  20:
+    location: 13/70/373
+    total-item-value: 15
+    max-item-value: 5
+  21:
+    location: 13/76/339
+    total-item-value: 15
+    max-item-value: 5
+  22:
+    location: 19/76/305
+    total-item-value: 15
+    max-item-value: 5
+  23:
+    location: 31/77/281
+    total-item-value: 15
+    max-item-value: 5
+  24:
+    location: 2/74/263
+    total-item-value: 15
+    max-item-value: 5
+  25:
+    location: 50/77/247
+    total-item-value: 15
+    max-item-value: 5
+  26:
+    location: 8/75/239
+    total-item-value: 15
+    max-item-value: 5
+  27:
+    location: 25/73/226
+    total-item-value: 15
+    max-item-value: 5
+  28:
+    location: 46/71/212
+    total-item-value: 15
+    max-item-value: 5
+  29:
+    location: 22/70/168
+    total-item-value: 15
+    max-item-value: 5
+  30:
+    location: 6/65/163
+    total-item-value: 15
+    max-item-value: 5
+  31:
+    location: 57/70/24
+    total-item-value: 15
+    max-item-value: 5
+  32:
+    location: 112/67/20
+    total-item-value: 15
+    max-item-value: 5
+  33:
+    location: 92/78/69
+    total-item-value: 15
+    max-item-value: 5
+  34:
+    location: 154/70/42
+    total-item-value: 15
+    max-item-value: 5
+  35:
+    location: 174/75/19
+    total-item-value: 15
+    max-item-value: 5
+  36:
+    location: 202/70/12
+    total-item-value: 15
+    max-item-value: 5
+  37:
+    location: 207/73/42
+    total-item-value: 15
+    max-item-value: 5
+  38:
+    location: 234/79/60
+    total-item-value: 15
+    max-item-value: 5
+  39:
+    location: 284/69/82
+    total-item-value: 15
+    max-item-value: 5
+  40:
+    location: 332/75/11 
+    total-item-value: 15
+    max-item-value: 5
+  41:
+    location: 381/80/93
+    total-item-value: 15
+    max-item-value: 5
+  42:
+    location: 424/77/56
+    total-item-value: 15
+    max-item-value: 5
+  43:
+    location: 431/81/113
+    total-item-value: 15
+    max-item-value: 5
+  44:
+    location: 416/79/174
+    total-item-value: 15
+    max-item-value: 5
+  45:
+    location: 453/80/209
+    total-item-value: 15
+    max-item-value: 5
+  46:
+    location: 459/80/232
+    total-item-value: 15
+    max-item-value: 5
+  47:
+    location: 438/80/258
+    total-item-value: 15
+    max-item-value: 5
+  48:
+    location: 444/80/305
+    total-item-value: 15
+    max-item-value: 5
+  49:
+    location: 425/80/299
+    total-item-value: 15
+    max-item-value: 5
+  50:
+    location: 413/80/308
+    total-item-value: 15
+    max-item-value: 5
+  51:
+    location: 421/80/333
+    total-item-value: 15
+    max-item-value: 5
+  52:
+    location: 431/80/353
+    total-item-value: 15
+    max-item-value: 5
+  53:
+    location: 418/80/382
+    total-item-value: 15
+    max-item-value: 5
+  54:
+    location: 424/80/411
+    total-item-value: 15
+    max-item-value: 5
+  55:
+    location: 413/81/458
+    total-item-value: 15
+    max-item-value: 5
+  56:
+    location: 388/80/448
+    total-item-value: 15
+    max-item-value: 5
+  57:
+    location: 370/80/430
+    total-item-value: 15
+    max-item-value: 5
+  58:
+    location: 301/80/456
+    total-item-value: 15
+    max-item-value: 5
+  59:
+    location: 270/84/453
+    total-item-value: 15
+    max-item-value: 5
+  60:
+    location: 212/76/421
+    total-item-value: 15
+    max-item-value: 5
+  61:
+    location: 114/66/440
+    total-item-value: 15
+    max-item-value: 5
+  62:
+    location: 109/67/426
+    total-item-value: 15
+    max-item-value: 5
+  63:
+    location: 76/64/428
+    total-item-value: 15
+    max-item-value: 5
+  64:
+    location: 64/72/389
+    total-item-value: 15
+    max-item-value: 5
+  65:
+    location: 67/78/356
+    total-item-value: 15
+    max-item-value: 5
+  66:
+    location: 73/75/330
+    total-item-value: 15
+    max-item-value: 5
+  67:
+    location: 61/70/314
+    total-item-value: 15
+    max-item-value: 5
+  68:
+    location: 63/73/281
+    total-item-value: 15
+    max-item-value: 5
+  69:
+    location: 63/74/179
+    total-item-value: 15
+    max-item-value: 5
+  70:
+    location: 61/72/172
+    total-item-value: 15
+    max-item-value: 5
+  71:
+    location: 73/76/159
+    total-item-value: 15
+    max-item-value: 5
+  72:
+    location: 97/73/146
+    total-item-value: 15
+    max-item-value: 5
+  73:
+    location: 84/67/115
+    total-item-value: 15
+    max-item-value: 5
+  74:
+    location: 68/66/109
+    total-item-value: 15
+    max-item-value: 5
+  75:
+    location: 127/84/109
+    total-item-value: 15
+    max-item-value: 5
+  76:
+    location: 160/85/90
+    total-item-value: 15
+    max-item-value: 5
+  77:
+    location: 182/75/86
+    total-item-value: 15
+    max-item-value: 5
+  78:
+    location: 330/76/153
+    total-item-value: 15
+    max-item-value: 5
+  79:
+    location: 380/80/193
+    total-item-value: 15
+    max-item-value: 5
+  80:
+    location: 375/80/210
+    total-item-value: 15
+    max-item-value: 5
+  81:
+    location: 381/80/213
+    total-item-value: 15
+    max-item-value: 5
+  82:
+    location: 409/78/246
+    total-item-value: 15
+    max-item-value: 5
+  83:
+    location: 394/80/315
+    total-item-value: 15
+    max-item-value: 5
+  84:
+    location: 395/80/342
+    total-item-value: 15
+    max-item-value: 5
+  85:
+    location: 392/80/389
+    total-item-value: 15
+    max-item-value: 5
+  86:
+    location: 389/80/377
+    total-item-value: 15
+    max-item-value: 5
+  87:
+    location: 380/80/270
+    total-item-value: 15
+    max-item-value: 5
+  88:
+    location: 368/80/372
+    total-item-value: 15
+    max-item-value: 5
+  89:
+    location: 317/80/401
+    total-item-value: 15
+    max-item-value: 5
+  90:
+    location: 288/78/396
+    total-item-value: 15
+    max-item-value: 5
+  91:
+    location: 268/78/399
+    total-item-value: 15
+    max-item-value: 5
+  92:
+    location: 247/78/381
+    total-item-value: 15
+    max-item-value: 5
+  93:
+    location: 183/75/372
+    total-item-value: 15
+    max-item-value: 5
+  94:
+    location: 116/69/371
+    total-item-value: 15
+    max-item-value: 5
+  95:
+    location: 116/71/322
+    total-item-value: 15
+    max-item-value: 5
+  96:
+    location: 138/69/268
+    total-item-value: 15
+    max-item-value: 5
+  97:
+    location: 134/69/240
+    total-item-value: 15
+    max-item-value: 5
+  98:
+    location: 122/73/217
+    total-item-value: 15
+    max-item-value: 5
+  99:
+    location: 144/64/160
+    total-item-value: 15
+    max-item-value: 5
+  100:
+    location: 208/70/122
+    total-item-value: 15
+    max-item-value: 5
+  101:
+    location: 214/73/133
+    total-item-value: 15
+    max-item-value: 5
+  102:
+    location: 207/108/157
+    total-item-value: 15
+    max-item-value: 5
+  103:
+    location: 207/95/136
+    total-item-value: 15
+    max-item-value: 5
+  104:
+    location: 202/83/172
+    total-item-value: 15
+    max-item-value: 5
+  105:
+    location: 203/72/171
+    total-item-value: 15
+    max-item-value: 5
+  106:
+    location: 212/74/175
+    total-item-value: 15
+    max-item-value: 5
+  107:
+    location: 197/74/142
+    total-item-value: 15
+    max-item-value: 5
+  108:
+    location: 208/70/147
+    total-item-value: 15
+    max-item-value: 5
+  109:
+    location: 197/75/154
+    total-item-value: 15
+    max-item-value: 5
+  110:
+    location: 214/82/133
+    total-item-value: 15
+    max-item-value: 5
+  111:
+    location: 208/79/148
+    total-item-value: 15
+    max-item-value: 5
+  112:
+    location: 217/83/148
+    total-item-value: 15
+    max-item-value: 5
+  113:
+    location: 217/78/151
+    total-item-value: 15
+    max-item-value: 5
+  114:
+    location: 208/82/158
+    total-item-value: 15
+    max-item-value: 5
+  115:
+    location: 199/87/156
+    total-item-value: 15
+    max-item-value: 5
+  116:
+    location: 217/91/148
+    total-item-value: 15
+    max-item-value: 5
+  117:
+    location: 212/91/168
+    total-item-value: 15
+    max-item-value: 5
+  118:
+    location: 218/78/159
+    total-item-value: 15
+    max-item-value: 5
+  119:
+    location: 285/77/156
+    total-item-value: 15
+    max-item-value: 5
+  120:
+    location: 312/76/164
+    total-item-value: 15
+    max-item-value: 5
+  121:
+    location: 352/79/196
+    total-item-value: 15
+    max-item-value: 5
+  122:
+    location: 355/79/215
+    total-item-value: 15
+    max-item-value: 5
+  123:
+    location: 364/80/232
+    total-item-value: 15
+    max-item-value: 5
+  124:
+    location: 357/80/255
+    total-item-value: 15
+    max-item-value: 5
+  125:
+    location: 378/79/306
+    total-item-value: 15
+    max-item-value: 5
+  126:
+    location: 376/80/321
+    total-item-value: 15
+    max-item-value: 5
+  127:
+    location: 348/80/332
+    total-item-value: 15
+    max-item-value: 5
+  128:
+    location: 322/80/365
+    total-item-value: 15
+    max-item-value: 5
+  129:
+    location: 307/79/336
+    total-item-value: 15
+    max-item-value: 5
+  130:
+    location: 283/77/329
+    total-item-value: 15
+    max-item-value: 5
+  131:
+    location: 244/77/342
+    total-item-value: 15
+    max-item-value: 5
+  132:
+    location: 222/76/337
+    total-item-value: 15
+    max-item-value: 5
+  133:
+    location: 170/67/347
+    total-item-value: 15
+    max-item-value: 5
+  134:
+    location: 173/65/317
+    total-item-value: 15
+    max-item-value: 5
+  135:
+    location: 163/66/234
+    total-item-value: 15
+    max-item-value: 5
+  136:
+    location: 189/67/214
+    total-item-value: 15
+    max-item-value: 5
+  137:
+    location: 196/68/242
+    total-item-value: 15
+    max-item-value: 5
+  138:
+    location: 226/70/226
+    total-item-value: 15
+    max-item-value: 5
+  139:
+    location: 196/72/284
+    total-item-value: 15
+    max-item-value: 5
+  140:
+    location: 196/72/273
+    total-item-value: 15
+    max-item-value: 5
+  141:
+    location: 244/72/208
+    total-item-value: 15
+    max-item-value: 5
+  142:
+    location: 281/77/146
+    total-item-value: 15
+    max-item-value: 5
+  143:
+    location: 299/77/180
+    total-item-value: 15
+    max-item-value: 5
+  144:
+    location: 329/79/205
+    total-item-value: 15
+    max-item-value: 5
+  145:
+    location: 330/79/214
+    total-item-value: 15
+    max-item-value: 5
+  146:
+    location: 347/80/305
+    total-item-value: 15
+    max-item-value: 5
+  147:
+    location: 321/79/296
+    total-item-value: 15
+    max-item-value: 5
+  148:
+    location: 228/76/305
+    total-item-value: 15
+    max-item-value: 5
+  149:
+    location: 228/75/271
+    total-item-value: 15
+    max-item-value: 5
+  150:
+    location: 266/74/231
+    total-item-value: 15
+    max-item-value: 5
+  151:
+    location: 289/77/211
+    total-item-value: 15
+    max-item-value: 5
+  152:
+    location: 288/77/237
+    total-item-value: 15
+    max-item-value: 5
+  153:
+    location: 301/78/251
+    total-item-value: 15
+    max-item-value: 5
+  154:
+    location: 234/74/257
+    total-item-value: 15
+    max-item-value: 5
+  155:
+    location: 277/77/263
+    total-item-value: 15
+    max-item-value: 5
+  156:
+    location: 318/79/268
+    total-item-value: 15
+    max-item-value: 5
+  157:
+    location: 295/79/284
+    total-item-value: 15
+    max-item-value: 5
+                                                                                                                                                                                               
+loots:
+  level-1:
+    item-value: 3
+    chance: 45
+    items:
+      - '{"material": "STICK", "amount": 7}'
+      - '{"material": "FLINT", "amount": 5}'
+      - '{"material": "FEATHER", "amount": 5}'
+      - '{"material": "LEATHER_HELMET"}'
+      - '{"material": "LEATHER_BOOT"}'
+      - '{"material": "LEATHER_CHESTPLATE"}'
+      - '{"material": "LEATHER_LEGGINGS"}'              
+      - '{"material": "COBBLESTONE", "amount": 6}'
+      - '{"material": "PORKCHOP", "amount": 3}'
+      - '{"material": "FLINT_AND_STEEL"}'
+      - '{"material": "APPLE"}'
+      - '{"material": "CRAFTING_TABLE"}'
+
+  level-2:
+    item-value: 3
+    chance: 25
+    items:
+      - '{"material": "STONE_SWORD"}'
+      - '{"material": "ARROW", "amount": 7}'
+      - '{"material": "CONCRETE", "amount": 7}'
+      - '{"material": "BOW"}'
+      - '{"material": "COOKED_PORKCHOP", "amount": 3}'
+      - '{"material": "COOKED_BEEF"}'
+      - '{"material": "COOKED_CHICKEN", "amount": 2}'
+      - '{"material": "TNT", "amount": 2}'
+      - '{"material": "GOLD_HELMET"}'
+      - '{"material": "GOLD_BOOT"}'
+      - '{"material": "GOLD_CHESTPLATE"}'
+      - '{"material": "GOLD_LEGGINGS"}'
+  level-3:
+    item-value: 3
+    chance: 15
+    items:
+      - '{"material": "IRON_INGOT", "amount": 3}'
+
+  level-4:
+    item-value: 4
+    chance: 10
+    items:
+      - '{"material": "IRON_INGOT", "amount": 8}'
+      - '{"material": "GOLDEN_APPLE"}'
+      - '{"material": "MUSHROOM_STEW"}'      
+  level-5:
+    item-value: 5
+    chance: 5
+    items:
+      - '{"material": "DIAMOND", "amount": 8}'
+

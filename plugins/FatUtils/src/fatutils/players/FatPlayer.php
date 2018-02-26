@@ -20,6 +20,7 @@ use fatutils\ui\impl\LanguageWindow;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\item\ItemFactory;
 use pocketmine\level\Position;
+use pocketmine\math\Vector3;
 use pocketmine\Player;
 use pocketmine\scheduler\PluginTask;
 use pocketmine\utils\TextFormat;
@@ -654,5 +655,18 @@ class FatPlayer
         if ($group == "Veteran")
             return 2;
         return 0;
+    }
+
+    public function isWithinDist(Vector3 $p_location, int $p_dist) : bool
+    {
+        if ($this->calcDist($p_location) > $p_dist)
+            return false;
+        return true;
+    }
+
+    public function calcDist(Vector3 $p_location) : int
+    {
+        $l_playerPos = $this->getPlayer()->getLocation()->asVector3();
+        return sqrt(pow($l_playerPos->x - $p_location->x, 2) + pow($l_playerPos->y - $p_location->y, 2) + pow($l_playerPos->z - $p_location->z, 2));
     }
 }

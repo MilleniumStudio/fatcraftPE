@@ -56,6 +56,11 @@ fi
 --make FatcraftHungerGames/ \
 --out FatcraftHungerGames.phar
 
+
+../PocketMine-MP/bin/php7/bin/php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
+--make FatcraftBattleRoyal/ \
+--out FatcraftBattleRoyal.phar
+
 ../PocketMine-MP/bin/php7/bin/php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
 --make FatUtils/ \
 --out FatUtils.phar
