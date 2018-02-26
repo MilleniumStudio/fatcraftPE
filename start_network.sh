@@ -97,5 +97,7 @@ start_docker br 1 19158 fatcraft/pocketmine:br-1 br/WipeOut_01_build4
 
 #screen -dmS FatFoward ./tools/FatForward/startFatForward
 
+start_docker battleRoyal 1 19161 fatcraft/pocketmine:battleRoyal-1 battleRoyal/battRoy1
+
 ## DEBUG
 #docker run --rm --name lobby-1 --hostname lobby-1 --env SERVER_NAME=lobby-1 --env SERVER_PORT=19132 --env SERVER_TYPE=lobby --env SERVER_ID=1 --env SERVER_MAP=mainLobby --publish 19132:19132 --publish 19132:19132/udp --link mysql:mysql --volume `pwd`/worlds:/home/minecraft/map_repository:ro -ti fatcraft/pocketmine:lobby
