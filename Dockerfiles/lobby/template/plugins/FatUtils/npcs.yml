@@ -1,6 +1,19 @@
 #NPCS config
 
 npcs:
+
+  - name: "§4§lBETA§r §5Battle §6Royal §4§lHIT ME"
+    displayname: "§4§lBETA§r §5Battle §6Royal §4§lHIT ME"
+    location: 0.5/12/-17.5/307/0
+    type : "Player"
+    size : 1
+    skin: "KruGame"
+    equipment:
+    update: true
+    function: "NPCFunctionTeleport"
+    data:
+      to: 27.5/8/65.5/0/0
+
   - name: "welcomenpc"
     displayname: "Games"
     location: -3.5/55.1/56.5/0/0
