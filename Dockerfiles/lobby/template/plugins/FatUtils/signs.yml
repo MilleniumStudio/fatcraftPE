@@ -7,26 +7,27 @@ signsareas:
   - name: "BattleRoyal"
     update: true
     locations: [
+      "30/9/68",
       "29/9/68",
       "28/9/68",
-      "27/9/68"
-#      "26/9/68",
-#      "25/9/68",
-#      "29/10/68",
-#      "28/10/68",
-#      "27/10/68",
-#      "26/10/68",
-#      "25/10/68",
-#      "29/11/68",
-#      "28/11/68",
-#      "27/11/68",
-#      "26/11/68",
-#      "25/11/68"
+      "27/9/68",
+      "26/9/68",
+      "25/9/68",
+      "29/10/68",
+      "28/10/68",
+      "27/10/68",
+      "26/10/68",
+      "25/10/68",
+      "29/11/68",
+      "28/11/68",
+      "27/11/68",
+      "26/11/68",
+      "25/11/68"
     ]
     face: "NORTH"
     function: "MultiSignFunctionServer"
     data:
-      type : "battleRoyal"
+      type : "battleroyal"
       offset : 1
       onlyVIP: false
 
@@ -56,6 +57,7 @@ signsareas:
   - name: "multiple.server_boatracer"
     update: true
     locations: [
+      "80/8/15",
       "80/8/16",
       "80/8/17",
       "80/8/18",
@@ -104,6 +106,7 @@ signsareas:
   - name: "multiple.server_skywar"
     update: true
     locations: [
+      "80/8/-36",
       "80/8/-35",
       "80/8/-34",
       "80/8/-33",
