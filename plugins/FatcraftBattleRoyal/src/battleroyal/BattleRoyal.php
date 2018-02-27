@@ -86,7 +86,7 @@ class BattleRoyal extends PluginBase implements Listener
         WorldUtils::setWorldsTime(0);
 		WorldUtils::stopWorldsTime();
 
-		GameManager::getInstance()->setWaiting(); // init new game on SQL side
+		//GameManager::getInstance()->setWaiting(); // init new game on SQL side
         FatPlayer::$m_OptionDisplayHealth = false;
 
 		$this->m_WaitingTimer = new DisplayableTimer(GameManager::getInstance()->getWaitingTickDuration());
@@ -186,7 +186,8 @@ class BattleRoyal extends PluginBase implements Listener
 			->setTitle(new TextFormatter("timer.playing.title"))
             ->addStartCallback(function()
             {
-                $this->setCurrentCenterLoc($this->getBattleRoyalConfig()->getPos1());
+                $l_centerpoint = new Vector3(rand($this->getBattleRoyalConfig()->getPos1()->x - 150, $this->getBattleRoyalConfig()->getPos1()->x + 150), $this->getBattleRoyalConfig()->getPos1()->y, rand($this->getBattleRoyalConfig()->getPos1()->z - 150, $this->getBattleRoyalConfig()->getPos1()->z + 150));
+                $this->setCurrentCenterLoc($l_centerpoint);
                 $this->setCurrentRadius($this->getBattleRoyalConfig()->getRadius1());
                 $this->computeBubble($this->currentZoneLoc, $this->currentRadius);
                 $this->doStuffWithChunks();

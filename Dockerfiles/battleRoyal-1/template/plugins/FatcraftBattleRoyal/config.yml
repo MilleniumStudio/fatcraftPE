@@ -3,7 +3,7 @@ maxPlayer: 20
 waitingSecDuration: 90
 playingSecDuration: 90
 spawnLocation: 
-startGameLocation: 256/140/256
+startGameLocation: 256/110/256
 
 
 #Max rewards for the first player, divided by place un score
