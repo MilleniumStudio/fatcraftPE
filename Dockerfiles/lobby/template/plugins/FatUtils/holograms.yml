@@ -5,7 +5,23 @@ holograms:
     location: map/0/12/-8
     title : "hologram.lobby.welcome.title"
     text: "hologram.lobby.welcome.text"
+
   - name: "getapig.message"
     location: map/-5/18/-25
     title : "hologram.lobby.pig.title"
     text: "hologram.lobby.pig.text"
+
+  - name: "hologram.lobby.grade.hero"
+    location: map/15.5/15/20.5
+    title: "hologram.lobby.grade.hero.title"
+    text: "hologram.lobby.grade.hero.text"
+
+  - name: "hologram.lobby.grade.legend"
+    location: map/0.5/17/22.5
+    title: "hologram.lobby.grade.legend.title"
+    text: "hologram.lobby.grade.legend.text"
+
+  - name: "hologram.lobby.grade.titan"
+    location: map/-14.5/15/20.5
+    title: "hologram.lobby.grade.titan.title"
+    text: "hologram.lobby.grade.titan.text"
