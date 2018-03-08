@@ -163,9 +163,9 @@ class ShopManager
                 if ($l_RequiredRank > $l_PlayerVipRank)
                 {
                     if ($l_RequiredRank == 1)
-                        $l_BottomText .= "§4Commander§r";
+                        $l_BottomText .= "§4Titan§r";
                     if ($l_RequiredRank == 2)
-                        $l_BottomText .= "§6Veteran§r";
+                        $l_BottomText .= "§6Legend§r";
                 }
                 else
                 {
