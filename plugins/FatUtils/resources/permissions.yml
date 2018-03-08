@@ -4,25 +4,25 @@ default:
   allow:
     - chat.sendMessageTest
 
-Rookie:
+Hero:
   extends: default
-  prefix: "§2Rookie "
+  prefix: "§2Hero "
   color: §f
   allow:
     - effect.superjump
 
-Commander:
-  extends: Rookie
-  prefix: "§4Commander "
+Titan:
+  extends: Hero
+  prefix: "§4Titan "
   color: §4
   allow:
     - lobby.quickgameselection
     - reset.kit.disabled
     - lobby.fly
 
-Veteran:
-  extends: Commander
-  prefix: "§6Veteran "
+Legend:
+  extends: Titan
+  prefix: "§6Legend "
   color: §6
     - lobby.setscale
 
