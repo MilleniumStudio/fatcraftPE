@@ -57,7 +57,7 @@ class BattleRoyal extends PluginBase implements Listener
     public const TYPE_PLAYER_SPAWN = 0;
     public const TYPE_WORLD_SPAWN = 1;
 
-    private $countCycle = 0;
+    public $maxPlayer = 0;
 
     public static function getInstance(): BattleRoyal
 	{
@@ -83,11 +83,14 @@ class BattleRoyal extends PluginBase implements Listener
 	{
 		LoadBalancer::getInstance()->setServerState(LoadBalancer::SERVER_STATE_OPEN);
 
-        WorldUtils::setWorldsTime(0);
+        WorldUtils::setWorldsTime(2000);
 		WorldUtils::stopWorldsTime();
 
-		//GameManager::getInstance()->setWaiting(); // init new game on SQL side
+		GameManager::getInstance()->setWaiting(); // init new game on SQL side
+        GameManager::getInstance()->m_isBattleRoyal = true;
+
         FatPlayer::$m_OptionDisplayHealth = false;
+        FatPlayer::$m_OptionDisplayNameTag = false;
 
 		$this->m_WaitingTimer = new DisplayableTimer(GameManager::getInstance()->getWaitingTickDuration());
 		$this->m_WaitingTimer
@@ -176,6 +179,7 @@ class BattleRoyal extends PluginBase implements Listener
 		LoadBalancer::getInstance()->setServerState(LoadBalancer::SERVER_STATE_CLOSED);
 		GameManager::getInstance()->startGame();
 
+		$this->maxPlayer = count($this->getServer()->getOnlinePlayers());
 		// INIT SIDEBAR
 		Sidebar::getInstance()->clearLines();
 
@@ -215,7 +219,6 @@ class BattleRoyal extends PluginBase implements Listener
 		{
 			PlayersManager::getInstance()->getFatPlayer($l_Player)->setPlaying();
 
-            $l_Player->setGamemode(Player::ADVENTURE);
             $l_Player->addEffect(Effect::getEffect(Effect::DAMAGE_RESISTANCE)->setAmplifier(10)->setDuration(60 * 20));
 
 			PlayersManager::getInstance()->getFatPlayer($l_Player)->equipKitToPlayer();
@@ -235,6 +238,117 @@ class BattleRoyal extends PluginBase implements Listener
 
 		Sidebar::getInstance()->update();
 	}
+
+	public function needCustomeName(int $p_itemId) : bool
+    {
+        $value = false;
+        switch ($p_itemId)
+        {
+            case ItemIds::EGG:
+            case ItemIds::BOW:
+            case ItemIds::ARROW:
+            case ItemIds::SNOWBALL:
+            case ItemIds::CHORUS_FRUIT_POPPED:
+            case ItemIds::GOLD_BOOTS:
+            case ItemIds::GOLD_HELMET:
+            case ItemIds::GOLD_CHESTPLATE:
+            case ItemIds::GOLD_LEGGINGS:
+            case ItemIds::IRON_BOOTS:
+            case ItemIds::IRON_HELMET:
+            case ItemIds::IRON_CHESTPLATE:
+            case ItemIds::IRON_LEGGINGS:
+            case ItemIds::CHAINMAIL_BOOTS:
+            case ItemIds::CHAINMAIL_HELMET:
+            case ItemIds::CHAINMAIL_CHESTPLATE:
+            case ItemIds::CHAINMAIL_LEGGINGS:
+            case ItemIds::DIAMOND_BOOTS:
+            case ItemIds::DIAMOND_HELMET:
+            case ItemIds::DIAMOND_CHESTPLATE:
+            case ItemIds::DIAMOND_LEGGINGS:
+            case ItemIds::WOODEN_SWORD:
+            case ItemIds::STONE_SWORD:
+            case ItemIds::IRON_SWORD:
+            case ItemIds::GOLD_SWORD:
+            case ItemIds::DIAMOND_SWORD:
+            case ItemIds::GOLDEN_APPLE:
+            case ItemIds::LEATHER_HELMET:
+            case ItemIds::LEATHER_BOOTS:
+            case ItemIds::LEATHER_CHESTPLATE:
+            case ItemIds::LEATHER_LEGGINGS:
+            $value = true;
+        }
+        return $value;
+}
+
+    public function getBattleRoyalCustomName(int $p_itemId) : string
+    {
+        switch ($p_itemId)
+        {
+            case ItemIds::EGG:
+                return "§5GRENADE§r";
+            case ItemIds::BOW:
+                return "§5SNIPER RIFFLE§r";
+            case ItemIds::ARROW:
+                return "§2SNIPER RIFFLE AMMO§r";
+            case ItemIds::SNOWBALL:
+                return "§5ASSAULT RIFFLE§r";
+            case ItemIds::CHORUS_FRUIT_POPPED:
+                return "§2ASSAULT RIFFLE AMMO§r";
+            case ItemIds::GOLD_BOOTS:
+                return "§2DESERT RANGERS§r";
+            case ItemIds::GOLD_HELMET:
+                return "§2DESERT HELMET§r";
+            case ItemIds::GOLD_CHESTPLATE:
+                return "§2DESERT VEST§r";
+            case ItemIds::GOLD_LEGGINGS:
+                return "§2DESERT LEGGINGS§r";
+            case ItemIds::IRON_BOOTS:
+                return "§5FOREST RANGERS REINFORCED §r";
+            case ItemIds::IRON_HELMET:
+                return "§5FOREST HELMET REINFORCED §r";
+            case ItemIds::IRON_CHESTPLATE:
+                return "§5FOREST VEST REINFORCED§r";
+            case ItemIds::IRON_LEGGINGS:
+                return "§5FOREST LEGGINGS REINFORCED §r";
+            case ItemIds::CHAINMAIL_BOOTS:
+                return "§3FOREST RANGERS§r";
+            case ItemIds::CHAINMAIL_HELMET:
+                return "§3FOREST HELMET§r";
+            case ItemIds::CHAINMAIL_CHESTPLATE:
+                return "§3FOREST VEST§e";
+            case ItemIds::CHAINMAIL_LEGGINGS:
+                return "§3FOREST LEGGINGS§e";
+            case ItemIds::DIAMOND_BOOTS:
+                return "§4SUPER SOLDIER BOOTS§r";
+            case ItemIds::DIAMOND_HELMET:
+                return "§4SUPER SOLDIER HELMET§r";
+            case ItemIds::DIAMOND_CHESTPLATE:
+                return "§4SUPER SOLDIER VEST§r";
+            case ItemIds::DIAMOND_LEGGINGS:
+                return "§4SUPER SOLDIER LEGGINGS§r";
+            case ItemIds::WOODEN_SWORD:
+                return "§fBAT§r";
+            case ItemIds::STONE_SWORD:
+                return "§2NAILED BAT§r";
+            case ItemIds::IRON_SWORD:
+                return "§3KATANA§r";
+            case ItemIds::GOLD_SWORD:
+                return "§2MACHETE§r";
+            case ItemIds::DIAMOND_SWORD:
+                return "§6SUPER KATANA§r";
+            case ItemIds::GOLDEN_APPLE:
+                return "§5ADRENALINE§r";
+            case ItemIds::LEATHER_HELMET;
+                return "§fRAMBO HEADBAND§r";
+            case ItemIds::LEATHER_BOOTS;
+                return "§fFLIPFLOP§r";
+            case ItemIds::LEATHER_CHESTPLATE;
+                return "§fBEACH TANK TOP§r";
+            case ItemIds::LEATHER_LEGGINGS;
+                return "§fBEACH SHORT§r";
+
+        }
+    }
 
 	public function applyBattleRoyalSidebarTemplate()
     {
@@ -455,7 +569,7 @@ class BattleRoyal extends PluginBase implements Listener
 				}
 			} else if (GameManager::getInstance()->isPlaying())
 			{
-			    $nbPlayer = count($this->getServer()->getOnlinePlayers());
+			    $nbPlayer = PlayersManager::getInstance()->getInGamePlayerLeft();
 				if ($nbPlayer == 1)
 				    $this->endGame();
                 if ($nbPlayer == 0)

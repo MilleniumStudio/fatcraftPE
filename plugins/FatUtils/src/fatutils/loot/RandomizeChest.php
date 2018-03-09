@@ -9,6 +9,8 @@
 namespace fatutils\loot;
 
 
+use battleroyal\BattleRoyal;
+use fatutils\game\GameManager;
 use fatutils\tools\WorldUtils;
 use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockIds;
@@ -47,6 +49,8 @@ class RandomizeChest
     //--------
     public function fillChest()
     {
+        $isBattleRoyal = GameManager::getInstance()->m_isBattleRoyal;
+
         if ($this->m_Position instanceof Position)
         {
             echo "Filling chest at " . $this->getPosition() . "\n";
@@ -74,6 +78,42 @@ class RandomizeChest
                                 $l_EmptySlot = $l_slot;
                         }
                         echo "   - item[" . $l_EmptySlot . "]= " . $l_Item . "\n";
+
+                        $l_itemId = $l_Item->getId();
+
+                        if ($isBattleRoyal)
+                        {
+                            if (BattleRoyal::getInstance()->needCustomeName($l_itemId))
+                            {
+                                $l_Item->setCustomName(BattleRoyal::getInstance()->getBattleRoyalCustomName($l_itemId));
+                            }
+                            if ($l_itemId == ItemIds::SNOWBALL || $l_itemId == ItemIds::BOW)
+                            {
+                                $l_ExtraAmmo = null;
+                                $l_SecondEmptySlot = null;
+                                while (is_null($l_SecondEmptySlot))
+                                {
+                                    $l_slot = rand(0, $l_ChestTile->getInventory()->getSize() - 1);
+                                    $item = $l_ChestTile->getInventory()->getItem($l_slot);
+                                    if (!is_null($item) && $item->getId() == ItemIds::AIR && $l_slot != $l_EmptySlot)
+                                        $l_SecondEmptySlot = $l_slot;
+                                }
+                                if ($l_itemId == ItemIds::SNOWBALL)
+                                {
+                                    $l_ExtraAmmo = new Item(ItemIds::CHORUS_FRUIT_POPPED);
+                                    $l_ExtraAmmo->setCount(40);
+                                }
+                                if ($l_itemId == ItemIds::BOW)
+                                {
+                                    $l_ExtraAmmo = new Item(ItemIds::ARROW);
+                                    $l_ExtraAmmo->setCount(10);
+                                }
+                                $l_ExtraAmmo->setCustomName(BattleRoyal::getInstance()->getBattleRoyalCustomName($l_ExtraAmmo->getId()));
+
+                                $l_ChestTile->getInventory()->setItem($l_SecondEmptySlot, $l_ExtraAmmo);
+                                echo "   - extra ammo[" . $l_SecondEmptySlot . "]= " . $l_ExtraAmmo . "\n";
+                            }
+                        }
                         $l_ChestTile->getInventory()->setItem($l_EmptySlot, $l_Item);
                     }
                 }

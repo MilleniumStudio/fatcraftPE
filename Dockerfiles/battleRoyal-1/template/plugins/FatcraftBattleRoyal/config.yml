@@ -1,4 +1,4 @@
-minPlayer: 4
+minPlayer: 3
 maxPlayer: 20
 waitingSecDuration: 90
 playingSecDuration: 90
@@ -644,53 +644,79 @@ chests:
 loots:
   level-1:
     item-value: 3
-    chance: 45
+    chance: 40
     items:
-      - '{"material": "STICK", "amount": 7}'
-      - '{"material": "FLINT", "amount": 5}'
-      - '{"material": "FEATHER", "amount": 5}'
       - '{"material": "LEATHER_HELMET"}'
-      - '{"material": "LEATHER_BOOT"}'
+      - '{"material": "LEATHER_BOOTS"}'
       - '{"material": "LEATHER_CHESTPLATE"}'
-      - '{"material": "LEATHER_LEGGINGS"}'              
-      - '{"material": "COBBLESTONE", "amount": 6}'
-      - '{"material": "PORKCHOP", "amount": 3}'
-      - '{"material": "FLINT_AND_STEEL"}'
-      - '{"material": "APPLE"}'
-      - '{"material": "CRAFTING_TABLE"}'
+      - '{"material": "LEATHER_LEGGINGS"}'
+      - '{"material": "CHORUS_FRUIT_POPPED", "amount": 12}'
+      - '{"material": "EGG"}'
+      - '{"material": "GOLD_HELMET"}'
+      - '{"material": "GOLD_BOOT"}'
+      - '{"material": "SNOWBALL"}'
+      - '{"material": "BOW"}'
+      - '{"material": "WOODEN_SWORD"}'
 
   level-2:
     item-value: 3
-    chance: 25
+    chance: 40
     items:
+      - '{"material": "CHORUS_FRUIT_POPPED", "amount": 12}'
       - '{"material": "STONE_SWORD"}'
-      - '{"material": "ARROW", "amount": 7}'
-      - '{"material": "CONCRETE", "amount": 7}'
-      - '{"material": "BOW"}'
+      - '{"material": "ARROW", "amount": 4}'
       - '{"material": "COOKED_PORKCHOP", "amount": 3}'
       - '{"material": "COOKED_BEEF"}'
       - '{"material": "COOKED_CHICKEN", "amount": 2}'
-      - '{"material": "TNT", "amount": 2}'
-      - '{"material": "GOLD_HELMET"}'
-      - '{"material": "GOLD_BOOT"}'
       - '{"material": "GOLD_CHESTPLATE"}'
       - '{"material": "GOLD_LEGGINGS"}'
+      - '{"material": "IRON_HELMET"}'
+      - '{"material": "IRON_BOOT"}'
+      - '{"material": "SNOWBALL"}'
+      - '{"material": "CHORUS_FRUIT_POPPED", "amount": 20}'
+      - '{"material": "BOW"}'
+
   level-3:
     item-value: 3
-    chance: 15
+    chance: 40
     items:
-      - '{"material": "IRON_INGOT", "amount": 3}'
+      - '{"material": "IRON_SWORD"}'
+      - '{"material": "BOW"}'
+      - '{"material": "CHORUS_FRUIT_POPPED", "amount": 9}'
+      - '{"material": "IRON_CHESTPLATE"}'
+      - '{"material": "IRON_LEGGINGS"}'
+      - '{"material": "EGG", "amount": 2}'
+      - '{"material": "CHAINMAIL_CHESTPLATE"}'
+      - '{"material": "CHAINMAIL_LEGGINGS"}'
+      - '{"material": "ARROW", "amount": 5}'
+      - '{"material": "SNOWBALL"}'
 
   level-4:
     item-value: 4
-    chance: 10
+    chance: 40
     items:
-      - '{"material": "IRON_INGOT", "amount": 8}'
+      - '{"material": "GOLD_SWORD"}'
+      - '{"material": "ARROW", "amount": 6}'
       - '{"material": "GOLDEN_APPLE"}'
-      - '{"material": "MUSHROOM_STEW"}'      
+      - '{"material": "MUSHROOM_STEW"}'
+      - '{"material": "CHORUS_FRUIT_POPPED", "amount": 30}'
+      - '{"material": "CHAINMAIL_HELMET"}'
+      - '{"material": "CHAINMAIL_BOOT"}'
+      - '{"material": "EGG", "amount": 2}'
+      - '{"material": "DIAMOND_HELMET"}'
+      - '{"material": "DIAMOND_BOOT"}'
+      - '{"material": "SNOWBALL"}'
+
+
   level-5:
     item-value: 5
-    chance: 5
+    chance: 40
     items:
-      - '{"material": "DIAMOND", "amount": 8}'
+      - '{"material": "DIAMOND_SWORD"}'
+      - '{"material": "ARROW", "amount": 10}'
+      - '{"material": "DIAMOND_CHESTPLATE"}'
+      - '{"material": "DIAMOND_LEGGINGS"}'
+      - '{"material": "EGG", "amount": 4}'
+      - '{"material": "BOW"}'
+      - '{"material": "SNOWBALL"}'
 

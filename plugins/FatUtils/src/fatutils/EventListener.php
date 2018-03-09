@@ -108,8 +108,8 @@ class EventListener implements Listener
 				$e->setCancelled(true);
 			} else
 			{
-                            $color = PermissionManager::getInstance()->getFatPlayerGroupColor($l_FatPlayer);
-                            $e->setMessage($color . $e->getMessage());
+                $color = PermissionManager::getInstance()->getFatPlayerGroupColor($l_FatPlayer);
+                $e->setMessage($color . $e->getMessage());
 			}
 		}
 	}

@@ -31,6 +31,8 @@ class GameManager
 
 	private $m_PlayerNbrAtStart = 0;
 
+	public $m_isBattleRoyal = false;
+
     public static function getInstance(): GameManager
     {
         if (is_null(self::$m_Instance))
@@ -139,7 +141,7 @@ class GameManager
 
     public function setWaiting()
     {
-        $this->m_State = GameManager::GAME_STATE_PLAYING;
+        $this->m_State = GameManager::GAME_STATE_WAITING;
     }
 
     public function setPlaying()

@@ -27,7 +27,7 @@ signsareas:
     face: "NORTH"
     function: "MultiSignFunctionServer"
     data:
-      type : "battleroyal"
+      type : "battleRoyal"
       offset : 1
       onlyVIP: false
 
