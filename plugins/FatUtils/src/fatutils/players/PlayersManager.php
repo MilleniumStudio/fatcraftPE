@@ -219,6 +219,11 @@ class PlayersManager
 		$key = $p_Player->getUniqueId()->toString();
 
 		if (isset($this->m_FatPlayers[$key]))
-			unset($this->m_FatPlayers[$key]);
+        {
+            $l_fatPlayer = $this->m_FatPlayers[$key];
+            if ($l_fatPlayer instanceof FatPlayer)
+                LoadBalancer::getInstance()->getServer()->removePlayer($l_fatPlayer->getPlayer());
+            unset($this->m_FatPlayers[$key]);
+        }
 	}
 }
