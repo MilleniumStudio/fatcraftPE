@@ -249,6 +249,8 @@ class BattleRoyal extends PluginBase implements Listener
             case ItemIds::ARROW:
             case ItemIds::SNOWBALL:
             case ItemIds::CHORUS_FRUIT_POPPED:
+            case ItemIds::ENDER_PEARL:
+            case ItemIds::GUNPOWDER:
             case ItemIds::GOLD_BOOTS:
             case ItemIds::GOLD_HELMET:
             case ItemIds::GOLD_CHESTPLATE:
@@ -294,6 +296,10 @@ class BattleRoyal extends PluginBase implements Listener
                 return "§5ASSAULT RIFFLE§r";
             case ItemIds::CHORUS_FRUIT_POPPED:
                 return "§2ASSAULT RIFFLE AMMO§r";
+            case ItemIds::ENDER_PEARL:
+                return "§5SHOTGUN§r";
+            case ItemIds::GUNPOWDER:
+                return "§2SHOTGUN AMMO§r";
             case ItemIds::GOLD_BOOTS:
                 return "§2DESERT RANGERS§r";
             case ItemIds::GOLD_HELMET:

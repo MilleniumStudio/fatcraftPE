@@ -124,6 +124,12 @@ class EventListener implements Listener
         }
     }
 
+    public function onBlockBreakEvent(BlockBreakEvent $e)
+    {
+        if ($e->getBlock()->getId() == 95)
+            $e->setCancelled();
+    }
+
     public function onPlayerHit(EntityDamageEvent $e)
     {
         if (GameManager::getInstance()->isWaiting() && $e->getEntity() instanceof Player)

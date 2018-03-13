@@ -108,6 +108,11 @@ class RandomizeChest
                                     $l_ExtraAmmo = new Item(ItemIds::ARROW);
                                     $l_ExtraAmmo->setCount(10);
                                 }
+                                if ($l_itemId == ItemIds::ENDER_PEARL)
+                                {
+                                    $l_ExtraAmmo = new Item(ItemIds::GUNPOWDER);
+                                    $l_ExtraAmmo->setCount(10);
+                                }
                                 $l_ExtraAmmo->setCustomName(BattleRoyal::getInstance()->getBattleRoyalCustomName($l_ExtraAmmo->getId()));
 
                                 $l_ChestTile->getInventory()->setItem($l_SecondEmptySlot, $l_ExtraAmmo);

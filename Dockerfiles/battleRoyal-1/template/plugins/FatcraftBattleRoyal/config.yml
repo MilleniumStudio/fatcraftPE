@@ -1,4 +1,4 @@
-minPlayer: 3
+minPlayer: 2
 maxPlayer: 20
 waitingSecDuration: 90
 playingSecDuration: 90
@@ -654,9 +654,12 @@ loots:
       - '{"material": "EGG"}'
       - '{"material": "GOLD_HELMET"}'
       - '{"material": "GOLD_BOOT"}'
+      - '{"material": "GUNPOWDER", "amount": 3}'
       - '{"material": "SNOWBALL"}'
+      - '{"material": "ENDER_PEARL"}'
       - '{"material": "BOW"}'
       - '{"material": "WOODEN_SWORD"}'
+      - '{"material": "GUNPOWDER", "amount": 3}'
 
   level-2:
     item-value: 3
@@ -670,6 +673,7 @@ loots:
       - '{"material": "COOKED_CHICKEN", "amount": 2}'
       - '{"material": "GOLD_CHESTPLATE"}'
       - '{"material": "GOLD_LEGGINGS"}'
+      - '{"material": "ENDER_PEARL"}'
       - '{"material": "IRON_HELMET"}'
       - '{"material": "IRON_BOOT"}'
       - '{"material": "SNOWBALL"}'
@@ -684,7 +688,9 @@ loots:
       - '{"material": "BOW"}'
       - '{"material": "CHORUS_FRUIT_POPPED", "amount": 9}'
       - '{"material": "IRON_CHESTPLATE"}'
+      - '{"material": "GUNPOWDER", "amount": 8}'
       - '{"material": "IRON_LEGGINGS"}'
+      - '{"material": "ENDER_PEARL"}'
       - '{"material": "EGG", "amount": 2}'
       - '{"material": "CHAINMAIL_CHESTPLATE"}'
       - '{"material": "CHAINMAIL_LEGGINGS"}'
@@ -702,7 +708,9 @@ loots:
       - '{"material": "CHORUS_FRUIT_POPPED", "amount": 30}'
       - '{"material": "CHAINMAIL_HELMET"}'
       - '{"material": "CHAINMAIL_BOOT"}'
+      - '{"material": "GUNPOWDER", "amount": 10}'
       - '{"material": "EGG", "amount": 2}'
+      - '{"material": "ENDER_PEARL"}'
       - '{"material": "DIAMOND_HELMET"}'
       - '{"material": "DIAMOND_BOOT"}'
       - '{"material": "SNOWBALL"}'
@@ -718,5 +726,6 @@ loots:
       - '{"material": "DIAMOND_LEGGINGS"}'
       - '{"material": "EGG", "amount": 4}'
       - '{"material": "BOW"}'
+      - '{"material": "ENDER_PEARL"}'
       - '{"material": "SNOWBALL"}'
 

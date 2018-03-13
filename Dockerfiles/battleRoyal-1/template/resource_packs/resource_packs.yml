@@ -9,5 +9,5 @@ resource_stack:
  #Example
  # - natural.zip
  # - vanilla.zip
- - FATCRAFT_BR17.mcpack
+ - FATCRAFT_BR18.mcpack
  #If you want to force clients to use vanilla resources, you must place a vanilla resource pack in your resources folder and add it to the stack here.
