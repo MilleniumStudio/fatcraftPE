@@ -3,6 +3,7 @@
 namespace fatutils;
 
 use fatutils\ban\BanManager;
+use fatutils\commands\AsConsoleCommand;
 use fatutils\commands\BanCommand;
 use fatutils\commands\MuteCommand;
 use fatutils\loot\ChestsManager;
@@ -51,6 +52,7 @@ class FatUtils extends PluginBase
         $this->getCommand("lang")->setExecutor(new commands\LanguageCommand());
 
         $this->getCommand("ban")->setExecutor(new BanCommand());
+        $this->getCommand("asconsole")->setExecutor(new AsConsoleCommand());
         $this->getCommand("mute")->setExecutor(new MuteCommand());
         $this->getCommand("pet")->setExecutor(PetsManager::getInstance());
         $this->getCommand("skin")->setExecutor(SkinRepository::getInstance());

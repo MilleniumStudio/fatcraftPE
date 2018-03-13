@@ -9,7 +9,9 @@
 namespace fatutils\permission;
 
 
+use fatcraft\loadbalancer\LoadBalancer;
 use fatutils\players\PlayersManager;
+use libasynql\result\MysqlResult;
 use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
@@ -37,7 +39,16 @@ class PermCommands implements CommandExecutor
                             $fatPlayer->getPlayer()->sendMessage("Your group change to ".$args[2]."");
                         }
                         else
+                        {
                             $sender->sendMessage("Can't find player ".$args[1]);
+                            $sender->sendMessage("Trying update rank in db with uuid...");
+                            $sender->sendMessage("UUID : " . $args[1]);
+
+                            MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(), "UPDATE players SET permission_group = ? WHERE uuid = ?", [
+                                ["s", $args[2]],
+                                ["s", $args[1]]
+                            ]);
+                        }
                     }else{
                         $sender->sendMessage("You have to specify the group you want to set to this player");
                     }

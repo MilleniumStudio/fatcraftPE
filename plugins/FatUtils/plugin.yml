@@ -18,6 +18,8 @@ commands:
     description: "Merge you fatcraft acount with your firestorm account"
   lang:
     description: "Display the language menu"
+  asconsole:
+    description: "as console"
   perms:
     permission: perms
     description: "permissions commands"
