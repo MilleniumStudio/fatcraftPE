@@ -8,6 +8,7 @@
 
 namespace fatcraft\lobby;
 
+use fatcraft\loadbalancer\LoadBalancer;
 use fatutils\FatUtils;
 use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
@@ -20,6 +21,7 @@ use fatutils\ui\impl\GamesWindow;
 use fatutils\ui\impl\LobbiesWindow;
 use fatutils\shop\ShopItem;
 use fatutils\ui\impl\ScaleWindow;
+use pocketmine\command\ConsoleCommandSender;
 use pocketmine\entity\Effect;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\inventory\InventoryPickupItemEvent;
@@ -87,6 +89,8 @@ class Lobby extends PluginBase implements Listener
 					$l_FatPlayer->getFatgold() . " " . (new TextFormatter("currency.fatgold.short"))->asStringForFatPlayer($l_FatPlayer)
 				];
 			});
+
+        LoadBalancer::getInstance()->getServer()->dispatchCommand(new ConsoleCommandSender(), "buycraft secret c3ff65408c433494f06bcd411bc6399e03fb6c6c");
     }
 
     public function onPlayerJoin(PlayerJoinEvent $e)
