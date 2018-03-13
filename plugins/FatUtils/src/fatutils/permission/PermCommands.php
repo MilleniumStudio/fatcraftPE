@@ -41,10 +41,10 @@ class PermCommands implements CommandExecutor
                         else
                         {
                             $sender->sendMessage("Can't find player ".$args[1]);
-                            $sender->sendMessage("Trying update rank in db with uuid...");
-                            $sender->sendMessage("UUID : " . $args[1]);
+                            $sender->sendMessage("Trying update rank " . $args[2] . " in db with xuid...");
+                            $sender->sendMessage("xuid : " . $args[1]);
 
-                            MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(), "UPDATE players SET permission_group = ? WHERE uuid = ?", [
+                            MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(), "UPDATE players SET permission_group = ? WHERE xuid = ?", [
                                 ["s", $args[2]],
                                 ["s", $args[1]]
                             ]);
