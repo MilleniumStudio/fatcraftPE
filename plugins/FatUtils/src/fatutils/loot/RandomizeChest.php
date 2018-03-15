@@ -87,7 +87,7 @@ class RandomizeChest
                             {
                                 $l_Item->setCustomName(BattleRoyal::getInstance()->getBattleRoyalCustomName($l_itemId));
                             }
-                            if ($l_itemId == ItemIds::SNOWBALL || $l_itemId == ItemIds::BOW)
+                            if ($l_itemId == ItemIds::SNOWBALL || $l_itemId == ItemIds::BOW|| $l_itemId == ItemIds::ENDER_PEARL)
                             {
                                 $l_ExtraAmmo = null;
                                 $l_SecondEmptySlot = null;

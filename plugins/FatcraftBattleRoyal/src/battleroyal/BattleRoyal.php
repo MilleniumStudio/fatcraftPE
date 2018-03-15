@@ -195,6 +195,8 @@ class BattleRoyal extends PluginBase implements Listener
                 $this->setCurrentRadius($this->getBattleRoyalConfig()->getRadius1());
                 $this->computeBubble($this->currentZoneLoc, $this->currentRadius);
                 $this->doStuffWithChunks();
+                foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+                    $l_Player->addTitle("§2Game started !§r", "§8Fly over the place and gear up !§r");
             })
             ->addStopCallback(function ()
 			{
@@ -443,6 +445,9 @@ class BattleRoyal extends PluginBase implements Listener
                     {
                         $l_fatPlayer->getPlayer()->setSpawn(BattleRoyal::getInstance()->getCurrentCenterLoc(), BattleRoyal::TYPE_WORLD_SPAWN);
                         echo ("spawn set\n");
+                        $l_fatPlayer->getPlayer()->addTitle(
+                            ("§5New area defined !§r"),
+                            ("Follow your compass to the safe zone"));
                     }
                 }
 
@@ -523,14 +528,20 @@ class BattleRoyal extends PluginBase implements Listener
         if ($this->m_PlayTimer instanceof Timer)
             $this->m_PlayTimer->cancel();
 
-        GameManager::getInstance()->endGame();
+        $winner = PlayersManager::getInstance()->getInGamePlayers()[0];
 
-        $winners = PlayersManager::getInstance()->getInGamePlayers();
-
-        foreach ($winners as $fatPlayer)
+        if ($winner instanceof FatPlayer)
         {
-            if ($fatPlayer instanceof FatPlayer)
-                ScoresManager::getInstance()->giveRewardToPlayer($fatPlayer->getPlayer()->getUniqueId(), 1);
+            ScoresManager::getInstance()->giveRewardToPlayer($winner->getPlayer()->getUniqueId(), 1);
+
+            GameManager::getInstance()->endGame(false);
+
+            foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+                $l_Player->addTitle("Winner is §6" . $winner->getName()."§r !", "Game over");
+        }
+        else
+        {
+            GameManager::getInstance()->endGame();
         }
 
 		(new BossbarTimer(200))
@@ -566,14 +577,32 @@ class BattleRoyal extends PluginBase implements Listener
 		{
 			if (GameManager::getInstance()->isWaiting())
 			{
-				if ($this->m_WaitingTimer instanceof Timer && $this->m_WaitingTimer->getTickLeft() > 0 &&
+				if ($this->m_WaitingTimer instanceof Timer)
+                {
+                    if ($this->m_WaitingTimer->getTickLeft() > 0 &&
 					(count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMinPlayer()))
-				{
-					$this->m_WaitingTimer->cancel();
-					$this->m_WaitingTimer = null;
-					$this->resetGameWaiting();
-				}
-			} else if (GameManager::getInstance()->isPlaying())
+                    {
+                        $this->m_WaitingTimer->cancel();
+                        $this->m_WaitingTimer = null;
+                        $this->resetGameWaiting();
+                    }
+                    else
+                    {
+                        $l_SecLeft = $this->m_WaitingTimer->getSecondLeft();
+                        $l_Text = "";
+                        if ($l_SecLeft == 3)
+                            $l_Text = TextFormat::RED . $l_SecLeft;
+                        else if ($l_SecLeft == 2)
+                            $l_Text = TextFormat::GOLD . $l_SecLeft;
+                        else if ($l_SecLeft == 1)
+                            $l_Text = TextFormat::YELLOW . $l_SecLeft;
+
+                        foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+                            $l_Player->addTitle($l_Text, "");
+                    }
+                }
+
+            } else if (GameManager::getInstance()->isPlaying())
 			{
 			    $nbPlayer = PlayersManager::getInstance()->getInGamePlayerLeft();
 				if ($nbPlayer == 1)
@@ -614,7 +643,7 @@ class BattleRoyal extends PluginBase implements Listener
 		Sidebar::getInstance()->clearLines();
 		// Waiting Sidebar Initialization
 		Sidebar::getInstance()
-			->addTranslatedLine(new TextFormatter("template.hg"))
+			->addTranslatedLine(new TextFormatter("template.battleroyal"))
 			->addTimer($this->m_WaitingTimer)
 			->addWhiteSpace()
 			->addMutableLine(function ()

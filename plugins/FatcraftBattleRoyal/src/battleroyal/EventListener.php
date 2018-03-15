@@ -34,7 +34,6 @@ class EventListener implements Listener
     public function playerSneakEvent(PlayerToggleSneakEvent $e)
     {
         $player = $e->getPlayer();
-        echo("toggle sneak event bitch\n");
 
         if ($player->getInventory()->getItem($player->getInventory()->getHeldItemIndex())->getId() == ItemIds::BOW
             && !$player->isSneaking())
