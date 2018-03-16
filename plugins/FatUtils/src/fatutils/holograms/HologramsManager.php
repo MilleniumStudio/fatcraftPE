@@ -65,6 +65,8 @@ class HologramsManager implements Listener
             $text = isset($value['text']) ? $value['text'] : null;
             $this->add(new Hologram($name, $l_Location, $title, $text));
             FatUtils::getInstance()->getLogger()->info("[Holograms] hologram ". $name . " spawned on " . $p_RawLocation);
+
+            echo("add hologram : ". $value['name'] . "\n");
         }
     }
 

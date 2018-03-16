@@ -17,6 +17,7 @@ use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerDeathEvent;
+use pocketmine\event\player\PlayerExhaustEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\event\player\PlayerToggleSneakEvent;
@@ -139,4 +140,11 @@ class EventListener implements Listener
     {
         $p_event->setCancelled();
     }
+
+    public function onPlayerExhaust(PlayerExhaustEvent $p_Event)
+    {
+        if (GameManager::getInstance()->isWaiting())
+            $p_Event->setCancelled(true);
+    }
+
 }

@@ -1,0 +1,12 @@
+#Holograms config
+
+holograms:
+  - name: "Top20MirrorsEdge"
+    location: map/132.5/12/263.5
+    title: "hologram.mirrorsEdgeTop20"
+    text: ""
+
+  - name: "Top20MirrorsEdge2"
+    location: map/13.5/112/-1.5
+    title: "hologram.mirrorsEdgeTop20"
+    text: ""

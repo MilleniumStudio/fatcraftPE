@@ -1,0 +1,48 @@
+# Configuration file for StatsPE
+
+# Select your language
+Language: French
+
+# Enable Stats: true/false
+Stats:
+  Online: true
+  ClientID: true
+  LastIP: true
+  UUID: true
+  XBoxAuthenticated: false
+  FirstJoin: true
+  LastJoin: true
+  JoinCount: true
+  KillCount: true
+  K/D: true
+  DeathCount: true
+  OnlineTime: true
+  BlockBreakCount: true
+  BlockPlaceCount: true
+  ChatCount: true
+  ItemConsumeCount: true
+  ItemCraftCount: true
+  ItemDropCount: true
+
+# Date format, for a further explanation see here: http://php.net/manual/de/function.date.php
+dateFormat: "H:i:s d. M Y"
+# Data provider for StatsPE
+# It can save it's data in these providers:
+# mysql, json
+Provider: mysql
+JSON:
+    # Time in minutes after which changes are saved
+    saveInterval: 1
+# mysql settings in case you're using it
+MySQL:
+    host: <<MYSQL_HOST>>:<<MYSQL_PORT>>
+    username: <<MYSQL_USER>>
+    password: <<MYSQL_PASS>>
+    database: <<MYSQL_DATA>>
+    cacheLimit: 100
+
+FloatingTops:
+- statName: pk_XP
+  name: "Top 20 Parkour"
+  location: map/212/12/-7
+  lines: 20

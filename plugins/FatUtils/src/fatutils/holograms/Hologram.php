@@ -2,6 +2,7 @@
 
 namespace fatutils\holograms;
 
+use fatcraft\loadbalancer\LoadBalancer;
 use pocketmine\math\Vector3;
 use pocketmine\level\particle\FloatingTextParticle;
 use pocketmine\level\Location;
@@ -34,18 +35,28 @@ class Hologram
     public function updatePosition(Vector3 $pos)
     {
         $this->particle->setComponents($pos->x, $pos->y, $pos->z);
+        $this->sendToPlayers();
 //        $this->send();
     }
 
     public function updateTitle(string $title)
     {
         $this->particle->setTitle($title);
-//        $this->send();
+        $this->sendToPlayers();
     }
 
     public function updateText(array $texts)
     {
         $this->particle->setText(TextFormat::RESET . implode(TextFormat::RESET . "\n", $texts));
+        $this->sendToPlayers();
+//        $this->send();
+    }
+
+    public function updateTextWithString(string $text)
+    {
+        $this->rawText = $text;
+        $this->particle->setText($this->rawText);
+        $this->sendRaw();
 //        $this->send();
     }
 
@@ -61,13 +72,16 @@ class Hologram
         }
     }
 
-    public function sendToPlayer(Player $player, array $p_Params = [])
+    public function sendToPlayer(Player $player, array $p_Params = [], bool $p_CustomText = false)
     {
         $p_Params['playername'] = $player->getName();
         if ($this->level != null)
         {
             $this->particle->setTitle((new TextFormatter($this->rawTitle, $p_Params))->asStringForPlayer($player));
-            $this->particle->setText((new TextFormatter($this->rawText, $p_Params))->asStringForPlayer($player));
+            if ($p_CustomText)
+                $this->particle->setText($this->rawText);
+            else
+                $this->particle->setText((new TextFormatter($this->rawText, $p_Params))->asStringForPlayer($player));
             $this->level->addParticle($this->particle, [$player]);
         }
         else
@@ -76,4 +90,11 @@ class Hologram
         }
     }
 
+    public function sendToPlayers()
+    {
+        foreach (LoadBalancer::getInstance()->getServer()->getOnlinePlayers() as $player)
+        {
+            $this->sendToPlayer($player, [], true);
+        }
+    }
 }

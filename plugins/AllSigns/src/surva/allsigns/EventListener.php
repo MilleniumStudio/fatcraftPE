@@ -9,11 +9,24 @@
 
 namespace surva\allsigns;
 
+use fatcraft\loadbalancer\LoadBalancer;
+use fatutils\game\GameManager;
 use fatutils\players\PlayersManager;
+use fatutils\tools\schedulers\DisplayableTimer;
+use fatutils\tools\Sidebar;
+use fatutils\tools\TextFormatter;
 use pocketmine\block\Block;
+use pocketmine\block\BlockIds;
+use pocketmine\event\entity\EntityRegainHealthEvent;
 use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerExhaustEvent;
 use pocketmine\event\player\PlayerInteractEvent;
+use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\level\Level;
+use pocketmine\Player;
+use pocketmine\plugin\Plugin;
+use pocketmine\scheduler\PluginTask;
 use pocketmine\tile\Sign;
 use pocketmine\command\ConsoleCommandSender;
 
@@ -144,7 +157,7 @@ class EventListener implements Listener
                     case $configFile->get("addCheckpoint"):
                         $tile->setText($configFile->get("Obf") . "checkpoint", $configFile->get("checkpoint"), "", "");
                         $l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($player);
-                        // $player->sendMessage(new TextFormatter("parkour.checkpoint.message"))->asStringForPlayer($l_FatPlayer);
+                        (new ConsoleCommandSender())->sendMessage(new TextFormatter("parkour.checkpoint.message"))->asStringForPlayer($l_FatPlayer);
                         // message on checkpoint need to be made
 						break;
 
@@ -270,10 +283,20 @@ class EventListener implements Listener
                         var_dump(substr($text[3], 3));
                         break;
 
+                    case $configFile->get("startChrono1");
+                        if ($text[1] == $configFile->get("startChrono2"))
+                            AllSigns::getInstance()->startTimer($event->getPlayer()->getName());
+                        break;
+
+                    case $configFile->get("stopChrono1");
+                        AllSigns::getInstance()->validateTime($event->getPlayer()->getName());
+                        break;
+
                     default:
                         if ($text[1] == $configFile->get("checkpoint"))
                         {
                             $command = "spawnpoint " . $player->getName() . " " . $player->getPosition()->getX() . " " . $player->getPosition()->getY() . " " . $player->getPosition()->getZ();
+                            $player->addTitle("", "§6Checkpoint saved§r");
                             $this->getAllSigns()->getServer()->dispatchCommand($this->m_ConsoleCommandSender, $command);
                         }
 
@@ -296,4 +319,24 @@ class EventListener implements Listener
         return $this->allSigns;
     }
 
+    public function onPlayerMove(PlayerMoveEvent $e)
+    {
+        $player = $e->getPlayer();
+        $blockId = LoadBalancer::getInstance()->getServer()->getLevel(1)->getBlockAt($player->getFloorX(), $player->getFloorY(), $player->getFloorZ())->getId();
+        if ($blockId == BlockIds::WATER)
+        {
+            $player->setHealth($player->getMaxHealth());
+            $player->setFood($player->getMaxFood());
+        }
+    }
+
+    public function onPlayerJoin(PlayerJoinEvent $e)
+    {
+        Sidebar::getInstance()->update();
+    }
+
+    public function onPlayerExhaust(PlayerExhaustEvent $e)
+    {
+        $e->getPlayer()->setFood($e->getPlayer()->getMaxFood());
+    }
 }

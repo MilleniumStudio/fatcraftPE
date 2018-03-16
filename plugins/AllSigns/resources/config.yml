@@ -21,6 +21,10 @@ tpNextLevel: "tpNextLevel"
 goToGame : "goToGame"
 goToLobby : "goToLobby"
 infoSign : "infoSign"
+startChrono1: "§kee§r §6Hit me to §r§kee"
+startChrono2: "§6Start Chrono !"
+stopChrono1: "§keewwwww§r"
+stopChrono2: "§5Stop Chrono §keewwwww§r"
 
 # Messages
 noworld: "§cWorld does not exist"
