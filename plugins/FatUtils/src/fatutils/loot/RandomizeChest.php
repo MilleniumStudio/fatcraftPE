@@ -15,7 +15,9 @@ use fatutils\tools\WorldUtils;
 use pocketmine\block\BlockFactory;
 use pocketmine\block\BlockIds;
 use pocketmine\item\Item;
+use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
+use pocketmine\item\SplashPotion;
 use pocketmine\level\Position;
 use pocketmine\tile\Chest;
 
@@ -56,6 +58,7 @@ class RandomizeChest
             echo "Filling chest at " . $this->getPosition() . "\n";
             WorldUtils::loadChunkAt($this->m_Position);
             $l_ChestBlock = $this->m_Position->getLevel()->getBlock($this->m_Position);
+
             $l_ChestTile = $this->m_Position->getLevel()->getTile($l_ChestBlock);
             if ($l_ChestTile instanceof Chest)
             {
@@ -66,12 +69,24 @@ class RandomizeChest
                 {
                     $l_LootTable = LootManager::getInstance()->getRandomLootTable($this->m_MinItemValue, $this->m_MaxItemValue);
                     $l_InventoryTotalValue += $l_LootTable->getItemValue();
-                    $l_Item = $l_LootTable->getRandomItem();
-                    if ($l_ChestTile->getInventory()->firstEmpty() != -1)
+
+                    while (true)
                     {
-                        $l_EmptySlot = null;
-                        while (is_null($l_EmptySlot))
+                        $l_Item = $l_LootTable->getRandomItem();
+                        $l_itemId = $l_Item->getId();
+                        echo ("item id = " . $l_itemId . "\n");
+                        if ($l_itemId == ItemIds::SNOWBALL || $l_itemId == ItemIds::BOW || $l_itemId == ItemIds::ENDER_PEARL)
                         {
+                            if ($l_ChestTile->getInventory()->contains(ItemFactory::get($l_itemId, 0, 1)))
+                                continue;
+                        }
+                        break;
+                    }
+
+                    if ($l_ChestTile->getInventory()->firstEmpty() != -1) {
+                        $l_EmptySlot = null;
+                        while (is_null($l_EmptySlot)) {
+
                             $l_slot = rand(0, $l_ChestTile->getInventory()->getSize() - 1);
                             $item = $l_ChestTile->getInventory()->getItem($l_slot);
                             if (!is_null($item) && $item->getId() == ItemIds::AIR)
@@ -83,11 +98,19 @@ class RandomizeChest
 
                         if ($isBattleRoyal)
                         {
+                            if ($l_itemId == ItemIds::SPLASH_POTION)
+                            {
+                                if ($l_Item instanceof SplashPotion)
+                                    $l_Item->metaData = rand(0, 1);
+                            }
                             if (BattleRoyal::getInstance()->needCustomeName($l_itemId))
                             {
-                                $l_Item->setCustomName(BattleRoyal::getInstance()->getBattleRoyalCustomName($l_itemId));
+                                if (isset($l_Item->metaData))
+                                    $l_Item->setCustomName(BattleRoyal::getInstance()->getBattleRoyalCustomName($l_itemId, $l_Item->metaData));
+                                else
+                                    $l_Item->setCustomName(BattleRoyal::getInstance()->getBattleRoyalCustomName($l_itemId));
                             }
-                            if ($l_itemId == ItemIds::SNOWBALL || $l_itemId == ItemIds::BOW|| $l_itemId == ItemIds::ENDER_PEARL)
+                            if ($l_itemId == ItemIds::SNOWBALL || $l_itemId == ItemIds::BOW || $l_itemId == ItemIds::ENDER_PEARL)
                             {
                                 $l_ExtraAmmo = null;
                                 $l_SecondEmptySlot = null;

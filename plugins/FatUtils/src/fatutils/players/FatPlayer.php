@@ -246,6 +246,7 @@ class FatPlayer
                 $this->m_permissionGroup = $result->rows[0]["permission_group"];
                 if ($this->m_permissionGroup == null || $this->m_permissionGroup == "")
                     $this->m_permissionGroup = "default";
+                echo ("yo permission group = " . $this->m_permissionGroup . "\n");
                 $this->m_MutedTimestamp = $result->rows[0]["muted"];
 
 				$this->m_Fatsilver = $result->rows[0]["fatsilver"];
@@ -650,9 +651,9 @@ class FatPlayer
     {
         $group = $this->getPermissionGroup();
 
-        if ($group == "Commander")
+        if ($group == "Titan")
             return 1;
-        if ($group == "Veteran")
+        if ($group == "Legend")
             return 2;
         return 0;
     }

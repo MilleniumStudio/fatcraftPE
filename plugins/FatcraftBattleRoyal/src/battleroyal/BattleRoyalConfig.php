@@ -40,11 +40,9 @@ class BattleRoyalConfig
         else
             $this->m_WaitingPosition = BattleRoyal::getInstance()->getServer()->getLevel(1)->getSpawnLocation();
 
-        $this->Pos1 = new Vector3(256, 80, 256);
+        $this->Pos1 = new Vector3(-497, 115, 743);
         $this->Radius1 = 200;
 
-        $this->Pos2 = new Vector3(-310, 65, 15);
-        $this->Radius2 = 100;
     }
 
     public function getWaitingLocation() : Position

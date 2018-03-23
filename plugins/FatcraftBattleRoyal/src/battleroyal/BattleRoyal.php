@@ -35,6 +35,7 @@ use pocketmine\plugin\Plugin;
 use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\PluginTask;
 use pocketmine\utils\TextFormat;
+use pocketmine\utils\UUID;
 
 class BattleRoyal extends PluginBase implements Listener
 {
@@ -116,7 +117,8 @@ class BattleRoyal extends PluginBase implements Listener
 				}
 			});
 
-			Sidebar::getInstance()->addTranslatedLine(new TextFormatter("template.battleroyal"));
+			Sidebar::getInstance()->addTranslatedLine(new TextFormatter("template.battleRoyale"))
+                ->addTranslatedLine(new TextFormatter("template.playfatcraft"));
 
 		Sidebar::getInstance()
 			->addTimer($this->m_WaitingTimer)
@@ -130,7 +132,7 @@ class BattleRoyal extends PluginBase implements Listener
 	public function handlePlayerConnection(Player $p_Player)
 	{
 			$p_Player->sendMessage((new TextFormatter("template.info.template", [
-				"gameName" => new TextFormatter("template.battleroyal"),
+				"gameName" => new TextFormatter("template.battleRoyale"),
 				//"text" => new TextFormatter("template.info.hg")
 			]))->asStringForPlayer($p_Player));
 
@@ -174,7 +176,9 @@ class BattleRoyal extends PluginBase implements Listener
 	// UTILS
 	//---------------------
 	public function startGame()
-	{
+    {
+        echo ("ici startGame 0 !\n");
+
 		// CLOSING SERVER
 		LoadBalancer::getInstance()->setServerState(LoadBalancer::SERVER_STATE_CLOSED);
 		GameManager::getInstance()->startGame();
@@ -183,20 +187,24 @@ class BattleRoyal extends PluginBase implements Listener
 		// INIT SIDEBAR
 		Sidebar::getInstance()->clearLines();
 
-        Sidebar::getInstance()->addTranslatedLine(new TextFormatter("template.battleroyal"));
-
+        Sidebar::getInstance()->addTranslatedLine(new TextFormatter("template.battleRoyale"))
+        ->addTranslatedLine(new TextFormatter("template.playfatcraft"));
 		$this->m_PlayTimer = new DisplayableTimer(GameManager::getInstance()->getPlayingTickDuration());
 		$this->m_PlayTimer
 			->setTitle(new TextFormatter("timer.playing.title"))
             ->addStartCallback(function()
             {
-                $l_centerpoint = new Vector3(rand($this->getBattleRoyalConfig()->getPos1()->x - 150, $this->getBattleRoyalConfig()->getPos1()->x + 150), $this->getBattleRoyalConfig()->getPos1()->y, rand($this->getBattleRoyalConfig()->getPos1()->z - 150, $this->getBattleRoyalConfig()->getPos1()->z + 150));
+                echo ("ici startGame !\n");
+
+                $l_centerpoint = new Vector3(rand($this->getBattleRoyalConfig()->getPos1()->x - 50, $this->getBattleRoyalConfig()->getPos1()->x + 50), $this->getBattleRoyalConfig()->getPos1()->y, rand($this->getBattleRoyalConfig()->getPos1()->z - 50, $this->getBattleRoyalConfig()->getPos1()->z + 50));
                 $this->setCurrentCenterLoc($l_centerpoint);
                 $this->setCurrentRadius($this->getBattleRoyalConfig()->getRadius1());
                 $this->computeBubble($this->currentZoneLoc, $this->currentRadius);
                 $this->doStuffWithChunks();
                 foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
                     $l_Player->addTitle("§2Game started !§r", "§8Fly over the place and gear up !§r");
+                echo ("ici startGame 2 !\n");
+
             })
             ->addStopCallback(function ()
 			{
@@ -221,7 +229,7 @@ class BattleRoyal extends PluginBase implements Listener
 		{
 			PlayersManager::getInstance()->getFatPlayer($l_Player)->setPlaying();
 
-            $l_Player->addEffect(Effect::getEffect(Effect::DAMAGE_RESISTANCE)->setAmplifier(10)->setDuration(60 * 20));
+            $l_Player->addEffect(Effect::getEffect(Effect::DAMAGE_RESISTANCE)->setAmplifier(10)->setDuration(30 * 20));
 
 			PlayersManager::getInstance()->getFatPlayer($l_Player)->equipKitToPlayer();
             $l_Player->getInventory()->setChestplate(Item::get(ItemIds::ELYTRA));
@@ -279,12 +287,15 @@ class BattleRoyal extends PluginBase implements Listener
             case ItemIds::LEATHER_BOOTS:
             case ItemIds::LEATHER_CHESTPLATE:
             case ItemIds::LEATHER_LEGGINGS:
-            $value = true;
+            case ItemIds::SPLASH_POTION:
+            case ItemIds::DIAMOND_PICKAXE:
+            case ItemIds::WOODEN_PICKAXE:
+                $value = true;
         }
         return $value;
 }
 
-    public function getBattleRoyalCustomName(int $p_itemId) : string
+    public function getBattleRoyalCustomName(int $p_itemId, int $p_metaData = 0) : string
     {
         switch ($p_itemId)
         {
@@ -354,14 +365,25 @@ class BattleRoyal extends PluginBase implements Listener
                 return "§fBEACH TANK TOP§r";
             case ItemIds::LEATHER_LEGGINGS;
                 return "§fBEACH SHORT§r";
-
+            case ItemIds::SPLASH_POTION:
+                if ($p_metaData == 0)
+                    return "§3WALL POTION§r";
+                if ($p_metaData == 1)
+                    return "§3STAIRS POTION§r";
+            case ItemIds::WOODEN_PICKAXE:
+                return "§5SLEDGE HAMMER";
+            case ItemIds::STONE_PICKAXE:
+                return "§5§lFAT SLEDGE HAMMER";
+            case ItemIds::DIAMOND_PICKAXE:
+                return "§5§lULTIMATE SLEDGE HAMMER";
+                break;
         }
     }
 
 	public function applyBattleRoyalSidebarTemplate()
     {
         Sidebar::getInstance()
-            ->addTranslatedLine(new TextFormatter("template.battleroyal"))
+            ->addTranslatedLine(new TextFormatter("template.battleRoyale"))
             ->addTranslatedLine(new TextFormatter("template.playfatcraft"))
             ->addTimer($this->m_PlayTimer)
             ->addWhiteSpace()
@@ -537,7 +559,7 @@ class BattleRoyal extends PluginBase implements Listener
             GameManager::getInstance()->endGame(false);
 
             foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-                $l_Player->addTitle("Winner is §6" . $winner->getName()."§r !", "Game over");
+                $l_Player->addTitle(" #1 §6Victory is MINE !", "§4" . $winner->getPlayer()->getName(), -1, 3000);
         }
         else
         {
@@ -562,25 +584,25 @@ class BattleRoyal extends PluginBase implements Listener
 	//---------------------
 	// EVENTS
 	//---------------------
-	public function playerQuitEvent(PlayerQuitEvent $e)
-	{
-		if (GameManager::getInstance()->isPlaying())
-		{
-			$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($e->getPlayer());
-			if ($l_FatPlayer != null)
-				$l_FatPlayer->setOutOfGame();
-		}
+    public function playerQuitEvent(PlayerQuitEvent $e)
+    {
+        if (GameManager::getInstance()->isPlaying())
+        {
+            $l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($e->getPlayer());
+            if ($l_FatPlayer != null)
+                $l_FatPlayer->setOutOfGame();
+        }
 
-		Sidebar::getInstance()->update();
+        Sidebar::getInstance()->update();
 
-		new DelayedExec(function ()
-		{
-			if (GameManager::getInstance()->isWaiting())
-			{
-				if ($this->m_WaitingTimer instanceof Timer)
+        new DelayedExec(function ()
+        {
+            if (GameManager::getInstance()->isWaiting())
+            {
+                if ($this->m_WaitingTimer instanceof Timer)
                 {
                     if ($this->m_WaitingTimer->getTickLeft() > 0 &&
-					(count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMinPlayer()))
+                        (count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMinPlayer()))
                     {
                         $this->m_WaitingTimer->cancel();
                         $this->m_WaitingTimer = null;
@@ -603,15 +625,15 @@ class BattleRoyal extends PluginBase implements Listener
                 }
 
             } else if (GameManager::getInstance()->isPlaying())
-			{
-			    $nbPlayer = PlayersManager::getInstance()->getInGamePlayerLeft();
-				if ($nbPlayer == 1)
-				    $this->endGame();
+            {
+                $nbPlayer = PlayersManager::getInstance()->getInGamePlayerLeft();
+                if ($nbPlayer == 1)
+                    $this->endGame();
                 if ($nbPlayer == 0)
-					$this->getServer()->shutdown();
-			}
-		}, 1);
-	}
+                    $this->getServer()->shutdown();
+            }
+        }, 1);
+    }
 
 	private function resetGameWaiting()
 	{
@@ -643,8 +665,9 @@ class BattleRoyal extends PluginBase implements Listener
 		Sidebar::getInstance()->clearLines();
 		// Waiting Sidebar Initialization
 		Sidebar::getInstance()
-			->addTranslatedLine(new TextFormatter("template.battleroyal"))
-			->addTimer($this->m_WaitingTimer)
+			->addTranslatedLine(new TextFormatter("template.battleRoyale"))
+            ->addTranslatedLine(new TextFormatter("template.playfatcraft"))
+            ->addTimer($this->m_WaitingTimer)
 			->addWhiteSpace()
 			->addMutableLine(function ()
 			{
@@ -652,6 +675,28 @@ class BattleRoyal extends PluginBase implements Listener
 			});
 		Sidebar::getInstance()->update();
 	}
+
+	public function giveRightPickaxe(String $p_uuid, int $p_val)
+    {
+        $player = PlayersManager::getInstance()->getPlayerFromUUID(UUID::fromString($p_uuid));
+        if ($player != null)
+        {
+            $item = null;
+            if ($p_val == 0)
+                $item = ItemFactory::get(ItemIds::WOODEN_PICKAXE);
+            if ($p_val == 1)
+                $item = ItemFactory::get(ItemIds::STONE_PICKAXE);
+            if ($p_val == 2)
+                $item = ItemFactory::get(ItemIds::DIAMOND_PICKAXE);
+
+            if ($item != null)
+            {
+                $item->setCustomName($this->getBattleRoyalCustomName($item->getId()));
+                $player->getInventory()->setItem(0, $item);
+            }
+        }
+
+    }
 
 	//---------------------
 	// GETTERS
@@ -857,9 +902,9 @@ class BattleRoyal extends PluginBase implements Listener
             $level->setBlock($this->bubbleVertices[$i + $this->begin],
                     new Block(BlockIds::PORTAL, 3), false, false);
             $i++;
-            if ($i >= 2500)
+            if ($i >= 1500)
             {
-                $this->begin += 2500;
+                $this->begin += 1500;
 
                 $task = new SpawnBubbleTask($this);
                 $this->getServer()->getScheduler()->scheduleDelayedTask($task, 1);

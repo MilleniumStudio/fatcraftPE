@@ -1,7 +1,7 @@
 name: FatcraftBattleRoyal
 version: 0.4
 main: battleroyal\BattleRoyal
-description: "Battleroyal"
+description: "Battleroyale"
 depend: [FatUtils]
 api: [3.0.0-ALPHA10]
 load: POSTWORLD

@@ -4,6 +4,7 @@ namespace fatutils\scores;
 
 use fatcraft\loadbalancer\LoadBalancer;
 use fatutils\FatUtils;
+use fatutils\game\GameManager;
 use fatutils\gamedata\GameDataManager;
 use fatutils\players\PlayersManager;
 use fatutils\shop\ShopManager;
@@ -65,21 +66,24 @@ class ScoresManager
 
 	public function recordScore(String $p_PlayerUUID, int $p_Position, $data = array())
 	{
-		var_dump($p_PlayerUUID, $p_Position, $data);
+		//var_dump($p_PlayerUUID, $p_Position, $data);
 
 		$l_JsonData = json_encode($data);
+        $l_serverType = LoadBalancer::getInstance()->getServerType();
+
 		FatUtils::getInstance()->getLogger()->info("Registering score for $p_PlayerUUID at pos $p_Position. ($l_JsonData)");
 
 		if (GameDataManager::getInstance()->getGameId() != 0)
 		{
 			FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
 				new DirectQueryMysqlTask(LoadBalancer::getInstance()->getCredentials(),
-					"INSERT INTO scores (game, player, position, data) VALUES (?, ?, ?, ?)", [
+					"INSERT INTO scores (game, player, position, data, serverType) VALUES (?, ?, ?, ?, ?)", [
 						["i", GameDataManager::getInstance()->getGameId()],
 						["s", $p_PlayerUUID],
 						["i", $p_Position],
-						["s", $l_JsonData]
-					]
+                        ["s", $l_JsonData],
+                        ["s", $l_serverType],
+                    ]
 				));
 		}
 	}

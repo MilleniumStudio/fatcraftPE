@@ -11,6 +11,7 @@ use fatutils\tools\Sidebar;
 use fatutils\tools\WorldUtils;
 use fatutils\spawns\SpawnManager;
 use battleroyal\BattleRoyal;
+use libasynql\result\MysqlResult;
 use pocketmine\entity\Effect;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
@@ -21,8 +22,12 @@ use pocketmine\event\player\PlayerExhaustEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\event\player\PlayerToggleSneakEvent;
+use pocketmine\item\Item;
 use pocketmine\item\ItemIds;
+use pocketmine\nbt\tag\StringTag;
 use pocketmine\Player;
+use pocketmine\plugin\Plugin;
+use pocketmine\scheduler\PluginTask;
 use pocketmine\utils\TextFormat;
 
 class EventListener implements Listener
@@ -68,7 +73,7 @@ class EventListener implements Listener
             if ($l_PlayerLeft <= 1 && !GameManager::getInstance()->isGameFinished())
                 BattleRoyal::getInstance()->endGame();
 
-            $e->setDeathMessage("YOU DIED AT " . BattleRoyal::getInstance()->maxPlayer - PlayersManager::getInstance()->getInGamePlayerLeft() . " POSITION.");
+            $e->getPlayer()->sendMessage("You died as pos " . (BattleRoyal::getInstance()->maxPlayer - PlayersManager::getInstance()->getInGamePlayerLeft() + 1) . ".\n");
             $p->setGamemode(3);
 
             Sidebar::getInstance()->update();
@@ -87,7 +92,7 @@ class EventListener implements Listener
     /**
      * @param PlayerJoinEvent $e
      */
-    public function onSpawn(PlayerJoinEvent $e)
+    public function onPlayerJoin(PlayerJoinEvent $e)
     {
         $p_Player = $e->getPlayer();
 
@@ -105,6 +110,9 @@ class EventListener implements Listener
         $p = $e->getPlayer();
         $p->setGamemode(Player::ADVENTURE);
         $p->getInventory()->clearAll();
+
+        $task = new GiveSledgeHammer(BattleRoyal::getInstance(), $p->getUniqueId()->toString());
+        BattleRoyal::getInstance()->getServer()->getScheduler()->scheduleDelayedTask($task, 1);
 
         BattleRoyal::getInstance()->handlePlayerConnection($p);
     }
@@ -126,8 +134,8 @@ class EventListener implements Listener
 
     public function onBlockBreakEvent(BlockBreakEvent $e)
     {
-        if ($e->getBlock()->getId() == 95)
-            $e->setCancelled();
+        $array = [];
+        $e->setDrops($array);
     }
 
     public function onPlayerHit(EntityDamageEvent $e)
@@ -146,5 +154,31 @@ class EventListener implements Listener
         if (GameManager::getInstance()->isWaiting())
             $p_Event->setCancelled(true);
     }
+}
 
+
+class GiveSledgeHammer extends PluginTask
+{
+    private $m_uuid = "";
+    public function __construct(Plugin $p_owner, String $p_uuid)
+    {
+        parent::__construct($p_owner);
+        $this->m_uuid = $p_uuid;
+    }
+
+    public function onRun(int $currentTick)
+    {
+        $result = MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(),
+            "SELECT * FROM scores WHERE player = ? && `position` = 100 && serverType = 'battleRoyal'", [
+                ["s", $this->m_uuid]
+            ]);
+        if (($result instanceof \libasynql\result\MysqlSelectResult) and count($result->rows) >= 1)
+            BattleRoyal::getInstance()->giveRightPickaxe($this->m_uuid, 1);
+        else
+            BattleRoyal::getInstance()->giveRightPickaxe($this->m_uuid, 0);
+    }
+
+    public function cancel() {
+        $this->getHandler()->cancel();
+    }
 }
