@@ -443,7 +443,7 @@ class BattleRoyal extends PluginBase implements Listener
                     if (!$l_player->hasEffect(Effect::FATAL_POISON))
                         $l_player->addEffect(Effect::getEffect(Effect::FATAL_POISON)->setDuration(INT32_MAX));
                     if (!$l_player->hasEffect(Effect::CONFUSION))
-                        $l_player->addEffect(Effect::getEffect(Effect::CONFUSION)->setDuration(INT32_MAX)->setAmplifier(10));
+                        $l_player->addEffect(Effect::getEffect(Effect::CONFUSION)->setDuration(INT32_MAX)->setAmplifier(1));
                 }
             }
         }

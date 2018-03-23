@@ -23,6 +23,7 @@ use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\event\player\PlayerToggleSneakEvent;
 use pocketmine\item\Item;
+use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\Player;
@@ -49,23 +50,32 @@ class EventListener implements Listener
         }
     }
 
-    /**
-     * @param PlayerDeathEvent $e
-     */
-    public function playerDeathEvent(PlayerDeathEvent $e)
+    public function onPlayerDamage(EntityDamageEvent $p_event)
     {
-        $p = $e->getEntity();
+        $entity = $p_event->getEntity();
+        if ($entity instanceof Player)
+        {
+            if ($entity->getHealth() - $p_event->getFinalDamage() <= 0)
+            {
+                $this->playerDeathEvent($entity);
+                $p_event->setCancelled();
+            }
+        }
+    }
 
+    // not an actual event
+    public function playerDeathEvent(Player $player)
+    {
         if (!GameManager::getInstance()->isWaiting()) {
-            PlayersManager::getInstance()->getFatPlayer($p)->setOutOfGame(true);
+            PlayersManager::getInstance()->getFatPlayer($player)->setOutOfGame(true);
 
-            WorldUtils::addStrike($p->getLocation());
+            WorldUtils::addStrike($player->getLocation());
             $l_PlayerLeft = PlayersManager::getInstance()->getInGamePlayerLeft();
 
-            ScoresManager::getInstance()->giveRewardToPlayer($p->getUniqueId(), ((GameManager::getInstance()->getPlayerNbrAtStart() - $l_PlayerLeft) / GameManager::getInstance()->getPlayerNbrAtStart()));
+            ScoresManager::getInstance()->giveRewardToPlayer($player->getUniqueId(), ((GameManager::getInstance()->getPlayerNbrAtStart() - $l_PlayerLeft) / GameManager::getInstance()->getPlayerNbrAtStart()));
 
             foreach (BattleRoyal::getInstance()->getServer()->getOnlinePlayers() as $l_Player) {
-                $l_Player->sendMessage($e->getDeathMessage());
+                //$l_Player->sendMessage($e->getDeathMessage());
                 if ($l_PlayerLeft > 1)
                     $l_Player->sendMessage("Il reste " . TextFormat::YELLOW . PlayersManager::getInstance()->getInGamePlayerLeft() . TextFormat::RESET . " survivants !");
             }
@@ -73,9 +83,24 @@ class EventListener implements Listener
             if ($l_PlayerLeft <= 1 && !GameManager::getInstance()->isGameFinished())
                 BattleRoyal::getInstance()->endGame();
 
-            $e->getPlayer()->sendMessage("You died as pos " . (BattleRoyal::getInstance()->maxPlayer - PlayersManager::getInstance()->getInGamePlayerLeft() + 1) . ".\n");
-            $p->setGamemode(3);
+            $player->setTitle("You died at pos #". (BattleRoyal::getInstance()->maxPlayer - PlayersManager::getInstance()->getInGamePlayerLeft() + 1) . ".\n");
+            $player->setGamemode(3);
+            $player->setHealth($player->getMaxHealth());
 
+            $drops = $player->getInventory()->getContents();
+
+            foreach ($drops as $index => $item)
+            {
+                switch ($item->getId())
+                {
+                    case (ItemIds::SNOWBALL):
+                    case (ItemIds::ENDER_PEARL):
+                    case (ItemIds::BOW):
+                        $item->setCount(1);
+                        break;
+                }
+            }
+            $player->getInventory()->dropContents(BattleRoyal::getInstance()->getServer()->getLevel(1), $player->getPosition());
             Sidebar::getInstance()->update();
         }
     }
