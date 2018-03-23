@@ -4,7 +4,7 @@ signs: []
 
 signsareas:
 
-  - name: "BattleRoyal"
+  - name: "BattleRoyale"
     update: true
     locations: [
       "30/9/68",

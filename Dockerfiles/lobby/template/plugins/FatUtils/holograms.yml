@@ -2,7 +2,7 @@
 
 holograms:
   - name: "welcom.message"
-    location: map/0/12/-8
+    location: map/0/20/-8
     title : "hologram.lobby.welcome.title"
     text: "hologram.lobby.welcome.text"
 

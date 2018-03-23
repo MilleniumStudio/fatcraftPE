@@ -2,9 +2,9 @@
 
 npcs:
 
-  - name: "§4§lBETA§r §5Battle §6Royal §4§lHIT ME"
-    displayname: "§4§lBETA§r §5Battle §6Royal §4§lHIT ME"
-    location: 0.5/12/-17.5/307/0
+  - name: "§4§lBETA§r §5Battle §6Royale §4§lHIT ME"
+    displayname: "§4§lBETA§r §5Battle §6Royale §4§lHIT ME"
+    location: -2.5/14/-3.5/307/0
     type : "Player"
     size : 1
     skin: "KruGame"
