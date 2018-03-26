@@ -75,17 +75,17 @@ class EventListener implements Listener
             ScoresManager::getInstance()->giveRewardToPlayer($player->getUniqueId(), ((GameManager::getInstance()->getPlayerNbrAtStart() - $l_PlayerLeft) / GameManager::getInstance()->getPlayerNbrAtStart()));
 
             foreach (BattleRoyal::getInstance()->getServer()->getOnlinePlayers() as $l_Player) {
-                //$l_Player->sendMessage($e->getDeathMessage());
                 if ($l_PlayerLeft > 1)
-                    $l_Player->sendMessage("Il reste " . TextFormat::YELLOW . PlayersManager::getInstance()->getInGamePlayerLeft() . TextFormat::RESET . " survivants !");
+                    $l_Player->sendMessage(TextFormat::YELLOW . PlayersManager::getInstance()->getInGamePlayerLeft() . TextFormat::RESET . " players alive !");
             }
 
             if ($l_PlayerLeft <= 1 && !GameManager::getInstance()->isGameFinished())
                 BattleRoyal::getInstance()->endGame();
 
-            $player->setTitle("You died at pos #". (BattleRoyal::getInstance()->maxPlayer - PlayersManager::getInstance()->getInGamePlayerLeft() + 1) . ".\n");
-            $player->setGamemode(3);
-            $player->setHealth($player->getMaxHealth());
+            $player->addTitle("You are #". (BattleRoyal::getInstance()->maxPlayer - PlayersManager::getInstance()->getInGamePlayerLeft() + 1) . ".\n");
+            $player->setGamemode(PLAYER::SPECTATOR);
+
+            //$player->setHealth($player->getMaxHealth());
 
             $drops = $player->getInventory()->getContents();
 
@@ -104,15 +104,6 @@ class EventListener implements Listener
             Sidebar::getInstance()->update();
         }
     }
-
-//    /**
-//     * @param EntityDamageEvent $e
-//     */
-//    public function onEntityDamageEvent(EntityDamageEvent $e)
-//    {
-//        if (GameManager::getInstance()->getSecondSinceStart() < 30)
-//            $e->setCancelled(true);
-//    }
 
     /**
      * @param PlayerJoinEvent $e

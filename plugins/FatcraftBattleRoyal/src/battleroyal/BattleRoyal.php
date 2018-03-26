@@ -194,8 +194,6 @@ class BattleRoyal extends PluginBase implements Listener
 			->setTitle(new TextFormatter("timer.playing.title"))
             ->addStartCallback(function()
             {
-                echo ("ici startGame !\n");
-
                 $l_centerpoint = new Vector3(rand($this->getBattleRoyalConfig()->getPos1()->x - 50, $this->getBattleRoyalConfig()->getPos1()->x + 50), $this->getBattleRoyalConfig()->getPos1()->y, rand($this->getBattleRoyalConfig()->getPos1()->z - 50, $this->getBattleRoyalConfig()->getPos1()->z + 50));
                 $this->setCurrentCenterLoc($l_centerpoint);
                 $this->setCurrentRadius($this->getBattleRoyalConfig()->getRadius1());
@@ -203,7 +201,6 @@ class BattleRoyal extends PluginBase implements Listener
                 $this->doStuffWithChunks();
                 foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
                     $l_Player->addTitle("§2Game started !§r", "§8Fly over the place and gear up !§r");
-                echo ("ici startGame 2 !\n");
 
             })
             ->addStopCallback(function ()

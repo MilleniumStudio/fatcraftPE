@@ -24,6 +24,7 @@ Legend:
   extends: Titan
   prefix: "§6Legend "
   color: §6
+  allow:
     - lobby.setscale
 
 VIP:
