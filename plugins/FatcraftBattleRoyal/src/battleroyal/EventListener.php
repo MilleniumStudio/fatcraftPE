@@ -55,6 +55,8 @@ class EventListener implements Listener
         $entity = $p_event->getEntity();
         if ($entity instanceof Player)
         {
+            if (PlayersManager::getInstance()->getFatPlayer($entity)->isOutOfGame())
+                return;
             if ($entity->getHealth() - $p_event->getFinalDamage() <= 0)
             {
                 $this->playerDeathEvent($entity);
@@ -66,7 +68,8 @@ class EventListener implements Listener
     // not an actual event
     public function playerDeathEvent(Player $player)
     {
-        if (!GameManager::getInstance()->isWaiting()) {
+        if (!GameManager::getInstance()->isWaiting())
+        {
             $player->addTitle("You are #". (PlayersManager::getInstance()->getInGamePlayerLeft()) . ".\n");
             PlayersManager::getInstance()->getFatPlayer($player)->setOutOfGame(true);
 
