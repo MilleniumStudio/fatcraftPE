@@ -95,6 +95,7 @@ class EventListener implements Listener
 
         if (GameManager::getInstance()->isWaiting())
             PlayersManager::getInstance()->removePlayer($p);
+		PermissionManager::getInstance()->removePlayerPerms($l_FatPlayer);
     }
 
 	public function onPlayerChat(PlayerChatEvent $e)

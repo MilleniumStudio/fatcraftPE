@@ -899,9 +899,9 @@ class BattleRoyal extends PluginBase implements Listener
             $level->setBlock($this->bubbleVertices[$i + $this->begin],
                     new Block(BlockIds::PORTAL, 3), false, false);
             $i++;
-            if ($i >= 1500)
+            if ($i >= 500)
             {
-                $this->begin += 1500;
+                $this->begin += 500;
 
                 $task = new SpawnBubbleTask($this);
                 $this->getServer()->getScheduler()->scheduleDelayedTask($task, 1);

@@ -10,6 +10,7 @@ namespace fatcraft\lobby;
 
 use fatcraft\loadbalancer\LoadBalancer;
 use fatutils\FatUtils;
+use fatutils\permission\PermissionManager;
 use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
 use fatutils\shop\ShopManager;
@@ -28,6 +29,7 @@ use pocketmine\event\inventory\InventoryPickupItemEvent;
 use pocketmine\event\inventory\InventoryPickupArrowEvent;
 use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\level\ChunkUnloadEvent;
+use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerDropItemEvent;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerExhaustEvent;
@@ -93,9 +95,49 @@ class Lobby extends PluginBase implements Listener
         LoadBalancer::getInstance()->getServer()->dispatchCommand(new ConsoleCommandSender(), "buycraft secret c3ff65408c433494f06bcd411bc6399e03fb6c6c");
     }
 
+    public function checkPlayerPermissions(Player $p_Player)
+    {
+        // Items in player bar
+        if ($p_Player->hasPermission("lobby.quickgameselection"))
+        {
+            $p_Player->getInventory()->setHeldItemIndex(4);
+
+            $l_MainMenu = Item::get(ItemIds::COMPASS);
+            $l_MainMenu->setCustomName((new TextFormatter("lobby.hotbar.mainMenu"))->asStringForPlayer($p_Player));
+            $p_Player->getInventory()->setItem(2, $l_MainMenu);
+        }
+        if ($p_Player->hasPermission("lobby.fly"))
+        {
+            $l_FlyItem = Item::get(ItemIds::ELYTRA);
+            $l_FlyItem->setCustomName((new TextFormatter("lobby.hotbar.lobbyFly"))->asStringForPlayer($p_Player));
+            $p_Player->getInventory()->setItem(8, $l_FlyItem);
+        }
+        if ($p_Player->hasPermission("effect.superjump"))
+        {
+            $p_Player->addEffect(Effect::getEffect(Effect::JUMP_BOOST)->setAmplifier(2)->setDuration(INT32_MAX));
+        }
+        if ($p_Player->hasPermission("lobby.setscale"))
+        {
+            $l_FlyItem = Item::get(ItemIds::TOTEM);
+            $l_FlyItem->setCustomName((new TextFormatter("lobby.hotbar.setscale"))->asStringForPlayer($p_Player));
+            $p_Player->getInventory()->setItem(4, $l_FlyItem);
+        }
+
+        $l_Shop = Item::get(ItemIds::EMERALD);
+        $l_Shop->setCustomName((new TextFormatter("shop.title"))->asStringForPlayer($p_Player));
+        $p_Player->getInventory()->setItem(1, $l_Shop);
+
+        $l_LobbyChooser = Item::get(ItemIds::NETHERSTAR);
+        $l_LobbyChooser->setCustomName((new TextFormatter("lobby.hotbar.lobbyChooser"))->asStringForPlayer($p_Player));
+        $p_Player->getInventory()->setItem(6, $l_LobbyChooser);
+
+        $p_Player->getInventory()->sendContents($p_Player);
+    }
+
     public function onPlayerJoin(PlayerJoinEvent $e)
     {
         $l_Player = $e->getPlayer();
+        $l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($l_Player);
 
         new DelayedExec(function () use ($e)
 		{
@@ -105,41 +147,8 @@ class Lobby extends PluginBase implements Listener
 			);
 		}, 5);
 
-        // Items in player bar
-        if ($l_Player->hasPermission("lobby.quickgameselection"))
-        {
-            $l_Player->getInventory()->setHeldItemIndex(4);
-
-            $l_MainMenu = Item::get(ItemIds::COMPASS);
-			$l_MainMenu->setCustomName((new TextFormatter("lobby.hotbar.mainMenu"))->asStringForPlayer($l_Player));
-            $l_Player->getInventory()->setItem(2, $l_MainMenu);
-		}
-        if ($l_Player->hasPermission("lobby.fly"))
-        {
-            $l_FlyItem = Item::get(ItemIds::ELYTRA);
-            $l_FlyItem->setCustomName((new TextFormatter("lobby.hotbar.lobbyFly"))->asStringForPlayer($l_Player));
-            $l_Player->getInventory()->setItem(8, $l_FlyItem);
-        }
-		if ($l_Player->hasPermission("effect.superjump"))
-        {
-            $l_Player->addEffect(Effect::getEffect(Effect::JUMP_BOOST)->setAmplifier(2)->setDuration(INT32_MAX));
-        }
-        if ($l_Player->hasPermission("lobby.setscale"))
-        {
-            $l_FlyItem = Item::get(ItemIds::TOTEM);
-            $l_FlyItem->setCustomName((new TextFormatter("lobby.hotbar.setscale"))->asStringForPlayer($l_Player));
-            $l_Player->getInventory()->setItem(4, $l_FlyItem);
-        }
-
-		$l_Shop = Item::get(ItemIds::EMERALD);
-		$l_Shop->setCustomName((new TextFormatter("shop.title"))->asStringForPlayer($l_Player));
-        $l_Player->getInventory()->setItem(1, $l_Shop);
-
-		$l_LobbyChooser = Item::get(ItemIds::NETHERSTAR);
-		$l_LobbyChooser->setCustomName((new TextFormatter("lobby.hotbar.lobbyChooser"))->asStringForPlayer($e->getPlayer()));
-        $l_Player->getInventory()->setItem(6, $l_LobbyChooser);
-
-        $l_Player->getInventory()->sendContents($e->getPlayer());
+        PermissionManager::getInstance()->updatePermissions($l_FatPlayer);
+        $this->checkPlayerPermissions($l_Player);
         $l_Player->addEffect(Effect::getEffect(Effect::SPEED)->setAmplifier(2)->setDuration(INT32_MAX));
 
         if ($this->m_SpawnPoint != null)
@@ -213,6 +222,11 @@ class Lobby extends PluginBase implements Listener
     public function onPlayerExhaust(PlayerExhaustEvent $p_Event)
     {
         $p_Event->setCancelled(true);
+    }
+
+    public function onPlayerChat(PlayerChatEvent $p_e)
+    {
+        $this->checkPlayerPermissions($p_e->getPlayer());
     }
 
     public function onPlayerDamage(EntityDamageEvent $e)

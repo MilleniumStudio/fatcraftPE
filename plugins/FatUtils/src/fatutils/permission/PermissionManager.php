@@ -117,4 +117,11 @@ class PermissionManager
             array_splice($this->m_activePerms, $fatPlayer->getUniqueId()->toString(), 1);
         }
     }
+
+    public function removePlayerPerms(FatPlayer $fatPlayer)
+    {
+        $uuid = $fatPlayer->getPlayer()->getUniqueId()->toString();
+        if (array_key_exists($uuid, $this->m_activePerms))
+            unset($this->m_activePerms[$uuid]);
+    }
 }
