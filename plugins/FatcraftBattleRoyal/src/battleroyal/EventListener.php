@@ -67,6 +67,7 @@ class EventListener implements Listener
     public function playerDeathEvent(Player $player)
     {
         if (!GameManager::getInstance()->isWaiting()) {
+            $player->addTitle("You are #". (PlayersManager::getInstance()->getInGamePlayerLeft()) . ".\n");
             PlayersManager::getInstance()->getFatPlayer($player)->setOutOfGame(true);
 
             WorldUtils::addStrike($player->getLocation());
@@ -82,7 +83,6 @@ class EventListener implements Listener
             if ($l_PlayerLeft <= 1 && !GameManager::getInstance()->isGameFinished())
                 BattleRoyal::getInstance()->endGame();
 
-            $player->addTitle("You are #". (BattleRoyal::getInstance()->maxPlayer - PlayersManager::getInstance()->getInGamePlayerLeft() + 1) . ".\n");
             $player->setGamemode(PLAYER::SPECTATOR);
 
             //$player->setHealth($player->getMaxHealth());
