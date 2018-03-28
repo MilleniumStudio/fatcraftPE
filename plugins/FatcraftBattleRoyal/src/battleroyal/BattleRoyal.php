@@ -226,6 +226,8 @@ class BattleRoyal extends PluginBase implements Listener
             $l_Player->teleport($this->getBattleRoyalConfig()->getStartGameLocation());
         }
 
+        PlayersManager::getInstance()->changeAllInGamePlayerGamemode(Player::SURVIVAL);
+
         $this->getServer()->getScheduler()->scheduleDelayedTask(new class(FatUtils::getInstance()) extends PluginTask
         {
 
