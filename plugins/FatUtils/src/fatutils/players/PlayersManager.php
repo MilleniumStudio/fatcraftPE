@@ -89,6 +89,15 @@ class PlayersManager
                 ]));
 	}
 
+	public function changeAllInGamePlayerGamemode(int $p_Gamemode)
+    {
+        foreach ($this->m_FatPlayers as $l_FatPlayer)
+        {
+            if ($l_FatPlayer instanceof FatPlayer && !$l_FatPlayer->isOutOfGame())
+                $l_FatPlayer->getPlayer()->setGamemode($p_Gamemode);
+        }
+    }
+
 	public function removePlayer(Player $p_Player)
 	{
 		$key = $p_Player->getUniqueId()->toString();

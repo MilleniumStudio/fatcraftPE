@@ -11,11 +11,10 @@ namespace surva\allsigns;
 use fatcraft\loadbalancer\LoadBalancer;
 use fatutils\FatUtils;
 use fatutils\holograms\HologramsManager;
+use fatutils\holograms\UpdateMirrorsEdgeHologram;
 use fatutils\tools\Sidebar;
 use fatutils\tools\TextFormatter;
 use libasynql\DirectQueryMysqlTask;
-use libasynql\result\MysqlResult;
-use libasynql\result\MysqlSelectResult;
 use pocketmine\Player;
 use pocketmine\plugin\Plugin;
 use pocketmine\scheduler\PluginTask;
@@ -64,7 +63,7 @@ class AllSigns extends PluginBase
             });
         HologramsManager::getInstance();
 
-        FatUtils::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new UpdateHolograms($this), 100);
+        FatUtils::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new UpdateMirrorsEdgeHologram($this), 100);
         FatUtils::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new UpdateSidebar($this), 2);
 
     }
@@ -121,56 +120,6 @@ class AllSigns extends PluginBase
     }
 }
 
-
-class UpdateHolograms extends PluginTask
-{
-    public function __construct(Plugin $owner)
-    {
-        parent::__construct($owner);
-    }
-
-    public function onRun(int $currentTick)
-    {
-        $textBuffer = "";
-        $result = MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(),
-            "SELECT MIN(`time`) AS `minTime`, `player_name` FROM chrono_scores GROUP BY `player_name` ORDER BY `minTime` ASC LIMIT 20", []
-        );
-        if (($result instanceof MysqlSelectResult) and isset($result->rows[0]))
-        {
-            $i = 0;
-            while (isset($result->rows[$i]))
-            {
-                $val = $i + 1;
-
-                $floatResult = sprintf("%.2f", $result->rows[$i]["minTime"]);
-                $intVal = intval($floatResult);
-                $minute = intVal($floatResult / 60);
-                $second = $intVal % 60;
-                $cents = ($floatResult - floatval($intVal)) * 100;
-
-                if ($i + 1 <=3)
-                    $textBuffer .= "§6" . $val . "§5 - " . $result->rows[$i]["player_name"] . " ->§4 " . $minute . "'" . $second . "\"" . $cents . "\n";
-                else
-                    $textBuffer .= "§6" . $val . "§r - " . $result->rows[$i]["player_name"] . " -> " . $minute . "'" . $second . "\"" . $cents . "\n";
-                $i++;
-            }
-        }
-        //wwwsecho("text buffer = " . $textBuffer. "\n");
-
-        if (HologramsManager::getInstance()->getHologram("Top20MirrorsEdge") != null)
-        {
-            HologramsManager::getInstance()->getHologram("Top20MirrorsEdge")->updateTextWithString($textBuffer);
-            HologramsManager::getInstance()->getHologram("Top20MirrorsEdge2")->updateTextWithString($textBuffer);
-        }
-
-        else
-            echo("Top20MirrorsEdge hologram not loaded\n");
-    }
-
-    public function cancel() {
-        $this->getHandler()->cancel();
-    }
-}
 
 class UpdateSidebar extends PluginTask
 {

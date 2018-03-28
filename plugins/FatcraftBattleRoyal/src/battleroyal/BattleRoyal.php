@@ -39,10 +39,10 @@ use pocketmine\utils\UUID;
 
 class BattleRoyal extends PluginBase implements Listener
 {
-	private $m_BattleRoyalConfig;
-	private static $m_Instance;
-	private $m_WaitingTimer;
-	private $m_PlayTimer;
+    private $m_BattleRoyalConfig;
+    private static $m_Instance;
+    private $m_WaitingTimer;
+    private $m_PlayTimer;
 
     private $defineZone1 = false;
 
@@ -60,101 +60,97 @@ class BattleRoyal extends PluginBase implements Listener
 
     public $maxPlayer = 0;
 
+    private $damagesEnabled = false;
+
     public static function getInstance(): BattleRoyal
-	{
-		return self::$m_Instance;
-	}
+    {
+        return self::$m_Instance;
+    }
 
-	public function onLoad()
-	{
-		self::$m_Instance = $this;
-	}
+    public function onLoad()
+    {
+        self::$m_Instance = $this;
+    }
 
-	public function onEnable()
-	{
-		$this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
-		$this->getServer()->getPluginManager()->registerEvents($this, $this);
+    public function onEnable()
+    {
+        $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
+        $this->getServer()->getPluginManager()->registerEvents($this, $this);
 
-		FatUtils::getInstance()->setTemplateConfig($this->getConfig());
-		$this->m_BattleRoyalConfig = new BattleRoyalConfig($this->getConfig());
-		$this->initialize();
-	}
+        FatUtils::getInstance()->setTemplateConfig($this->getConfig());
+        $this->m_BattleRoyalConfig = new BattleRoyalConfig($this->getConfig());
+        $this->initialize();
+    }
 
-	private function initialize()
-	{
-		LoadBalancer::getInstance()->setServerState(LoadBalancer::SERVER_STATE_OPEN);
+    private function initialize()
+    {
+        LoadBalancer::getInstance()->setServerState(LoadBalancer::SERVER_STATE_OPEN);
 
         WorldUtils::setWorldsTime(2000);
-		WorldUtils::stopWorldsTime();
+        WorldUtils::stopWorldsTime();
 
-		GameManager::getInstance()->setWaiting(); // init new game on SQL side
+        GameManager::getInstance()->setWaiting(); // init new game on SQL side
         GameManager::getInstance()->m_isBattleRoyal = true;
 
         FatPlayer::$m_OptionDisplayHealth = false;
         FatPlayer::$m_OptionDisplayNameTag = false;
 
-		$this->m_WaitingTimer = new DisplayableTimer(GameManager::getInstance()->getWaitingTickDuration());
-		$this->m_WaitingTimer
-			->setTitle(new TextFormatter("timer.waiting.title"))
-			->addStopCallback(function ()
-			{
-				$this->startGame();
-			})
-			->addSecondCallback(function () {
-				if ($this->m_WaitingTimer instanceof Timer)
-				{
-					$l_SecLeft = $this->m_WaitingTimer->getSecondLeft();
-					$l_Text = "";
-					if ($l_SecLeft == 3)
-						$l_Text = TextFormat::RED . $l_SecLeft;
-					else if ($l_SecLeft == 2)
-						$l_Text = TextFormat::GOLD . $l_SecLeft;
-					else if ($l_SecLeft == 1)
-						$l_Text = TextFormat::YELLOW . $l_SecLeft;
+        $this->m_WaitingTimer = new DisplayableTimer(GameManager::getInstance()->getWaitingTickDuration());
+        $this->m_WaitingTimer
+            ->setTitle(new TextFormatter("timer.waiting.title"))
+            ->addStopCallback(function () {
+                $this->startGame();
+            })
+            ->addSecondCallback(function () {
+                if ($this->m_WaitingTimer instanceof Timer) {
+                    $l_SecLeft = $this->m_WaitingTimer->getSecondLeft();
+                    $l_Text = "";
+                    if ($l_SecLeft == 3)
+                        $l_Text = TextFormat::RED . $l_SecLeft;
+                    else if ($l_SecLeft == 2)
+                        $l_Text = TextFormat::GOLD . $l_SecLeft;
+                    else if ($l_SecLeft == 1)
+                        $l_Text = TextFormat::YELLOW . $l_SecLeft;
 
-					foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-						$l_Player->addTitle($l_Text, "");
-				}
-			});
+                    foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+                        $l_Player->addTitle($l_Text, "");
+                }
+            });
 
-			Sidebar::getInstance()->addTranslatedLine(new TextFormatter("template.battleRoyale"))
-                ->addTranslatedLine(new TextFormatter("template.playfatcraft"));
+        Sidebar::getInstance()->addTranslatedLine(new TextFormatter("template.battleRoyale"))
+            ->addTranslatedLine(new TextFormatter("template.playfatcraft"));
 
-		Sidebar::getInstance()
-			->addTimer($this->m_WaitingTimer)
-			->addWhiteSpace()
-			->addMutableLine(function ()
-			{
-				return new TextFormatter("game.waitingForMore", ["amount" => max(0, PlayersManager::getInstance()->getMinPlayer() - count($this->getServer()->getOnlinePlayers()))]);
-			});
+        Sidebar::getInstance()
+            ->addTimer($this->m_WaitingTimer)
+            ->addWhiteSpace()
+            ->addMutableLine(function () {
+                return new TextFormatter("game.waitingForMore", ["amount" => max(0, PlayersManager::getInstance()->getMinPlayer() - count($this->getServer()->getOnlinePlayers()))]);
+            });
     }
 
-	public function handlePlayerConnection(Player $p_Player)
-	{
-			$p_Player->sendMessage((new TextFormatter("template.info.template", [
-				"gameName" => new TextFormatter("template.battleRoyale"),
-				//"text" => new TextFormatter("template.info.hg")
-			]))->asStringForPlayer($p_Player));
+    public function handlePlayerConnection(Player $p_Player)
+    {
+        $p_Player->sendMessage((new TextFormatter("template.info.template", [
+            "gameName" => new TextFormatter("template.battleRoyale"),
+            //"text" => new TextFormatter("template.info.hg")
+        ]))->asStringForPlayer($p_Player));
 
-        if (GameManager::getInstance()->isWaiting())
-		{
-		    $p_Player->teleport($this->getBattleRoyalConfig()->getWaitingLocation()->asVector3());
+        if (GameManager::getInstance()->isWaiting()) {
+            $p_Player->teleport($this->getBattleRoyalConfig()->getWaitingLocation()->asVector3());
 
-		    $p_Player->setGamemode(Player::ADVENTURE);
+            $p_Player->setGamemode(Player::ADVENTURE);
 
-			$this->getLogger()->info("onlinePlayers: " . count($this->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMinPlayer());
-			if (count($this->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMaxPlayer())
-			{
-				$this->getLogger()->info("MAX PLAYER REACH !");
-				if ($this->m_WaitingTimer instanceof Timer)
-					$this->m_WaitingTimer->cancel();
-				$this->startGame();
-			} else if (count($this->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMinPlayer())
-			{
-				$this->getLogger()->info("MIN PLAYER REACH !");
-				if ($this->m_WaitingTimer instanceof Timer)
-					$this->m_WaitingTimer->start();
-			}
+            $this->getLogger()->info("onlinePlayers: " . count($this->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMinPlayer());
+            if (count($this->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMaxPlayer()) {
+                $this->getLogger()->info("MAX PLAYER REACH !");
+                if ($this->m_WaitingTimer instanceof Timer)
+                    $this->m_WaitingTimer->cancel();
+                $this->startGame();
+            } else if (count($this->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMinPlayer()) {
+                $this->getLogger()->info("MIN PLAYER REACH !");
+                if ($this->m_WaitingTimer instanceof Timer)
+                    $this->m_WaitingTimer->start();
+            }
 //            else if (count($this->getServer()->getOnlinePlayers()) < PlayersManager::getInstance()->getMinPlayer())
 //            {
 //                $l_WaitingFor = PlayersManager::getInstance()->getMinPlayer() - count($this->getServer()->getOnlinePlayers());
@@ -162,38 +158,36 @@ class BattleRoyal extends PluginBase implements Listener
 //					$l_Player->addTitle("", (new TextFormatter("game.waitingForMore", ["amount" => $l_WaitingFor]))->asStringForPlayer($l_Player), 1, 60, 1);
 //            }
 
-		} else
-		{
+        } else {
             $p_Player->setGamemode(3);
-			$p_Player->sendMessage(TextFormat::YELLOW . "You've been automatically set to SPECTATOR");
-			$this->getServer()->getLogger()->info($p_Player->getName() . " has been set to SPECTATOR");
-		}
+            $p_Player->sendMessage(TextFormat::YELLOW . "You've been automatically set to SPECTATOR");
+            $this->getServer()->getLogger()->info($p_Player->getName() . " has been set to SPECTATOR");
+        }
 
-		Sidebar::getInstance()->update();
-	}
+        Sidebar::getInstance()->update();
+    }
 
-	//---------------------
-	// UTILS
-	//---------------------
-	public function startGame()
+    //---------------------
+    // UTILS
+    //---------------------
+    public function startGame()
     {
-        echo ("ici startGame 0 !\n");
+        echo("ici startGame 0 !\n");
 
-		// CLOSING SERVER
-		LoadBalancer::getInstance()->setServerState(LoadBalancer::SERVER_STATE_CLOSED);
-		GameManager::getInstance()->startGame();
+        // CLOSING SERVER
+        LoadBalancer::getInstance()->setServerState(LoadBalancer::SERVER_STATE_CLOSED);
+        GameManager::getInstance()->startGame();
 
-		$this->maxPlayer = count($this->getServer()->getOnlinePlayers());
-		// INIT SIDEBAR
-		Sidebar::getInstance()->clearLines();
+        $this->maxPlayer = count($this->getServer()->getOnlinePlayers());
+        // INIT SIDEBAR
+        Sidebar::getInstance()->clearLines();
 
         Sidebar::getInstance()->addTranslatedLine(new TextFormatter("template.battleRoyale"))
-        ->addTranslatedLine(new TextFormatter("template.playfatcraft"));
-		$this->m_PlayTimer = new DisplayableTimer(GameManager::getInstance()->getPlayingTickDuration());
-		$this->m_PlayTimer
-			->setTitle(new TextFormatter("timer.playing.title"))
-            ->addStartCallback(function()
-            {
+            ->addTranslatedLine(new TextFormatter("template.playfatcraft"));
+        $this->m_PlayTimer = new DisplayableTimer(GameManager::getInstance()->getPlayingTickDuration());
+        $this->m_PlayTimer
+            ->setTitle(new TextFormatter("timer.playing.title"))
+            ->addStartCallback(function () {
                 $l_centerpoint = new Vector3(rand($this->getBattleRoyalConfig()->getPos1()->x - 50, $this->getBattleRoyalConfig()->getPos1()->x + 50), $this->getBattleRoyalConfig()->getPos1()->y, rand($this->getBattleRoyalConfig()->getPos1()->z - 50, $this->getBattleRoyalConfig()->getPos1()->z + 50));
                 $this->setCurrentCenterLoc($l_centerpoint);
                 $this->setCurrentRadius($this->getBattleRoyalConfig()->getRadius1());
@@ -203,48 +197,66 @@ class BattleRoyal extends PluginBase implements Listener
                     $l_Player->addTitle("§2Game started !§r", "§8Fly over the place and gear up !§r");
 
             })
-            ->addStopCallback(function ()
-			{
+            ->addStopCallback(function () {
                 $this->nextStep();
-                //$this->endGame();
-			});
+            });
 
-		Sidebar::getInstance()
-			->addWhiteSpace()
-			->addTimer($this->m_PlayTimer)
-			->addWhiteSpace()
-			->addMutableLine(function ()
-			{
-				return new TextFormatter("hungergame.alivePlayer", ["nbr" => PlayersManager::getInstance()->getInGamePlayerLeft()]);
-			});
+        Sidebar::getInstance()
+            ->addWhiteSpace()
+            ->addTimer($this->m_PlayTimer)
+            ->addWhiteSpace()
+            ->addMutableLine(function () {
+                return new TextFormatter("hungergame.alivePlayer", ["nbr" => PlayersManager::getInstance()->getInGamePlayerLeft()]);
+            });
 
-		// FILLING UP CHEST
-		ChestsManager::getInstance()->fillChests();
+        // FILLING UP CHEST
+        ChestsManager::getInstance()->fillChests();
 
-		// PREPARING PLAYERS
-		foreach ($this->getServer()->getOnlinePlayers() as $l_Player)
-		{
-			PlayersManager::getInstance()->getFatPlayer($l_Player)->setPlaying();
+        // PREPARING PLAYERS
+        foreach ($this->getServer()->getOnlinePlayers() as $l_Player) {
+            PlayersManager::getInstance()->getFatPlayer($l_Player)->setPlaying();
 
-            $l_Player->addEffect(Effect::getEffect(Effect::DAMAGE_RESISTANCE)->setAmplifier(10)->setDuration(30 * 20));
+            $l_Player->addEffect(Effect::getEffect(Effect::DAMAGE_RESISTANCE)->setAmplifier(10)->setDuration(12 * 20));
 
-			PlayersManager::getInstance()->getFatPlayer($l_Player)->equipKitToPlayer();
+            PlayersManager::getInstance()->getFatPlayer($l_Player)->equipKitToPlayer();
             $l_Player->getInventory()->setChestplate(Item::get(ItemIds::ELYTRA));
 
-			$l_Player->addTitle(TextFormat::GREEN . "GO !");
+            $l_Player->addTitle(TextFormat::GREEN . "GO !");
 
-			$l_Player->teleport($this->getBattleRoyalConfig()->getStartGameLocation());
-
-            $l_Player->setGamemode(Player::SURVIVAL);
+            $l_Player->teleport($this->getBattleRoyalConfig()->getStartGameLocation());
         }
 
-		// START PLAY TIMER
-		$this->m_PlayTimer->start();
+        $this->getServer()->getScheduler()->scheduleDelayedTask(new class(FatUtils::getInstance()) extends PluginTask
+        {
 
-		// UNBLOCKING SPAWNS
+            public function __construct(PluginBase $p_Plugin)
+            {
+                parent::__construct($p_Plugin);
+            }
 
-		Sidebar::getInstance()->update();
-	}
+            public function onRun(int $currentTick)
+            {
+                BattleRoyal::getInstance()->enableDamages(true);
+            }
+        }, 20 * 12);
+
+        // START PLAY TIMER
+        $this->m_PlayTimer->start();
+
+        // UNBLOCKING SPAWNS
+
+        Sidebar::getInstance()->update();
+    }
+
+    public function enableDamages(bool $p_val = true)
+    {
+        $this->damagesEnabled = $p_val;
+    }
+
+    public function areDamagesEnabled(): bool
+    {
+        return $this->damagesEnabled;
+    }
 
 	public function needCustomeName(int $p_itemId) : bool
     {

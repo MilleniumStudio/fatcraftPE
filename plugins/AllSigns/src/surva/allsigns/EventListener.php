@@ -23,6 +23,7 @@ use pocketmine\event\player\PlayerExhaustEvent;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerMoveEvent;
+use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\level\Level;
 use pocketmine\Player;
 use pocketmine\plugin\Plugin;
@@ -333,6 +334,11 @@ class EventListener implements Listener
     public function onPlayerJoin(PlayerJoinEvent $e)
     {
         Sidebar::getInstance()->update();
+    }
+
+    public function onPlayerQuit(PlayerQuitEvent $e)
+    {
+        unset(AllSigns::getInstance()->m_timers[((string)($e->getPlayer()->getXuid()))]);
     }
 
     public function onPlayerExhaust(PlayerExhaustEvent $e)

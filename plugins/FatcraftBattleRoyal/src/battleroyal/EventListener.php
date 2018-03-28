@@ -159,7 +159,7 @@ class EventListener implements Listener
 
     public function onPlayerHit(EntityDamageEvent $e)
     {
-        if (GameManager::getInstance()->isWaiting() && $e->getEntity() instanceof Player)
+        if (BattleRoyal::getInstance()->areDamagesEnabled() == false)
             $e->setCancelled();
     }
 

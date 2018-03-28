@@ -25,3 +25,8 @@ holograms:
     location: map/-14.5/15/20.5
     title: "hologram.lobby.grade.titan.title"
     text: "hologram.lobby.grade.titan.text"
+
+  - name: "Top20MirrorsEdge"
+    location: map/32.5/12.5/-75.5
+    title: "hologram.mirrorsEdgeTop20"
+    text: ""
