@@ -523,12 +523,13 @@ loots:
       - '{"material": "GOLD_HELMET"}'
       - '{"material": "GOLD_BOOTS"}'
       - '{"material": "GUNPOWDER", "amount": 3}'
+      - '{"material": "CARROT", "amount": 3}'
       - '{"material": "SNOWBALL"}'
       - '{"material": "ENDER_PEARL"}'
       - '{"material": "BOW"}'
       - '{"material": "WOODEN_SWORD"}'
       - '{"material": "GUNPOWDER", "amount": 3}'
-      - '{"material": "SPLASH_POTION", "amount": 2}'
+  #    - '{"material": "SPLASH_POTION"}'
 
   level-2:
     item-value: 3
@@ -548,7 +549,7 @@ loots:
       - '{"material": "SNOWBALL"}'
       - '{"material": "CHORUS_FRUIT_POPPED", "amount": 20}'
       - '{"material": "BOW"}'
-      - '{"material": "SPLASH_POTION", "amount": 3}'
+ #     - '{"material": "SPLASH_POTION"}'
 
   level-3:
     item-value: 3
@@ -562,11 +563,11 @@ loots:
       - '{"material": "IRON_LEGGINGS"}'
       - '{"material": "ENDER_PEARL"}'
       - '{"material": "EGG", "amount": 2}'
-      - '{"material": "CHAINMAIL_CHESTPLATE"}'
-      - '{"material": "CHAINMAIL_LEGGINGS"}'
+#      - '{"material": "CHAINMAIL_CHESTPLATE"}'
+#      - '{"material": "CHAINMAIL_LEGGINGS"}'
       - '{"material": "ARROW", "amount": 5}'
       - '{"material": "SNOWBALL"}'
-      - '{"material": "SPLASH_POTION", "amount": 5}'
+#      - '{"material": "SPLASH_POTION"}'
 
   level-4:
     item-value: 4
@@ -577,15 +578,15 @@ loots:
       - '{"material": "GOLDEN_APPLE"}'
       - '{"material": "MUSHROOM_STEW"}'
       - '{"material": "CHORUS_FRUIT_POPPED", "amount": 30}'
-      - '{"material": "CHAINMAIL_HELMET"}'
-      - '{"material": "CHAINMAIL_BOOTS"}'
+#      - '{"material": "CHAINMAIL_HELMET"}'
+#      - '{"material": "CHAINMAIL_BOOTS"}'
       - '{"material": "GUNPOWDER", "amount": 10}'
       - '{"material": "EGG", "amount": 2}'
       - '{"material": "ENDER_PEARL"}'
       - '{"material": "DIAMOND_HELMET"}'
       - '{"material": "DIAMOND_BOOTS"}'
       - '{"material": "SNOWBALL"}'
-      - '{"material": "SPLASH_POTION", "amount": 4}'
+#      - '{"material": "SPLASH_POTION"}'
 
   level-5:
     item-value: 5
@@ -599,4 +600,4 @@ loots:
       - '{"material": "BOW"}'
       - '{"material": "ENDER_PEARL"}'
       - '{"material": "SNOWBALL"}'
-      - '{"material": "SPLASH_POTION", "amount": 3}'
+ #     - '{"material": "SPLASH_POTION"}'
