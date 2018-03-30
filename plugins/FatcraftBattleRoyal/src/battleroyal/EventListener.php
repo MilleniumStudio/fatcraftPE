@@ -88,8 +88,6 @@ class EventListener implements Listener
 
             $player->setGamemode(PLAYER::SPECTATOR);
 
-            //$player->setHealth($player->getMaxHealth());
-
             $drops = $player->getInventory()->getContents();
 
             foreach ($drops as $index => $item)
@@ -103,6 +101,7 @@ class EventListener implements Listener
                         break;
                 }
             }
+
             $player->getInventory()->dropContents(BattleRoyal::getInstance()->getServer()->getLevel(1), $player->getPosition());
             Sidebar::getInstance()->update();
         }

@@ -158,3 +158,7 @@ cd ..
 cd bb-1/
 ./docker_build.sh
 cd ..
+
+cd shop/
+./docker_build.sh
+cd ..

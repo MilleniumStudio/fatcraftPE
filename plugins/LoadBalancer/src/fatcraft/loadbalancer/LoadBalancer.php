@@ -118,6 +118,9 @@ class LoadBalancer extends PluginBase implements Listener
 
         $this->updateCacheServersByType();
 
+        if (LoadBalancer::getInstance()->getServerType() == "shop")
+            LoadBalancer::getInstance()->getServer()->dispatchCommand(new ConsoleCommandSender(), "buycraft secret c3ff65408c433494f06bcd411bc6399e03fb6c6c");
+
         $this->getLogger()->info("Enabled");
     }
 

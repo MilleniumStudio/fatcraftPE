@@ -1,0 +1,55 @@
+## configuration for LoadBalancer
+
+## Mysql connector config
+mysql:
+  host: <<MYSQL_HOST>>
+  username: <<MYSQL_USER>>
+  password: <<MYSQL_PASS>>
+  schema: <<MYSQL_DATA>>
+  port: <<MYSQL_PORT>>
+
+## This node configuration
+## type : is the server type, ex : entry, main_lobby, parkour_lobby...
+## id   : is the server id, different server types can have the same server id
+node:
+  type: lobby
+  id: 1
+  state: open
+  name: Station E264
+
+## Max players management
+## max        : if set to -1, the type based is used
+## type_based : sum the max players for the selected type and set the network max players
+## online : total or type based
+network:
+ # max: 0
+  type_based: lobby
+  online : total
+
+## Timers in ticks
+## self : update this server timestamp (20 for 1 second)
+## others : update other server list (20 for 1 second)
+## cleaner : cleaner delay (20 for 1 second)
+## timeout : max diff before clean server (& players in it) /!\ TIME IN SECONDS
+timers:
+  self: 5
+  others: 5
+  cleaner: 20
+  timeout: 10
+
+## Players section
+## singlesession : a player cannot be logged in 2 times on the network
+players:
+  singlesession: true
+
+## Redirect section
+## to_type : redirect incomming players to the specified node type, false to disable
+## limit   : if reach, playerswill be redirected to to_type, -1 to always redirect
+## message : message sent to the player on redirect
+redirect:
+  to_type: lobby
+  limit: 70
+  message: "You have been forwarded to another server !"
+
+## External IP for transferts
+external_ip: "<<SERVER_IP>>"
