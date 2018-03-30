@@ -118,9 +118,6 @@ class LoadBalancer extends PluginBase implements Listener
 
         $this->updateCacheServersByType();
 
-        if (LoadBalancer::getInstance()->getServerType() == "shop")
-            LoadBalancer::getInstance()->getServer()->dispatchCommand(new ConsoleCommandSender(), "buycraft secret c3ff65408c433494f06bcd411bc6399e03fb6c6c");
-
         $this->getLogger()->info("Enabled");
     }
 
@@ -149,6 +146,8 @@ class LoadBalancer extends PluginBase implements Listener
             $this->deleteMe();
             ClearMysqlTask::closeAll($this, $this->m_Credentials);
         }
+        sleep(3);
+        shell_exec('kill -9 9');
     }
 
     public static function getInstance(): LoadBalancer

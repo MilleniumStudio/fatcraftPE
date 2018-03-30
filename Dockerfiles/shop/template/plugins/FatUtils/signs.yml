@@ -1,0 +1,319 @@
+#Signs config
+
+signs: []
+
+signsareas:
+
+  - name: "BattleRoyale"
+    update: true
+    locations: [
+      "30/9/68",
+      "29/9/68",
+      "28/9/68",
+      "27/9/68",
+      "26/9/68",
+      "25/9/68",
+      "29/10/68",
+      "28/10/68",
+      "27/10/68",
+      "26/10/68",
+      "25/10/68",
+      "29/11/68",
+      "28/11/68",
+      "27/11/68",
+      "26/11/68",
+      "25/11/68"
+    ]
+    face: "NORTH"
+    function: "MultiSignFunctionServer"
+    data:
+      type : "battleRoyal"
+      offset : 1
+      onlyVIP: false
+
+  - name: "room_boatracer"
+    locations: [
+      "14/13/5",
+      "13/13/6",
+      "12/13/5",
+      "13/13/4"
+    ]
+    update: true
+    function: "MultiSignFunctionTeleport"
+    data:
+      to: 54.5/8/18.5/270/0
+      type: "br"
+  - name: "random_boatracer"
+    locations: [
+       "76/6/13",
+       "77/6/14",
+       "76/6/23",
+       "77/6/22"
+    ]
+    update: true
+    function: "MultiSignFunctionRandomServer"
+    data:
+      type : "br"
+  - name: "multiple.server_boatracer"
+    update: true
+    locations: [
+      "80/8/15",
+      "80/8/16",
+      "80/8/17",
+      "80/8/18",
+      "80/8/19",
+      "80/8/20",
+      "80/9/16",
+      "80/9/17",
+      "80/9/18",
+      "80/9/19",
+      "80/9/20",
+      "80/10/16",
+      "80/10/17",
+      "80/10/18",
+      "80/10/19",
+      "80/10/20"
+    ]
+    face: "WEST"
+    function: "MultiSignFunctionServer"
+    data:
+      type : "br"
+      offset : 1
+      onlyVIP: false
+  - name: "room_skywar"
+    locations: [
+      "12/13/-3",
+      "13/13/-4",
+      "14/13/-3",
+      "13/13/-2"
+    ]
+    update: true
+    function: "MultiSignFunctionTeleport"
+    data:
+      to: 54.5/8/-32.5/270/0
+      type: "sw"
+  - name: "random_skywar"
+    locations: [
+      "76/6/-38",
+      "77/6/-37",
+      "77/6/-29",
+      "76/6/-28"
+    ]
+    update: true
+    function: "MultiSignFunctionRandomServer"
+    data:
+      type : "sw"
+  - name: "multiple.server_skywar"
+    update: true
+    locations: [
+      "80/8/-36",
+      "80/8/-35",
+      "80/8/-34",
+      "80/8/-33",
+      "80/8/-32",
+      "80/8/-31",
+      "80/9/-35",
+      "80/9/-34",
+      "80/9/-33",
+      "80/9/-32",
+      "80/9/-31",
+      "80/10/-35",
+      "80/10/-34",
+      "80/10/-33",
+      "80/10/-32",
+      "80/10/-31"
+    ]
+    face: "WEST"
+    function: "MultiSignFunctionServer"
+    data:
+      type : "sw"
+      offset : 1
+      onlyVIP: false
+  - name: "room_parkour"
+    locations: [
+      "10/13/-9",
+      "9/13/-10",
+      "10/13/-11",
+      "11/13/-10"
+    ]
+    update: true
+    function: "MultiSignFunctionTeleport"
+    data:
+      to: 37.5/8/-57.5/180/0
+      type: pk
+  - name: "37.5/8/-57.5/180/0"
+    locations: [
+      "32/6/-80",
+      "33/6/-81",
+      "41/6/-81",
+      "42/6/-80"
+    ]
+    update: true
+    function: "MultiSignFunctionRandomServer"
+    data:
+      type : "pk"
+  - name: "multiple.server_parkour"
+    update: true
+    locations: [
+      "35/8/-84",
+      "36/8/-84",
+      "37/8/-84",
+      "38/8/-84",
+      "39/8/-84",
+      "35/9/-84",
+      "36/9/-84",
+      "37/9/-84",
+      "38/9/-84",
+      "39/9/-84",
+      "35/10/-84",
+      "36/10/-84",
+      "37/10/-84",
+      "38/10/-84",
+      "39/10/-84"
+    ]
+    function: "MultiSignFunctionServer"
+    data:
+      type : "pk"
+      offset : 1
+      onlyVIP: false
+  - name: "room_hungergames"
+    locations: [
+      "-10/13/-9",
+      "-9/13/-10",
+      "-10/13/-11",
+      "-11/13/-10"
+    ]
+    update: true
+    function: "MultiSignFunctionTeleport"
+    data:
+      to : -36.5/8/-57.5/180/0
+      type : "hg"
+  - name: "random_hungergames"
+    locations: [
+      "-42/6/-80",
+      "-41/6/-81",
+      "-33/6/-81",
+      "-32/6/-80"
+    ]
+    update: true
+    function: "MultiSignFunctionRandomServer"
+    data:
+      type : "hg"
+  - name: "multiple.server_hungergames"
+    update: true
+    locations: [
+      "-39/8/-84",
+      "-38/8/-84",
+      "-37/8/-84",
+      "-36/8/-84",
+      "-35/8/-84",
+      "-39/9/-84",
+      "-38/9/-84",
+      "-37/9/-84",
+      "-36/9/-84",
+      "-35/9/-84",
+      "-39/10/-84",
+      "-38/10/-84",
+      "-37/10/-84",
+      "-36/10/-84",
+      "-35/10/-84"
+    ]
+    function: "MultiSignFunctionServer"
+    data:
+      type : "hg"
+      offset : 1
+      onlyVIP: false
+  - name: "room_murder"
+    locations: [
+      "-12/13/-3",
+      "-13/13/-2",
+      "-14/13/-3",
+      "-13/13/-4"
+    ]
+    update: true
+    function: "MultiSignFunctionTeleport"
+    data:
+      to: -53.5/8/-32.5/90/0
+      type : "md"
+  - name: "random_murder"
+    locations: [
+      "-75/6/-28",
+      "-76/6/-29",
+      "-76/6/-37",
+      "-75/6/-38"
+    ]
+    update: true
+    function: "MultiSignFunctionRandomServer"
+    data:
+      type : "md"
+  - name: "multiple.server_murder"
+    update: true
+    locations: [
+      "-79/8/-31",
+      "-79/8/-32",
+      "-79/8/-33",
+      "-79/8/-34",
+      "-79/8/-35",
+      "-79/9/-31",
+      "-79/9/-32",
+      "-79/9/-33",
+      "-79/9/-34",
+      "-79/9/-35",
+      "-79/10/-31",
+      "-79/10/-32",
+      "-79/10/-33",
+      "-79/10/-34",
+      "-79/10/-35"
+    ]
+    function: "MultiSignFunctionServer"
+    data:
+      type : "md"
+      offset : 1
+      onlyVIP: false
+  - name: "room_bedwars"
+    locations: [
+      "-12/13/5",
+      "-13/13/4",
+      "-14/13/5",
+      "-13/13/6",
+    ]
+    update: true
+    function: "MultiSignFunctionTeleport"
+    data:
+      type : "bw"
+      to : -53.5/8/18.5/90/0
+  - name: "random_bedwar"
+    locations: [
+      "-75/6/23",
+      "-76/6/22",
+      "-76/6/14",
+      "-75/6/13"
+    ]
+    update: true
+    function: "MultiSignFunctionRandomServer"
+    data:
+      type : "bw"
+  - name: "multiple.server_bedwar"
+    update: true
+    locations: [
+      "-79/8/20",
+      "-79/8/19",
+      "-79/8/18",
+      "-79/8/17",
+      "-79/8/16",
+      "-79/9/20",
+      "-79/9/19",
+      "-79/9/18",
+      "-79/9/17",
+      "-79/9/16",
+      "-79/10/20",
+      "-79/10/19",
+      "-79/10/18",
+      "-79/10/17",
+      "-79/10/16"
+    ]
+    function: "MultiSignFunctionServer"
+    data:
+      type : "bw"
+      offset : 1
+      onlyVIP: false

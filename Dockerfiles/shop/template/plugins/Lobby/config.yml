@@ -1,0 +1,5 @@
+## configuration for Lobby plugin
+welcomeTitle: "Serveur §cFatcraft§r"
+welcomeSubtitle: "Amusez vous bien !"
+
+spawn : 0.5/16.5/1.5/180/0
