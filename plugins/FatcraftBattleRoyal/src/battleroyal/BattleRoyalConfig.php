@@ -40,7 +40,11 @@ class BattleRoyalConfig
         else
             $this->m_WaitingPosition = BattleRoyal::getInstance()->getServer()->getLevel(1)->getSpawnLocation();
 
-        $this->Pos1 = new Vector3(-497, 115, 743);
+        $x = rand(-620, -430);
+        $y = 95;
+        $z = rand (570 , 800);
+        // legacy coord : new Vector3(-497, 115, 743);
+        $this->Pos1 = new Vector3($x, $y, $z);
         $this->Radius1 = 200;
 
     }

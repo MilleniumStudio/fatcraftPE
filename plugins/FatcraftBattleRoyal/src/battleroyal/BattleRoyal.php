@@ -570,7 +570,7 @@ class BattleRoyal extends PluginBase implements Listener
             GameManager::getInstance()->endGame(false);
 
             foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-                $l_Player->addTitle(" #1 §6Victory is MINE !", "§4" . $winner->getPlayer()->getName(), -1, 3000);
+                $l_Player->addTitle(" #1 §6Victory !", "§4" . $winner->getPlayer()->getName() . " won !", -1, 3000);
         }
         else
         {

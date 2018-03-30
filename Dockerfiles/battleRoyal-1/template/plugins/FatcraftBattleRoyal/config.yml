@@ -3,7 +3,7 @@ maxPlayer: 20
 waitingSecDuration: 90
 playingSecDuration: 90
 spawnLocation: 
-startGameLocation: -497/140/743
+startGameLocation: -496.5/155/743.5
 
 
 #Max rewards for the first player, divided by place un score
@@ -508,7 +508,138 @@ chests:
     location: -474/96/624
     total-item-value: 15
     max-item-value: 5
-
+  125:
+    location: -526/94/919
+    total-item-value: 15
+    max-item-value: 5
+  126:
+    location: -442/79/929
+    total-item-value: 15
+    max-item-value: 5
+  127:
+    location: -424/73/970
+    total-item-value: 15
+    max-item-value: 5
+  128:
+    location: -494/86/902
+    total-item-value: 15
+    max-item-value: 5
+  129:
+    location: -495/90/887
+    total-item-value: 15
+    max-item-value: 5
+  130:
+    location: -585/103/935
+    total-item-value: 15
+    max-item-value: 5
+  131:
+    location: -581/99/935
+    total-item-value: 15
+    max-item-value: 5
+  132:
+    location: -615/75/636
+    total-item-value: 15
+    max-item-value: 5
+  133:
+    location: -615/75/649
+    total-item-value: 15
+    max-item-value: 5
+  134:
+    location: -637/75/637
+    total-item-value: 15
+    max-item-value: 5
+  135:
+    location: -637/75/648
+    total-item-value: 15
+    max-item-value: 5
+  136:
+    location: -628/108/907
+    total-item-value: 15
+    max-item-value: 5
+  137:
+    location: -630/108/920
+    total-item-value: 15
+    max-item-value: 5
+  138:
+    location: -786/71/634
+    total-item-value: 15
+    max-item-value: 5
+  139:
+    location: -773/70/624
+    total-item-value: 15
+    max-item-value: 5
+  140:
+    location: -791/70/648
+    total-item-value: 15
+    max-item-value: 5
+  141:
+    location: -774/76/702
+    total-item-value: 15
+    max-item-value: 5
+  142:
+    location: -783/76/687
+    total-item-value: 15
+    max-item-value: 5
+  143:
+    location: -699/69/636
+    total-item-value: 15
+    max-item-value: 5
+  144:
+    location: -674/75/657
+    total-item-value: 15
+    max-item-value: 5
+  145:
+    location: -719/83/677
+    total-item-value: 15
+    max-item-value: 5
+  146:
+    location: -724/96/730
+    total-item-value: 15
+    max-item-value: 5
+  147:
+    location: -704/90/697
+    total-item-value: 15
+    max-item-value: 5
+  148:
+    location: -598/79/549
+    total-item-value: 15
+    max-item-value: 5
+  149:
+    location: -544/83/538
+    total-item-value: 15
+    max-item-value: 5
+  150:
+    location: -521/82/538
+    total-item-value: 15
+    max-item-value: 5
+  151:
+    location: -529/79/523
+    total-item-value: 15
+    max-item-value: 5
+  152:
+    location: -630/82/535
+    total-item-value: 15
+    max-item-value: 5
+  153:
+    location: -633/79/493
+    total-item-value: 15
+    max-item-value: 5
+  154:
+    location: -580/84/510
+    total-item-value: 15
+    max-item-value: 5
+  155:
+    location: -676/90/541
+    total-item-value: 15
+    max-item-value: 5
+  156:
+    location: -688/88/512
+    total-item-value: 15
+    max-item-value: 5
+  157:
+    location: -727/89/536
+    total-item-value: 15
+    max-item-value: 5
 loots:
   level-1:
     item-value: 3
