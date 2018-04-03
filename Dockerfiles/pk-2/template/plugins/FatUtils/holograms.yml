@@ -2,7 +2,7 @@
 
 holograms:
   - name: "Top20MirrorsEdge"
-    location: map/132.5/12/263.5
+    location: map/134.5/8/263.5
     title: "hologram.mirrorsEdgeTop20"
     text: ""
 

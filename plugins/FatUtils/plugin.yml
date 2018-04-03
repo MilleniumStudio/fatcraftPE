@@ -3,7 +3,7 @@ version: Build#16
 main: fatutils\FatUtils
 description: "FatUtils"
 api: [3.0.0-ALPHA10]
-depend: ["StatsPE", "LoadBalancer"]
+depend: ["LoadBalancer"]
 load: POSTWORLD
 commands:
   fatUtils:
@@ -18,6 +18,8 @@ commands:
     description: "Merge you fatcraft acount with your firestorm account"
   lang:
     description: "Display the language menu"
+  walltest:
+    description: "wall test"
   asconsole:
     description: "as console"
   perms:

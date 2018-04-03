@@ -48,7 +48,7 @@ players:
 ## message : message sent to the player on redirect
 redirect:
   to_type: lobby
-  limit: 70
+  limit: 1
   message: "You have been forwarded to another server !"
 
 ## External IP for transferts

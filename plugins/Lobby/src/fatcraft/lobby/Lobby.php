@@ -91,9 +91,6 @@ class Lobby extends PluginBase implements Listener
 					$l_FatPlayer->getFatgold() . " " . (new TextFormatter("currency.fatgold.short"))->asStringForFatPlayer($l_FatPlayer)
 				];
 			});
-
-        if (LoadBalancer::getInstance()->getServerType() == "shop")
-            LoadBalancer::getInstance()->getServer()->dispatchCommand(new ConsoleCommandSender(), "buycraft secret c3ff65408c433494f06bcd411bc6399e03fb6c6c");
     }
 
     public function checkPlayerPermissions(Player $p_Player)

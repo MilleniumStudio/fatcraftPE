@@ -10,6 +10,7 @@ namespace fatutils\players;
 
 use fatutils\FatUtils;
 use fatutils\tools\TextFormatter;
+use pocketmine\command\ConsoleCommandSender;
 use pocketmine\Player;
 use pocketmine\utils\UUID;
 use fatutils\gamedata\GameDataManager;
@@ -41,6 +42,8 @@ class PlayersManager
 	private function __construct()
 	{
 		$this->initialize();
+        if (LoadBalancer::getInstance()->getServerType() == "shop")
+            LoadBalancer::getInstance()->getServer()->dispatchCommand(new ConsoleCommandSender(), "buycraft secret c3ff65408c433494f06bcd411bc6399e03fb6c6c");
 	}
 
 	public function initialize()
