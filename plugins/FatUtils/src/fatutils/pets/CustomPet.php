@@ -91,10 +91,10 @@ class CustomPet extends Living
         $this->m_petType = $petType;
         $this->setCanSaveWithChunk(false);
         parent::__construct($level, $nbt);
-        if(!isset($this->namedtag->NameVisibility)) {
-            $this->namedtag->NameVisibility = new IntTag("NameVisibility", 2);
-        }
-        switch ($this->namedtag->NameVisibility->getValue()) {
+        //if($this->namedtag->getInt("NameVisibility") === null) {
+            $this->namedtag->setInt("NameVisibility", 2);
+        //}
+        switch ($this->namedtag->getInt("NameVisibility")) {
             case 0:
                 $this->setNameTagVisible(false);
                 $this->setNameTagAlwaysVisible(false);
@@ -112,9 +112,9 @@ class CustomPet extends Living
                 $this->setNameTagAlwaysVisible(true);
                 break;
         }
-        if(!isset($this->namedtag->Scale)) {
+        /*if(!isset($this->namedtag->Scale)) {
                 $this->namedtag->Scale = new FloatTag("Scale", $this->m_scale);
-        }
+        }*/
     }
 
     public function modifyAttributes(string $attributeName, string $valueType, $value): bool
@@ -126,18 +126,22 @@ class CustomPet extends Living
             switch ($type) {
                 case 0: { //byte
                     $value = $value + 0; //le cast pas sérieux qui est plus efficace que le cast correct (et toujours mieux que l'absence de cast)
+                    $this->getDataPropertyManager()->setByte($attr, $value, true);
                 }
                     break;
                 case 1: { //short
                     $value = intval($value);
+                    $this->getDataPropertyManager()->setShort($attr, $value, true);
                 }
                     break;
                 case 2: { //int
                     $value = intval($value);
+                    $this->getDataPropertyManager()->setInt($attr, $value, true);
                 }
                     break;
                 case 3: { //float
                     $value = floatval($value);
+                    $this->getDataPropertyManager()->setFloat($attr, $value, true);
                 }
                     break;
                 case 4: { //string
@@ -154,13 +158,13 @@ class CustomPet extends Living
                     break;
                 case 7: { //long
                     $value = $value + 0;
+                    $this->getDataPropertyManager()->setLong($attr, $value, true);
                 }
                     break;
                 case 8: { //Vec3F
                     echo "Error for attribute " . $attributeName . ": type VECTOR3F isn't implemented\n";
                 }
             }
-            $this->setDataProperty($attr, $type, $value, true);
 
         } catch (Exception $exception) {
             return false;
@@ -201,7 +205,7 @@ class CustomPet extends Living
         $pk->motion = $this->getMotion();
         $pk->yaw = $this->yaw;
         $pk->pitch = $this->pitch;
-        $pk->metadata = $this->dataProperties;
+        $pk->metadata = $this->getDataPropertyManager()->getDirty();
         $player->dataPacket($pk);
 
 //        parent::spawnTo($player);

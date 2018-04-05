@@ -21,6 +21,7 @@ use fatutils\tools\schedulers\TipsTimer;
 use pocketmine\block\Block;
 use pocketmine\block\BlockIds;
 use pocketmine\entity\Effect;
+use pocketmine\entity\EffectInstance;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\item\Item;
@@ -215,11 +216,15 @@ class BattleRoyal extends PluginBase implements Listener
         // PREPARING PLAYERS
         foreach ($this->getServer()->getOnlinePlayers() as $l_Player) {
             PlayersManager::getInstance()->getFatPlayer($l_Player)->setPlaying();
-
-            $l_Player->addEffect(Effect::getEffect(Effect::DAMAGE_RESISTANCE)->setAmplifier(10)->setDuration(12 * 20));
-
+            $l_Player->addEffect(new EffectInstance(
+                Effect::getEffect(Effect::DAMAGE_RESISTANCE),
+                12 * 20,
+                10,
+                0,
+                0
+            ));
             PlayersManager::getInstance()->getFatPlayer($l_Player)->equipKitToPlayer();
-            $l_Player->getInventory()->setChestplate(Item::get(ItemIds::ELYTRA));
+            $l_Player->getArmorInventory()->setChestplate(Item::get(ItemIds::ELYTRA));
 
             $l_Player->addTitle(TextFormat::GREEN . "GO !");
 

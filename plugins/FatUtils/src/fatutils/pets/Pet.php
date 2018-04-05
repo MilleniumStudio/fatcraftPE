@@ -70,8 +70,7 @@ class Pet extends ShopItem
 
         $this->m_CustomPet = new CustomPet($this->m_fatPlayer->getPlayer()->getLevel(), $tag, $this->m_petTypes, $this->m_options);
 
-        $this->m_CustomPet->setDataProperty(Entity::DATA_FLAG_NO_AI, Entity::DATA_TYPE_BYTE, 1, true);
-
+        $this->m_CustomPet->getDataPropertyManager()->setByte(Entity::DATA_FLAG_NO_AI, 1);
         $this->m_fatPlayer->getPlayer()->getLocation()->getLevel()->addEntity($this->m_CustomPet);
         $this->m_CustomPet->spawnToAll();
     }

@@ -35,10 +35,12 @@ class SlapperHuman extends Human {
 				$this->setNameTagAlwaysVisible(true);
 				break;
 		}
-		if(!isset($this->namedtag->Scale)) {
-			$this->namedtag->Scale = new FloatTag("Scale", 1.0);
+		if($this->namedtag->getFloat("Scale") === null) {
+            $this->getDataPropertyManager()->setFloat(self::DATA_SCALE, 1.0);
 		}
-		$this->setDataProperty(self::DATA_SCALE, self::DATA_TYPE_FLOAT, $this->namedtag->Scale->getValue());
+		else
+    		$this->getDataPropertyManager()->setFloat(self::DATA_SCALE, $this->namedtag->getFloat("Scale"));
+
 	}
 
 	public function saveNBT() {
@@ -50,9 +52,9 @@ class SlapperHuman extends Human {
 				$visibility = 2;
 			}
 		}
-		$scale = $this->getDataProperty(Entity::DATA_SCALE);
-		$this->namedtag->NameVisibility = new IntTag("NameVisibility", $visibility);
-		$this->namedtag->Scale = new FloatTag("Scale", $scale);
+		$scale = $this->getDataPropertyManager()->getFloat(Entity::DATA_SCALE);
+		$this->namedtag->SetInt("NameVisibility", $visibility);
+		$this->namedtag->setFloat("Scale", $scale);
 	}
 
 	public function spawnTo(Player $player) {

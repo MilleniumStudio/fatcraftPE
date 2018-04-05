@@ -102,7 +102,7 @@ class SignsManager implements Listener, CommandExecutor
                 $data = isset($value['data']) ? $value['data'] : [];
 
                 $sign = new CustomSign($name, $tile);
-                $tile->namedtag->signName = $name;
+                $tile->namedtag->setString("SignName", $name);
                 $sign->update = $update;
                 $sign->text = $text;
                 $sign->commands = $commands;
@@ -184,8 +184,8 @@ class SignsManager implements Listener, CommandExecutor
 
                 if ($tile !== null)
                 {
-                    $tile->namedtag->signName = $name;
-                    $tile->namedtag->index = $i;
+                    $tile->namedtag->setString("SignName", $name);
+                    $tile->namedtag->setInt("Index", $i);
 
                     $sign = new CustomSign($name, $tile);
                     $sign->update = $update;
@@ -332,15 +332,15 @@ class SignsManager implements Listener, CommandExecutor
             if ($tile instanceof TileSign)
             {
                 FatUtils::getInstance()->getLogger()->debug("[Signs] Text interact " . $block->getName() . " " . $tile->x . "/" . $tile->y . "/" . $tile->z . " face: " . $block->getDamage());
-                if (isset($tile->namedtag->signName))
+                if ($tile->namedtag->getString("SignName") !== null)
                 {
-                    if (isset($this->m_RegisteredSigns[$tile->namedtag->signName]))
+                    if (isset($this->m_RegisteredSigns[$tile->namedtag->getString("SignName")]))
                     {
-                        $sign = $this->m_RegisteredSigns[$tile->namedtag->signName];
+                        $sign = $this->m_RegisteredSigns[$tile->namedtag->getString("SignName")];
                         $index = -1;
-                        if (isset($tile->namedtag->index))
+                        if ($tile->namedtag->getInt("Index") !== null)
                         {
-                            $index = $tile->namedtag->index;
+                            $index = $tile->namedtag->getInt("Index");
                         }
                         $sign->onInterract($player, $index);
                         $event->setCancelled(TRUE);

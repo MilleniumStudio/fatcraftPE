@@ -288,7 +288,7 @@ class Main extends PluginBase implements Listener {
 													case "cap":
 														if($entity instanceof SlapperHuman) {
 															if(isset($args[2])) {
-																$entity->getInventory()->setHelmet(Item::fromString($args[2]));
+                                                                $entity->getArmorInventory()->setHelmet(Item::fromString($args[2]));
 																$sender->sendMessage($this->prefix . "Helmet updated.");
 															} else {
 																$sender->sendMessage($this->prefix . "Please enter an item ID.");
@@ -302,7 +302,7 @@ class Main extends PluginBase implements Listener {
 													case "chestplate":
 														if($entity instanceof SlapperHuman) {
 															if(isset($args[2])) {
-																$entity->getInventory()->setChestplate(Item::fromString($args[2]));
+                                                                $entity->getArmorInventory()->setChestplate(Item::fromString($args[2]));
 																$sender->sendMessage($this->prefix . "Chestplate updated.");
 															} else {
 																$sender->sendMessage($this->prefix . "Please enter an item ID.");
@@ -316,7 +316,7 @@ class Main extends PluginBase implements Listener {
 													case "leggings":
 														if($entity instanceof SlapperHuman) {
 															if(isset($args[2])) {
-																$entity->getInventory()->setLeggings(Item::fromString($args[2]));
+                                                                $entity->getArmorInventory()->setLeggings(Item::fromString($args[2]));
 																$sender->sendMessage($this->prefix . "Leggings updated.");
 															} else {
 																$sender->sendMessage($this->prefix . "Please enter an item ID.");
@@ -330,7 +330,7 @@ class Main extends PluginBase implements Listener {
 													case "shoes":
 														if($entity instanceof SlapperHuman) {
 															if(isset($args[2])) {
-																$entity->getInventory()->setBoots(Item::fromString($args[2]));
+                                                                $entity->getArmorInventory()->setBoots(Item::fromString($args[2]));
 																$sender->sendMessage($this->prefix . "Boots updated.");
 															} else {
 																$sender->sendMessage($this->prefix . "Please enter an item ID.");
@@ -509,7 +509,7 @@ class Main extends PluginBase implements Listener {
 														if(isset($args[2])) {
 															if($entity instanceof SlapperFallingSand) {
 																$data = explode(":", $args[2]);
-																$entity->setDataProperty(Entity::DATA_VARIANT, Entity::DATA_TYPE_INT, ((int) ($data[0] ?? 1)) | (((int) ($data[1] ?? 0)) << 8));
+																$entity->getDataPropertyManager()->setInt(Entity::DATA_VARIANT, ((int) ($data[0] ?? 1)) | (((int) ($data[1] ?? 0)) << 8));
 																$entity->sendData($entity->getViewers());
 																$sender->sendMessage($this->prefix . "Block updated.");
 															} else {
@@ -542,7 +542,7 @@ class Main extends PluginBase implements Listener {
 													case "size":
 														if(isset($args[2])) {
 															$scale = (float) $args[2];
-															$entity->setDataProperty(Entity::DATA_SCALE, Entity::DATA_TYPE_FLOAT, $scale);
+															$entity->getDataPropertyManager()->setFloat(Entity::DATA_SCALE, $scale);
 															$entity->sendData($entity->getViewers());
 															$sender->sendMessage($this->prefix . "Updated scale.");
 														} else {

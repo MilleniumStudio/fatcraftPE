@@ -19,6 +19,7 @@ use fatutils\game\GameManager;
 use fatutils\spawns\SpawnManager;
 use fatutils\tools\schedulers\TipsTimer;
 use pocketmine\entity\Effect;
+use pocketmine\entity\EffectInstance;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\item\ItemFactory;
@@ -192,7 +193,6 @@ class HungerGame extends PluginBase implements Listener
  						else
  						    $l_Player->teleport(WorldUtils::getRandomizedLocationWithinArea($l_ArenaLoc, floatval($l_ArenaLocRadius), 0, floatval($l_ArenaLocRadius)));
  						$l_Player->sendTip((new TextFormatter("hungergame.invulnerable", ["timesec" => 5]))->asStringForPlayer($l_Player));
- 						$l_Player->addEffect(Effect::getEffect(Effect::DAMAGE_RESISTANCE)->setAmplifier(10)->setDuration(5 * 20));
 					}
 				}
 			});
@@ -220,7 +220,13 @@ class HungerGame extends PluginBase implements Listener
 			} else
 			{
 				$l_Player->setGamemode(Player::ADVENTURE);
-				$l_Player->addEffect(Effect::getEffect(Effect::DAMAGE_RESISTANCE)->setAmplifier(10)->setDuration(30 * 20));
+                $l_Player->addEffect(new EffectInstance(
+                    Effect::getEffect(Effect::DAMAGE_RESISTANCE),
+                    30 * 20,
+                    10,
+                    0,
+                    0
+                ));
 			}
 
 			PlayersManager::getInstance()->getFatPlayer($l_Player)->equipKitToPlayer();
@@ -351,8 +357,13 @@ class HungerGame extends PluginBase implements Listener
 
 		Sidebar::getInstance()->clearLines();
 		// Waiting Sidebar Initialization
+        $templateText = "";
+        if ($this->getHungerGameConfig()->isSkyWars())
+            $templateText = "template.sw";
+        else
+            $templateText = "template.hg";
 		Sidebar::getInstance()
-			->addTranslatedLine(new TextFormatter("template.hg"))
+			->addTranslatedLine(new TextFormatter($templateText))
 			->addTimer($this->m_WaitingTimer)
 			->addWhiteSpace()
 			->addMutableLine(function ()

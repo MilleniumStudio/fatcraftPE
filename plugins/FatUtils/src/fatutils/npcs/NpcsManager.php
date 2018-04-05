@@ -112,25 +112,25 @@ class NpcsManager implements Listener, CommandExecutor
                 }
 
                 $entity = $this->spawnNpc($l_Location, $type, $name, $displayname, $commands, $entitySkin);
-                $entity->setDataProperty(Entity::DATA_SCALE, Entity::DATA_TYPE_FLOAT, $size);
 
+                $entity->getDataPropertyManager()->setFloat(Entity::DATA_SCALE, $size);
                 if($entity instanceof Human)
                 {
                     if (isset($equipment["head"]) && $equipment["head"] !== "")
                     {
-                        $entity->getInventory()->setHelmet(\fatutils\tools\ItemUtils::getItemFromRaw($equipment["head"]));
+                        $entity->getArmorInventory()->setHelmet(\fatutils\tools\ItemUtils::getItemFromRaw($equipment["head"]));
                     }
                     if (isset($equipment["chest"]) && $equipment["chest"] !== "")
                     {
-                        $entity->getInventory()->setChestplate(\fatutils\tools\ItemUtils::getItemFromRaw($equipment["chest"]));
+                        $entity->getArmorInventory()->setChestplate(\fatutils\tools\ItemUtils::getItemFromRaw($equipment["chest"]));
                     }
                     if (isset($equipment["pants"]) && $equipment["pants"] !== "")
                     {
-                        $entity->getInventory()->setLeggings(\fatutils\tools\ItemUtils::getItemFromRaw($equipment["pants"]));
+                        $entity->getArmorInventory()->setLeggings(\fatutils\tools\ItemUtils::getItemFromRaw($equipment["pants"]));
                     }
                     if (isset($equipment["boots"]) && $equipment["boots"] !== "")
                     {
-                        $entity->getInventory()->setBoots(\fatutils\tools\ItemUtils::getItemFromRaw($equipment["boots"]));
+                        $entity->getArmorInventory()->setBoots(\fatutils\tools\ItemUtils::getItemFromRaw($equipment["boots"]));
                     }
                     if (isset($equipment["held"]) && $equipment["held"] !== "")
                     {
@@ -164,13 +164,14 @@ class NpcsManager implements Listener, CommandExecutor
                     FatUtils::getInstance()->getLogger()->warning("[NPCS] ". $ex->getMessage());
                 }
 
-                if ($update)
+                /*if ($update)
                 {
                     $entity->namedtag->Update = true;
-                }
+                }*/
                 $this->updateNPC($entity);
             }
         }
+        $this->updateNpcs();
     }
 
     public function spawnNpc(Location $p_Location, $chosenType, $name, $displayname, array $commands = [], Skin $p_Skin = null): Entity
@@ -191,8 +192,8 @@ class NpcsManager implements Listener, CommandExecutor
                 new FloatTag("", $p_Location->pitch)
             ])
         ]);
-        $nbt->Commands = new CompoundTag("Commands", []);
-        $nbt->Update = new ByteTag("Update", false);
+
+        $nbt->setByte("Update", true);
 
         if ($chosenType === "Player")
         {
@@ -200,7 +201,8 @@ class NpcsManager implements Listener, CommandExecutor
             {
                 $p_Skin = \fatutils\tools\SkinRepository::getInstance()->getSkin("Steve");
             }
-            $nbt->Skin = new CompoundTag("Skin", ["Data" => new StringTag("Data", $p_Skin->getSkinData()), "Name" => new StringTag("Name", $p_Skin->getSkinId())]);
+            $nbt->setTag(new CompoundTag("Skin", ["Data" => new StringTag("Data", $p_Skin->getSkinData()), "Name" => new StringTag("Name", $p_Skin->getSkinId())]));
+
             $entity = new \fatutils\pets\HumanPet($p_Location->getLevel(), $nbt, $chosenType);
         }
         else
@@ -208,11 +210,10 @@ class NpcsManager implements Listener, CommandExecutor
             $entity = new \fatutils\pets\CustomPet($p_Location->getLevel(), $nbt, $chosenType);
         }
 
-        foreach ($commands as $command)
-        {
-            $entity->namedtag->Commands[$command] = new StringTag($command, $command);
-        }
-        $entity->namedtag->npcName = $name;
+        $entity->namedtag->setString("Command", "");
+        if (isset($commands[0]))
+            $entity->namedtag->setString("Command", $commands[0]);
+        $entity->namedtag->setString("npcName", $name);
         $entity->setNameTag($displayname);
         WorldUtils::forceLoadChunk($p_Location);
         $p_Location->getLevel()->addEntity($entity);
@@ -292,11 +293,11 @@ class NpcsManager implements Listener, CommandExecutor
         if(!$event->getDamager() instanceof Player) {
             return;
         }
-        if(isset($event->getEntity()->namedtag->npcName))
+        if($event->getEntity()->namedtag->getString("npcName") !== null)
         {
-            if(isset($this->m_RegisteredNPCS[$event->getEntity()->namedtag->npcName]))
+            if(isset($this->m_RegisteredNPCS[$event->getEntity()->namedtag->getString("npcName")]))
             {
-                $entity = $this->m_RegisteredNPCS[$event->getEntity()->namedtag->npcName];
+                $entity = $this->m_RegisteredNPCS[$event->getEntity()->namedtag->getString("npcName")];
                 $entity->onInterract($event->getDamager());
                 $event->setCancelled(true);
             }
