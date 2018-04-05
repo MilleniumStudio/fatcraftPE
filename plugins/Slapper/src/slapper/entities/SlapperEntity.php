@@ -42,11 +42,12 @@ class SlapperEntity extends Entity {
 				break;
 		}
 		$this->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_IMMOBILE, true);
-		if(!isset($this->namedtag->Scale)) {
-			$this->namedtag->Scale = new FloatTag("Scale", 1.0);
-		}
-		$this->setDataProperty(self::DATA_SCALE, self::DATA_TYPE_FLOAT, $this->namedtag->Scale->getValue());
-		$this->setDataProperty(self::DATA_BOUNDING_BOX_HEIGHT, self::DATA_TYPE_FLOAT, static::HEIGHT);
+        if($this->namedtag->getFloat("Scale") === null) {
+            $this->getDataPropertyManager()->setFloat(self::DATA_SCALE, 1.0);
+        }
+        else
+            $this->getDataPropertyManager()->setFloat(self::DATA_SCALE, $this->namedtag->getFloat("Scale"));
+		$this->getDataPropertyManager()->setFloat(self::DATA_BOUNDING_BOX_HEIGHT, static::HEIGHT);
 	}
 
 	public function saveNBT() {

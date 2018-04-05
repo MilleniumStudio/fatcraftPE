@@ -21,6 +21,7 @@ use pocketmine\command\ConsoleCommandSender;
 
 class HumanPet extends Human
 {
+    public const NAME_VISIBILITY = 200;
     private $m_id = 0;
     private $m_petType = "none";
     public $width = 1;
@@ -81,10 +82,10 @@ class HumanPet extends Human
         $this->setCanSaveWithChunk(false);
 
         parent::__construct($level, $nbt);
-        if(!isset($this->namedtag->NameVisibility)) {
-            $this->namedtag->NameVisibility = new IntTag("NameVisibility", 2);
+        if($this->getDataPropertyManager()->getInt(self::NAME_VISIBILITY) === null) {
+            $this->getDataPropertyManager()->setInt(self::NAME_VISIBILITY, 0);
         }
-        switch ($this->namedtag->NameVisibility->getValue()) {
+        switch ($this->getDataPropertyManager()->getInt(self::NAME_VISIBILITY)) {
             case 0:
                 $this->setNameTagVisible(false);
                 $this->setNameTagAlwaysVisible(false);
@@ -102,11 +103,12 @@ class HumanPet extends Human
                 $this->setNameTagAlwaysVisible(true);
                 break;
         }
-        if(!isset($this->namedtag->Scale)) {
-                $this->namedtag->Scale = new FloatTag("Scale", 1.0);
-        }
-        $this->setDataProperty(self::DATA_SCALE, self::DATA_TYPE_FLOAT, $this->namedtag->Scale->getValue());
-        $this->setDataProperty(self::DATA_FLAG_NO_AI, self::DATA_TYPE_BYTE, 1, true);
+       // if($this->getDataPropertyManager()->getFloat("Scale") === null) {
+     ///           $this->getDataPropertyManager()->setFloat("Scale", 1.0);
+     //   }
+
+        //$this->getDataPropertyManager()->setFloat(self::DATA_SCALE, $this->namedtag->getTag("Scale")->getValue());
+        $this->getDataPropertyManager()->setByte(self::DATA_FLAG_NO_AI, 1, true);
 
         $this->initEntity();
     }
@@ -120,18 +122,22 @@ class HumanPet extends Human
             switch ($type) {
                 case 0: { //byte
                     $value = $value + 0; //le cast pas sérieux qui est plus efficace que le cast correct (et toujours mieux que l'absence de cast)
+                    $this->getDataPropertyManager()->setByte($attr, $value, true);
                 }
                     break;
                 case 1: { //short
                     $value = intval($value);
+                    $this->getDataPropertyManager()->setShort($attr, $value, true);
                 }
                     break;
                 case 2: { //int
                     $value = intval($value);
+                    $this->getDataPropertyManager()->setInt($attr, $value, true);
                 }
                     break;
                 case 3: { //float
                     $value = floatval($value);
+                    $this->getDataPropertyManager()->setFloat($attr, $value, true);
                 }
                     break;
                 case 4: { //string
@@ -148,14 +154,13 @@ class HumanPet extends Human
                     break;
                 case 7: { //long
                     $value = $value + 0;
+                    $this->getDataPropertyManager()->setLong($attr, $value, true);
                 }
                     break;
                 case 8: { //Vec3F
                     echo "Error for attribute " . $attributeName . ": type VECTOR3F isn't implemented\n";
                 }
             }
-            $this->setDataProperty($attr, $type, $value, true);
-
         } catch (Exception $exception) {
             return false;
         }
@@ -176,12 +181,12 @@ class HumanPet extends Human
         {
             $this->function->onInterract($player);
         }
-        if(isset($this->namedtag->Commands))
+        if($this->namedtag->getString("Command") !== null)
         {
-            foreach ($this->namedtag->Commands as $cmd)
-            {
-                FatUtils::getInstance()->getServer()->dispatchCommand(new ConsoleCommandSender(), str_replace("{player}", $player->getName(), $cmd));
-            }
+            //foreach ($this->namedtag->Commands as $cmd)
+            //{
+                FatUtils::getInstance()->getServer()->dispatchCommand(new ConsoleCommandSender(), str_replace("{player}", $player->getName(), $this->namedtag->getString("Command")));
+            //}
         }
     }
 
@@ -199,10 +204,10 @@ class HumanPet extends Human
         $pk->yaw = $this->yaw;
         $pk->pitch = $this->pitch;
         $pk->item = $this->getInventory()->getItemInHand();
-        $pk->metadata = $this->dataProperties;
+        $pk->metadata = $this->getDataPropertyManager()->getDirty();
         $player->dataPacket($pk);
 
-        $this->inventory->sendArmorContents($player);
+        $this->getArmorInventory()->sendContents($player);
 
 //        if(!($this instanceof Player)){
             $this->sendSkin([$player]);

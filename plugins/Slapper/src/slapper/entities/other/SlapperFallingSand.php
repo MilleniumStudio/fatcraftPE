@@ -13,15 +13,15 @@ class SlapperFallingSand extends SlapperEntity {
 
 	public function __construct(Level $level, CompoundTag $nbt) {
 		parent::__construct($level, $nbt);
-		if(!isset($this->namedtag->BlockID)) {
-			$this->namedtag->BlockID = new IntTag("BlockID", 1);
+		if($this->getDataPropertyManager()->getInt("BlockID") === null) {
+            $this->getDataPropertyManager()->setInt(self::DATA_VARIANT, 1);
 		}
-		$this->setDataProperty(self::DATA_VARIANT, self::DATA_TYPE_INT, $this->namedtag->BlockID->getValue());
+		$this->getDataPropertyManager()->setInt(self::DATA_VARIANT, $this->namedtag->getInt("BlockID"));
 	}
 
 	public function saveNBT() {
 		parent::saveNBT();
-		$this->namedtag->BlockID = new IntTag("BlockID", $this->getDataProperty(self::DATA_VARIANT));
+		$this->namedtag->setInt("BlockID", $this->getDataPropertyManager()->getInt(self::DATA_VARIANT));
 	}
 
 }

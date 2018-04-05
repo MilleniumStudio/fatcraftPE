@@ -351,8 +351,13 @@ class HungerGame extends PluginBase implements Listener
 
 		Sidebar::getInstance()->clearLines();
 		// Waiting Sidebar Initialization
+        $templateText = "";
+        if ($this->getHungerGameConfig()->isSkyWars())
+            $templateText = "template.sw";
+        else
+            $templateText = "template.hg";
 		Sidebar::getInstance()
-			->addTranslatedLine(new TextFormatter("template.hg"))
+			->addTranslatedLine(new TextFormatter($templateText))
 			->addTimer($this->m_WaitingTimer)
 			->addWhiteSpace()
 			->addMutableLine(function ()

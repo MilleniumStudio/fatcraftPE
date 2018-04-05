@@ -29,7 +29,7 @@ class MultiSignFunctionServer extends SignFunction
         foreach ($p_MultipleSigns->signs as $sign)
         {
             $sign->data["type"] = $this->type;
-            $sign->data["id"] = $sign->sign->namedtag->index + $offset;
+            $sign->data["id"] = $sign->sign->namedtag->getInt("Index") + $offset;
             $sign->data["onlyVIP"] = $this->onlyVIP;
             $sign->function = new SignFunctionServer($sign);
         }

@@ -24,6 +24,8 @@ use fatutils\shop\ShopItem;
 use fatutils\ui\impl\ScaleWindow;
 use pocketmine\command\ConsoleCommandSender;
 use pocketmine\entity\Effect;
+use pocketmine\entity\EffectInstance;
+use pocketmine\entity\projectile\Egg;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\inventory\InventoryPickupItemEvent;
 use pocketmine\event\inventory\InventoryPickupArrowEvent;
@@ -112,7 +114,13 @@ class Lobby extends PluginBase implements Listener
         }
         if ($p_Player->hasPermission("effect.superjump"))
         {
-            $p_Player->addEffect(Effect::getEffect(Effect::JUMP_BOOST)->setAmplifier(2)->setDuration(INT32_MAX));
+            $p_Player->addEffect(new EffectInstance(
+                Effect::getEffect(Effect::JUMP_BOOST),
+                INT32_MAX,
+                2,
+                0,
+                0
+            ));
         }
         if ($p_Player->hasPermission("lobby.setscale"))
         {
@@ -147,8 +155,13 @@ class Lobby extends PluginBase implements Listener
 
         PermissionManager::getInstance()->updatePermissions($l_FatPlayer);
         $this->checkPlayerPermissions($l_Player);
-        $l_Player->addEffect(Effect::getEffect(Effect::SPEED)->setAmplifier(2)->setDuration(INT32_MAX));
-
+        $l_Player->addEffect(new EffectInstance(
+            Effect::getEffect(Effect::SPEED),
+            INT32_MAX,
+            2,
+            0,
+            0
+        ));
         if ($this->m_SpawnPoint != null)
         {
             $l_Player->teleport($this->m_SpawnPoint, $this->m_SpawnPoint->yaw, $this->m_SpawnPoint->pitch);

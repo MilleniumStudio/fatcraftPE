@@ -80,7 +80,6 @@ class EventListener implements Listener
     public function onSpawn(PlayerJoinEvent $e)
     {
         $p_Player = $e->getPlayer();
-
         if (GameManager::getInstance()->isPlaying()) {
             if ($p_Player->isOp()) {
                 $p_Player->setGamemode(3);
