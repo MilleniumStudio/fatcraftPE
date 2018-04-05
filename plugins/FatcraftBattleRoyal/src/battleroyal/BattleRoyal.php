@@ -218,7 +218,7 @@ class BattleRoyal extends PluginBase implements Listener
             PlayersManager::getInstance()->getFatPlayer($l_Player)->setPlaying();
             $l_Player->addEffect(new EffectInstance(
                 Effect::getEffect(Effect::DAMAGE_RESISTANCE),
-                12 * 20,
+                30 * 20,
                 10,
                 0,
                 0
@@ -457,9 +457,9 @@ class BattleRoyal extends PluginBase implements Listener
                 else
                 {
                     if (!$l_player->hasEffect(Effect::FATAL_POISON))
-                        $l_player->addEffect(Effect::getEffect(Effect::FATAL_POISON)->setDuration(INT32_MAX));
+                        $l_player->addEffect(new EffectInstance(Effect::getEffect(Effect::FATAL_POISON), INT32_MAX));
                     if (!$l_player->hasEffect(Effect::CONFUSION))
-                        $l_player->addEffect(Effect::getEffect(Effect::CONFUSION)->setDuration(INT32_MAX)->setAmplifier(1));
+                        $l_player->addEffect(new EffectInstance(Effect::getEffect(Effect::CONFUSION), INT32_MAX));
                 }
             }
         }
@@ -530,10 +530,6 @@ class BattleRoyal extends PluginBase implements Listener
                 {
                     $l_Player = $l_fatPlayer->getPlayer();
                     $l_Player->getInventory()->setItem(8, Item::get(ItemIds::COMPASS));
-                    if ($l_Player->getInventory()->getChestplate()->getId() == ItemIds::ELYTRA)
-                    {
-                        $l_Player->getInventory()->removeItem($l_Player->getInventory()->getChestplate());
-                    }
                 }
             }
 

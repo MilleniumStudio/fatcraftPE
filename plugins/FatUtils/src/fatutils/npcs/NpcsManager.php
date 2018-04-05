@@ -290,7 +290,7 @@ class NpcsManager implements Listener, CommandExecutor
         if(!$event instanceof EntityDamageByEntityEvent) {
             return;
         }
-        if(!$event->getDamager() instanceof Player) {
+        if(!$event->getDamager() instanceof Player || $event->getEntity() instanceof Player) {
             return;
         }
         if($event->getEntity()->namedtag->getString("npcName") !== null)

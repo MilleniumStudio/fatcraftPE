@@ -13,6 +13,7 @@ use fatutils\spawns\SpawnManager;
 use battleroyal\BattleRoyal;
 use libasynql\result\MysqlResult;
 use pocketmine\entity\Effect;
+use pocketmine\entity\EffectInstance;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\entity\EntityDamageEvent;
@@ -44,7 +45,7 @@ class EventListener implements Listener
 
         if ($player->getInventory()->getItem($player->getInventory()->getHeldItemIndex())->getId() == ItemIds::BOW
             && !$player->isSneaking())
-            $player->addEffect(Effect::getEffect(Effect::SLOWNESS)->setAmplifier(5)->setDuration(INT32_MAX));
+            $player->addEffect(new EffectInstance(Effect::getEffect(Effect::SLOWNESS), INT32_MAX, 5, 0, 0));
         else {
             $player->removeEffect(Effect::SLOWNESS);
         }
