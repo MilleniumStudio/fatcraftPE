@@ -22,6 +22,7 @@ use pocketmine\block\Block;
 use pocketmine\block\BlockIds;
 use pocketmine\entity\Effect;
 use pocketmine\entity\EffectInstance;
+use pocketmine\entity\Entity;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\item\Item;
@@ -223,7 +224,13 @@ class BattleRoyal extends PluginBase implements Listener
                 0,
                 0
             ));
+
+            foreach ($this->getServer()->getOnlinePlayers() as $l_secPlayer) {
+                $l_Player->sendData($l_secPlayer, [$l_Player::DATA_NAMETAG => [Entity::DATA_TYPE_STRING, ""]]);
+            }
+
             PlayersManager::getInstance()->getFatPlayer($l_Player)->equipKitToPlayer();
+
             $l_Player->getArmorInventory()->setChestplate(Item::get(ItemIds::ELYTRA));
 
             $l_Player->addTitle(TextFormat::GREEN . "GO !");
