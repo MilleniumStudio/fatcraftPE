@@ -73,7 +73,7 @@ class EventListener implements Listener
         {
             $player->addTitle("You are #". (PlayersManager::getInstance()->getInGamePlayerLeft()) . ".\n");
             PlayersManager::getInstance()->getFatPlayer($player)->setOutOfGame(true);
-
+            $player->removeEffect(Effect::NAUSEA);
             WorldUtils::addStrike($player->getLocation());
             $l_PlayerLeft = PlayersManager::getInstance()->getInGamePlayerLeft();
 

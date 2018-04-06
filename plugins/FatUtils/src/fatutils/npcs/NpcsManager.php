@@ -32,6 +32,7 @@ class NpcsManager implements Listener, CommandExecutor
     private static $m_Instance = null;
     public $config;
     private $m_RegisteredNPCS = array();
+    public const DATA_UNIQ_NAME = 5050; //string
 
     public static function getInstance(): NpcsManager
     {
@@ -213,10 +214,10 @@ class NpcsManager implements Listener, CommandExecutor
         $entity->namedtag->setString("Command", "");
         if (isset($commands[0]))
             $entity->namedtag->setString("Command", $commands[0]);
-        $entity->getDataPropertyManager()->setString(Entity::DATA_NAMETAG, $name);
         $entity->setNameTag($displayname);
         WorldUtils::forceLoadChunk($p_Location);
         $p_Location->getLevel()->addEntity($entity);
+        $entity->getDataPropertyManager()->setString(self::DATA_UNIQ_NAME, $name);
         $this->m_RegisteredNPCS[$name] = $entity;
         $entity->spawnToAll();
         FatUtils::getInstance()->getLogger()->info("[NPCS] Spawned entity " . $entity->getId() . " !");
@@ -287,19 +288,23 @@ class NpcsManager implements Listener, CommandExecutor
         */
     public function onEntityDamage(EntityDamageEvent $event)
     {
+        echo ("yo ici \n");
+
         if(!$event instanceof EntityDamageByEntityEvent) {
             return;
         }
         if(!$event->getDamager() instanceof Player || $event->getEntity() instanceof Player) {
             return;
         }
-        if($event->getEntity()->getDataPropertyManager()->getString(Entity::DATA_NAMETAG) !== null)
+        if($event->getEntity()->getDataPropertyManager()->getString(self::DATA_UNIQ_NAME) !== null)
         {
-            if(isset($this->m_RegisteredNPCS[$event->getEntity()->getDataPropertyManager()->getString(Entity::DATA_NAMETAG)]))
+            echo ("et la\n");
+            if(isset($this->m_RegisteredNPCS[$event->getEntity()->getDataPropertyManager()->getString(self::DATA_UNIQ_NAME)]))
             {
-                $entity = $this->m_RegisteredNPCS[$event->getEntity()->getDataPropertyManager()->getString(Entity::DATA_NAMETAG)];
+                $entity = $this->m_RegisteredNPCS[$event->getEntity()->getDataPropertyManager()->getString(self::DATA_UNIQ_NAME)];
                 $entity->onInterract($event->getDamager());
                 $event->setCancelled(true);
+                echo ("yo set canceled\n");
             }
         }
     }
