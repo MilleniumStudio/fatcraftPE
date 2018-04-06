@@ -207,6 +207,9 @@ class HumanPet extends Human
         $pk->metadata = $this->getDataPropertyManager()->getDirty();
         $player->dataPacket($pk);
 
+        //TODO: Hack for MCPE 1.2.13: DATA_NAMETAG is useless in AddPlayerPacket, so it has to be sent separately
+        $this->sendData($player, [self::DATA_NAMETAG => [self::DATA_TYPE_STRING, $this->getNameTag()]]);
+
         $this->getArmorInventory()->sendContents($player);
 
 //        if(!($this instanceof Player)){

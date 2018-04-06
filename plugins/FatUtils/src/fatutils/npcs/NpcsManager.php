@@ -213,7 +213,7 @@ class NpcsManager implements Listener, CommandExecutor
         $entity->namedtag->setString("Command", "");
         if (isset($commands[0]))
             $entity->namedtag->setString("Command", $commands[0]);
-        $entity->namedtag->setString("npcName", $name);
+        $entity->getDataPropertyManager()->setString(Entity::DATA_NAMETAG, $name);
         $entity->setNameTag($displayname);
         WorldUtils::forceLoadChunk($p_Location);
         $p_Location->getLevel()->addEntity($entity);
@@ -293,11 +293,11 @@ class NpcsManager implements Listener, CommandExecutor
         if(!$event->getDamager() instanceof Player || $event->getEntity() instanceof Player) {
             return;
         }
-        if($event->getEntity()->namedtag->getString("npcName") !== null)
+        if($event->getEntity()->getDataPropertyManager()->getString(Entity::DATA_NAMETAG) !== null)
         {
-            if(isset($this->m_RegisteredNPCS[$event->getEntity()->namedtag->getString("npcName")]))
+            if(isset($this->m_RegisteredNPCS[$event->getEntity()->getDataPropertyManager()->getString(Entity::DATA_NAMETAG)]))
             {
-                $entity = $this->m_RegisteredNPCS[$event->getEntity()->namedtag->getString("npcName")];
+                $entity = $this->m_RegisteredNPCS[$event->getEntity()->getDataPropertyManager()->getString(Entity::DATA_NAMETAG)];
                 $entity->onInterract($event->getDamager());
                 $event->setCancelled(true);
             }
