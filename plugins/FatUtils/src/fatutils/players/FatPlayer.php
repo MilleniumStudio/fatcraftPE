@@ -341,25 +341,24 @@ class FatPlayer
 
 			$tempItem = ItemFactory::fromString($itemName);
 			$tempItem->setCount(1);
-
-			if ($item == Kit::SLOT_KIT_HEAD)
-				$this->m_Player->getInventory()->setHelmet($tempItem);
-			if ($item == Kit::SLOT_KIT_CHEST)
-				$this->m_Player->getInventory()->setChestplate($tempItem);
-			if ($item == Kit::SLOT_KIT_PANTS)
-				$this->m_Player->getInventory()->setLeggings($tempItem);
-			if ($item == Kit::SLOT_KIT_BOOTS)
-				$this->m_Player->getInventory()->setBoots($tempItem);
-			if ($item == Kit::SLOT_KIT_HELD)
-			{
-				$this->m_Player->getInventory()->setItemInHand($tempItem);
-				if ($itemName == "BOW")
-				{
-					$arrows = ItemFactory::fromString("arrow");
-					$arrows->setCount(10);
-					$this->m_Player->getInventory()->addItem(clone $arrows);
-				}
-			}
+            if ($this->m_Player instanceof Player) {
+                if ($item == Kit::SLOT_KIT_HEAD)
+                    $this->m_Player->getArmorInventory()->setHelmet($tempItem);
+                if ($item == Kit::SLOT_KIT_CHEST)
+                    $this->m_Player->getArmorInventory()->setChestplate($tempItem);
+                if ($item == Kit::SLOT_KIT_PANTS)
+                    $this->m_Player->getArmorInventory()->setLeggings($tempItem);
+                if ($item == Kit::SLOT_KIT_BOOTS)
+                    $this->m_Player->getArmorInventory()->setBoots($tempItem);
+                if ($item == Kit::SLOT_KIT_HELD) {
+                    $this->m_Player->getInventory()->setItemInHand($tempItem);
+                    if ($itemName == "BOW") {
+                        $arrows = ItemFactory::fromString("arrow");
+                        $arrows->setCount(10);
+                        $this->m_Player->getInventory()->addItem(clone $arrows);
+                    }
+                }
+            }
 		}
 		$this->clearKitItems();
 		$this->syncKitItems();

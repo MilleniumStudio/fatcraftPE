@@ -279,25 +279,25 @@ class ShopKeeper extends ClickableNPC
                             {
                                 $l_Item = ItemUtils::getItemFromRaw(self::$m_ShopContent["armors"][$l_Key]["helmet"]);
                                 if (ItemUtils::isHelmet($l_Item->getId()))
-                                    $p_Player->getInventory()->setHelmet(ItemUtils::getColoredItemIfColorable($l_Item, $l_Color));
+                                    $p_Player->getArmorInventory()->setHelmet(ItemUtils::getColoredItemIfColorable($l_Item, $l_Color));
                             }
                             if (isset(self::$m_ShopContent["armors"][$l_Key]["chestplate"]))
                             {
                                 $l_Item = ItemUtils::getItemFromRaw(self::$m_ShopContent["armors"][$l_Key]["chestplate"]);
                                 if (ItemUtils::isChestplate($l_Item->getId()))
-                                    $p_Player->getInventory()->setChestplate(ItemUtils::getColoredItemIfColorable($l_Item, $l_Color));
+                                    $p_Player->getArmorInventory()->setChestplate(ItemUtils::getColoredItemIfColorable($l_Item, $l_Color));
                             }
                             if (isset(self::$m_ShopContent["armors"][$l_Key]["leggings"]))
                             {
                                 $l_Item = ItemUtils::getItemFromRaw(self::$m_ShopContent["armors"][$l_Key]["leggings"]);
                                 if (ItemUtils::isLeggings($l_Item->getId()))
-                                    $p_Player->getInventory()->setLeggings(ItemUtils::getColoredItemIfColorable($l_Item, $l_Color));
+                                    $p_Player->getArmorInventory()->setLeggings(ItemUtils::getColoredItemIfColorable($l_Item, $l_Color));
                             }
                             if (isset(self::$m_ShopContent["armors"][$l_Key]["boots"]))
                             {
                                 $l_Item = ItemUtils::getItemFromRaw(self::$m_ShopContent["armors"][$l_Key]["boots"]);
                                 if (ItemUtils::isBoots($l_Item->getId()))
-                                    $p_Player->getInventory()->setBoots(ItemUtils::getColoredItemIfColorable($l_Item, $l_Color));
+                                    $p_Player->getArmorInventory()->setBoots(ItemUtils::getColoredItemIfColorable($l_Item, $l_Color));
                             }
 
                             $p_Player->sendMessage((new TextFormatter("bedwars.shop.bought", ["name" => new TextFormatter("bedwars.shop.items.armors." . $l_Key)]))->asStringForPlayer($p_Player));
