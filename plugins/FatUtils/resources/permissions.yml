@@ -4,6 +4,13 @@ default:
   allow:
     - chat.sendMessageTest
 
+Youtuber:
+  extends: default
+  prefix: "§3Youtuber "
+  color: §3
+  allow:
+    - lobby.setscale
+
 Hero:
   extends: default
   prefix: "§2Hero "
