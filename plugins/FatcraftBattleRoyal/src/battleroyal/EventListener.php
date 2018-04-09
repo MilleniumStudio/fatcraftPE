@@ -56,8 +56,8 @@ class EventListener implements Listener
         $entity = $p_event->getEntity();
         if ($entity instanceof Player)
         {
-            if (PlayersManager::getInstance()->getFatPlayer($entity)->isOutOfGame())
-                return;
+            /*if (PlayersManager::getInstance()->getFatPlayer($entity)->isOutOfGame())
+                return;*/
             if ($entity->getHealth() - $p_event->getFinalDamage() <= 0)
             {
                 $this->playerDeathEvent($entity);
@@ -89,18 +89,47 @@ class EventListener implements Listener
 
             $player->setGamemode(PLAYER::SPECTATOR);
 
-            $drops = $player->getInventory()->getContents();
+            $isThereSnowball = false;
+            $isThereEnderPearl = false;
+            $isThereBow = false;
 
-            foreach ($drops as $index => $item)
+            foreach ($player->getInventory()->getContents() as $index => $item)
             {
+                $number = $item->getCount();
                 switch ($item->getId())
                 {
                     case (ItemIds::SNOWBALL):
+                        $isThereSnowball = true;
+                        $player->getInventory()->removeItem($item);
+                        break;
                     case (ItemIds::ENDER_PEARL):
+                        $isThereEnderPearl = true;
+                        $player->getInventory()->removeItem($item);
+                        break;
                     case (ItemIds::BOW):
-                        $item->setCount(1);
+                        $isThereBow = true;
+                        $player->getInventory()->removeItem($item);
                         break;
                 }
+            }
+
+            if ($isThereSnowball)
+            {
+                $item = Item::fromString("SNOWBALL");
+                $item->setCustomName(BattleRoyal::getInstance()->getBattleRoyalCustomName(ItemIds::SNOWBALL));
+                $player->getInventory()->addItem($item);
+            }
+            if ($isThereEnderPearl)
+            {
+                $item = Item::fromString("ENDER_PEARL");
+                $item->setCustomName(BattleRoyal::getInstance()->getBattleRoyalCustomName(ItemIds::ENDER_PEARL));
+                $player->getInventory()->addItem($item);
+            }
+            if ($isThereBow)
+            {
+                $item = Item::fromString("BOW");
+                $item->setCustomName(BattleRoyal::getInstance()->getBattleRoyalCustomName(ItemIds::BOW));
+                $player->getInventory()->addItem($item);
             }
 
             $player->getInventory()->dropContents(BattleRoyal::getInstance()->getServer()->getLevel(1), $player->getPosition());
