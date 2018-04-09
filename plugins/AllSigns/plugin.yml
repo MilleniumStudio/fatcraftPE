@@ -1,5 +1,5 @@
 name: AllSigns
 main: surva\allsigns\AllSigns
 version: 1.0.2
-api: 3.0.0-ALPHA10
+api: 3.0.0-ALPHA11
 depend: ["StatsPE", "LoadBalancer", "FatUtils"]

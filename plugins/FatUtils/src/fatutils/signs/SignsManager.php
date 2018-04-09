@@ -332,7 +332,7 @@ class SignsManager implements Listener, CommandExecutor
             if ($tile instanceof TileSign)
             {
                 FatUtils::getInstance()->getLogger()->debug("[Signs] Text interact " . $block->getName() . " " . $tile->x . "/" . $tile->y . "/" . $tile->z . " face: " . $block->getDamage());
-                if ($tile->namedtag->getString("SignName") !== null)
+                if ($tile->namedtag->hasTag("SignName") && $tile->namedtag->getString("SignName") !== null)
                 {
                     if (isset($this->m_RegisteredSigns[$tile->namedtag->getString("SignName")]))
                     {
