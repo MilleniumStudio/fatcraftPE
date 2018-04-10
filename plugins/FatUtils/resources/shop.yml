@@ -1,18 +1,63 @@
 content:
   particles:
-    orbit:
-      name: "shop.items.particles.orbit"
-      desc: "shop.items.particles.orbit.desc"
-      class: "fatutils\\shop\\particles\\OrbitParticle"
-      priceFS: 1500
-      priceFG: 50
+    carrotPath:
+      name: "CARROT"
+      desc: "shop.items.particles.flamePath.desc"
+      class: "fatutils\\shop\\particles\\PathParticle"
+      priceFS: 200000
+      priceFG: 500
+      rawParticle: "{\"particleName\":\"TYPE_CARROT\"}"
     crown:
       name: "shop.items.particles.crown"
       desc: "shop.items.particles.crown.desc"
       class: "fatutils\\shop\\particles\\CrownParticle"
       priceFS: 1500
       priceFG: 50
+    cape:
+      name: "shop.items.particles.cape"
+      desc: "shop.items.particles.cape.desc"
+      class: "fatutils\\shop\\particles\\CapeParticle"
+      priceFS: 1500
+      priceFG: 50
+      rgbColor: "#FF2020"
+    orbit:
+      name: "shop.items.particles.orbit"
+      desc: "shop.items.particles.orbit.desc"
+      class: "fatutils\\shop\\particles\\OrbitParticle"
+      priceFS: 1500
+      priceFG: 50
+      rankVIP: 0
+    glyph:
+      name: "shop.items.particles.glyph"
+      desc: "shop.items.particles.glyph.desc"
+      class: "fatutils\\shop\\particles\\GlyphParticle"
+      priceFS: 1500
+      priceFG: 50
+      offsetY: 0.1
       rankVIP: 1
+    glyphyPath:
+      name: "shop.items.particles.glyphyPath"
+      desc: "shop.items.particles.glyphyPath.desc"
+      class: "fatutils\\shop\\particles\\GlyphyPathParticle"
+#      priceFS: 1500
+      priceFG: 50
+      rankVIP: 1
+    heartPath:
+      name: "shop.items.particles.heartPath"
+      desc: "shop.items.particles.heartPath.desc"
+      class: "fatutils\\shop\\particles\\PathParticle"
+      priceFS: 2000
+      priceFG: 70
+      rankVIP: 2
+      rawParticle: "{\"particleName\":\"TYPE_HEART\"}"
+    flamePath:
+      name: "shop.items.particles.flamePath"
+      desc: "shop.items.particles.flamePath.desc"
+      class: "fatutils\\shop\\particles\\PathParticle"
+      priceFS: 2000
+      priceFG: 70
+      rankVIP: 2
+      rawParticle: "{\"particleName\":\"TYPE_FLAME\"}"
 #    barrierYellow:
 #      name: "shop.items.particles.barrierYellow"
 #      desc: "shop.items.particles.barrierYellow.desc"
@@ -42,51 +87,6 @@ content:
 #      priceFG: 75
 #      offsetY: 0.4
 #      randomColors: true
-    glyph:
-      name: "shop.items.particles.glyph"
-      desc: "shop.items.particles.glyph.desc"
-      class: "fatutils\\shop\\particles\\GlyphParticle"
-      priceFS: 1500
-      priceFG: 50
-      offsetY: 0.1
-      rankVIP: 1
-    glyphyPath:
-      name: "shop.items.particles.glyphyPath"
-      desc: "shop.items.particles.glyphyPath.desc"
-      class: "fatutils\\shop\\particles\\GlyphyPathParticle"
-#      priceFS: 1500
-      priceFG: 50
-    heartPath:
-      name: "shop.items.particles.heartPath"
-      desc: "shop.items.particles.heartPath.desc"
-      class: "fatutils\\shop\\particles\\PathParticle"
-      priceFS: 2000
-      priceFG: 70
-      rankVIP: 2
-      rawParticle: "{\"particleName\":\"TYPE_HEART\"}"
-    flamePath:
-      name: "shop.items.particles.flamePath"
-      desc: "shop.items.particles.flamePath.desc"
-      class: "fatutils\\shop\\particles\\PathParticle"
-      priceFS: 2000
-      priceFG: 70
-      rankVIP: 2
-      rawParticle: "{\"particleName\":\"TYPE_FLAME\"}"
-#    carrotPath:
-#      name: "CARROT"
-#      desc: "shop.items.particles.flamePath.desc"
-#      class: "fatutils\\shop\\particles\\PathParticle"
-#      priceFS: 200000
-#      priceFG: 5000
-#      rankVIP: 2
-#      rawParticle: "{\"particleName\":\"TYPE_CARROT\"}"
-    cape:
-      name: "shop.items.particles.cape"
-      desc: "shop.items.particles.cape.desc"
-      class: "fatutils\\shop\\particles\\CapeParticle"
-      priceFS: 1500
-      priceFG: 50
-      rgbColor: "#FF2020"
   pets:
     Chicken:
       name: "shop.items.pets.Chicken"
@@ -94,19 +94,78 @@ content:
       priceFS: 1500
       priceFG: 50
       type: "Chicken"
+    Cat4:
+      name: "shop.items.pets.catWhite"
+      class: "fatutils\\pets\\Pet"
+      priceFS: 1500
+      priceFG: 50
+      type: "Ocelot"
+      options:
+        DATA_VARIANT: "DATA_TYPE_INT/3"
+    Bat:
+      name: "shop.items.pets.Bat"
+      class: "fatutils\\pets\\Pet"
+#      priceFS: 2000
+      priceFG: 70
+      type: "Bat"
+    Bunny:
+      name: "shop.items.pets.Bunny"
+      class: "fatutils\\pets\\Pet"
+      priceFS: 1500
+      priceFG: 50
+      type: "Bunny"
+    Cat1:
+      name: "shop.items.pets.ocelot"
+      class: "fatutils\\pets\\Pet"
+      priceFS: 1500
+      priceFG: 50
+      type: "Ocelot"
+      rankVIP: 0
+    Parrot:
+      name: "shop.items.pets.Parrot"
+      class: "fatutils\\pets\\Pet"
+      priceFS: 2000
+      priceFG: 70
+      type: "Parrot"
       rankVIP: 1
-#    Cow:
-#      name: "shop.items.pets.Cow"
-#      class: "fatutils\\pets\\Pet"
-#      priceFS: 1500
-#      priceFG: 50
-#      type: "Cow"
+    Wolf:
+      name: "shop.items.pets.Wolf"
+      class: "fatutils\\pets\\Pet"
+      priceFS: 1500
+      priceFG: 50
+      type: "Wolf"
+    PolarBear:
+      name: "shop.items.pets.PolarBear"
+      class: "fatutils\\pets\\Pet"
+      priceFS: 2000
+      priceFG: 70
+      type: "PolarBear"
+      rankVIP: 2
+    Llama:
+      name: "shop.items.pets.Llama"
+      class: "fatutils\\pets\\Pet"
+      priceFS: 1500
+      priceFG: 50
+      type: "Llama"
+      rankVIP: 2
+    Endermite:
+      name: "shop.items.pets.Endermite"
+      class: "fatutils\\pets\\Pet"
+      priceFG: 70
+      type: "Endermite"
+      rankVIP: 2
     Pig:
       name: "shop.items.pets.Pig"
       class: "fatutils\\pets\\Pet"
 #      priceFS: 1500
 #      priceFG: 50
       type: "Pig"
+#    Cow:
+#      name: "shop.items.pets.Cow"
+#      class: "fatutils\\pets\\Pet"
+#      priceFS: 1500
+#      priceFG: 50
+#      type: "Cow"
 #    Sheep:
 #      name: "shop.items.pets.Sheep"
 #      class: "fatutils\\pets\\Pet"
@@ -137,19 +196,6 @@ content:
 #     priceFS: 1500
 #     priceFG: 50
 #     type: "Squid"
-    Bunny:
-      name: "shop.items.pets.Bunny"
-      class: "fatutils\\pets\\Pet"
-      priceFS: 1500
-      priceFG: 50
-      type: "Bunny"
-      rankVIP: 1
-    Bat:
-      name: "shop.items.pets.Bat"
-      class: "fatutils\\pets\\Pet"
-#      priceFS: 2000
-      priceFG: 70
-      type: "Bat"
 #    IronGolem:
 #      name: "shop.items.pets.IronGolem"
 #      class: "fatutils\\pets\\Pet"
@@ -162,12 +208,6 @@ content:
 #      priceFS: 1500
 #      priceFG: 50
 #      type: "Snowman"
-#    Cat1:
-#      name: "shop.items.pets.ocelot"
-#      class: "fatutils\\pets\\Pet"
-#      priceFS: 1500
-#      priceFG: 50
-#      type: "Ocelot"
 #    Cat2:
 #      name: "shop.items.pets.catBlack"
 #      class: "fatutils\\pets\\Pet"
@@ -184,14 +224,6 @@ content:
 #      type: "Ocelot"
 #      options:
 #       DATA_VARIANT: "DATA_TYPE_INT/2"
-    Cat4:
-      name: "shop.items.pets.catWhite"
-      class: "fatutils\\pets\\Pet"
-      priceFS: 1500
-      priceFG: 50
-      type: "Ocelot"
-      options:
-        DATA_VARIANT: "DATA_TYPE_INT/3"
 #    Horse:
 #      name: "shop.items.pets.Horse"
 #      class: "fatutils\\pets\\Pet"
@@ -222,26 +254,6 @@ content:
 #      priceFS: 1500
 #      priceFG: 50
 #      type: "ZombieHorse"
-    PolarBear:
-      name: "shop.items.pets.PolarBear"
-      class: "fatutils\\pets\\Pet"
-      priceFS: 2000
-      priceFG: 70
-      type: "PolarBear"
-      rankVIP: 2
-#    Llama:
-#      name: "shop.items.pets.Llama"
-#      class: "fatutils\\pets\\Pet"
-#      priceFS: 1500
-#      priceFG: 50
-#      type: "Llama"
-    Parrot:
-      name: "shop.items.pets.Parrot"
-      class: "fatutils\\pets\\Pet"
-      priceFS: 2000
-      priceFG: 70
-      type: "Parrot"
-      rankVIP: 2
 #    Zombie:
 #      name: "shop.items.pets.Zombie"
 #      class: "fatutils\\pets\\Pet"
@@ -361,11 +373,6 @@ content:
 #      priceFS: 1500
 #      priceFG: 50
 #      type: "EnderDragon"
-    Endermite:
-      name: "shop.items.pets.Endermite"
-      class: "fatutils\\pets\\Pet"
-      priceFG: 70
-      type: "Endermite"
 #    Vindicator:
 #      name: "shop.items.pets.Vindicator"
 #      class: "fatutils\\pets\\Pet"

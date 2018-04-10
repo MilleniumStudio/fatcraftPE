@@ -139,7 +139,8 @@ class ShopManager
 
 		$l_EquippedText = new TextFormatter("shop.equpped");
 		$l_BuyableText = new TextFormatter("shop.buyable");
-		$l_UnbuyableText = new TextFormatter("shop.unbuyable");
+        //$l_UnbuyableText = new TextFormatter("shop.unbuyable");
+        $l_UnbuyableText = new TextFormatter("shop.buyable");
 
 		$l_Ret->addPart((new Button())
 			->setText((new TextFormatter("window.return"))->asStringForFatPlayer($l_FatPlayer))
@@ -162,6 +163,8 @@ class ShopManager
 			{
                 if ($l_RequiredRank > $l_PlayerVipRank)
                 {
+                    if ($l_RequiredRank == 0)
+                        $l_BottomText .= "§2Hero§r";
                     if ($l_RequiredRank == 1)
                         $l_BottomText .= "§4Titan§r";
                     if ($l_RequiredRank == 2)
