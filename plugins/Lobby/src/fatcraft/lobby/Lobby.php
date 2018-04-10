@@ -196,7 +196,7 @@ class Lobby extends PluginBase implements Listener
                 ShopManager::getInstance()->getShopMenu($p_Event->getPlayer())->open();
                 break;
             case ItemIds::ELYTRA:
-                $p_Event->getPlayer()->getInventory()->setChestplate(ItemFactory::get(ItemIds::ELYTRA));
+                $p_Event->getPlayer()->getArmorInventory()->setChestplate(ItemFactory::get(ItemIds::ELYTRA));
                 $p_Event->getPlayer()->teleport(new Vector3(0.5, 56, 66.5), 180);
                 break;
             case ItemIds::TOTEM:
