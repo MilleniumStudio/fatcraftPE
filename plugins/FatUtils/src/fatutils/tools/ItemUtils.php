@@ -88,7 +88,7 @@ class ItemUtils
                 }else{
                     $tag = new CompoundTag("", []);
                 }
-                $tag->customColor = new IntTag("customColor", ColorUtils::getColorCode(ColorUtils::getColorFromColor($p_Color)));
+                $tag->setInt("customColor", ColorUtils::getColorCode(ColorUtils::getColorFromColor($p_Color)));
                 $p_Item->setCompoundTag($tag);
                 break;
         }

@@ -364,8 +364,8 @@ class Bedwars extends PluginBase implements Listener
 						$l_Player->setGamemode(Player::SURVIVAL);
 						$l_Team->getSpawn()->teleport($l_Player, 2);
 
-						$l_Player->getInventory()->setChestplate(ItemUtils::getColoredItemIfColorable(Item::get(ItemIds::LEATHER_CHESTPLATE), $l_Team->getColor()));
-						$l_Player->getInventory()->setLeggings(ItemUtils::getColoredItemIfColorable(Item::get(ItemIds::LEATHER_LEGGINGS), $l_Team->getColor()));
+						$l_Player->getArmorInventory()->setChestplate(ItemUtils::getColoredItemIfColorable(Item::get(ItemIds::LEATHER_CHESTPLATE), $l_Team->getColor()));
+						$l_Player->getArmorInventory()->setLeggings(ItemUtils::getColoredItemIfColorable(Item::get(ItemIds::LEATHER_LEGGINGS), $l_Team->getColor()));
 						$l_Player->getInventory()->addItem(Item::get(ItemIds::WOODEN_SWORD));
 
 						PlayersManager::getInstance()->getFatPlayer($l_Player)->equipKitToPlayer();
