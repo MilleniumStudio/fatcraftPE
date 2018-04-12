@@ -14,8 +14,11 @@ use battleroyal\BattleRoyal;
 use libasynql\result\MysqlResult;
 use pocketmine\entity\Effect;
 use pocketmine\entity\EffectInstance;
+use pocketmine\entity\EntityIds;
+use pocketmine\entity\projectile\Grenada;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerDeathEvent;
@@ -26,6 +29,7 @@ use pocketmine\event\player\PlayerToggleSneakEvent;
 use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
+use pocketmine\lang\TextContainer;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\Player;
 use pocketmine\plugin\Plugin;
@@ -56,12 +60,40 @@ class EventListener implements Listener
         $entity = $p_event->getEntity();
         if ($entity instanceof Player)
         {
-            /*if (PlayersManager::getInstance()->getFatPlayer($entity)->isOutOfGame())
-                return;*/
+            if (PlayersManager::getInstance()->getFatPlayer($entity)->isOutOfGame())
+                return;
             if ($entity->getHealth() - $p_event->getFinalDamage() <= 0)
             {
-                $this->playerDeathEvent($entity);
                 $p_event->setCancelled();
+
+                $this->playerDeathEvent($entity);
+                if ($p_event instanceof EntityDamageByEntityEvent)
+                {
+                    foreach (BattleRoyal::getInstance()->getServer()->getOnlinePlayers() as $player)
+                    {
+                        $damager = $p_event->getDamager();
+                        if ($damager instanceof Player)
+                        {
+                            $player->sendMessage(new TextContainer("§4" . $damager->getName() . "§r killed §4" . $entity->getName() . "§r."));
+                            continue;
+                        }
+                        else
+                        {
+                            if ($damager instanceof Grenada)
+                            {
+                                $player->sendMessage(new TextContainer("§5" . $entity->getName() . "§r miserably killed himself..."));
+                                continue;
+                            }
+                        }
+                    }
+                }
+                foreach (BattleRoyal::getInstance()->getServer()->getOnlinePlayers() as $player)
+                {
+                    if ($p_event->getCause() == EntityDamageEvent::CAUSE_MAGIC)
+                        $player->sendMessage(new TextContainer("§5" . $entity->getName() . "§r was killed by the fog."));
+                    if ($p_event-> getCause() == EntityDamageEvent::CAUSE_FALL)
+                        $player->sendMessage(new TextContainer("§5" . $entity->getName() . "§r just failed a deadly jump..."));
+                }
             }
         }
     }

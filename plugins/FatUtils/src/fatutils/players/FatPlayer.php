@@ -246,7 +246,6 @@ class FatPlayer
                 $this->m_permissionGroup = $result->rows[0]["permission_group"];
                 if ($this->m_permissionGroup == null || $this->m_permissionGroup == "")
                     $this->m_permissionGroup = "default";
-                echo ("yo permission group = " . $this->m_permissionGroup . "\n");
                 $this->m_MutedTimestamp = $result->rows[0]["muted"];
 
 				$this->m_Fatsilver = $result->rows[0]["fatsilver"];
@@ -650,11 +649,13 @@ class FatPlayer
     {
         $group = $this->getPermissionGroup();
 
+        if ($group == "Hero")
+            return 0;
         if ($group == "Titan")
             return 1;
         if ($group == "Legend")
             return 2;
-        return 0;
+        return -1;
     }
 
     public function isWithinDist(Vector3 $p_location, int $p_dist) : bool

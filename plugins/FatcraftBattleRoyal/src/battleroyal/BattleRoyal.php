@@ -128,6 +128,9 @@ class BattleRoyal extends PluginBase implements Listener
             ->addMutableLine(function () {
                 return new TextFormatter("game.waitingForMore", ["amount" => max(0, PlayersManager::getInstance()->getMinPlayer() - count($this->getServer()->getOnlinePlayers()))]);
             });
+
+        // FILLING UP CHEST
+        ChestsManager::getInstance()->fillChests();
     }
 
     public function handlePlayerConnection(Player $p_Player)
@@ -208,11 +211,8 @@ class BattleRoyal extends PluginBase implements Listener
             ->addTimer($this->m_PlayTimer)
             ->addWhiteSpace()
             ->addMutableLine(function () {
-                return new TextFormatter("hungergame.alivePlayer", ["nbr" => PlayersManager::getInstance()->getInGamePlayerLeft()]);
+                return new TextFormatter("battleroyal.alivePlayer", ["nbr" => PlayersManager::getInstance()->getInGamePlayerLeft(), "nbr2" => $this->maxPlayer]);
             });
-
-        // FILLING UP CHEST
-        ChestsManager::getInstance()->fillChests();
 
         // PREPARING PLAYERS
         foreach ($this->getServer()->getOnlinePlayers() as $l_Player) {
@@ -434,16 +434,16 @@ class BattleRoyal extends PluginBase implements Listener
 
                 $l_distance = $l_FatPlayer->calcDist($l_pos1);
                 if ($l_distance > $l_radius1)
-                    return "§4DISTANCE TO SAFE ZONE§r\n" . ($l_distance - $l_radius1) . "m";
+                    return "§4UNSAFE ZONE§r\n" . "§4SAFE ZONE: §f" . ($l_distance - $l_radius1) . "m§r";
                 if ($this->getNextDamageLoc() != null && $this->getNextDamageRadius() != 0 && ($l_diff = ($l_FatPlayer->calcDist($this->getNextDamageLoc()) -  $this->getNextDamageRadius())) >= 0)
-                    return "§2SAFE ZONE\nNEXT ZONE : " . $l_diff . "m§r";
+                    return "§2SAFE ZONE\n§cNEXT SAFE ZONE: §f" . $l_diff . "m§r"; //§kµ§r
                 else
                     return "§2SAFE ZONE\n";
             })
             ->addWhiteSpace()
             ->addMutableLine(function ()
             {
-                return new TextFormatter("hungergame.alivePlayer", ["nbr" => PlayersManager::getInstance()->getInGamePlayerLeft()]);
+                return new TextFormatter("battleroyal.alivePlayer", ["nbr" => PlayersManager::getInstance()->getInGamePlayerLeft(), "nbr2" => $this->maxPlayer]);
             });
     }
 
@@ -464,7 +464,7 @@ class BattleRoyal extends PluginBase implements Listener
                 else
                 {
                     if (!$l_player->hasEffect(Effect::FATAL_POISON))
-                        $l_player->addEffect(new EffectInstance(Effect::getEffect(Effect::FATAL_POISON), INT32_MAX));
+                        $l_player->addEffect(new EffectInstance(Effect::getEffect(Effect::FATAL_POISON), INT32_MAX, 2));
                     if (!$l_player->hasEffect(Effect::CONFUSION))
                         $l_player->addEffect(new EffectInstance(Effect::getEffect(Effect::CONFUSION), INT32_MAX));
                 }
@@ -480,7 +480,7 @@ class BattleRoyal extends PluginBase implements Listener
 
         $this->m_PlayTimer = new DisplayableTimer(GameManager::getInstance()->getPlayingTickDuration());
         $this->m_PlayTimer
-            ->setTitle("NEXT ZONE IN")
+            ->setTitle("NEXT ZONE")
             ->addStartCallback(function ()
             {
                 // this will set the new direction of COMPASS
@@ -489,9 +489,9 @@ class BattleRoyal extends PluginBase implements Listener
                     if ($l_fatPlayer instanceof FatPlayer)
                     {
                         $l_fatPlayer->getPlayer()->setSpawn(BattleRoyal::getInstance()->getCurrentCenterLoc(), BattleRoyal::TYPE_WORLD_SPAWN);
-                        echo ("spawn set\n");
+                        //echo ("spawn set\n");
                         $l_fatPlayer->getPlayer()->addTitle(
-                            ("§5New area defined !§r"),
+                            ("§5New game area !§r"),
                             ("Follow your compass to the safe zone"));
                     }
                 }
@@ -564,6 +564,16 @@ class BattleRoyal extends PluginBase implements Listener
         $this->setCurrentRadius($l_newRadius);
     }
 
+    public function displayWinner()
+    {
+        $winner = PlayersManager::getInstance()->getInGamePlayers()[0];
+        if ($winner instanceof FatPlayer)
+        {
+            foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+                $l_Player->addTitle(" #1 §6Victory !", "§4" . $winner->getPlayer()->getName() . " won !", -1, 3000);
+        }
+    }
+
 	public function endGame()
     {
         if ($this->m_PlayTimer instanceof Timer)
@@ -577,8 +587,7 @@ class BattleRoyal extends PluginBase implements Listener
 
             GameManager::getInstance()->endGame(false);
 
-            foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-                $l_Player->addTitle(" #1 §6Victory !", "§4" . $winner->getPlayer()->getName() . " won !", -1, 3000);
+            $this->getServer()->getScheduler()->scheduleRepeatingTask(new DisplayWinner($this), 10);
         }
         else
         {
@@ -992,6 +1001,23 @@ class ComputeBubbleTask extends PluginTask
     public function onRun(int $currentTick)
     {
         BattleRoyal::getInstance()->doStuffWithChunks();
+    }
+
+    public function cancel() {
+        $this->getHandler()->cancel();
+    }
+}
+
+class DisplayWinner extends PluginTask
+{
+    public function __construct(Plugin $owner)
+    {
+        parent::__construct($owner);
+    }
+
+    public function onRun(int $currentTick)
+    {
+        BattleRoyal::getInstance()->displayWinner();
     }
 
     public function cancel() {
