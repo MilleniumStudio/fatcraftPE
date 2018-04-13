@@ -84,3 +84,7 @@ fi
 ../PocketMine-MP/bin/php7/bin/php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
 --make FatcraftBuildBattle/ \
 --out FatcraftBuildBattle.phar
+
+../PocketMine-MP/bin/php7/bin/php -dphar.readonly=0 ../PocketMine-DevTools/src/DevTools/ConsoleScript.php \
+--make BuycraftPM/ \
+--out BuycraftPM.phar
