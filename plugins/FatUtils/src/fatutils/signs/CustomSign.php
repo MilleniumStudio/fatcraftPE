@@ -2,6 +2,7 @@
 
 namespace fatutils\signs;
 
+use fatcraft\loadbalancer\LoadBalancer;
 use pocketmine\tile\Sign;
 use pocketmine\command\ConsoleCommandSender;
 use pocketmine\Player;
@@ -37,7 +38,7 @@ class CustomSign
 
     public function updateTexte()
     {
-        if ($this->sign instanceof Sign)
+        if ($this->sign instanceof Sign && LoadBalancer::getInstance()->getServerType() != "shop")
         {
             $this->sign->setText($this->text[0], $this->text[1], $this->text[2], $this->text[3]);
         }

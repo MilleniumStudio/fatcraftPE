@@ -2,6 +2,7 @@
 
 namespace fatutils;
 
+use fatcraft\loadbalancer\LoadBalancer;
 use fatutils\ban\BanManager;
 use fatutils\commands\AsConsoleCommand;
 use fatutils\commands\BanCommand;
@@ -17,12 +18,16 @@ use fatutils\tools\particles\ParticleBuilder;
 use fatutils\tools\WorldUtils;
 use fatutils\tools\TextFormatter;
 use fatutils\tools\SkinRepository;
+use libasynql\DirectQueryMysqlTask;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
+use pocketmine\command\ConsoleCommandSender;
 use pocketmine\level\Position;
 use pocketmine\level\sound\GenericSound;
 use pocketmine\Player;
+use pocketmine\plugin\Plugin;
 use pocketmine\plugin\PluginBase;
+use pocketmine\scheduler\PluginTask;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
 
@@ -68,6 +73,13 @@ class FatUtils extends PluginBase
 		TextFormatter::loadLanguages();
 
 		ShopManager::getInstance();
+
+        if (LoadBalancer::getInstance()->getServerType() == "shop")
+        {
+            LoadBalancer::getInstance()->getServer()->dispatchCommand(new ConsoleCommandSender(), "buycraft secret c3ff65408c433494f06bcd411bc6399e03fb6c6c");
+
+            LoadBalancer::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new LogPlayerConnected($this), 20 * 60 /*this is every minutes*/);
+        }
     }
 
     public function onTemplateConfigSet()
@@ -159,5 +171,29 @@ class FatUtils extends PluginBase
      */
     public function getPluginFile() : string{
         return $this->getFile();
+    }
+}
+
+class LogPlayerConnected extends PluginTask
+{
+    public function __construct(Plugin $owner)
+    {
+        parent::__construct($owner);
+    }
+
+    public function onRun(int $currentTick)
+    {
+        echo("log done !\n");
+        $var = LoadBalancer::getInstance()->getPlayerNumberOnTheNetwork();
+        FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
+            new DirectQueryMysqlTask(LoadBalancer::getInstance()->getCredentials(),
+                "INSERT INTO player_connected (player_number) VALUES (?)", [
+                    ["i", $var]
+                ]
+            ));
+    }
+
+    public function cancel() {
+        $this->getHandler()->cancel();
     }
 }

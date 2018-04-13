@@ -11,6 +11,7 @@ use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\server\QueryRegenerateEvent;
 use pocketmine\event\player\PlayerTransferEvent;
 use pocketmine\network\mcpe\protocol\TransferPacket;
+use pocketmine\plugin\Plugin;
 use pocketmine\plugin\PluginBase;
 use pocketmine\Player;
 use pocketmine\command\Command;
@@ -944,4 +945,8 @@ class LoadBalancer extends PluginBase implements Listener
         $sender->sendMessage("- /lobby <id> -> Vous connect à un lobby");
     }
 
+    public function getPlayerNumberOnTheNetwork() :int
+    {
+        return $this->m_TotalPlayers;
+    }
 }
