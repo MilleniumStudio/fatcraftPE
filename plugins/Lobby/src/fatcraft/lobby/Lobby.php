@@ -10,6 +10,7 @@ namespace fatcraft\lobby;
 
 use fatcraft\loadbalancer\LoadBalancer;
 use fatutils\FatUtils;
+use fatutils\holograms\UpdateMirrorsEdgeHologram;
 use fatutils\permission\PermissionManager;
 use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
@@ -93,6 +94,7 @@ class Lobby extends PluginBase implements Listener
 					$l_FatPlayer->getFatgold() . " " . (new TextFormatter("currency.fatgold.short"))->asStringForFatPlayer($l_FatPlayer)
 				];
 			});
+        FatUtils::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new UpdateMirrorsEdgeHologram($this), 100);
     }
 
     public function checkPlayerPermissions(Player $p_Player)
