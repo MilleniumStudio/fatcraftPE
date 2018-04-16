@@ -491,19 +491,24 @@ class LoadBalancer extends PluginBase implements Listener
             usleep(200);
         }
         else {
-            if ($type == LoadBalancer::TEMPLATE_TYPE_LOBBY) {
-                $beginAtLobby = 1;
-                foreach ($this->m_Cache_ServerByType[$type] as $current) {
-                    //$currentServerTimestamp = (new \DateTime($current["laston"]))->getTimestamp();
-                    //$bestServerTimestamp = (new \DateTime($serverToReturn["laston"]))->getTimestamp();
-                if ($serverToReturn == null ||
-                    //($currentServerTimestamp < $bestServerTimestamp &&
-                    ($current["id"] == $beginAtLobby &&
-                    $serverToReturn["online"] + 10 < $serverToReturn["max"]))
+            if ($type == LoadBalancer::TEMPLATE_TYPE_LOBBY)
+            {
+                $lobbyNumber = 1;
+                $lobbyIterator = 0;
+                while(true)
+                {
+                    $current = $this->m_Cache_ServerByType[LoadBalancer::TEMPLATE_TYPE_LOBBY][$lobbyIterator];
+                    if ($current["id"] == $lobbyNumber && $current["online"] + count($this->getServer()->getOnlinePlayers()) + 5 < $current["max"])
                     {
                         return $current;
                     }
-                    $beginAtLobby++;
+                    $lobbyIterator++;
+                    if ($lobbyIterator > count($this->m_Cache_ServerByType[LoadBalancer::TEMPLATE_TYPE_LOBBY]))
+                    {
+                        $lobbyNumber++;
+                        $lobbyIterator = 0;
+                        sleep(1);
+                    }
                 }
             } else
             {
@@ -727,7 +732,7 @@ class LoadBalancer extends PluginBase implements Listener
             if ($l_Event->getIp() === null or $l_Event->getPort() === null)
             {
                 $p_Player->kick("%disconnectScreen.serverFull", false);
-		return false;
+		        return false;
             }
             else
             {
@@ -880,7 +885,7 @@ class LoadBalancer extends PluginBase implements Listener
                 if ($this->getConfig()->getNested("redirect.to_type") !== $this->m_ServerType)
                 {
                     $l_Player = $sender;
-                    $l_Server = $this->getBest($this->getConfig()->getNested("redirect.to_type"));
+                    $l_Server = $this->getBestServerByType($this->getConfig()->getNested("redirect.to_type"));
                     if ($l_Server !== null)
                     {
                         $this->transferPlayer($l_Player, $l_Server["ip"], $l_Server["port"], "Transfering to " . $l_Server["type"] . "-" . $l_Server["id"]);
