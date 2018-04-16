@@ -229,7 +229,7 @@ class BattleRoyal extends PluginBase implements Listener
                 $l_Player->sendData($l_secPlayer, [$l_Player::DATA_NAMETAG => [Entity::DATA_TYPE_STRING, ""]]);
             }
 
-            PlayersManager::getInstance()->getFatPlayer($l_Player)->equipKitToPlayer();
+            //PlayersManager::getInstance()->getFatPlayer($l_Player)->equipKitToPlayer();
 
             $l_Player->getArmorInventory()->setChestplate(Item::get(ItemIds::ELYTRA));
 
