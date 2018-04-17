@@ -229,7 +229,7 @@ class HungerGame extends PluginBase implements Listener
                 ));
 			}
 
-			PlayersManager::getInstance()->getFatPlayer($l_Player)->equipKitToPlayer();
+			//PlayersManager::getInstance()->getFatPlayer($l_Player)->equipKitToPlayer();
 
 			$l_Player->addTitle(TextFormat::GREEN . "GO !");
 		}
