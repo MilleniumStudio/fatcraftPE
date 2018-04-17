@@ -87,6 +87,12 @@ content:
 #      priceFG: 75
 #      offsetY: 0.4
 #      randomColors: true
+    earlyShockwave:
+      name: "shop.items.particles.early"
+      desc: "shop.items.particles.early.desc"
+      class: "fatutils\\shop\\particles\\EarlyParticle"
+      rgbColor: "#FFFF01"
+      rawParticle: "{\"particleName\":\"TYPE_DUST\"}"
   pets:
     Chicken:
       name: "shop.items.pets.Chicken"

@@ -337,7 +337,8 @@ class FatPlayer
 		foreach ($this->m_KitItems as $item => $value)
 		{
 			$itemName = $this->parseKitItemFromDb($value);
-
+            echo("item :");
+            var_dump($itemName);
 			$tempItem = ItemFactory::fromString($itemName);
 			$tempItem->setCount(1);
             if ($this->m_Player instanceof Player) {
@@ -409,10 +410,11 @@ class FatPlayer
     public function setPermissionGroup(string $p_groupName)
     {
         $this->m_permissionGroup = $p_groupName;
-        MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(), "UPDATE players SET permission_group = ? WHERE uuid = ?", [
+        FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
+            new DirectQueryMysqlTask(LoadBalancer::getInstance()->getCredentials(), "UPDATE players SET permission_group = ? WHERE uuid = ?", [
             ["s", $this->m_permissionGroup],
             ["s", $this->getPlayer()->getUniqueId()]
-        ]);
+        ]));
     }
 
     public function getFSAccount()
@@ -481,11 +483,12 @@ class FatPlayer
 	{
 		$this->m_BoughtShopItems[] = $p_ShopItem->getKey();
 
-        MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(),
+        FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
+            new DirectQueryMysqlTask(LoadBalancer::getInstance()->getCredentials(),
             "UPDATE players SET shop_possessed = ? WHERE uuid = ?", [
                 ["s", json_encode($this->m_BoughtShopItems)],
                 ["s", $this->getPlayer()->getUniqueId()]
-            ]);
+            ]));
 
         FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
             new DirectQueryMysqlTask(LoadBalancer::getInstance()->getCredentials(),
@@ -634,6 +637,17 @@ class FatPlayer
 				["s", $this->getPlayer()->getUniqueId()]
 			]);
 	}
+
+	public function updateName()
+    {
+        FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
+            new DirectQueryMysqlTask(LoadBalancer::getInstance()->getCredentials(),
+            "UPDATE players SET name = ? WHERE uuid = ?", [
+                ["s", $this->getPlayer()->getName()],
+                ["s", $this->getPlayer()->getUniqueId()]
+            ]
+        ));
+    }
 
 	public function setPreviewing(bool $p_Value)
 	{

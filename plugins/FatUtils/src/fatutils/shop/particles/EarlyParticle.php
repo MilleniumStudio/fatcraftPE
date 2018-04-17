@@ -26,10 +26,14 @@ use pocketmine\level\particle\RedstoneParticle;
 use pocketmine\level\Position;
 use pocketmine\math\Vector3;
 
-class GlyphParticle extends ShopItem
+class EarlyParticle extends ShopItem
 {
 	private $m_MainLoop = null;
 	private $m_Anim = null;
+
+    private $rColor;
+    private $gColor;
+    private $bColor;
 
 	public function getSlotName(): string
 	{
@@ -39,11 +43,16 @@ class GlyphParticle extends ShopItem
 	public function equip()
 	{
 		$l_RawParticle = $this->getDataValue("rawParticle", null);
-		$l_ParticleBuilder = is_null($l_RawParticle) ? ParticleBuilder::fromParticleId(Particle::TYPE_ENCHANTMENT_TABLE) : ParticleBuilder::fromRaw($l_RawParticle);
+        $l_RgbColor = ColorUtils::hexToRgb($this->getDataValue("rgbColor", "#FFFFAA"));
+        $this->rColor = $l_RgbColor["r"];
+        $this->gColor = $l_RgbColor["g"];
+        $this->bColor = $l_RgbColor["b"];
+		$l_ParticleBuilder = is_null($l_RawParticle) ? ParticleBuilder::fromParticleId(Particle::TYPE_DUST) : ParticleBuilder::fromRaw($l_RawParticle);
+        $l_ParticleBuilder->setColor($this->rColor, $this->gColor, $this->bColor);
 
 		$this->m_MainLoop = new LoopedExec(function () use ($l_ParticleBuilder)
 		{
-			if (FatUtils::getInstance()->getServer()->getTick() % 70 == 0)
+			if (FatUtils::getInstance()->getServer()->getTick() % 30 == 0)
 			{
 				if (!($this->m_Anim instanceof ShockWaveAnimation) || !$this->m_Anim->isRunning())
 				{
@@ -52,7 +61,7 @@ class GlyphParticle extends ShopItem
 					$this->m_Anim
 						->setNbPointInACircle(10)
 						->setTickDuration(20 * 2)
-						->setFinalRadius(2)
+						->setFinalRadius(1)
 						->setCallback(function ($data) use ($l_Level, $l_ParticleBuilder)
 						{
                             $l_Level = $this->getEntity()->getLevel();

@@ -510,10 +510,10 @@ class Murder extends PluginBase implements Listener
                 {
                     if ($holder->getUniqueId()->equals($this->m_murdererUUID))
                     {
-                        foreach ($p_event->getInventory()->getContents() as $content) {
-                            if ($content->getId() == ItemIds::IRON_INGOT) {
-                                $content->setCount(0);
-
+                        foreach ($p_event->getInventory()->getContents() as $key => $content) {
+                            if ($content->getId() == ItemIds::IRON_INGOT)
+                            {
+                                $p_event->getInventory()->removeItem($content);
                                 echo ("suppose to set count 0\n");
                             }
                         }

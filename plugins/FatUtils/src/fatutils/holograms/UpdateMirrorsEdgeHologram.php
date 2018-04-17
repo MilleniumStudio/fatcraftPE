@@ -10,6 +10,7 @@ use fatutils\holograms\HologramsManager;
 use libasynql\result\MysqlResult;
 use libasynql\result\MysqlSelectResult;
 use pocketmine\plugin\Plugin;
+use pocketmine\Server;
 
 class UpdateMirrorsEdgeHologram extends PluginTask
 {
@@ -51,11 +52,12 @@ class UpdateMirrorsEdgeHologram extends PluginTask
             if ($holo != null)
                 HologramsManager::getInstance()->getHologram("Top20MirrorsEdge")->updateTextWithString($textBuffer);
 
+            if (LoadBalancer::getInstance()->getServerType() == LoadBalancer::TEMPLATE_TYPE_LOBBY)
+                return;
             $holo = HologramsManager::getInstance()->getHologram("Top20MirrorsEdge2");
             if ($holo != null)
                 HologramsManager::getInstance()->getHologram("Top20MirrorsEdge2")->updateTextWithString($textBuffer);
         }
-
         else
             echo("Top20MirrorsEdge hologram not loaded\n");
     }

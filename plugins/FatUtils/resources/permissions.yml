@@ -4,6 +4,11 @@ default:
   allow:
     - chat.sendMessageTest
 
+Early:
+  extend: default
+  prefix: "§eEarly "
+  color: "§e"
+
 Youtuber:
   extends: default
   prefix: "§3Youtuber "
@@ -43,7 +48,7 @@ VIP:
     - lobby.items
 
 Modo:
-  extends: VIP
+  extends: Legend
   prefix: "§1Staff "
   color: §f
   allow:

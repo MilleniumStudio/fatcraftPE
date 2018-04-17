@@ -168,6 +168,22 @@ class Lobby extends PluginBase implements Listener
         {
             $l_Player->teleport($this->m_SpawnPoint, $this->m_SpawnPoint->yaw, $this->m_SpawnPoint->pitch);
         }
+        $currentTime = time();
+        var_dump($currentTime);
+        if ($currentTime >= 1524074400 && $currentTime <= 1524096000)
+        {
+            echo ("yo ici\n");
+            $lGift = ShopManager::getInstance()->getShopItemByKey($l_Player, "particles.earlyShockwave");
+            var_dump($lGift);
+            if ($lGift != null)
+            {
+                $l_FatPlayer->addBoughtShopItem($lGift, -1, -1);
+                if ($l_FatPlayer->getVipRank() == -1)
+                    $l_FatPlayer->setPermissionGroup("Early");
+
+            }
+        }
+        $l_FatPlayer->updateName();
     }
 
     public function onPlayerQuit(PlayerQuitEvent $p_Event)

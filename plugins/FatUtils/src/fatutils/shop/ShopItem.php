@@ -82,7 +82,7 @@ abstract class ShopItem
 
 	public function getRankAccess(): int
     {
-        return $this->getDataValue("rankVIP", 0);
+        return $this->getDataValue("rankVIP", -1);
     }
 
 	public abstract function getSlotName(): string;
