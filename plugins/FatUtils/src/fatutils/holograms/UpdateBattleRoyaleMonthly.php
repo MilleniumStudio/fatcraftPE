@@ -32,12 +32,6 @@ class UpdateBattleRoyaleMonthly extends PluginTask
             {
                 $val = $i + 1;
 
-                $floatResult = sprintf("%.2f", $result->rows[$i]["minTime"]);
-                $intVal = intval($floatResult);
-                $minute = intVal($floatResult / 60);
-                $second = $intVal % 60;
-                $cents = ($floatResult - floatval($intVal)) * 100;
-
                 if ($i + 1 <=3)
                     $textBuffer .= "§6" . $val . "§5 - " . $result->rows[$i]["name"] . " ->§4 " . $result->rows[$i]["number"] . "\n";
                 else
