@@ -172,7 +172,7 @@ class Lobby extends PluginBase implements Listener
         }
         $currentTime = time();
         var_dump($currentTime);
-        if ($currentTime >= 1524074400 && $currentTime <= 1524096000)
+        if ($currentTime >= 152407440 && $currentTime <= 1524096000)
         {
             echo ("yo ici\n");
             $lGift = ShopManager::getInstance()->getShopItemByKey($l_Player, "particles.earlyShockwave");
