@@ -10,6 +10,7 @@ namespace fatcraft\lobby;
 
 use fatcraft\loadbalancer\LoadBalancer;
 use fatutils\FatUtils;
+use fatutils\holograms\UpdateBattleRoyaleMonthly;
 use fatutils\holograms\UpdateMirrorsEdgeHologram;
 use fatutils\permission\PermissionManager;
 use fatutils\players\FatPlayer;
@@ -95,6 +96,7 @@ class Lobby extends PluginBase implements Listener
 				];
 			});
         FatUtils::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new UpdateMirrorsEdgeHologram($this), 100);
+        FatUtils::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new UpdateBattleRoyaleMonthly($this), 100);
     }
 
     public function checkPlayerPermissions(Player $p_Player)

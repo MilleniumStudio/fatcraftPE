@@ -30,3 +30,8 @@ holograms:
     location: map/32.5/12.5/-75.5
     title: "hologram.mirrorsEdgeTop20"
     text: ""
+
+  - name: "Top20BattleRoyale"
+    location: map/32.5/12.5/60.5
+    title: "hologram.battleRoyaleMonthly"
+    text: ""

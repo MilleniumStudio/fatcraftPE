@@ -4,34 +4,34 @@ content:
       name: "CARROT"
       desc: "shop.items.particles.flamePath.desc"
       class: "fatutils\\shop\\particles\\PathParticle"
-      priceFS: 200000
+      priceFS: 500000
       priceFG: 500
       rawParticle: "{\"particleName\":\"TYPE_CARROT\"}"
     crown:
       name: "shop.items.particles.crown"
       desc: "shop.items.particles.crown.desc"
       class: "fatutils\\shop\\particles\\CrownParticle"
-      priceFS: 1500
+      priceFS: 3000
       priceFG: 50
     cape:
       name: "shop.items.particles.cape"
       desc: "shop.items.particles.cape.desc"
       class: "fatutils\\shop\\particles\\CapeParticle"
-      priceFS: 1500
+      priceFS: 3000
       priceFG: 50
       rgbColor: "#FF2020"
     orbit:
       name: "shop.items.particles.orbit"
       desc: "shop.items.particles.orbit.desc"
       class: "fatutils\\shop\\particles\\OrbitParticle"
-      priceFS: 1500
+      priceFS: 5000
       priceFG: 50
       rankVIP: 0
     glyph:
       name: "shop.items.particles.glyph"
       desc: "shop.items.particles.glyph.desc"
       class: "fatutils\\shop\\particles\\GlyphParticle"
-      priceFS: 1500
+      priceFS: 5000
       priceFG: 50
       offsetY: 0.1
       rankVIP: 1
@@ -39,14 +39,14 @@ content:
       name: "shop.items.particles.glyphyPath"
       desc: "shop.items.particles.glyphyPath.desc"
       class: "fatutils\\shop\\particles\\GlyphyPathParticle"
-#      priceFS: 1500
+      priceFS: 5000
       priceFG: 50
       rankVIP: 1
     heartPath:
       name: "shop.items.particles.heartPath"
       desc: "shop.items.particles.heartPath.desc"
       class: "fatutils\\shop\\particles\\PathParticle"
-      priceFS: 2000
+      priceFS: 6000
       priceFG: 70
       rankVIP: 2
       rawParticle: "{\"particleName\":\"TYPE_HEART\"}"
@@ -54,7 +54,7 @@ content:
       name: "shop.items.particles.flamePath"
       desc: "shop.items.particles.flamePath.desc"
       class: "fatutils\\shop\\particles\\PathParticle"
-      priceFS: 2000
+      priceFS: 6000
       priceFG: 70
       rankVIP: 2
       rawParticle: "{\"particleName\":\"TYPE_FLAME\"}"
@@ -97,13 +97,13 @@ content:
     Chicken:
       name: "shop.items.pets.Chicken"
       class: "fatutils\\pets\\Pet"
-      priceFS: 1500
+      priceFS: 2000
       priceFG: 50
       type: "Chicken"
     Cat4:
       name: "shop.items.pets.catWhite"
       class: "fatutils\\pets\\Pet"
-      priceFS: 1500
+      priceFS: 2000
       priceFG: 50
       type: "Ocelot"
       options:
@@ -117,40 +117,40 @@ content:
     Bunny:
       name: "shop.items.pets.Bunny"
       class: "fatutils\\pets\\Pet"
-      priceFS: 1500
+      priceFS: 2000
       priceFG: 50
       type: "Bunny"
     Cat1:
       name: "shop.items.pets.ocelot"
       class: "fatutils\\pets\\Pet"
-      priceFS: 1500
+      priceFS: 2000
       priceFG: 50
       type: "Ocelot"
       rankVIP: 0
     Parrot:
       name: "shop.items.pets.Parrot"
       class: "fatutils\\pets\\Pet"
-      priceFS: 2000
+      priceFS: 2500
       priceFG: 70
       type: "Parrot"
       rankVIP: 1
     Wolf:
       name: "shop.items.pets.Wolf"
       class: "fatutils\\pets\\Pet"
-      priceFS: 1500
+      priceFS: 3000
       priceFG: 50
       type: "Wolf"
     PolarBear:
       name: "shop.items.pets.PolarBear"
       class: "fatutils\\pets\\Pet"
-      priceFS: 2000
+      priceFS: 4000
       priceFG: 70
       type: "PolarBear"
       rankVIP: 2
     Llama:
       name: "shop.items.pets.Llama"
       class: "fatutils\\pets\\Pet"
-      priceFS: 1500
+      priceFS: 4000
       priceFG: 50
       type: "Llama"
       rankVIP: 2
