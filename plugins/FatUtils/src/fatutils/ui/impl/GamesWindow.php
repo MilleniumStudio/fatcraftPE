@@ -28,6 +28,14 @@ class GamesWindow
             })
         );
 
+        $l_Window->addPart((new Button())
+            ->setText((new TextFormatter("template.battleRoyale"))->asStringForPlayer($p_Player))
+            ->setCallback(function () use ($l_FatPlayer)
+            {
+                LoadBalancer::getInstance()->balancePlayer($l_FatPlayer->getPlayer(), LoadBalancer::TEMPLATE_TYPE_BATTLE_ROYALE);
+            })
+        );
+
 		$l_Window->addPart((new Button())
 			->setText((new TextFormatter("template.br"))->asStringForPlayer($p_Player))
 			->setCallback(function () use ($l_FatPlayer)

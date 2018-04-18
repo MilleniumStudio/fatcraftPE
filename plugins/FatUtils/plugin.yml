@@ -35,6 +35,7 @@ commands:
     aliases: ["unmute"]
   pet:
       description: "debug commands for pets"
+      permission: command.pet
   skin:
       description: "debug commands for skins"
       permission: command.skin

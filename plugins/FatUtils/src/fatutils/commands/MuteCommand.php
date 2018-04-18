@@ -31,7 +31,7 @@ class MuteCommand implements CommandExecutor
 			{
 				if (($p_Label === "mute" && $sender->hasPermission("chat.mute")))
 				{
-					$l_ExpirationTime = null;
+					$l_ExpirationTime = 5 * 60;
 
 					$l_ArgsParsed = ArrayUtils::parseCmd(["for", "cause"], $p_Args);
 					if (isset($l_ArgsParsed["for"]) && is_numeric($l_ArgsParsed["for"][0]))
