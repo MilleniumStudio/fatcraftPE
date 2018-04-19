@@ -39,7 +39,7 @@ class UpdateMirrorsEdgeHologram extends PluginTask
                 $cents = ($floatResult - floatval($intVal)) * 100;
 
                 if ($i + 1 <=3)
-                    $textBuffer .= "§6" . $val . "§5 - " . $result->rows[$i]["player_name"] . " ->§4 " . $minute . "'" . $second . "\"" . $cents . "\n";
+                    $textBuffer .= "§6" . $val . "§r - " . $result->rows[$i]["player_name"] . " -> " . $minute . "'" . $second . "\"" . $cents . "\n";
                 else
                     $textBuffer .= "§6" . $val . "§r - " . $result->rows[$i]["player_name"] . " -> " . $minute . "'" . $second . "\"" . $cents . "\n";
                 $i++;
@@ -47,7 +47,7 @@ class UpdateMirrorsEdgeHologram extends PluginTask
         }
 
         if (HologramsManager::getInstance()->getHologram("Top20MirrorsEdge") != null)
-        {
+        {/**/
             $holo = HologramsManager::getInstance()->getHologram("Top20MirrorsEdge");
             if ($holo != null)
                 HologramsManager::getInstance()->getHologram("Top20MirrorsEdge")->updateTextWithString($textBuffer);
