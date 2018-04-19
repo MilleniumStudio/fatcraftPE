@@ -171,6 +171,7 @@ class Lobby extends PluginBase implements Listener
             $l_Player->teleport($this->m_SpawnPoint, $this->m_SpawnPoint->yaw, $this->m_SpawnPoint->pitch);
         }
         $l_FatPlayer->updateName();
+        Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());
     }
 
     public function onPlayerQuit(PlayerQuitEvent $p_Event)
