@@ -2,6 +2,7 @@
 
 namespace fatutils;
 
+use fatcraft\loadbalancer\LoadBalancer;
 use fatutils\ban\BanManager;
 use fatutils\game\GameManager;
 use fatutils\players\FatPlayer;
