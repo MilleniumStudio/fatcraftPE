@@ -7,7 +7,7 @@ use fatutils\FatUtils;
 use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
 use fatutils\shop\ShopItem;
-use pocketmine\block\BlockIds;
+use pocketmine\block\BlockIds;:
 use pocketmine\entity\Entity;
 use pocketmine\level\Location;
 use pocketmine\math\Vector3;
@@ -54,8 +54,8 @@ class Pet extends ShopItem
                 continue;
 
             // don't return if the current $l_entity is the current legit equiped pet
-            if ($this->m_fatPlayer->getSlot(ShopItem::SLOT_PET)->getEntity()->getId() == $l_entity->getId())
-                continue;
+            /*if ($this->m_fatPlayer->getSlot(ShopItem::SLOT_PET)->getEntity()->getId() == $l_entity->getId())
+                continue;*/
 
             // prevent spawning multiple preview pets
             if ($l_entity->getOwningEntityId() == $this->getEntity()->getId())
