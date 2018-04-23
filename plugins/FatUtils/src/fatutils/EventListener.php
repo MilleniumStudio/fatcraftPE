@@ -68,11 +68,9 @@ class EventListener implements Listener
 
         if (!PlayersManager::getInstance()->fatPlayerExist($p))
             PlayersManager::getInstance()->addPlayer($p);
-        else
-        {
-            FatUtils::getInstance()->getLogger()->info("Reapplying player to FatPlayer");
-            PlayersManager::getInstance()->getFatPlayer($p)->setPlayer($p);
-        }
+
+        FatUtils::getInstance()->getLogger()->info("Reapplying player to FatPlayer");
+        PlayersManager::getInstance()->getFatPlayer($p)->setPlayer($p);
 
         new DelayedExec(function () use ($p)
 		{
@@ -93,6 +91,14 @@ class EventListener implements Listener
 			}
 		}
 
+        foreach (LoadBalancer::getInstance()->getServer()->getLevel(1)->getEntities() as $l_entity)
+        {
+            if ($l_entity instanceof Player || $l_entity->getOwningEntity() == null)
+                continue;
+            if ($l_entity->getOwningEntity()->getId() == $e->getPlayer()->getId())
+                $l_entity->despawnFromAll();
+        }
+
         if (GameManager::getInstance()->isWaiting())
             PlayersManager::getInstance()->removePlayer($p);
 		PermissionManager::getInstance()->removePlayerPerms($l_FatPlayer);
@@ -105,7 +111,7 @@ class EventListener implements Listener
 			$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($e->getPlayer());
 			if ($l_FatPlayer->isMuted())
 			{
-				$e->getPlayer()->sendMessage(TextFormat::RED . "You've been muted until " . date("Y-m-d H:i:s", $l_FatPlayer->getMutedExpiration()));
+			    $e->getPlayer()->sendMessage(TextFormat::RED . "You've been muted until " . date("H:i:s", $l_FatPlayer->getMutedExpiration()));
 				$e->setCancelled(true);
 			} else
 			{

@@ -14,6 +14,7 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\DoubleTag;
 use pocketmine\nbt\tag\FloatTag;
 use pocketmine\nbt\tag\ListTag;
+use pocketmine\Player;
 
 /**
  * Created by IntelliJ IDEA.
@@ -45,6 +46,20 @@ class Pet extends ShopItem
     public function equip()
     {
         $this->m_fatPlayer = PlayersManager::getInstance()->getFatPlayer($this->getEntity());
+
+        foreach (LoadBalancer::getInstance()->getServer()->getLevel(1)->getEntities() as $l_entity)
+        {
+            if ($l_entity instanceof Player || $l_entity->getOwningEntity() == null)
+                continue;
+
+            // don't return if the current $l_entity is the current legit equiped pet
+            if ($this->m_fatPlayer->getSlot(ShopItem::SLOT_PET)->getEntity()->getId() == $l_entity->getId())
+                continue;
+
+            // prevent spawning multiple preview pets
+            if ($l_entity->getOwningEntityId() == $this->getEntity()->getId())
+                return;
+        }
         $this->m_petTypes = $this->getDataValue("type", "Parrot");
         $this->m_options = $this->getDataValue("options", array_key_exists("options", PetTypes::ENTITIES[$this->m_petTypes])?PetTypes::ENTITIES[$this->m_petTypes]["options"]:[]);
         $this->m_nextPosition = $this->m_fatPlayer->getPlayer()->getLocation();
@@ -69,7 +84,7 @@ class Pet extends ShopItem
         );
 
         $this->m_CustomPet = new CustomPet($this->m_fatPlayer->getPlayer()->getLevel(), $tag, $this->m_petTypes, $this->m_options);
-
+        $this->m_CustomPet->setOwningEntity($this->m_fatPlayer->getPlayer());
         $this->m_CustomPet->getDataPropertyManager()->setByte(Entity::DATA_FLAG_NO_AI, 1);
         $this->m_fatPlayer->getPlayer()->getLocation()->getLevel()->addEntity($this->m_CustomPet);
         $this->m_CustomPet->spawnToAll();

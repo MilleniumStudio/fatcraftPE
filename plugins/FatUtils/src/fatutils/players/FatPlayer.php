@@ -436,13 +436,18 @@ class FatPlayer
 
     //--> MUTE
     /**
-     * @param int|null $p_ExpireSecondFromNow if null is given, player is mute for one month
+     * @param int|null $p_timeToMute if null is given, player is mute for 5 days
      */
-    public function setMuted(int $p_ExpireSecondFromNow = null)
+    public function setMuted(int $p_timeToMute = null)
     {
-        $l_ExpirationTimestamp = time() + (is_null($p_ExpireSecondFromNow) ? 30 * 24 * 60 * 60 : $p_ExpireSecondFromNow);
+        $l_ExpirationTimestamp = time();
+        if (is_null($p_timeToMute))
+            $l_ExpirationTimestamp += 60 * 60 * 24 * 5;
+        else {
+            $l_ExpirationTimestamp += $p_timeToMute;
+        }
         $l_Result = MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(),
-            "UPDATE players SET muted = FROM_UNIXTIME(?) WHERE uuid = ?", [
+            "UPDATE players SET muted = ? WHERE uuid = ?", [
                 ["i", $l_ExpirationTimestamp],
                 ["s", $this->getPlayer()->getUniqueId()]
             ]);
@@ -456,7 +461,7 @@ class FatPlayer
 
     public function getMutedExpiration(): int
     {
-        return $this->m_MutedTimestamp;
+        return intval($this->m_MutedTimestamp) - time();
     }
 
 
