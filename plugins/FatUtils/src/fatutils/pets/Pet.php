@@ -2,6 +2,7 @@
 
 namespace fatutils\pets;
 
+use fatcraft\loadbalancer\LoadBalancer;
 use fatutils\FatUtils;
 use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
