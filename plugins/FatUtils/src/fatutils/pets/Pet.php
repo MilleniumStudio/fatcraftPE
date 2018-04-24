@@ -7,7 +7,7 @@ use fatutils\FatUtils;
 use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
 use fatutils\shop\ShopItem;
-use pocketmine\block\BlockIds;:
+use pocketmine\block\BlockIds;
 use pocketmine\entity\Entity;
 use pocketmine\level\Location;
 use pocketmine\math\Vector3;
@@ -48,19 +48,24 @@ class Pet extends ShopItem
     {
         $this->m_fatPlayer = PlayersManager::getInstance()->getFatPlayer($this->getEntity());
 
+        $countPets = false;
+
         foreach (LoadBalancer::getInstance()->getServer()->getLevel(1)->getEntities() as $l_entity)
         {
+            if ($countPets && $this->m_fatPlayer->getSlot(ShopItem::SLOT_PET) != null)
+                return;
             if ($l_entity instanceof Player || $l_entity->getOwningEntity() == null)
                 continue;
 
-            // don't return if the current $l_entity is the current legit equiped pet
-            /*if ($this->m_fatPlayer->getSlot(ShopItem::SLOT_PET)->getEntity()->getId() == $l_entity->getId())
-                continue;*/
-
-            // prevent spawning multiple preview pets
-            if ($l_entity->getOwningEntityId() == $this->getEntity()->getId())
-                return;
+            if ($l_entity->getOwningEntity()->getId() == $this->getEntity()->getId())
+            {
+                if ($l_entity->getId() == $this->m_fatPlayer->getSlot(ShopItem::SLOT_PET)->getEntity()->getId())
+                    continue;
+                else
+                    $countPets = true;
+            }
         }
+
         $this->m_petTypes = $this->getDataValue("type", "Parrot");
         $this->m_options = $this->getDataValue("options", array_key_exists("options", PetTypes::ENTITIES[$this->m_petTypes])?PetTypes::ENTITIES[$this->m_petTypes]["options"]:[]);
         $this->m_nextPosition = $this->m_fatPlayer->getPlayer()->getLocation();
