@@ -181,6 +181,98 @@ class EventListener implements Listener
                 FatUtils::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new InvisibleBlockTask(FatUtils::getInstance(), $event), 20);
         }
     }
+
+    public function onChat(PlayerChatEvent $event): void
+    {
+        $message = $event->getMessage();
+        $words = explode(" ", strtolower($message));
+        $iterator = 0;
+        foreach ($words as $word)
+        {
+            switch ($word)
+            {
+                case "abruti":
+                case "abrutis":
+                case "baise":
+                case "bez":
+                case "baize":
+                case "batard":
+                case "batar":
+                case "bâtard":
+                case "bite":
+                case "chier":
+                case "chié":
+                case "chi":
+                case "con":
+                case "connard":
+                case "conard":
+                case "conar":
+                case "connasse":
+                case "conasse":
+                case "conas":
+                case "cul":
+                case "couille":
+                case "couye":
+                case "couy":
+                case "couill":
+                case "encule":
+                case "enculé":
+                case "enfoiré":
+                case "enfoire":
+                case "merde":
+                case "merd":
+                case "merdé":
+                case "nique":
+                case "nik":
+                case "niqué":
+                case "niké":
+                case "ntm":
+                case "poufiasse":
+                case "poufias":
+                case "pute":
+                case "putain":
+                case "putin":
+                case "suce":
+                case "salaud":
+                case "salo":
+                case "salop":
+                case "salope":
+                case "sallope":
+                case "salloppe":
+                case "tencule":
+                case "tg":
+                case "ass":
+                case "asshole":
+                case "bastard":
+                case "bitch":
+                case "cok":
+                case "cock":
+                case "cocksucker":
+                case "dick":
+                case "dik":
+                case "fuck":
+                case "fuk":
+                case "fucker":
+                case "fucking":
+                case "kys":
+                case "mofo":
+                case "motherfucker":
+                case "shit":
+                case "twat":
+                case "cabron":
+                case "puta":
+                    for ($i = 0; $i < strlen($word); $i++)
+                        $word[$i] = '*';
+                    $words[$iterator] = $word;
+                    break;
+                default:
+                    var_dump($word);
+                    break;
+            }
+            $iterator++;
+        }
+        $event->setMessage(implode(" ", $words));
+    }
 }
 
 class InvisibleBlockTask extends \pocketmine\scheduler\PluginTask
