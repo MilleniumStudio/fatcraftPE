@@ -642,6 +642,436 @@ chests:
     location: -727/89/536
     total-item-value: 15
     max-item-value: 5
+  158:
+    location: -412/72/437
+    total-item-value: 15
+    max-item-value: 5
+  159:
+    location: -416/77/437
+    total-item-value: 15
+    max-item-value: 5
+  160:
+    location: -371/72/463
+    total-item-value: 15
+    max-item-value: 5
+  161:
+    location: -378/77/458
+    total-item-value: 15
+    max-item-value: 5
+  162:
+    location: -361/77/453
+    total-item-value: 15
+    max-item-value: 5
+  163:
+    location: -361/72/453
+    total-item-value: 15
+    max-item-value: 5
+  164:
+    location: -331/71/451
+    total-item-value: 15
+    max-item-value: 5
+  165:
+    location: -331/72/431
+    total-item-value: 15
+    max-item-value: 5
+  166:
+    location: -341/77/420
+    total-item-value: 15
+    max-item-value: 5
+  167:
+    location: -331/77/447
+    total-item-value: 15
+    max-item-value: 5
+  168:
+    location: -375/77/403
+    total-item-value: 15
+    max-item-value: 5
+  169:
+    location: -361/77/396
+    total-item-value: 15
+    max-item-value: 5
+  170:
+    location: -389/77/406
+    total-item-value: 15
+    max-item-value: 5
+  171:
+    location: -379/72/396
+    total-item-value: 15
+    max-item-value: 5
+  172:
+    location: -365/72/400
+    total-item-value: 15
+    max-item-value: 5
+  173:
+    location: -353/77/401
+    total-item-value: 15
+    max-item-value: 5
+  174:
+    location: -593/96/472
+    total-item-value: 15
+    max-item-value: 5
+  175:
+    location: -592/101/473
+    total-item-value: 15
+    max-item-value: 5
+  176:
+    location: -593/101/472
+    total-item-value: 15
+    max-item-value: 5
+  177:
+    location: -584/101/450
+    total-item-value: 15
+    max-item-value: 5
+  178:
+    location: -593/101/417
+    total-item-value: 15
+    max-item-value: 5
+  179:
+    location: -589/106/476
+    total-item-value: 15
+    max-item-value: 5
+  180:
+    location: -589/106/415
+    total-item-value: 15
+    max-item-value: 5
+  181:
+    location: -586/96/418
+    total-item-value: 15
+    max-item-value: 5
+  182:
+    location: -590/97/428
+    total-item-value: 15
+    max-item-value: 5
+  183:
+    location: -601/96/407
+    total-item-value: 15
+    max-item-value: 5
+  184:
+    location: -616/101/398
+    total-item-value: 15
+    max-item-value: 5
+  185:
+    location: -612/106/400
+    total-item-value: 15
+    max-item-value: 5
+  186:
+    location: -627/97/402
+    total-item-value: 15
+    max-item-value: 5
+  187:
+    location: -636/101/403
+    total-item-value: 15
+    max-item-value: 5
+  188:
+    location: -639/106/400
+    total-item-value: 15
+    max-item-value: 5
+  189:
+    location: -656/96/397
+    total-item-value: 15
+    max-item-value: 5
+  190:
+    location: -659/106/400
+    total-item-value: 15
+    max-item-value: 5
+  191:
+    location: -656/96/423
+    total-item-value: 15
+    max-item-value: 5
+  192:
+    location: -663/96/439
+    total-item-value: 15
+    max-item-value: 5
+  193:
+    location: -656/101/438
+    total-item-value: 15
+    max-item-value: 5
+  194:
+    location: -659/106/441
+    total-item-value: 15
+    max-item-value: 5
+  195:
+    location: -637/96/437
+    total-item-value: 15
+    max-item-value: 5
+  196:
+    location: -635/101/443
+    total-item-value: 15
+    max-item-value: 5
+  197:
+    location: -639/106/441
+    total-item-value: 15
+    max-item-value: 5
+  198:
+    location: -643/96/461
+    total-item-value: 15
+    max-item-value: 5
+  199:
+    location: -639/106/463
+    total-item-value: 15
+    max-item-value: 5
+  200:
+    location: -613/101/460
+    total-item-value: 15
+    max-item-value: 5
+  201:
+    location: -613/97/434
+    total-item-value: 15
+    max-item-value: 5
+  202:
+    location: -600/101/449
+    total-item-value: 15
+    max-item-value: 5
+  203:
+    location: -602/111/445
+    total-item-value: 15
+    max-item-value: 5
+  204:
+    location: -620/96/448
+    total-item-value: 15
+    max-item-value: 5
+  205:
+    location: -623/106/445
+    total-item-value: 15
+    max-item-value: 5
+  206:
+    location: -623/111/445
+    total-item-value: 15
+    max-item-value: 5
+  207:
+    location: -624/100/435
+    total-item-value: 15
+    max-item-value: 5
+  208:
+    location: -621/96/428
+    total-item-value: 15
+    max-item-value: 5
+  209:
+    location: -627/101/425
+    total-item-value: 15
+    max-item-value: 5
+  210:
+    location: -623/111/424
+    total-item-value: 15
+    max-item-value: 5
+  211:
+    location: -599/96/427
+    total-item-value: 15
+    max-item-value: 5
+  212:
+    location: -600/101/428
+    total-item-value: 15
+    max-item-value: 5
+  213:
+    location: -602/111/424
+    total-item-value: 15
+    max-item-value: 5
+  214:
+    location: -310/73/557
+    total-item-value: 15
+    max-item-value: 5
+  215:
+    location: -312/73/546
+    total-item-value: 15
+    max-item-value: 5
+  216:
+    location: -319/72/537
+    total-item-value: 15
+    max-item-value: 5
+  217:
+    location: -323/73/557
+    total-item-value: 15
+    max-item-value: 5
+  218:
+    location: -328/72/550
+    total-item-value: 15
+    max-item-value: 5
+  219:
+    location: -333/75/603
+    total-item-value: 15
+    max-item-value: 5
+  220:
+    location: -326/75/603
+    total-item-value: 15
+    max-item-value: 5
+  221:
+    location: -292/73/592
+    total-item-value: 15
+    max-item-value: 5
+  222:
+    location: -285/73/581
+    total-item-value: 15
+    max-item-value: 5
+  223:
+    location: -292/72/550
+    total-item-value: 15
+    max-item-value: 5
+  224:
+    location: -260/72/550
+    total-item-value: 15
+    max-item-value: 5
+  225:
+    location: -268/74/592
+    total-item-value: 15
+    max-item-value: 5
+  226:
+    location: -259/78/592
+    total-item-value: 15
+    max-item-value: 5
+  227:
+    location: -278/78/588
+    total-item-value: 15
+    max-item-value: 5
+  228:
+    location: -294/78/592
+    total-item-value: 15
+    max-item-value: 5
+  229:
+    location: -285/77/550
+    total-item-value: 15
+    max-item-value: 5
+  230:
+    location: -256/77/550
+    total-item-value: 15
+    max-item-value: 5
+  231:
+    location: -256/84/580
+    total-item-value: 15
+    max-item-value: 5
+  232:
+    location: -256/84/592
+    total-item-value: 15
+    max-item-value: 5
+  233:
+    location: -294/84/592
+    total-item-value: 15
+    max-item-value: 5
+  234:
+    location: -283/82/554
+    total-item-value: 15
+    max-item-value: 5
+  235:
+    location: -294/82/550
+    total-item-value: 15
+    max-item-value: 5
+  236:
+    location: -256/87/554
+    total-item-value: 15
+    max-item-value: 5
+  237:
+    location: -268/87/550
+    total-item-value: 15
+    max-item-value: 5
+  238:
+    location: -255/76/620
+    total-item-value: 15
+    max-item-value: 5
+  239:
+    location: -264/77/622
+    total-item-value: 15
+    max-item-value: 5
+  240:
+    location: -259/76/637
+    total-item-value: 15
+    max-item-value: 5
+  241:
+    location: -284/76/626
+    total-item-value: 15
+    max-item-value: 5
+  242:
+    location: -328/78/649
+    total-item-value: 15
+    max-item-value: 5
+  243:
+    location: -349/78/629
+    total-item-value: 15
+    max-item-value: 5
+  244:
+    location: -339/79/649
+    total-item-value: 15
+    max-item-value: 5
+  245:
+    location: -339/83/629
+    total-item-value: 15
+    max-item-value: 5
+  246:
+    location: -330/87/630
+    total-item-value: 15
+    max-item-value: 5
+  247:
+    location: -344/87/648
+    total-item-value: 15
+    max-item-value: 5
+  248:
+    location: -373/72/488
+    total-item-value: 15
+    max-item-value: 5
+  249:
+    location: -365/77/488
+    total-item-value: 15
+    max-item-value: 5
+  250:
+    location: -365/72/488
+    total-item-value: 15
+    max-item-value: 5
+  251:
+    location: -376/77/479
+    total-item-value: 15
+    max-item-value: 5
+  252:
+    location: -367/72/507
+    total-item-value: 15
+    max-item-value: 5
+  253:
+    location: -381/72/511
+    total-item-value: 15
+    max-item-value: 5
+  254:
+    location: -378/72/495
+    total-item-value: 15
+    max-item-value: 5
+  255:
+    location: -384/72/495
+    total-item-value: 15
+    max-item-value: 5
+  256:
+    location: -366/71/493
+    total-item-value: 30
+    max-item-value: 5
+  257:
+    location: -364/78/507
+    total-item-value: 15
+    max-item-value: 5
+  258:
+    location: -381/77/507
+    total-item-value: 15
+    max-item-value: 5
+  259:
+    location: -374/77/495
+    total-item-value: 15
+    max-item-value: 5
+  260:
+    location: -405/72/494
+    total-item-value: 30
+    max-item-value: 5
+  261:
+    location: -394/72/481
+    total-item-value: 15
+    max-item-value: 5
+  262:
+    location: -393/79/478
+    total-item-value: 20
+    max-item-value: 5
+  263:
+    location: -405/79/468
+    total-item-value: 20
+    max-item-value: 5
+  264:
+    location: -343/70/451
+    total-item-value: 45
+    max-item-value: 5
+
+                                                                                                                                                                                               
 loots:
   level-1:
     item-value: 3
@@ -651,24 +1081,25 @@ loots:
       - '{"material": "LEATHER_BOOTS"}'
       - '{"material": "LEATHER_CHESTPLATE"}'
       - '{"material": "LEATHER_LEGGINGS"}'
+      - '{"material": "COOKED_PORKCHOP", "amount": 2}'
       - '{"material": "CHORUS_FRUIT_POPPED", "amount": 12}'
       - '{"material": "EGG"}'
       - '{"material": "GOLD_HELMET"}'
-      - '{"material": "GOLD_BOOTS"}'
+      - '{"material": "GOLD_BOOT"}'
       - '{"material": "GUNPOWDER", "amount": 3}'
-      - '{"material": "CARROT", "amount": 3}'
       - '{"material": "SNOWBALL"}'
       - '{"material": "ENDER_PEARL"}'
       - '{"material": "BOW"}'
+      - '{"material": "COOKED_CHICKEN", "amount": 1}'
+      - '{"material": "COOKED_CHICKEN", "amount": 1}'
       - '{"material": "WOODEN_SWORD"}'
       - '{"material": "GUNPOWDER", "amount": 3}'
-  #    - '{"material": "SPLASH_POTION"}'
 
   level-2:
     item-value: 3
     chance: 40
     items:
-      - '{"material": "CHORUS_FRUIT_POPPED", "amount": 12}'
+      - '{"material": "COOKED_CHICKEN", "amount": 2}'
       - '{"material": "STONE_SWORD"}'
       - '{"material": "ARROW", "amount": 4}'
       - '{"material": "COOKED_PORKCHOP", "amount": 3}'
@@ -678,11 +1109,10 @@ loots:
       - '{"material": "GOLD_LEGGINGS"}'
       - '{"material": "ENDER_PEARL"}'
       - '{"material": "IRON_HELMET"}'
-      - '{"material": "IRON_BOOTS"}'
+      - '{"material": "IRON_BOOT"}'
       - '{"material": "SNOWBALL"}'
       - '{"material": "CHORUS_FRUIT_POPPED", "amount": 20}'
       - '{"material": "BOW"}'
- #     - '{"material": "SPLASH_POTION"}'
 
   level-3:
     item-value: 3
@@ -696,11 +1126,11 @@ loots:
       - '{"material": "IRON_LEGGINGS"}'
       - '{"material": "ENDER_PEARL"}'
       - '{"material": "EGG", "amount": 2}'
-#      - '{"material": "CHAINMAIL_CHESTPLATE"}'
-#      - '{"material": "CHAINMAIL_LEGGINGS"}'
+      - '{"material": "MUSHROOM_STEW"}'
+      - '{"material": "CHAINMAIL_CHESTPLATE"}'
+      - '{"material": "CHAINMAIL_LEGGINGS"}'
       - '{"material": "ARROW", "amount": 5}'
       - '{"material": "SNOWBALL"}'
-#      - '{"material": "SPLASH_POTION"}'
 
   level-4:
     item-value: 4
@@ -710,16 +1140,17 @@ loots:
       - '{"material": "ARROW", "amount": 6}'
       - '{"material": "GOLDEN_APPLE"}'
       - '{"material": "MUSHROOM_STEW"}'
+      - '{"material": "MUSHROOM_STEW"}'
       - '{"material": "CHORUS_FRUIT_POPPED", "amount": 30}'
-#      - '{"material": "CHAINMAIL_HELMET"}'
-#      - '{"material": "CHAINMAIL_BOOTS"}'
+      - '{"material": "CHAINMAIL_HELMET"}'
+      - '{"material": "CHAINMAIL_BOOT"}'
       - '{"material": "GUNPOWDER", "amount": 10}'
       - '{"material": "EGG", "amount": 2}'
       - '{"material": "ENDER_PEARL"}'
       - '{"material": "DIAMOND_HELMET"}'
-      - '{"material": "DIAMOND_BOOTS"}'
+      - '{"material": "DIAMOND_BOOT"}'
       - '{"material": "SNOWBALL"}'
-#      - '{"material": "SPLASH_POTION"}'
+
 
   level-5:
     item-value: 5
@@ -733,4 +1164,3 @@ loots:
       - '{"material": "BOW"}'
       - '{"material": "ENDER_PEARL"}'
       - '{"material": "SNOWBALL"}'
- #     - '{"material": "SPLASH_POTION"}'

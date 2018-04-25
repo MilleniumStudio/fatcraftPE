@@ -40,10 +40,15 @@ class BattleRoyalConfig
         else
             $this->m_WaitingPosition = BattleRoyal::getInstance()->getServer()->getLevel(1)->getSpawnLocation();
 
-        $x = rand(-620, -430);
+        $z = rand (402, 887);
         $y = 95;
-        $z = rand (570 , 800);
-        // legacy coord : new Vector3(-497, 115, 743);
+
+        $Xmax = 1.45  * (floatval(($z - 402) / 6.0));
+        $Xmax = -$Xmax - 180;
+        var_dump($Xmax);
+        $x = rand (-715 , intval($Xmax));
+        var_dump($x);
+
         $this->Pos1 = new Vector3($x, $y, $z);
         $this->Radius1 = 200;
 

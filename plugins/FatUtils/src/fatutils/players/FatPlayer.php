@@ -74,6 +74,8 @@ class FatPlayer
 
 	private $m_isPreviewing = false;
 
+	private $m_dataRelativeToContext; // use this to whatever you need depending on the gamemode for example
+
     /**
      * FatPlayer constructor.
      * @param Player $p_Player
@@ -688,5 +690,15 @@ class FatPlayer
     {
         $l_playerPos = $this->getPlayer()->getLocation()->asVector3();
         return sqrt(pow($l_playerPos->x - $p_location->x, 2) + pow($l_playerPos->y - $p_location->y, 2) + pow($l_playerPos->z - $p_location->z, 2));
+    }
+
+    public function getDataRelativeToContext()
+    {
+        return $this->m_dataRelativeToContext;
+    }
+
+    public function setDataRelativeToContext($p_val)
+    {
+        $this->m_dataRelativeToContext = $p_val;
     }
 }

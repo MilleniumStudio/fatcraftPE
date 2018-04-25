@@ -31,6 +31,7 @@ use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
 use pocketmine\lang\TextContainer;
 use pocketmine\nbt\tag\StringTag;
+use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\Player;
 use pocketmine\plugin\Plugin;
 use pocketmine\scheduler\PluginTask;
@@ -104,9 +105,12 @@ class EventListener implements Listener
         if (!GameManager::getInstance()->isWaiting())
         {
             $player->addTitle("You are #". (PlayersManager::getInstance()->getInGamePlayerLeft()) . ".\n");
-            PlayersManager::getInstance()->getFatPlayer($player)->setOutOfGame(true);
+            $l_fatPlayer = PlayersManager::getInstance()->getFatPlayer($player);
+            $l_fatPlayer->setDataRelativeToContext(PlayersManager::getInstance()->getInGamePlayerLeft());
+            $l_fatPlayer->setOutOfGame(true);
             $player->removeEffect(Effect::NAUSEA);
             WorldUtils::addStrike($player->getLocation());
+            LoadBalancer::getInstance()->getServer()->getLevel(1)->broadcastLevelSoundEvent($player->getPosition(), LevelSoundEventPacket::SOUND_THUNDER);
             $l_PlayerLeft = PlayersManager::getInstance()->getInGamePlayerLeft();
 
             ScoresManager::getInstance()->giveRewardToPlayer($player->getUniqueId(), ((GameManager::getInstance()->getPlayerNbrAtStart() - $l_PlayerLeft) / GameManager::getInstance()->getPlayerNbrAtStart()));
@@ -249,7 +253,7 @@ class GiveSledgeHammer extends PluginTask
     public function onRun(int $currentTick)
     {
         $result = MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(),
-            "SELECT * FROM scores WHERE player = ? && `position` = 100 && serverType = 'battleRoyal'", [
+            "SELECT * FROM scores WHERE player = ? && `position` = 100 && serverType = 'battleRoyale'", [
                 ["s", $this->m_uuid]
             ]);
         if (($result instanceof \libasynql\result\MysqlSelectResult) and count($result->rows) >= 1)

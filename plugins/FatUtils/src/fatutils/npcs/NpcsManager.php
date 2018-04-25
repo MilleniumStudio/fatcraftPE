@@ -288,8 +288,6 @@ class NpcsManager implements Listener, CommandExecutor
         */
     public function onEntityDamage(EntityDamageEvent $event)
     {
-        echo ("yo ici \n");
-
         if(!$event instanceof EntityDamageByEntityEvent) {
             return;
         }

@@ -142,6 +142,7 @@ class BattleRoyal extends PluginBase implements Listener
 
         if (GameManager::getInstance()->isWaiting()) {
             $p_Player->teleport($this->getBattleRoyalConfig()->getWaitingLocation()->asVector3());
+            var_dump($this->getBattleRoyalConfig()->getPos1());
 
             $p_Player->setGamemode(Player::ADVENTURE);
 
@@ -189,7 +190,7 @@ class BattleRoyal extends PluginBase implements Listener
 
         Sidebar::getInstance()->addTranslatedLine(new TextFormatter("template.battleRoyale"))
             ->addTranslatedLine(new TextFormatter("template.playfatcraft"));
-        $this->m_PlayTimer = new DisplayableTimer(GameManager::getInstance()->getPlayingTickDuration());
+        $this->m_PlayTimer = new DisplayableTimer(GameManager::getInstance()->getPlayingTickDuration() + 900);
         $this->m_PlayTimer
             ->setTitle(new TextFormatter("timer.playing.title"))
             ->addStartCallback(function () {
@@ -210,7 +211,10 @@ class BattleRoyal extends PluginBase implements Listener
             ->addWhiteSpace()
             ->addTimer($this->m_PlayTimer)
             ->addWhiteSpace()
-            ->addMutableLine(function () {
+            ->addMutableLine(function (Player $p_player)
+            {
+                if (PlayersManager::getInstance()->getFatPlayer($p_player)->isOutOfGame())
+                    return new TextFormatter("battleroyal.top", ["val" => PlayersManager::getInstance()->getFatPlayer($p_player)->getDataRelativeToContext()]);
                 return new TextFormatter("battleroyal.alivePlayer", ["nbr" => PlayersManager::getInstance()->getInGamePlayerLeft(), "nbr2" => $this->maxPlayer]);
             });
 
@@ -433,16 +437,24 @@ class BattleRoyal extends PluginBase implements Listener
                 }
 
                 $l_distance = $l_FatPlayer->calcDist($l_pos1);
-                if ($l_distance > $l_radius1)
+                if ($l_distance > $l_radius1 && $this->defineZone1)
+                {
+                    $p_Player->addTitle("", "\n\n\n\n§4UNSAFE ZONE");
                     return "§4UNSAFE ZONE§r\n" . "§4SAFE ZONE: §f" . ($l_distance - $l_radius1) . "m§r";
+                }
                 if ($this->getNextDamageLoc() != null && $this->getNextDamageRadius() != 0 && ($l_diff = ($l_FatPlayer->calcDist($this->getNextDamageLoc()) -  $this->getNextDamageRadius())) >= 0)
-                    return "§2SAFE ZONE\n§cNEXT SAFE ZONE: §f" . $l_diff . "m§r"; //§kµ§r
+                {
+                    $p_Player->addTitle("", "\n\n\n\n§4UNSAFE ZONE");
+                    return "§cUNSAFE ZONE§r\n§2SAFE ZONE: §f" . $l_diff . "m§r"; //§kµ§r
+                }
                 else
                     return "§2SAFE ZONE\n";
             })
             ->addWhiteSpace()
-            ->addMutableLine(function ()
+            ->addMutableLine(function (Player $p_player)
             {
+                if (PlayersManager::getInstance()->getFatPlayer($p_player)->isOutOfGame())
+                    return new TextFormatter("battleroyal.top", ["val" => PlayersManager::getInstance()->getFatPlayer($p_player)->getDataRelativeToContext()]);
                 return new TextFormatter("battleroyal.alivePlayer", ["nbr" => PlayersManager::getInstance()->getInGamePlayerLeft(), "nbr2" => $this->maxPlayer]);
             });
     }
@@ -472,13 +484,13 @@ class BattleRoyal extends PluginBase implements Listener
         }
     }
 
-    public function genericStepFirstPart()
+    public function genericStepFirstPart(int $p_additionnalTime = 0)
     {
         echo ("- generic 1 -\n");
 
         Sidebar::getInstance()->clearLines();
 
-        $this->m_PlayTimer = new DisplayableTimer(GameManager::getInstance()->getPlayingTickDuration());
+        $this->m_PlayTimer = new DisplayableTimer(GameManager::getInstance()->getPlayingTickDuration() + $p_additionnalTime);
         $this->m_PlayTimer
             ->setTitle("NEXT ZONE")
             ->addStartCallback(function ()
@@ -827,11 +839,12 @@ class BattleRoyal extends PluginBase implements Listener
                 $sqrDZ = pow($p_center->z - $z, 2);
                 $sqrDY = $sqrRadius - $sqrDX - $sqrDZ;
 
-                if ($sqrDY > 0)
-                {
-                    $dY = sqrt($sqrDY);
 
-                    $y = $p_center->y + $dY;
+                $dY = sqrt($sqrDY);
+
+                $y = $p_center->y + $dY;
+                if ($sqrDY > 0 && $y < 145)
+                {
                     $yLow = $p_center->y - $dY;
 
                     if ($y > 255)
