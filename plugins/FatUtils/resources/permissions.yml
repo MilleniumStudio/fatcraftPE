@@ -48,12 +48,10 @@ VIP:
     - lobby.items
 
 Modo:
-  extends: Legend
-  prefix: "§1Staff "
+  prefix: "§dModo "
   color: §f
   allow:
     - ban.uuid
-    - ban.ip
     - ban.reload
     - chat.mute
     - chat.unmute
@@ -61,15 +59,20 @@ Modo:
     - op.ban
 
 Admin:
-  extends: Modo
+  extends: Legend
   prefix: "§5Admin "
   color: §f
   allow:
     - server.stop
-    - op.kick.modo
-    - op.ban.modo
     - perms
     - command.gps
+    - ban.uuid
+    - ban.ip
+    - ban.reload
+    - chat.mute
+    - chat.unmute
+    - op.kick
+    - op.ban
 
 Test:
    extends: Admin
