@@ -453,7 +453,7 @@ class BattleRoyal extends PluginBase implements Listener
             ->addWhiteSpace()
             ->addMutableLine(function (Player $p_player)
             {
-                if (PlayersManager::getInstance()->getFatPlayer($p_player)->isOutOfGame())
+                if (PlayersManager::getInstance()->getFatPlayer($p_player) != null && PlayersManager::getInstance()->getFatPlayer($p_player)->isOutOfGame())
                     return new TextFormatter("battleroyal.top", ["val" => PlayersManager::getInstance()->getFatPlayer($p_player)->getDataRelativeToContext()]);
                 return new TextFormatter("battleroyal.alivePlayer", ["nbr" => PlayersManager::getInstance()->getInGamePlayerLeft(), "nbr2" => $this->maxPlayer]);
             });

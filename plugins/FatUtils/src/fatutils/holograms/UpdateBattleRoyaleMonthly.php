@@ -33,7 +33,7 @@ class UpdateBattleRoyaleMonthly extends PluginTask
                 $val = $i + 1;
 
                 if ($i + 1 <=3)
-                    $textBuffer .= "§6" . $val . "§5 - " . $result->rows[$i]["name"] . " ->§4 " . $result->rows[$i]["number"] . "\n";
+                    $textBuffer .= "§6#" . $val . "§r - " . $result->rows[$i]["name"] . " -> " . $result->rows[$i]["number"] . "\n";
                 else
                     $textBuffer .= "§6" . $val . "§r - " . $result->rows[$i]["name"] . " -> " . $result->rows[$i]["number"] . "\n";
                 $i++;
