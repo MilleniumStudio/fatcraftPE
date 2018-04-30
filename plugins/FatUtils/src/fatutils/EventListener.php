@@ -219,6 +219,10 @@ class EventListener implements Listener
                 case "enculé":
                 case "enfoiré":
                 case "enfoire":
+                case "fdp":
+                case "gueule":
+                case "guele":
+                case "gueulle":
                 case "merde":
                 case "merd":
                 case "merdé":
@@ -227,6 +231,7 @@ class EventListener implements Listener
                 case "niqué":
                 case "niké":
                 case "ntm":
+                case "pd":
                 case "poufiasse":
                 case "poufias":
                 case "pute":

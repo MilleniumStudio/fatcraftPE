@@ -1085,7 +1085,7 @@ loots:
       - '{"material": "CHORUS_FRUIT_POPPED", "amount": 12}'
       - '{"material": "EGG"}'
       - '{"material": "GOLD_HELMET"}'
-      - '{"material": "GOLD_BOOT"}'
+      - '{"material": "GOLD_BOOTS"}'
       - '{"material": "GUNPOWDER", "amount": 3}'
       - '{"material": "SNOWBALL"}'
       - '{"material": "ENDER_PEARL"}'
@@ -1109,10 +1109,11 @@ loots:
       - '{"material": "GOLD_LEGGINGS"}'
       - '{"material": "ENDER_PEARL"}'
       - '{"material": "IRON_HELMET"}'
-      - '{"material": "IRON_BOOT"}'
+      - '{"material": "IRON_BOOTS"}'
       - '{"material": "SNOWBALL"}'
       - '{"material": "CHORUS_FRUIT_POPPED", "amount": 20}'
       - '{"material": "BOW"}'
+      - '{"material": "ROTTEN_FLESH", "amount": 12}'
 
   level-3:
     item-value: 3
@@ -1143,13 +1144,15 @@ loots:
       - '{"material": "MUSHROOM_STEW"}'
       - '{"material": "CHORUS_FRUIT_POPPED", "amount": 30}'
       - '{"material": "CHAINMAIL_HELMET"}'
-      - '{"material": "CHAINMAIL_BOOT"}'
+      - '{"material": "CHAINMAIL_BOOTS"}'
       - '{"material": "GUNPOWDER", "amount": 10}'
       - '{"material": "EGG", "amount": 2}'
       - '{"material": "ENDER_PEARL"}'
       - '{"material": "DIAMOND_HELMET"}'
-      - '{"material": "DIAMOND_BOOT"}'
+      - '{"material": "DIAMOND_BOOTS"}'
       - '{"material": "SNOWBALL"}'
+      - '{"material": "ROTTEN_FLESH", "amount": 10}'
+      - '{"material": "EXPERIENCE_BOTTLE"}'
 
 
   level-5:
@@ -1164,3 +1167,4 @@ loots:
       - '{"material": "BOW"}'
       - '{"material": "ENDER_PEARL"}'
       - '{"material": "SNOWBALL"}'
+      - '{"material": "EXPERIENCE_BOTTLE"}'

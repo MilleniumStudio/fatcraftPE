@@ -317,6 +317,8 @@ class BattleRoyal extends PluginBase implements Listener
             case ItemIds::SPLASH_POTION:
             case ItemIds::DIAMOND_PICKAXE:
             case ItemIds::WOODEN_PICKAXE:
+            case ItemIds::EXPERIENCE_BOTTLE:
+            case ItemIds::ROTTEN_FLESH:
                 $value = true;
         }
         return $value;
@@ -333,9 +335,9 @@ class BattleRoyal extends PluginBase implements Listener
             case ItemIds::ARROW:
                 return "§2SNIPER RIFFLE AMMO§r";
             case ItemIds::SNOWBALL:
-                return "§5ASSAULT RIFFLE§r";
+                return "§5AK§r";
             case ItemIds::CHORUS_FRUIT_POPPED:
-                return "§2ASSAULT RIFFLE AMMO§r";
+                return "§2AK AMMO§r";
             case ItemIds::ENDER_PEARL:
                 return "§5SHOTGUN§r";
             case ItemIds::GUNPOWDER:
@@ -403,7 +405,10 @@ class BattleRoyal extends PluginBase implements Listener
                 return "§5§lFAT SLEDGE HAMMER";
             case ItemIds::DIAMOND_PICKAXE:
                 return "§5§lULTIMATE SLEDGE HAMMER";
-                break;
+            case ItemIds::EXPERIENCE_BOTTLE:
+                return "§5§lSCAR L";
+            case ItemIds::ROTTEN_FLESH:
+                return "§2SCAR L AMMO§r";
         }
     }
 
@@ -595,7 +600,11 @@ class BattleRoyal extends PluginBase implements Listener
 
         if ($winner instanceof FatPlayer)
         {
-            ScoresManager::getInstance()->giveRewardToPlayer($winner->getPlayer()->getUniqueId(), 1);
+            $l_validateTop = true;
+            if (GameManager::getInstance()->getPlayerNbrAtStart() < 5)
+                $l_validateTop = false;
+
+            ScoresManager::getInstance()->giveRewardToPlayer($winner->getPlayer()->getUniqueId(), 1, $l_validateTop);
 
             GameManager::getInstance()->endGame(false);
 

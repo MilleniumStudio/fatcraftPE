@@ -57,6 +57,7 @@ Modo:
     - chat.unmute
     - op.kick
     - op.ban
+    - pocketmine.command.kick
 
 Admin:
   extends: Legend
@@ -73,6 +74,7 @@ Admin:
     - chat.unmute
     - op.kick
     - op.ban
+    - pocketmine.command.kick
 
 Test:
    extends: Admin

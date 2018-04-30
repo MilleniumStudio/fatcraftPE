@@ -100,14 +100,20 @@ content:
       priceFS: 2000
       priceFG: 50
       type: "Chicken"
-    Cat4:
-      name: "shop.items.pets.catWhite"
+#    Cat4:
+#      name: "shop.items.pets.catWhite"
+#      class: "fatutils\\pets\\Pet"
+#      priceFS: 2000
+#      priceFG: 50
+#      type: "Ocelot"
+#      options:
+#        DATA_VARIANT: "DATA_TYPE_INT/3"
+    Spider:
+      name: "shop.items.pets.Spider"
       class: "fatutils\\pets\\Pet"
       priceFS: 2000
       priceFG: 50
-      type: "Ocelot"
-      options:
-        DATA_VARIANT: "DATA_TYPE_INT/3"
+      type: "Spider"
     Bat:
       name: "shop.items.pets.Bat"
       class: "fatutils\\pets\\Pet"
@@ -140,6 +146,7 @@ content:
       priceFS: 3000
       priceFG: 50
       type: "Wolf"
+      rankVIP: 1
     PolarBear:
       name: "shop.items.pets.PolarBear"
       class: "fatutils\\pets\\Pet"
@@ -278,12 +285,6 @@ content:
 #      priceFS: 1500
 #      priceFG: 50
 #      type: "Skeleton"
-#    Spider:
-#      name: "shop.items.pets.Spider"
-#      class: "fatutils\\pets\\Pet"
-#      priceFS: 1500
-#      priceFG: 50
-#      type: "Spider"
 #    ZombiePigman:
 #      name: "shop.items.pets.ZombiePigman"
 #      class: "fatutils\\pets\\Pet"

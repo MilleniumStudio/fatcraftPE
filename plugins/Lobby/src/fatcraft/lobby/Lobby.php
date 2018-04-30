@@ -96,7 +96,7 @@ class Lobby extends PluginBase implements Listener
 				];
 			});
         FatUtils::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new UpdateMirrorsEdgeHologram($this), 100);
-        FatUtils::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new UpdateBattleRoyaleMonthly($this), 100);
+        FatUtils::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new UpdateBattleRoyaleMonthly($this), 500);
     }
 
     public function checkPlayerPermissions(Player $p_Player)

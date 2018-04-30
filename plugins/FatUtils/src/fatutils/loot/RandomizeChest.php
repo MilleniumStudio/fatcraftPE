@@ -110,7 +110,7 @@ class RandomizeChest
                                 else
                                     $l_Item->setCustomName(BattleRoyal::getInstance()->getBattleRoyalCustomName($l_itemId));
                             }
-                            if ($l_itemId == ItemIds::SNOWBALL || $l_itemId == ItemIds::BOW || $l_itemId == ItemIds::ENDER_PEARL)
+                            if ($l_itemId == ItemIds::SNOWBALL || $l_itemId == ItemIds::BOW || $l_itemId == ItemIds::ENDER_PEARL || $l_itemId == ItemIds::EXPERIENCE_BOTTLE)
                             {
                                 $l_ExtraAmmo = null;
                                 $l_SecondEmptySlot = null;
@@ -135,6 +135,11 @@ class RandomizeChest
                                 {
                                     $l_ExtraAmmo = new Item(ItemIds::GUNPOWDER);
                                     $l_ExtraAmmo->setCount(10);
+                                }
+                                if ($l_itemId == ItemIds::EXPERIENCE_BOTTLE)
+                                {
+                                    $l_ExtraAmmo = new Item(ItemIds::ROTTEN_FLESH);
+                                    $l_ExtraAmmo->setCount(15);
                                 }
                                 $l_ExtraAmmo->setCustomName(BattleRoyal::getInstance()->getBattleRoyalCustomName($l_ExtraAmmo->getId()));
 

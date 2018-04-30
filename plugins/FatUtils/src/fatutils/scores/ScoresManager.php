@@ -159,7 +159,7 @@ class ScoresManager
 		return $l_GeneratedScoreboard;
 	}
 
-	public function giveRewardToPlayer(UUID $p_PlayerUuid, float $p_RewardRatio)
+	public function giveRewardToPlayer(UUID $p_PlayerUuid, float $p_RewardRatio, bool $p_logScore = true)
 	{
 		if (array_search($p_PlayerUuid->toString(), $this->m_RewardedPlayers) === false)
 		{
@@ -178,6 +178,8 @@ class ScoresManager
 			$l_FatgoldReward = round($l_FatgoldReward * $p_RewardRatio);
 			$l_XpReward = round($l_XpReward * $p_RewardRatio);
 
+			if (!$p_logScore && $p_RewardRatio == 1)
+                $p_RewardRatio = 0.9;
 			$this->recordScore($p_PlayerUuid, round($p_RewardRatio * 100), [
 				ScoresManager::OPTION_KEY_MAX_FATSILVER_REWARD => $l_FatsilverReward,
 				ScoresManager::OPTION_KEY_MAX_FATGOLD_REWARD => $l_FatgoldReward,
