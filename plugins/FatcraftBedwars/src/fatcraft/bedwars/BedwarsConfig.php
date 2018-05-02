@@ -19,16 +19,19 @@ use pocketmine\utils\Config;
 class BedwarsConfig
 {
     const CONFIG_KEY_DEATH_ARENA_LOC = "deathArenaLoc";
+    const CONFIG_KEY_IS_FAST_RUSH = "isFastRush";
 
 	private $m_DeathArenaLoc = null;
 	private $m_bedsLocations = [];
-
+    private $m_isFastRush = false;
 	/**
 	 * HungerGameConfig constructor.
 	 * @param Config $p_Config
 	 */
 	public function __construct(Config $p_Config)
 	{
+        if ($p_Config->exists(BedwarsConfig::CONFIG_KEY_IS_FAST_RUSH))
+            $this->m_isFastRush = true;
         if ($p_Config->exists(BedwarsConfig::CONFIG_KEY_DEATH_ARENA_LOC))
             $this->m_DeathArenaLoc = WorldUtils::stringToLocation($p_Config->get(BedwarsConfig::CONFIG_KEY_DEATH_ARENA_LOC, ""));
 		else
@@ -50,5 +53,10 @@ class BedwarsConfig
 
     public function getBedLocation(Team $team) : Location{
         return $this->m_bedsLocations[$team->getName()];
+    }
+
+    public function isFastRush() : bool
+    {
+        return $this->m_isFastRush;
     }
 }

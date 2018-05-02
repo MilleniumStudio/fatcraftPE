@@ -8,6 +8,8 @@
 
 namespace fatcraft\bedwars;
 
+use battleroyal\BattleRoyal;
+use battleroyal\BattleRoyalConfig;
 use fatutils\players\PlayersManager;
 use fatutils\teams\TeamsManager;
 use fatutils\tools\ClickableNPC;
@@ -61,26 +63,26 @@ class ShopKeeper extends ClickableNPC
         $l_Window = new ButtonWindow($p_Player);
         $l_Window->setTitle((new TextFormatter("bedwars.shop.title"))->asStringForPlayer($p_Player));
 
-        if (isset(self::$m_ShopContent["blocks"]))
-        {
+        if (isset(self::$m_ShopContent["blocks"])) {
             $l_Window->addPart((new Button())
                 ->setText((new TextFormatter("bedwars.shop.items.blocks.title"))->asStringForPlayer($p_Player))
                 ->setImage("https://fatcraft.com/img/mcpe_assets/bedwars/Wool.png")
-                ->setCallback(function () use ($p_Player)
-                {
+                ->setCallback(function () use ($p_Player) {
                     self::getGenericItemWindow($p_Player, "blocks")->open();
                 })
             );
         }
 
-        $l_Window->addPart((new Button())
-            ->setText((new TextFormatter("bedwars.shop.upgrades.title"))->asStringForPlayer($p_Player))
-            ->setImage("https://fatcraft.com/img/mcpe_assets/bedwars/Anvil.png")
-            ->setCallback(function () use ($p_Player)
-            {
-                self::getUpgradesWindow($p_Player)->open();
-            })
-        );
+        if (!Bedwars::getInstance()->getBedwarsConfig()->isFastRush())
+        {
+            $l_Window->addPart((new Button())
+                ->setText((new TextFormatter("bedwars.shop.upgrades.title"))->asStringForPlayer($p_Player))
+                ->setImage("https://fatcraft.com/img/mcpe_assets/bedwars/Anvil.png")
+                ->setCallback(function () use ($p_Player) {
+                    self::getUpgradesWindow($p_Player)->open();
+                })
+            );
+        }
 
         if (isset(self::$m_ShopContent["weapons"]))
         {

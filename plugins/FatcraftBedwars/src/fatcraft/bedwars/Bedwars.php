@@ -430,11 +430,18 @@ class Bedwars extends PluginBase implements Listener
 			->addWhiteSpace()
 			->addTranslatedLine(new TextFormatter("bedwars.sidebar.currencies.title"))
 			->addMutableLine(function (Player $p_Player) {
-				return [
-					new TextFormatter("bedwars.sidebar.currency.iron", ["amount" => $this->getPlayerIron($p_Player)]),
-					new TextFormatter("bedwars.sidebar.currency.gold", ["amount" => $this->getPlayerGold($p_Player)]),
-					new TextFormatter("bedwars.sidebar.currency.diamond", ["amount" => $this->getPlayerDiamond($p_Player)])
-				];
+                if (Bedwars::getInstance()->getBedwarsConfig()->isFastRush())
+                {
+                        return [
+                        new TextFormatter("bedwars.sidebar.currency.iron", ["amount" => $this->getPlayerIron($p_Player)]),
+                        new TextFormatter("bedwars.sidebar.currency.gold", ["amount" => $this->getPlayerGold($p_Player)]),
+                    ];
+                }
+                return [
+                    new TextFormatter("bedwars.sidebar.currency.iron", ["amount" => $this->getPlayerIron($p_Player)]),
+                    new TextFormatter("bedwars.sidebar.currency.gold", ["amount" => $this->getPlayerGold($p_Player)]),
+                    new TextFormatter("bedwars.sidebar.currency.diamond", ["amount" => $this->getPlayerDiamond($p_Player)])
+                ];
 			});
 
         //remove team selectors
