@@ -48,6 +48,7 @@ VIP:
     - lobby.items
 
 Modo:
+  extends: Legend
   prefix: "§dModo "
   color: §f
   allow:
