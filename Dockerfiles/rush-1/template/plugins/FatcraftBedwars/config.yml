@@ -1,0 +1,145 @@
+minPlayer: 2
+maxPlayer: 2
+waitingSecDuration: 10
+playingSecDuration: 1200
+#deathArenaLoc: 0.5/6.1/60.5
+isFastRush: true
+
+rewards:
+  xp: 500
+  fatSilver: 50
+
+spawns:
+  blueSpawn:
+    location: -0.5/102/42.5
+  redSpawn:
+    location: -0.5/102/-42.5
+
+forges:
+  i1:
+    location: 1.5/101/46.5
+    itemType: IRON_INGOT
+    team: Blue
+    popDelay:
+      - 1
+      - 1
+      - 1
+  i2:
+    location: 1.5/101/-45.5
+    itemType: IRON_INGOT
+    team: Red
+    popDelay:
+      - 1
+      - 1
+      - 1
+
+  g1:
+    location: 1.5/101/46.5
+    itemType: GOLD_INGOT
+    popDelay:
+      - 3
+      - 2
+      - 1
+  g2:
+    location: 1.5/101/-45.5
+    itemType: GOLD_INGOT
+    popDelay:
+      - 3
+      - 2
+      - 1
+
+#  d1:
+#    location: 17/116.0/4
+#    itemType: DIAMOND
+#    popDelay:
+#      - 23
+#      - 18
+#      - 15
+#  d2:
+#    location: 13/116.0/8
+#    itemType: DIAMOND
+#    popDelay:
+#      - 23
+#      - 18
+#      - 15
+
+teams:
+  Blue:
+    color: BLUE
+    spawn: blueSpawn
+  Red:
+    color: RED
+    spawn: redSpawn
+
+npcTeamSelector:
+  1: 17/116.0/4
+  2: 13/116.0/8
+
+npcShop:
+  1: -1.5/101/47.5
+  2: -1.5/101/-46.5/270/0
+
+beds:
+  Blue: -0.5/101/40.5
+  Red: -0.5/101/-39.5
+
+shop:
+  blocks:
+    sandstone20: #TODO
+      rawItem: '{"material": "SANDSTONE", "amount": 20}'
+      imageUrl: "https://fatcraft.com/assets/img/icons/White_wool_20.png"
+      ironPrice: 5
+  weapons:
+    ironSword:
+      rawItem: '{"material": "IRON_SWORD"}'
+      imageUrl: "https://fatcraft.com/assets/img/icons/Iron_Sword.png"
+      ironPrice: 20
+    diamondSword:
+      rawItem: '{"material": "DIAMOND_SWORD"}'
+      imageUrl: "https://fatcraft.com/assets/img/icons/Diamond_Sword.png"
+      goldPrice: 40
+  armors:
+    ironSet:
+      helmet: '{"material": "IRON_HELMET"}'
+      chestplate: '{"material": "IRON_CHESTPLATE"}'
+      leggings: '{"material": "IRON_LEGGINGS"}'
+      boots: '{"material": "IRON_BOOTS"}'
+      imageUrl: "https://fatcraft.com/assets/img/icons/Iron_chestplate.png"
+      goldPrice: 10
+    diamondSet:
+      helmet: '{"material": "DIAMOND_HELMET"}'
+      chestplate: '{"material": "DIAMOND_CHESTPLATE"}'
+      leggings: '{"material": "DIAMOND_LEGGINGS"}'
+      boots: '{"material": "DIAMOND_BOOTS"}'
+      imageUrl: "https://fatcraft.com/assets/img/icons/Diamond_chestplate.png"
+      goldPrice: 20
+  tools:
+    ironPickaxe:
+      rawItem: '{"material": "IRON_PICKAXE"}'
+      imageUrl: "https://fatcraft.com/assets/img/icons/Iron_Pickaxe.png"
+      ironPrice: 25
+    diamondPickaxe:
+      rawItem: '{"material": "DIAMOND_PICKAXE"}'
+      imageUrl: "https://fatcraft.com/assets/img/icons/Diamond_Pickaxe.png"
+      goldPrice: 30
+#    shears:
+#      rawItem: '{"material": "SHEARS"}'
+#      imageUrl: "https://fatcraft.com/assets/img/icons/Shears.png"
+#      goldPrice: 7
+  others:
+    snowBalls:
+      rawItem: '{"material": "SNOWBALL", "amount": 5}'
+      imageUrl: "https://fatcraft.com/assets/img/icons/Snow_Ball.png"
+      ironPrice: 10
+    tnt:
+      rawItem: '{"material": "TNT", "amount": 1}'
+      imageUrl: "https://fatcraft.com/assets/img/icons/TNT.png"
+      goldPrice: 10
+    flintAndSteel:
+      rawItem: '{"material": "FLINT_AND_STEEL", "amount": 1}'
+      imageUrl: "https://fatcraft.com/assets/img/icons/FlintAndSteel.png"
+      goldPrice: 10
+    goldenApple: #TODO
+      rawItem: '{"material": "GOLDEN_APPLE", "amount": 5}'
+      imageUrl: "https://fatcraft.com/assets/img/icons/GoldenApple.png"
+      goldPrice: 5
