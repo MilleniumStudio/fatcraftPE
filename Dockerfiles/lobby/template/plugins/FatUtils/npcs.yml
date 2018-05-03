@@ -90,8 +90,8 @@ npcs:
     data:
       to: 0.5/13/-86.5/241/-19
 
-  - name: "boatracer"
-    displayname: "template.br"
+  - name: "rush"
+    displayname: "template.rush"
     location: 13.5/14/5.5/140/15
     type : "Player"
     size : 1
@@ -107,8 +107,8 @@ npcs:
     function: "NPCFunctionTeleport"
     data:
       to: 54.5/8/18.5/270/0
-  - name: "server.random.boatracer1"
-    displayname: "template.br"
+  - name: "server.random.rush1"
+    displayname: "template.rush"
     location: 77.5/7.5/13.5/50/0
     type : "Player"
     size : 1
@@ -124,8 +124,8 @@ npcs:
     commands: [
       "server connect {player} br"
     ]
-  - name: "server.random.boatracer2"
-    displayname: "template.br"
+  - name: "server.random.rush2"
+    displayname: "template.rush"
     location: 77.55/7.5/23.5/117/0
     type : "Player"
     size : 1
@@ -141,7 +141,7 @@ npcs:
     commands: [
       "server connect {player} br"
     ]
-  - name: "welcomenpc.boatracer"
+  - name: "welcomenpc.rush"
     displayname: "Back to spawn"
     location: 54.5/8/14.5/270/0
     type : "Player"

@@ -42,10 +42,10 @@ MySQL:
     cacheLimit: 100
 
 FloatingTops:
-- statName: br_XP
-  name: "Top 10 FormulaBoat"
-  location: map/73.5/10.5/26.5/51/0
-  lines: 10
+#- statName: br_XP
+#  name: "Top 10 FormulaBoat"
+#  location: map/73.5/10.5/26.5/51/0
+#  lines: 10
 - statName: sw_XP
   name: "Top 10 SkyWar"
   location: map/71.5/10.5/-40.5/237/0
