@@ -59,6 +59,7 @@ class Bedwars extends PluginBase implements Listener
     const PLAYER_DATA_CURRENCY_DIAMOND = "currency.diamond";
 
     private $bedBlockId;
+    private $sidebarTitle;
 
     private $m_BedwarsConfig;
     private static $m_Instance;
@@ -126,8 +127,12 @@ class Bedwars extends PluginBase implements Listener
 
         $this->bedBlockId = BlockIds::BEACON;
         if ($this->getBedwarsConfig()->isFastRush())
+        {
+            $this->sidebarTitle = "fastRush.sidebar.title";
             $this->bedBlockId = BlockIds::BED_BLOCK;
-
+        }
+        else
+            $this->sidebarTitle = "bedwars.sidebar.title";
         $this->m_WaitingTimer = new DisplayableTimer(GameManager::getInstance()->getWaitingTickDuration());
         $this->m_WaitingTimer
             ->setTitle(new TextFormatter("timer.waiting.title"))
@@ -152,7 +157,7 @@ class Bedwars extends PluginBase implements Listener
 
         Sidebar::getInstance()
 //            ->setUpdateTickInterval(40)
-            ->addTranslatedLine(new TextFormatter("bedwars.sidebar.title"))
+            ->addTranslatedLine(new TextFormatter($this->sidebarTitle))
             ->addTimer($this->m_WaitingTimer)
             ->addWhiteSpace()
             ->addMutableLine(function () {
@@ -412,7 +417,7 @@ class Bedwars extends PluginBase implements Listener
         // INIT SIDEBAR
         Sidebar::getInstance()->clearLines();
         Sidebar::getInstance()
-            ->addTranslatedLine(new TextFormatter("bedwars.sidebar.title"))
+            ->addTranslatedLine(new TextFormatter($this->sidebarTitle))
             ->addTimer($this->m_PlayTimer)
             ->addWhiteSpace()
             ->addTranslatedLine(new TextFormatter("bedwars.sidebar.teams.title"))

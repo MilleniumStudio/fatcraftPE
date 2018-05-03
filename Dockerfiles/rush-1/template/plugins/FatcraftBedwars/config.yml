@@ -132,7 +132,7 @@ shop:
       imageUrl: "https://fatcraft.com/assets/img/icons/Snow_Ball.png"
       ironPrice: 10
     tnt:
-      rawItem: '{"material": "TNT", "amount": 1}'
+      rawItem: '{"material": "TNT", "amount": 10}'
       imageUrl: "https://fatcraft.com/assets/img/icons/TNT.png"
       goldPrice: 10
     flintAndSteel:
