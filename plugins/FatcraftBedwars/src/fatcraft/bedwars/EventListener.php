@@ -65,14 +65,18 @@ class EventListener implements Listener
     public function onBlockBreak(BlockBreakEvent $e)
     {
 //	    FatUtils::getInstance()->getLogger()->info("BlockBreakEvent ==>");
-        if ($e->getBlock()->getId() == Bedwars::BLOCK_ID) {
+        if ($e->getBlock()->getId() == Bedwars::getInstance()->getBedBlockId())
+        {
             $l_PlayerTeam = TeamsManager::getInstance()->getPlayerTeam($e->getPlayer());
 
             if (isset($l_PlayerTeam) && WorldUtils::getDistanceBetween($e->getBlock(), $l_PlayerTeam->getSpawn()->getLocation()) < 2) {
                 if (Bedwars::DEBUG) {
                     echo "break your own bed authorized cause debug is on\n";
                 } else {
-					$e->getPlayer()->sendMessage((new TextFormatter("bedwars.bed.destroyed.cancelled"))->asStringForPlayer($e->getPlayer()));
+                    if (!Bedwars::getInstance()->getBedwarsConfig()->isFastRush())
+                        $e->getPlayer()->sendMessage((new TextFormatter("bedwars.bed.destroyed.cancelled"))->asStringForPlayer($e->getPlayer()));
+                    else
+                        $e->getPlayer()->sendMessage((new TextFormatter("fastRush.bed.destroyed.cancelled"))->asStringForPlayer($e->getPlayer()));
                     $e->setCancelled(true);
                 }
             } else {
@@ -80,9 +84,14 @@ class EventListener implements Listener
 
                 new DelayedExec(function ()
 				{
-                	PlayersManager::getInstance()->sendMessageToOnline(new TextFormatter("bedwars.bed.destroyed"));
-					Sidebar::getInstance()->update();
+                    if (!Bedwars::getInstance()->getBedwarsConfig()->isFastRush())
+                        PlayersManager::getInstance()->sendMessageToOnline(new TextFormatter("bedwars.bed.destroyed"));
+                    else
+                        PlayersManager::getInstance()->sendMessageToOnline(new TextFormatter("fastRush.bed.destroyed"));
+
+                    Sidebar::getInstance()->update();
 				}, 1);
+                $e->setDrops([]);
             }
         } else {
             if (!Bedwars::DEBUG && !$e->getBlock()->hasMetadata("isCustom"))
