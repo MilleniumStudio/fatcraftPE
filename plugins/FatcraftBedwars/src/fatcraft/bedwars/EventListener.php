@@ -148,8 +148,10 @@ class EventListener implements Listener
     {
         $p_Player = $e->getPlayer();
 
-        if (GameManager::getInstance()->isPlaying()) {
-            if ($p_Player->isOp()) {
+        if (GameManager::getInstance()->isPlaying() || count($this->getServer()->getOnlinePlayers()) > PlayersManager::getInstance()->getMaxPlayer())
+        {
+            if ($p_Player->isOp())
+            {
                 $p_Player->setGamemode(3);
                 PlayersManager::getInstance()->getFatPlayer($p_Player)->setOutOfGame();
                 return;
