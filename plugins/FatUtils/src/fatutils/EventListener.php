@@ -46,7 +46,7 @@ class EventListener implements Listener
                 $e->setKickMessage("You're banned from this server until " . date("D M j G:i:s Y", $l_ExpirationTimestamp) . ".");
             else
                 $e->setKickMessage("You're definitely banned from this server.");
-            return;
+            $e->setCancelled(true);
         }
 
         FatUtils::getInstance()->getLogger()->info("[LOGIN EVENT] from " . $e->getPlayer()->getName() . "(" . $e->getPlayer()->getUniqueId()->toString() . ") => " . ($e->isCancelled() ? "CANCELLED" : "ACCEPTED"));

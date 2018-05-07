@@ -16,6 +16,7 @@ use fatutils\permission\PermissionManager;
 use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
 use fatutils\shop\ShopManager;
+use fatutils\tools\schedulers\BossbarTimer;
 use fatutils\tools\Sidebar;
 use fatutils\tools\TextFormatter;
 use fatutils\tools\WorldUtils;
@@ -97,6 +98,7 @@ class Lobby extends PluginBase implements Listener
 			});
         FatUtils::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new UpdateMirrorsEdgeHologram($this), 100);
         FatUtils::getInstance()->getServer()->getScheduler()->scheduleRepeatingTask(new UpdateBattleRoyaleMonthly($this), 500);
+        $this->supportUsBossBar();
     }
 
     public function checkPlayerPermissions(Player $p_Player)
@@ -172,6 +174,41 @@ class Lobby extends PluginBase implements Listener
         }
         $l_FatPlayer->updateName();
         Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());
+
+
+    }
+
+    public function rankList()
+    {
+        (new BossbarTimer(150))
+            ->setTitle(new TextFormatter("lobby.shop.ranks"))
+            ->addStopCallback(function ()
+            {
+                $this->supportUsBossBar();
+            })
+            ->start();
+
+    }
+    public function shopUrl()
+    {
+        (new BossbarTimer(150))
+            ->setTitle(new TextFormatter("lobby.shop.url"))
+            ->addStopCallback(function ()
+            {
+                $this->rankList();
+            })
+            ->start();
+    }
+
+    public function supportUsBossBar()
+    {
+        (new BossbarTimer(200))
+            ->setTitle(new TextFormatter("lobby.support.us"))
+            ->addStopCallback(function ()
+            {
+                $this->shopUrl();
+            })
+            ->start();
     }
 
     public function onPlayerQuit(PlayerQuitEvent $p_Event)

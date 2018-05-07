@@ -23,10 +23,10 @@ class BanCommand implements CommandExecutor
     {
         if (($p_Label === "ban" && $sender->hasPermission("ban.uuid")) || ($p_Label === "banip" && $sender->hasPermission("ban.ip")))
 		{
-            $p_Player = FatUtils::getInstance()->getServer()->getPlayer($p_Args[0]);
-			if (!is_null($p_Player))
+            $l_Player = FatUtils::getInstance()->getServer()->getPlayer($p_Args[0]);
+			if (!is_null($l_Player))
 			{
-				$l_ExpirationTime = null;
+				$l_ExpirationTime = 60 * 60 * 24; // 1 day
 				$l_Reason = "";
 
 				$l_ArgsParsed = ArrayUtils::parseCmd(["for", "cause"], $p_Args);
@@ -47,12 +47,14 @@ class BanCommand implements CommandExecutor
 				if (isset($l_ArgsParsed["cause"]))
 					$l_Reason = implode(" ", $l_ArgsParsed["cause"]);
 
-				if ($p_Label === "ban")
-					BanManager::getInstance()->banUuid($p_Player->getUniqueId(), $l_ExpirationTime, $l_Reason);
-				else
-					BanManager::getInstance()->banIp($p_Player->getAddress(), $l_ExpirationTime, $l_Reason);
+				FatUtils::getInstance()->getServer()->broadcastMessage("§d[Server] " . $l_Player->getName() . " banned for ". $l_Reason . ".");
 
-				$p_Player->kick($l_Reason);
+				if ($p_Label === "ban")
+					BanManager::getInstance()->banUuid($l_Player->getUniqueId(), $l_ExpirationTime, $l_Reason . " by " . $sender->getName());
+				else
+					BanManager::getInstance()->banIp($l_Player->getAddress(), $l_ExpirationTime, $l_Reason . " by " . $sender->getName());
+
+				$l_Player->kick($l_Reason);
 			}
 		}
         return true;

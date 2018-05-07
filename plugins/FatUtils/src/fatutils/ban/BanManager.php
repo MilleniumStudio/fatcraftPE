@@ -68,20 +68,20 @@ class BanManager
             {
                 if (!is_null($l_Row["player_uuid"]))
                 {
-                    $l_Ban = Ban::createUuidBan($l_Row["id"], UUID::fromString($l_Row["player_uuid"]), intval($l_Row["expiration_date"]));
+                    $l_Ban = Ban::createUuidBan($l_Row["id"], UUID::fromString($l_Row["player_uuid"]), strtotime($l_Row["expiration_date"]));
                     if (!is_null($l_Ban))
                         $this->m_UuidBans[$l_Ban->getUuid()->toString()] = $l_Ban;
                 }
                 else if (!is_null($l_Row["player_ip"]))
                 {
-                    $l_Ban = Ban::createIpBan($l_Row["id"], $l_Row["player_ip"], intval($l_Row["expiration_date"]));
+                    $l_Ban = Ban::createIpBan($l_Row["id"], $l_Row["player_ip"], strtotime($l_Row["expiration_date"]));
                     if (!is_null($l_Ban))
                         $this->m_IpBans[$l_Ban->getIp()] = $l_Ban;
                 }
             }
         }
 
-        Server::getInstance()->getScheduler()->scheduleDelayedRepeatingTask(new BanRefreshTask(FatUtils::getInstance()), 60, -1);
+        Server::getInstance()->getScheduler()->scheduleDelayedTask(new BanRefreshTask(FatUtils::getInstance()), 100);
 
         // Ban address
 //		foreach ($this->m_IpBans as $l_IpBan)
