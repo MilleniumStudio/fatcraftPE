@@ -69,7 +69,7 @@ class EventListener implements Listener
         {
             $l_PlayerTeam = TeamsManager::getInstance()->getPlayerTeam($e->getPlayer());
 
-            if (isset($l_PlayerTeam) && WorldUtils::getDistanceBetween($e->getBlock(), $l_PlayerTeam->getSpawn()->getLocation()) < 2) {
+            if (isset($l_PlayerTeam) && WorldUtils::getDistanceBetween($e->getBlock(), $l_PlayerTeam->getSpawn()->getLocation()) < 15) {
                 if (Bedwars::DEBUG) {
                     echo "break your own bed authorized cause debug is on\n";
                 } else {
