@@ -1,0 +1,10 @@
+minPlayer: 2
+maxPlayer: 30
+waitingSecDuration: 10
+playingSecDuration: 300
+spawnLocation:
+
+#Max rewards for the first player, divided by place un score
+rewards:
+  xp: 1000
+  fatSilver: 100
