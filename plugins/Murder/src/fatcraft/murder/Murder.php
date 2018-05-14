@@ -135,7 +135,7 @@ class Murder extends PluginBase implements Listener
     {
         $p_Player = $p_event->getPlayer();
 
-        if (GameManager::getInstance()->isPlaying()) {
+        if (GameManager::getInstance()->isPlaying() || count(LoadBalancer::getInstance()->getServer()->getOnlinePlayers()) > PlayersManager::getInstance()->getMaxPlayer()) {
             if ($p_Player->isOp()) {
                 $p_Player->setGamemode(3);
                 PlayersManager::getInstance()->getFatPlayer($p_Player)->setOutOfGame();
