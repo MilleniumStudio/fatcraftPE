@@ -38,6 +38,7 @@ class PluginApi
             $err = curl_error($ctx);
             curl_close($ctx);
 
+            BuycraftPlugin::getInstance()->getServer()->shutdown();
             throw new \Exception("cURL request has failed: " . $err);
         }
 
