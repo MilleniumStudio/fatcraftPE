@@ -38,5 +38,4 @@ class AsConsoleCommand implements CommandExecutor
         }
         return true;
     }
-
 }

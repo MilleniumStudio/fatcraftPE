@@ -25,6 +25,9 @@ commands:
   perms:
     permission: perms
     description: "permissions commands"
+  modC:
+    permission: modC
+#    description: "give money" no need to display this to players
   ban:
     description: "Ban player"
     usage: "/ban <playerName> [for <duration> d|h|m] [cause <text>]"

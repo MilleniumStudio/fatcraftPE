@@ -6,6 +6,7 @@ use fatcraft\loadbalancer\LoadBalancer;
 use fatutils\ban\BanManager;
 use fatutils\commands\AsConsoleCommand;
 use fatutils\commands\BanCommand;
+use fatutils\commands\GiveMoney;
 use fatutils\commands\MuteCommand;
 use fatutils\loot\ChestsManager;
 use fatutils\permission\PermissionManager;
@@ -58,6 +59,7 @@ class FatUtils extends PluginBase
 
         $this->getCommand("ban")->setExecutor(new BanCommand());
         $this->getCommand("asconsole")->setExecutor(new AsConsoleCommand());
+        $this->getCommand("modC")->setExecutor(new GiveMoney());
         $this->getCommand("mute")->setExecutor(new MuteCommand());
         $this->getCommand("pet")->setExecutor(PetsManager::getInstance());
         $this->getCommand("skin")->setExecutor(SkinRepository::getInstance());
