@@ -1,6 +1,6 @@
 name: FatcraftInstagib
 version: Build#1
-main: Instagib
+main: instagib\Instagib
 description: "Instagib"
 depend: [FatUtils]
 api: [3.0.0-ALPHA11]

@@ -6,24 +6,30 @@
  * Time: 5:55 PM
  */
 
+namespace instagib;
+
 use fatcraft\loadbalancer\LoadBalancer;
 use fatutils\FatUtils;
 use fatutils\game\GameManager;
 use fatutils\players\PlayersManager;
+use fatutils\spawns\Spawn;
+use fatutils\spawns\SpawnManager;
 use fatutils\tools\schedulers\DisplayableTimer;
 use fatutils\tools\schedulers\Timer;
 use fatutils\tools\Sidebar;
 use fatutils\tools\TextFormatter;
 use fatutils\tools\WorldUtils;
+use InstagibConfig;
 use pocketmine\entity\Effect;
 use pocketmine\entity\EffectInstance;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\block\BlockBreakEvent;
+use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat;
 
-class Instagib extends PluginBase implements Listener
+class Instagib extends PluginBase
 {
     private static $m_Instance;
 
@@ -32,6 +38,13 @@ class Instagib extends PluginBase implements Listener
     private $m_playTimer;
     private $m_gameStarted;
 
+    private $m_scoreArray;
+
+    public static function getInstance(): Instagib
+    {
+        return self::$m_Instance;
+    }
+
     public function onLoad()
     {
         self::$m_Instance = $this;
@@ -39,8 +52,19 @@ class Instagib extends PluginBase implements Listener
 
     public function onEnable()
     {
-        $this->m_instagibConfig = new InstagibConfig($this->getConfig());
         FatUtils::getInstance()->setTemplateConfig($this->getConfig());
+        $this->m_instagibConfig = new InstagibConfig($this->getConfig());
+        if ($this->getConfig()->exists("spawns")) {
+            foreach ($this->getConfig()->getNested("spawns") as $spawn) {
+                var_dump($spawn);
+                SpawnManager::getInstance()->addSpawn(new Spawn(WorldUtils::stringToLocation($spawn)));
+            }
+        } else {
+            echo "pas de spawns ?\n";
+        }
+
+        var_dump($this->m_instagibConfig);
+        var_dump(SpawnManager::getInstance()->getSpawns());
         if ($this->m_instagibConfig->getEndGameTime() == 0)
             $this->getLogger()->critical("FatcraftInstagib : ERROR : end game timer == 0 (failed at loading conf ?)");
         else
@@ -82,12 +106,43 @@ class Instagib extends PluginBase implements Listener
             });
 
         Sidebar::getInstance()
+            ->addLine("§4§lInstagib")
+            ->addTranslatedLine(new TextFormatter("template.playfatcraft.purple"))
+            ->addWhiteSpace()
             ->addTimer($this->m_waitingTimer)
             ->addWhiteSpace()
             ->addMutableLine(function () {
                 return new TextFormatter("game.waitingForMore", ["amount" => max(0, PlayersManager::getInstance()->getMinPlayer() - count($this->getServer()->getOnlinePlayers()))]);
             });
+    }
 
+    public function handlePlayerLogin(Player $p_player)
+    {
+        $p_player->setGamemode(Player::ADVENTURE);
+        $p_player->getInventory()->clearAll();
+
+        $p_player->addEffect(new EffectInstance(
+            Effect::getEffect(Effect::JUMP_BOOST),
+            INT32_MAX,
+            2,
+            0,
+            0
+        ));
+        $p_player->addEffect(new EffectInstance(
+            Effect::getEffect(Effect::SPEED),
+            INT32_MAX,
+            2,
+            0,
+            0
+        ));
+
+        if (GameManager::getInstance()->isWaiting()) {
+            if (count(Instagib::getInstance()->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMinPlayer()) {
+                $this->getLogger()->info("MIN PLAYER REACH !");
+                if ($this->m_waitingTimer instanceof Timer)
+                    $this->m_waitingTimer->start();
+            }
+        }
     }
 
     public function startGame()
@@ -103,16 +158,8 @@ class Instagib extends PluginBase implements Listener
         $this->m_playTimer = new DisplayableTimer(GameManager::getInstance()->getPlayingTickDuration());
         $this->m_playTimer
             ->setTitle(new TextFormatter("timer.playing.title"))
-            ->addStopCallback(function () {});
-
-        Sidebar::getInstance()
-            ->addWhiteSpace()
-            ->addTimer($this->m_playTimer)
-            ->addWhiteSpace()
-            ->addMutableLine(function () {
-                return new TextFormatter("ADD SOMETHING");
+            ->addStopCallback(function () {
             });
-        Sidebar::getInstance()->update();
 
         // PREPARING PLAYERS
         foreach ($this->getServer()->getOnlinePlayers() as $l_Player) {
@@ -121,66 +168,55 @@ class Instagib extends PluginBase implements Listener
 
         $this->m_gameStarted = true;
 
+        foreach ($this->getServer()->getOnlinePlayers() as $player) {
+            $this->m_scoreArray[$player->getName()] = 0;
+        }
+        $this->handleSideBar();
+
         // START PLAY TIMER
         $this->m_playTimer->start();
+        $this->m_gameStarted = true;
     }
 
-
-    /**
-     * @param PlayerJoinEvent $e
-     */
-    public function onPlayerJoin(PlayerJoinEvent $e)
+    public function handleSideBar()
     {
-        $l_Player = $e->getPlayer();
-        echo ("YO !! player join event\n");
-        if (GameManager::getInstance()->isPlaying() || count(LoadBalancer::getInstance()->getServer()->getOnlinePlayers()) > PlayersManager::getInstance()->getMaxPlayer())
-        {
-            if ($l_Player->isOp()) {
-                $l_Player->setGamemode(3);
-                PlayersManager::getInstance()->getFatPlayer($l_Player)->setOutOfGame();
-                return;
-            }
-            else
-            {
-                LoadBalancer::getInstance()->balancePlayer($l_Player, LoadBalancer::TEMPLATE_TYPE_LOBBY);
-                return;
-            }
+        Sidebar::getInstance()->clearLines();
+
+        Sidebar::getInstance()
+            ->addLine("§4§lInstagib")
+            ->addTranslatedLine(new TextFormatter("template.playfatcraft.purple"))
+            ->addWhiteSpace()
+            ->addTimer($this->m_playTimer)
+            ->addWhiteSpace();
+
+        foreach ($this->m_scoreArray as $name => $score) {
+            Sidebar::getInstance()->addLine($name . " => " . $score);
         }
 
-        $l_Player = $e->getPlayer();
-        $l_Player->setGamemode(Player::ADVENTURE);
-        $l_Player->getInventory()->clearAll();
+        Sidebar::getInstance()
+            ->addWhiteSpace()
+            ->addWhiteSpace()
+            ->addWhiteSpace();
 
-        $l_Player->addEffect(new EffectInstance(
-            Effect::getEffect(Effect::JUMP_BOOST),
-            INT32_MAX,
-            2,
-            0,
-            0
-        ));
-        $l_Player->addEffect(new EffectInstance(
-            Effect::getEffect(Effect::SPEED),
-            INT32_MAX,
-            2,
-            0,
-            0
-        ));
-
-
-
-        if (GameManager::getInstance()->isWaiting())
-        {
-            if (count($this->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMinPlayer())
-            {
-                $this->getLogger()->info("MIN PLAYER REACH !");
-                if ($this->m_waitingTimer instanceof Timer)
-                    $this->m_waitingTimer->start();
-            }
-        }
+        Sidebar::getInstance()->update();
     }
 
-    public function onBlocBreakEvent(BlockBreakEvent $e)
+    public function getInstagibConfig(): InstagibConfig
     {
-        $e->setCancelled(true);
+        return ($this->m_instagibConfig);
+    }
+
+    public function scoreForPlayer(Player $p_player, int $p_value)
+    {
+        if (isset($this->m_scoreArray[$p_player->getName()])) {
+            $this->m_scoreArray[$p_player->getName()] += $p_value;
+        }
+        arsort($this->m_scoreArray);
+        $this->handleSideBar();
+    }
+
+    public function isGameStarted(): bool
+    {
+        return $this->m_gameStarted;
     }
 }

@@ -92,13 +92,18 @@ class SpawnManager
 
     public function getRandomEmptySpawn(): ?Spawn
     {
-        foreach ($this->getSpawns() as $l_Spawn)
+        $safety = 0;
+        while (1)
         {
-            if ($l_Spawn instanceof Spawn)
+            if ($safety >= 1000)
+                break;
+            $value = array_rand($this->getSpawns(),1);
+            if ($this->getSpawns()[$value] instanceof Spawn)
             {
-                if ($l_Spawn->isEmpty())
-                    return $l_Spawn;
+                if ($this->getSpawns()[$value]->isEmpty())
+                    return $this->getSpawns()[$value];
             }
+            $safety++;
         }
 
         return null;
