@@ -561,12 +561,23 @@ class Bedwars extends PluginBase implements Listener
 
     public function onPlayerDamage(EntityDamageEvent $p_Event)
     {
-        if (GameManager::getInstance()->isWaiting() && $p_Event->getCause() !== EntityDamageEvent::CAUSE_VOID) {
+        if (GameManager::getInstance()->isWaiting() && $p_Event->getCause() !== EntityDamageEvent::CAUSE_VOID)
+        {
             $p_Event->setCancelled(true);
             return;
         }
         $entity = $p_Event->getEntity();
-        if ($entity instanceof Player) {
+        if ($entity instanceof Player)
+        {
+            if($entity instanceof EntityDamageByEntityEvent)
+            {
+                $l_player = $entity->getDamager();
+                if (TeamsManager::getInstance()->getPlayerTeam($entity)->getName() == TeamsManager::getInstance()->getPlayerTeam($l_player)->getName())
+                    {
+                        $p_Event->setCancelled(true);
+                        return;
+                    }
+            }
             if ($this->getBedwarsConfig()->isFastRush()) {
                 if ($entity->getHealth() - $p_Event->getFinalDamage() <= 0) {
                     $p_Event->setCancelled();
