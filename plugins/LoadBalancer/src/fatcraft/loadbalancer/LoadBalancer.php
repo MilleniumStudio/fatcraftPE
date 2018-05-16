@@ -37,6 +37,7 @@ class LoadBalancer extends PluginBase implements Listener
     const TEMPLATE_TYPE_BEDWAR = "bw";
     const TEMPLATE_TYPE_BOAT_RACER = "br";
     const TEMPLATE_TYPE_BATTLE_ROYALE = "battleRoyale";
+    const TEMPLATE_TYPE_FAST_RUSH = "fastRush";
 
     private static $m_Instance;
     public $m_ConsoleCommandSender;
