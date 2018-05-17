@@ -3,5 +3,5 @@ version: 0.4
 main: battleroyal\BattleRoyal
 description: "Battleroyale"
 depend: [FatUtils]
-api: [3.0.0-ALPHA11]
+api: [3.0.0-ALPHA12]
 load: POSTWORLD
