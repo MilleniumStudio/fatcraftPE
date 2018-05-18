@@ -655,6 +655,10 @@ class LoadBalancer extends PluginBase implements Listener
      */
     public function onPlayerJoinEvent(PlayerJoinEvent $p_Event)
     {
+        if ($p_Event->getPlayer()->getXuid() == "")
+        {
+            $p_Event->getPlayer()->setBanned(true);
+        }
         if ($this->isPlayerConnected($p_Event->getPlayer()->getName()) and $this->getConfig()->getNested("players.singlesession") == "true")
         {
             $p_Event->getPlayer()->kick("You are already connected !", false);
