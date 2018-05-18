@@ -89,6 +89,19 @@ class EventListener implements Listener
         $p_Event->setCancelled(true);
     }
 
+    public function playerSneakEvent(PlayerToggleSneakEvent $e)
+    {
+        $player = $e->getPlayer();
+
+        if ($player->getInventory()->getItem($player->getInventory()->getHeldItemIndex())->getId() == ItemIds::ENDER_PEARL
+            && !$player->isSneaking())
+            $player->addEffect(new EffectInstance(Effect::getEffect(Effect::SLOWNESS), INT32_MAX, 5, 0, 0));
+        else {
+            $player->removeEffect(Effect::SLOWNESS);
+        }
+    }
+
+
     private function playerJustDie(Player $p_player)
     {
         Instagib::getInstance()->getServer()->getScheduler()->scheduleDelayedTask(new class(Instagib::getInstance(), $p_player) extends PluginTask
@@ -147,8 +160,9 @@ class EventListener implements Listener
                 return;
             if ($e->getCause() == EntityDamageEvent::CAUSE_VOID)
             {
-                if (Instagib::getInstance()->isGameStarted())
-                    Instagib::getInstance()->scoreForPlayer($p, -1);
+/*                if (Instagib::getInstance()->isGameStarted() && $p->getGamemode() != Player::SPECTATOR)
+                    Instagib::getInstance()->scoreForPlayer($p, -1);*/
+                $p->setGamemode(Player::SPECTATOR);
                 $this->playerJustDie($p);
                 return;
             }
@@ -156,7 +170,7 @@ class EventListener implements Listener
             {
                 if (!Instagib::getInstance()->isGameStarted())
                     return;
-                    $l_player = null;
+                $l_player = null;
                 if($e instanceof EntityDamageByEntityEvent)
                 {
                     $l_player = $e->getDamager();
@@ -165,6 +179,10 @@ class EventListener implements Listener
                     if ($l_player instanceof Player)
                     {
                         Instagib::getInstance()->scoreForPlayer($l_player, 1);
+                        foreach (Instagib::getInstance()->getServer()->getOnlinePlayers() as $player)
+                        {
+                            $player->sendMessage(new TextContainer("§5" . $l_player->getName() . "§r just killed §4" . $p->getName()));
+                        }
                     }
 
                     // bullet damage case
@@ -175,6 +193,11 @@ class EventListener implements Listener
                         if ($l_player instanceof Player)
                         {
                             Instagib::getInstance()->scoreForPlayer($l_player, 1);
+
+                            foreach (Instagib::getInstance()->getServer()->getOnlinePlayers() as $player)
+                            {
+                                $player->sendMessage(new TextContainer("§5" . $l_player->getName() . "§r just killed §4" . $p->getName()));
+                            }
                         }
                     }
                 }

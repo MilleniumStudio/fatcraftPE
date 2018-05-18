@@ -54,7 +54,7 @@ signsareas:
     function: "MultiSignFunctionRandomServer"
     data:
       type : "fastRush"
-  - name: "multiple.server_rush"
+  - name: "multiple.server_fastRush"
     update: true
     locations: [
       "80/8/15",
@@ -62,17 +62,7 @@ signsareas:
       "80/8/17",
       "80/8/18",
       "80/8/19",
-      "80/8/20",
-      "80/9/16",
-      "80/9/17",
-      "80/9/18",
-      "80/9/19",
-      "80/9/20",
-      "80/10/16",
-      "80/10/17",
-      "80/10/18",
-      "80/10/19",
-      "80/10/20"
+      "80/8/20"
     ]
     face: "WEST"
     function: "MultiSignFunctionServer"
@@ -80,6 +70,28 @@ signsareas:
       type : "fastRush"
       offset : 1
       onlyVIP: false
+
+
+
+
+  - name: "multiple.server_instagibRush"
+    update: true
+    locations: [
+      "80/9/16",
+      "80/9/17",
+      "80/9/18",
+      "80/9/19",
+      "80/9/20"
+    ]
+    face: "WEST"
+    function: "MultiSignFunctionServer"
+    data:
+      type : "instagib"
+      offset : 1
+      onlyVIP: false
+
+
+
   - name: "room_skywar"
     locations: [
       "12/13/-3",

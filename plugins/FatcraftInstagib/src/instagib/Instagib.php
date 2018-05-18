@@ -11,9 +11,13 @@ namespace instagib;
 use fatcraft\loadbalancer\LoadBalancer;
 use fatutils\FatUtils;
 use fatutils\game\GameManager;
+use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
+use fatutils\scores\ScoresManager;
 use fatutils\spawns\Spawn;
 use fatutils\spawns\SpawnManager;
+use fatutils\tools\schedulers\BossbarTimer;
+use fatutils\tools\schedulers\DelayedExec;
 use fatutils\tools\schedulers\DisplayableTimer;
 use fatutils\tools\schedulers\Timer;
 use fatutils\tools\Sidebar;
@@ -25,19 +29,27 @@ use pocketmine\entity\EffectInstance;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\block\BlockBreakEvent;
+use pocketmine\item\Item;
+use pocketmine\item\ItemIds;
 use pocketmine\Player;
+use pocketmine\plugin\Plugin;
 use pocketmine\plugin\PluginBase;
+use pocketmine\scheduler\PluginTask;
 use pocketmine\utils\TextFormat;
 
 class Instagib extends PluginBase
 {
     private static $m_Instance;
 
+    const END_GAME_TIMER = "endGameTime";
+    const KEY_SPAWNS = "spawns";
+
+
     private $m_instagibConfig;
     private $m_waitingTimer;
     private $m_playTimer;
     private $m_gameStarted;
-
+    //private $m_endGameTimer;
     private $m_scoreArray;
 
     public static function getInstance(): Instagib
@@ -56,15 +68,18 @@ class Instagib extends PluginBase
         $this->m_instagibConfig = new InstagibConfig($this->getConfig());
         if ($this->getConfig()->exists("spawns")) {
             foreach ($this->getConfig()->getNested("spawns") as $spawn) {
-                var_dump($spawn);
                 SpawnManager::getInstance()->addSpawn(new Spawn(WorldUtils::stringToLocation($spawn)));
             }
         } else {
             echo "pas de spawns ?\n";
         }
 
-        var_dump($this->m_instagibConfig);
-        var_dump(SpawnManager::getInstance()->getSpawns());
+       // if ($this->getConfig()->exists(Instagib::END_GAME_TIMER))
+        //    $this->m_endGameTimer = $this->getConfig()->get(Instagib::END_GAME_TIMER, 0);
+        //else
+        //    echo("endGameTime property does not exist in the config.yml\n");
+
+
         if ($this->m_instagibConfig->getEndGameTime() == 0)
             $this->getLogger()->critical("FatcraftInstagib : ERROR : end game timer == 0 (failed at loading conf ?)");
         else
@@ -136,6 +151,10 @@ class Instagib extends PluginBase
             0
         ));
 
+        $l_Sniper = Item::get(ItemIds::ENDER_PEARL);
+        $l_Sniper->setCustomName("§5Sniper");
+        $p_player->getInventory()->setItem(0, $l_Sniper);
+
         if (GameManager::getInstance()->isWaiting()) {
             if (count(Instagib::getInstance()->getServer()->getOnlinePlayers()) >= PlayersManager::getInstance()->getMinPlayer()) {
                 $this->getLogger()->info("MIN PLAYER REACH !");
@@ -155,22 +174,24 @@ class Instagib extends PluginBase
         Sidebar::getInstance()->clearLines();
         Sidebar::getInstance()->addLine("§4Instagib");
 
-        $this->m_playTimer = new DisplayableTimer(GameManager::getInstance()->getPlayingTickDuration());
+        $this->m_playTimer = new DisplayableTimer(4800);
         $this->m_playTimer
             ->setTitle(new TextFormatter("timer.playing.title"))
             ->addStopCallback(function () {
+               $this->endGame();
             });
 
         // PREPARING PLAYERS
         foreach ($this->getServer()->getOnlinePlayers() as $l_Player) {
             PlayersManager::getInstance()->getFatPlayer($l_Player)->setPlaying();
+
+            $nextSpawnLoc = SpawnManager::getInstance()->getRandomEmptySpawn();
+            $l_Player->teleport($nextSpawnLoc->getLocation());
+            $this->m_scoreArray[$l_Player->getName()] = 0;
         }
 
         $this->m_gameStarted = true;
 
-        foreach ($this->getServer()->getOnlinePlayers() as $player) {
-            $this->m_scoreArray[$player->getName()] = 0;
-        }
         $this->handleSideBar();
 
         // START PLAY TIMER
@@ -218,5 +239,68 @@ class Instagib extends PluginBase
     public function isGameStarted(): bool
     {
         return $this->m_gameStarted;
+    }
+
+    public function endGame()
+    {
+        if ($this->m_playTimer instanceof Timer)
+            $this->m_playTimer->cancel();
+
+        GameManager::getInstance()->endGame(false);
+
+        foreach ($this->getServer()->getOnlinePlayers() as $player)
+        {
+            if ($player instanceof Player)
+                ScoresManager::getInstance()->giveRewardToPlayer($player->getUniqueId(), 0.33);
+        }
+
+        $this->getServer()->getScheduler()->scheduleRepeatingTask(new DisplayWinner($this), 10);
+        (new BossbarTimer(200))
+            ->setTitle(new TextFormatter("timer.returnToLobby"))
+            ->addStopCallback(function ()
+            {
+                foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+                    LoadBalancer::getInstance()->balancePlayer($l_Player, LoadBalancer::TEMPLATE_TYPE_LOBBY);
+
+                new DelayedExec(function ()
+                {
+                    $this->getServer()->shutdown();
+                }, 100);
+            })
+            ->start();
+    }
+
+    public function displayWinner()
+    {
+        $name = "";
+        $score = 0;
+        arsort($this->m_scoreArray);
+        var_dump($this->m_scoreArray);
+        foreach ($this->m_scoreArray as $l_name => $l_score)
+        {
+            $name = $l_name;
+            $score = $l_score;
+            break;
+        }
+        echo("name = " . $name . "\n");
+        foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
+            $l_Player->addTitle("§6".$name . " won !", "score : " . $score, -1, 3000);
+    }
+}
+
+class DisplayWinner extends PluginTask
+{
+    public function __construct(Plugin $owner)
+    {
+        parent::__construct($owner);
+    }
+
+    public function onRun(int $currentTick)
+    {
+        Instagib::getInstance()->displayWinner();
+    }
+
+    public function cancel() {
+        $this->getHandler()->cancel();
     }
 }
