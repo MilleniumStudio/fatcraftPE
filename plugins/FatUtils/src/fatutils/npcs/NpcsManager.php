@@ -2,11 +2,14 @@
 
 namespace fatutils\npcs;
 
+use fatcraft\loadbalancer\LoadBalancer;
 use fatutils\FatUtils;
 use fatutils\pets\PetTypes;
+use fatutils\tools\SkinRepository;
 use fatutils\tools\WorldUtils;
 use fatutils\tools\schedulers\LoopedExec;
 
+use Grpc\Server;
 use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
@@ -26,6 +29,7 @@ use pocketmine\nbt\tag\FloatTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\nbt\tag\ByteTag;
+use pocketmine\utils\UUID;
 
 class NpcsManager implements Listener, CommandExecutor
 {
@@ -251,8 +255,20 @@ class NpcsManager implements Listener, CommandExecutor
         if ($sender instanceof Player) {
             switch ($args[0]) {
                 case "spawn": {
-                    $entity = $this->spawnNpc($sender, $args[1], $args[2], $args[2]);
-                    $sender->sendMessage("NPC " . $entity->getId() . " spawned !");
+                    if ($sender instanceof Player)
+                    {
+                        if (!$sender->isOp())
+                            return false;
+                        $l_uuid = UUID::fromRandom();
+                        $l_Skin = SkinRepository::getInstance()->getRandomSkin();
+                        $entity = $this->spawnNpc($sender, $args[1], $args[2], $args[2], [], $l_Skin);
+                        LoadBalancer::getInstance()->insertSlacker($args[2], $l_uuid, $entity->getId(), $l_Skin);
+                    }
+                    else
+                    {
+                        $entity = $this->spawnNpc($sender, $args[1], $args[2], $args[2]);
+                        $sender->sendMessage("NPC " . $entity->getId() . " spawned !");
+                    }
                 }
                     break;
                 case "rm": {

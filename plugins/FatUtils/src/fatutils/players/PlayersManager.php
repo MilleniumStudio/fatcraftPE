@@ -90,6 +90,7 @@ class PlayersManager
                     ["s", LoadBalancer::getInstance()->getServerType()],
                     ["s", date("Y-m-d H:i:s")]
                 ]));
+        LoadBalancer::getInstance()->sendSlackersData();
 	}
 
 	public function changeAllInGamePlayerGamemode(int $p_Gamemode)

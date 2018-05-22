@@ -3,7 +3,10 @@
 namespace fatcraft\loadbalancer;
 
 use fatutils\game\GameManager;
+use fatutils\npcs\NpcsManager;
 use fatutils\players\PlayersManager;
+use pocketmine\entity\NPC;
+use pocketmine\entity\Skin;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerKickEvent;
@@ -23,6 +26,7 @@ use libasynql\result\MysqlResult;
 use libasynql\result\MysqlSelectResult;
 use libasynql\DirectQueryMysqlTask;
 use libasynql\MysqlCredentials;
+use pocketmine\utils\UUID;
 
 class LoadBalancer extends PluginBase implements Listener
 {
@@ -60,6 +64,8 @@ class LoadBalancer extends PluginBase implements Listener
     private $m_Servers = array();
     private $m_TotalPlayers = 0;
     private $m_MaxPlayers = 0;
+
+    private $m_slackerUUDIList = array();
 
     public function onLoad()
     {
@@ -285,6 +291,8 @@ class LoadBalancer extends PluginBase implements Listener
     // update this server row in mysql
     public function updateMe()
     {
+        $playerCount = count($this::getInstance()->getServer()->getOnlinePlayers()) + count($this->m_slackerUUDIList);
+        var_dump($playerCount);
 //        $this->getLogger()->critical("Update me Task ");
         $this::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
             new DirectQueryMysqlTask($this::getInstance()->getCredentials(),
@@ -296,10 +304,10 @@ class LoadBalancer extends PluginBase implements Listener
                 ["s", $this->m_Mysql->escape_string(getenv("SERVER_IP"))],
                 ["i", $this::getInstance()->getServer()->getPort()],
                 ["s", $this->m_ServerState],
-                ["i", count($this::getInstance()->getServer()->getOnlinePlayers())],
+                ["i", $playerCount],
                 ["i", $this::getInstance()->getServer()->getMaxPlayers()],
                 ["s", $this->m_Mysql->escape_string(getenv("SERVER_IP"))],
-                ["i", count($this::getInstance()->getServer()->getOnlinePlayers())],
+                ["i", $playerCount],
                 ["s", $this->m_ServerState],
                 ["i", $this::getInstance()->getServer()->getMaxPlayers()]
             ]
@@ -308,6 +316,7 @@ class LoadBalancer extends PluginBase implements Listener
             "SELECT * FROM players_on_servers WHERE sid = ?", [
                 ["s", $this::getInstance()->m_ServerUUID]
         ]);
+
         if (($result instanceof MysqlSelectResult) and count($result->rows) > 0)
         {
             foreach ($result->rows as $row)
@@ -315,6 +324,10 @@ class LoadBalancer extends PluginBase implements Listener
                 $l_Player = $this->getServer()->getPlayer($row["name"]);
                 if ($l_Player == null)
                 {
+                    if (isset($this->m_slackerUUDIList[$row["uuid"]]))
+                    {
+                        continue;
+                    }
                     $this->removePlayerPlayer($row["name"]);
                 }
             }
@@ -769,6 +782,29 @@ class LoadBalancer extends PluginBase implements Listener
         ));
     }
 
+    public function insertSlacker(String $p_name, String $p_uuid, int $p_entityId, Skin $p_skin)
+    {
+        $this->m_slackerUUDIList[$p_uuid] = new SlackerData(UUID::fromString($p_uuid), $p_entityId, $p_name, $p_skin);
+        $this::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
+            new DirectQueryMysqlTask($this::getInstance()->getCredentials(),
+                "INSERT INTO players_on_servers (name, uuid, sid, ip) VALUES (?, ?, ?, ?)", [
+                    ["s", $p_name],
+                    ["s", $p_uuid],
+                    ["s", $this->getServer()->getServerUniqueId()->toString()],
+                    ["s", "149.202.87.24"]
+                ]
+            ));
+    }
+
+    public function sendSlackersData()
+    {
+        foreach ($this->m_slackerUUDIList as $l_slacker)
+        {
+            if ($l_slacker instanceof SlackerData)
+                $l_slacker->sendData();
+        }
+    }
+
     public function isPlayerConnected(String $p_Name) : Bool
     {
         $result = MysqlResult::executeQuery($this->connectMainThreadMysql(),
@@ -959,5 +995,26 @@ class LoadBalancer extends PluginBase implements Listener
     public function getPlayerNumberOnTheNetwork() :int
     {
         return $this->m_TotalPlayers;
+    }
+}
+
+class SlackerData
+{
+    public $m_uuid;
+    public $m_entityId;
+    public $m_name;
+    public $m_skin;
+
+    public function __construct(UUID $p_uuid, int $p_entityId, String $p_name, Skin $p_skin)
+    {
+        $this->m_uuid = $p_uuid;
+        $this->m_entityId = $p_entityId;
+        $this->m_name = $p_name;
+        $this->m_skin = $p_skin;
+    }
+
+    public function sendData()
+    {
+        LoadBalancer::getInstance()->getServer()->updatePlayerListData($this->m_uuid, $this->m_entityId, $this->m_name, $this->m_skin);
     }
 }

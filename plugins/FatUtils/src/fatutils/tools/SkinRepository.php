@@ -175,6 +175,17 @@ class SkinRepository implements Listener, CommandExecutor
             return $this->repository["Steve"];
     }
 
+    public function getRandomSkin() : Skin
+    {
+        $value = array_rand($this->repository,1);
+        $skin = $this->repository[$value];
+        if ($skin != null)
+            return $skin;
+        else
+            return $this->repository["Steve"];
+    }
+
+
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool
     {
         switch ($args[0]) {
