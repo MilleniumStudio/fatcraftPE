@@ -49,7 +49,7 @@ VIP:
 
 Modo:
   extends: Legend
-  prefix: "§dModo "
+  prefix: "§dMod "
   color: §f
   allow:
     - ban.uuid
