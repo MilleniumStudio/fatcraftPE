@@ -94,12 +94,12 @@ content:
       rgbColor: "#FFFF01"
       rawParticle: "{\"particleName\":\"TYPE_DUST\"}"
   pets:
-      Slime:
-        name: "shop.items.pets.Slime"
-        class: "fatutils\\pets\\Pet"
-  #      priceFS: 1500
-        priceFG: 70
-        type: "Slime"
+    Slime:
+      name: "shop.items.pets.Slime"
+      class: "fatutils\\pets\\Pet"
+#      priceFS: 1500
+      priceFG: 70
+      type: "Slime"
     Chicken:
       name: "shop.items.pets.Chicken"
       class: "fatutils\\pets\\Pet"

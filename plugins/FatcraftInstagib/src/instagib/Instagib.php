@@ -98,7 +98,7 @@ class Instagib extends PluginBase
 
         $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
 
-        $this->m_waitingTimer = new DisplayableTimer(GameManager::getInstance()->getWaitingTickDuration());
+        $this->m_waitingTimer = new DisplayableTimer(GameManager::getInstance()->getWaitingTickDuration() * 2);
         $this->m_waitingTimer
             ->setTitle(new TextFormatter("timer.waiting.title"))
             ->addStopCallback(function () {

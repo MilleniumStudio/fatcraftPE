@@ -37,6 +37,7 @@ use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\ProjectileHitEvent;
 use pocketmine\event\inventory\InventoryPickupItemEvent;
 use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerExhaustEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerLoginEvent;
@@ -273,7 +274,7 @@ class Murder extends PluginBase implements Listener
         }
         if (PlayersManager::getInstance()->getInGamePlayerLeft() <= 1)
             return;
-        if (Server::getInstance()->getTick() % (300 / (PlayersManager::getInstance()->getInGamePlayerLeft() - 1)) == 0) {
+        if (Server::getInstance()->getTick() % (150 / (PlayersManager::getInstance()->getInGamePlayerLeft() - 1)) == 0) {
             if (rand(0, 100) > 50) {
                 /** @var Location $loc */
                 $loc = $this->getMurderConfig()->gunPartsLocs[array_rand($this->getMurderConfig()->gunPartsLocs)];
@@ -665,4 +666,11 @@ class Murder extends PluginBase implements Listener
         }
         return true;
     }
+
+    public function onPlayerChat(PlayerChatEvent $p_e)
+    {
+        if ($p_e->getPlayer()->getGamemode() == Player::SPECTATOR)
+            $p_e->setCancelled();
+    }
+
 }
