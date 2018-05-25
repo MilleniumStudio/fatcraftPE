@@ -105,14 +105,14 @@ content:
     Slime:
       name: "shop.items.pets.Slime"
       class: "fatutils\\pets\\Pet"
-#      priceFS: 1500
       priceFG: 70
+      priceFS: 5000
       type: "Slime"
     Chicken:
       name: "shop.items.pets.Chicken"
       class: "fatutils\\pets\\Pet"
       priceFS: 2000
-      priceFG: 50
+      priceFG: 30
       type: "Chicken"
 #    Cat4:
 #      name: "shop.items.pets.catWhite"
@@ -126,31 +126,31 @@ content:
       name: "shop.items.pets.Spider"
       class: "fatutils\\pets\\Pet"
       priceFS: 2000
-      priceFG: 50
+      priceFG: 30
       type: "Spider"
     Bat:
       name: "shop.items.pets.Bat"
       class: "fatutils\\pets\\Pet"
 #      priceFS: 2000
-      priceFG: 70
+      priceFG: 30
       type: "Bat"
     Bunny:
       name: "shop.items.pets.Bunny"
       class: "fatutils\\pets\\Pet"
       priceFS: 2000
-      priceFG: 50
+      priceFG: 30
       type: "Bunny"
     Cat1:
       name: "shop.items.pets.ocelot"
       class: "fatutils\\pets\\Pet"
       priceFS: 2000
-      priceFG: 50
+      priceFG: 30
       type: "Ocelot"
       rankVIP: 0
     Parrot:
       name: "shop.items.pets.Parrot"
       class: "fatutils\\pets\\Pet"
-      priceFS: 2500
+      priceFS: 4000
       priceFG: 70
       type: "Parrot"
       rankVIP: 1
