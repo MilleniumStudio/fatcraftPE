@@ -17,6 +17,7 @@ abstract class ShopItem
 {
 	const SLOT_PET = "pet";
 	const SLOT_PARTICLE = "particle";
+	const SLOT_PAINTBALL = "paintball";
 
 	private $m_Entity = null;
 	private $m_Key = null;

@@ -25,6 +25,8 @@ use fatutils\ui\impl\GamesWindow;
 use fatutils\ui\impl\LobbiesWindow;
 use fatutils\shop\ShopItem;
 use fatutils\ui\impl\ScaleWindow;
+use fatutils\ui\windows\ButtonWindow;
+use fatutils\ui\windows\parts\Button;
 use pocketmine\command\ConsoleCommandSender;
 use pocketmine\entity\Effect;
 use pocketmine\entity\EffectInstance;
@@ -134,6 +136,10 @@ class Lobby extends PluginBase implements Listener
             $l_FlyItem->setCustomName((new TextFormatter("lobby.hotbar.setscale"))->asStringForPlayer($p_Player));
             $p_Player->getInventory()->setItem(4, $l_FlyItem);
         }
+
+        $l_PaintballGun = Item::get(ItemIds::EGG);
+        $l_PaintballGun->setCustomName((new TextFormatter("lobby.paintball.gun"))->asStringForPlayer($p_Player));
+        $p_Player->getInventory()->setItem(3, $l_PaintballGun);
 
         $l_Shop = Item::get(ItemIds::EMERALD);
         $l_Shop->setCustomName((new TextFormatter("shop.title"))->asStringForPlayer($p_Player));
@@ -245,6 +251,10 @@ class Lobby extends PluginBase implements Listener
             case ItemIds::TOTEM:
                 new ScaleWindow($p_Event->getPlayer());
                 break;
+            case ItemIds::EGG:
+                echo "use egg ! =D\n";
+                break;
+
         }
     }
 
@@ -334,5 +344,20 @@ class Lobby extends PluginBase implements Listener
     public function onChunkUnload(ChunkUnloadEvent $p_event)
     {
         $p_event->setCancelled();
+    }
+
+    public function getPaintballMenu(Player $p_Player)
+    {
+        $l_Window = new ButtonWindow($p_Player);
+        $l_Window->setTitle((new TextFormatter("shop.cat.paintball.desc"))->asStringForPlayer($p_Player));
+
+        $l_Window->addPart((new Button())
+            ->setText((new TextFormatter("shop.items.paintball.red"))->asStringForPlayer($p_Player))
+            ->setImage("https://fatcraft.com/img/mcpe_assets/bedwars/Wool.png")
+            ->setCallback(function () use ($p_Player) {
+                self::getGenericItemWindow($p_Player, "blocks");
+            })
+        );
+        return $l_Window;
     }
 }

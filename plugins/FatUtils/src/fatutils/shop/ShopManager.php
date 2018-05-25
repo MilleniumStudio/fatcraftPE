@@ -111,6 +111,16 @@ class ShopManager
 				})
 			);
 		}
+        if (array_key_exists("paintball", $l_ShopContent))
+        {
+            $l_Ret->addPart((new Button())
+                ->setText((new TextFormatter("shop.cat.paintball.title"))->asStringForPlayer($p_Player))
+                ->setCallback(function () use ($p_Player)
+                {
+                    $this->getGenericCategory("paintball", $p_Player)->open();
+                })
+            );
+        }
 
 		if ($p_Player->isOp())
 		{
@@ -270,7 +280,9 @@ class ShopManager
                     }
                 }
 
-				$l_Ret->addPart((new Button())
+                if ($p_CategoryName != ShopItem::SLOT_PAINTBALL)
+                {
+                    $l_Ret->addPart((new Button())
 					->setText((new TextFormatter("shop.preview"))->asStringForFatPlayer($l_FatPlayer))
 					->setCallback(function () use ($p_CategoryName, $p_ShopItem, $l_FatPlayer)
 					{
@@ -290,7 +302,8 @@ class ShopManager
 							}
 						}, 4 * 20);
 					})
-				);
+				    );
+                }
 			} else
 			{
 				if (!$l_FatPlayer->isEquipped($p_ShopItem))
