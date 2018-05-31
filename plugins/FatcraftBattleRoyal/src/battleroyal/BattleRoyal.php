@@ -587,7 +587,7 @@ class BattleRoyal extends PluginBase implements Listener
         if ($winner instanceof FatPlayer)
         {
             foreach (FatUtils::getInstance()->getServer()->getOnlinePlayers() as $l_Player)
-                $l_Player->addTitle(" #1 §6Victory !", "§4" . $winner->getPlayer()->getName() . " won !", -1, 3000);
+                $l_Player->addTitle("§6Victory !", "§4" . $winner->getPlayer()->getName() . " won !", -1, 3000);
         }
     }
 

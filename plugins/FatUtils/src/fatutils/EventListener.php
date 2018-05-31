@@ -185,6 +185,7 @@ class EventListener implements Listener
     public function onChat(PlayerChatEvent $event): void
     {
         $message = $event->getMessage();
+        $originalWords = explode(" ", $message);
         $words = explode(" ", strtolower($message));
         $iterator = 0;
         foreach ($words as $word)
@@ -268,15 +269,14 @@ class EventListener implements Listener
                 case "puta":
                     for ($i = 0; $i < strlen($word); $i++)
                         $word[$i] = '*';
-                    $words[$iterator] = $word;
+                    $originalWords[$iterator] = $word;
                     break;
                 default:
-                    var_dump($word);
                     break;
             }
             $iterator++;
         }
-        $event->setMessage(implode(" ", $words));
+        $event->setMessage(implode(" ", $originalWords));
     }
 }
 
