@@ -42,6 +42,7 @@ use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerExhaustEvent;
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerItemHeldEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\item\Item;
@@ -227,8 +228,9 @@ class Lobby extends PluginBase implements Listener
 		if ($l_Slot != null)
 		    $l_Slot->unequip();*/
 
+        $l_PlayerManager->getFatPlayer($p_Event->getPlayer())->updateBoughtItems();
 		$l_PlayerManager->removeFatPlayer($p_Event->getPlayer());
-	}
+    }
 
     // actions on item select / touch
     public function onPlayerUseItem(PlayerInteractEvent $p_Event)
@@ -252,7 +254,6 @@ class Lobby extends PluginBase implements Listener
                 new ScaleWindow($p_Event->getPlayer());
                 break;
             case ItemIds::EGG:
-                echo "use egg ! =D\n";
                 break;
 
         }
@@ -346,18 +347,57 @@ class Lobby extends PluginBase implements Listener
         $p_event->setCancelled();
     }
 
-    public function getPaintballMenu(Player $p_Player)
+    public function getPaintballMenu(Player $p_Player) : ?ButtonWindow
     {
+        $l_fatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Player);
+
+        if ($l_fatPlayer == null)
+            return null;
         $l_Window = new ButtonWindow($p_Player);
         $l_Window->setTitle((new TextFormatter("shop.cat.paintball.desc"))->asStringForPlayer($p_Player));
 
-        $l_Window->addPart((new Button())
-            ->setText((new TextFormatter("shop.items.paintball.red"))->asStringForPlayer($p_Player))
-            ->setImage("https://fatcraft.com/img/mcpe_assets/bedwars/Wool.png")
-            ->setCallback(function () use ($p_Player) {
-                self::getGenericItemWindow($p_Player, "blocks");
-            })
-        );
+        foreach ($l_fatPlayer->getBoughtItems() as $l_key => $l_BoughtShopItem)
+        {
+            if (substr($l_BoughtShopItem, 0, strlen("paintball.")) == "paintball.")
+            {
+                $l_BoughtShopItem = explode(" ", $l_BoughtShopItem);
+                if (count($l_BoughtShopItem) == 0)
+                {
+                    continue;
+                }
+                $l_keyTab = explode(".", $l_BoughtShopItem[0]);
+                $number = intval($l_BoughtShopItem[1]);
+
+                $l_ShopItem = ShopItem::createShopItem($p_Player, $l_BoughtShopItem[0], ShopManager::getInstance()->getShopContent()[ShopItem::SLOT_PAINTBALL][$l_keyTab[1]]);
+                if ($l_fatPlayer->isBought($l_ShopItem))
+                {
+                    $l_Window->addPart((new Button())
+                        ->setText((new TextFormatter($l_BoughtShopItem[0]))->asStringForPlayer($p_Player) . " x " . $l_BoughtShopItem[1])
+                        ->setImage("https://fatcraft.com/img/mcpe_assets/bedwars/Wool.png")
+                        ->setCallback(function () use ($l_ShopItem, $l_fatPlayer,$p_Player, $number) {
+                            $l_fatPlayer->setSlot(ShopItem::SLOT_PAINTBALL, $l_ShopItem);
+                            $p_Player->getInventory()->setItemInHand(Item::get(ItemIds::EGG));
+
+                            if ($number > 100)
+                                $number = 100;
+
+                            $p_Player->getInventory()->setItem(3, ItemFactory::get(ItemIds::EGG, 0, $number));
+                        })
+                    );
+                }
+            }
+        }
         return $l_Window;
+    }
+
+    public function onPlayerItemHeldEvent(PlayerItemHeldEvent $p_event)
+    {
+        $l_fatPlayer = PlayersManager::getInstance()->getFatPlayer($p_event->getPlayer());
+        if ($p_event->getItem()->getId() == ItemIds::EGG && $p_event->getSlot() == 3 && $l_fatPlayer->getCurrentHotbarItemSlot() != 3)
+        {
+            $this->getPaintballMenu($p_event->getPlayer())->open();
+            $l_fatPlayer->updateBoughtItems();
+        }
+        $l_fatPlayer->setCurrentHotbarItemSlot($p_event->getSlot());
     }
 }

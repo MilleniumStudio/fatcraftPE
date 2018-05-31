@@ -162,7 +162,7 @@ class ShopManager
 
 		foreach ($this->getShopContent()[$p_CategoryName] as $l_Key => $l_Pet)
 		{
-			$l_ShopItem = ShopItem::createShopItem($p_Player, $p_CategoryName . "." . $l_Key, $this->getShopContent()[$p_CategoryName][$l_Key]);
+            $l_ShopItem = ShopItem::createShopItem($p_Player, $p_CategoryName . "." . $l_Key, $this->getShopContent()[$p_CategoryName][$l_Key]);
             $l_RequiredRank = $l_ShopItem->getRankAccess();
             $l_PlayerVipRank = $l_FatPlayer->getVipRank();
 
@@ -231,7 +231,7 @@ class ShopManager
 			if ($p_ShopItem->getDescription() != null)
 				$l_Ret->setContent((new TextFormatter($p_ShopItem->getDescription()))->asStringForFatPlayer($l_FatPlayer));
 
-			if (!$l_FatPlayer->isBought($p_ShopItem))
+			if (!$l_FatPlayer->isBought($p_ShopItem) || $p_CategoryName == ShopItem::SLOT_PAINTBALL)
 			{
                 if ($l_RequiredRank <= $l_PlayerVipRank) {
                     if ($p_ShopItem->getFatsilverPrice() > -1) {
@@ -246,7 +246,10 @@ class ShopManager
                             ->setCallback(function () use ($p_CategoryName, $p_ShopItem, $l_FatPlayer) {
                                 if ($l_FatPlayer->getFatsilver() - $p_ShopItem->getFatsilverPrice() >= 0) {
                                     $l_FatPlayer->addFatsilver(-$p_ShopItem->getFatsilverPrice());
-                                    $l_FatPlayer->addBoughtShopItem($p_ShopItem, $p_ShopItem->getFatsilverPrice());
+                                    if ($p_CategoryName == ShopItem::SLOT_PAINTBALL)
+                                        $l_FatPlayer->addPaintballBoughtShopItem($p_ShopItem, $p_ShopItem->getFatsilverPrice());
+                                    else
+                                        $l_FatPlayer->addBoughtShopItem($p_ShopItem, $p_ShopItem->getFatsilverPrice());
                                     $l_FatPlayer->getPlayer()->sendMessage((new TextFormatter("shop.bought", ["name" => new TextFormatter($p_ShopItem->getName())]))->asStringForFatPlayer($l_FatPlayer));
                                     Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());
                                 } else
@@ -267,7 +270,10 @@ class ShopManager
                             ->setCallback(function () use ($p_CategoryName, $p_ShopItem, $l_FatPlayer) {
                                 if ($l_FatPlayer->getFatgold() - $p_ShopItem->getFatgoldPrice() >= 0) {
                                     $l_FatPlayer->addFatgold(-$p_ShopItem->getFatgoldPrice());
-                                    $l_FatPlayer->addBoughtShopItem($p_ShopItem, 0, $p_ShopItem->getFatgoldPrice());
+                                    if ($p_CategoryName == ShopItem::SLOT_PAINTBALL)
+                                        $l_FatPlayer->addPaintballBoughtShopItem($p_ShopItem, 0, $p_ShopItem->getFatgoldPrice());
+                                    else
+                                        $l_FatPlayer->addBoughtShopItem($p_ShopItem, 0, $p_ShopItem->getFatgoldPrice());
                                     Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());
                                     $l_FatPlayer->getPlayer()->sendMessage((new TextFormatter("shop.bought", ["name" => new TextFormatter($p_ShopItem->getName())]))->asStringForFatPlayer($l_FatPlayer));
                                     Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());

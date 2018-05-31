@@ -76,6 +76,8 @@ class FatPlayer
 
 	private $m_dataRelativeToContext; // use this to whatever you need depending on the gamemode for example
 
+    private $m_currentHotbarSlot; // atm only used for paintball mechanics
+
     /**
      * FatPlayer constructor.
      * @param Player $p_Player
@@ -486,16 +488,55 @@ class FatPlayer
 		return $this->m_slots;
 	}
 
-	public function addBoughtShopItem(ShopItem $p_ShopItem, $p_spentFS = 0, $p_spentFG = 0)
-	{
-		$this->m_BoughtShopItems[] = $p_ShopItem->getKey();
+    public function addPaintballBoughtShopItem(ShopItem $p_ShopItem, $p_spentFS = 0, $p_spentFG = 0)
+    {
+        $val = 64;
+        if ($this->isBought($p_ShopItem))
+        {
+            $l_shopItem = "";
+            foreach ($this->m_BoughtShopItems as $l_key => $l_BoughtShopItem)
+            {
+                if (substr($l_BoughtShopItem, 0, strlen("paintball.")) == "paintball.")
+                {
+                    $l_BoughtShopItem = explode(" ", $l_BoughtShopItem);
+                    if ($p_ShopItem->getKey() == $l_BoughtShopItem[0])
+                    {
+                        $val = intval($l_BoughtShopItem[1]) + 64;
+                        $this->m_BoughtShopItems[$l_key] = $p_ShopItem->getKey() . " " . $val;
+                    }
+                }
+            }
+        }
+        else
+            $this->m_BoughtShopItems[] = $p_ShopItem->getKey() . " " . $val;
+
+        $this->updateBoughtItems();
 
         FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
             new DirectQueryMysqlTask(LoadBalancer::getInstance()->getCredentials(),
-            "UPDATE players SET shop_possessed = ? WHERE uuid = ?", [
-                ["s", json_encode($this->m_BoughtShopItems)],
-                ["s", $this->getPlayer()->getUniqueId()]
-            ]));
+                "INSERT INTO shop_history (uuid, name, item, spentFS, spentFG) VALUES (?, ?, ?, ?, ?)", [
+                    ["s", $this->getPlayer()->getUniqueId()],
+                    ["s", $this->getPlayer()->getName()],
+                    ["s", $p_ShopItem->getName()],
+                    ["i", $p_spentFS],
+                    ["i", $p_spentFG]
+                ]
+            ));
+    }
+
+    public function updateBoughtItems()
+    {
+        FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
+            new DirectQueryMysqlTask(LoadBalancer::getInstance()->getCredentials(),
+                "UPDATE players SET shop_possessed = ? WHERE uuid = ?", [
+                    ["s", json_encode($this->m_BoughtShopItems)],
+                    ["s", $this->getPlayer()->getUniqueId()]
+                ]));
+    }
+
+    public function addBoughtShopItem(ShopItem $p_ShopItem, $p_spentFS = 0, $p_spentFG = 0)
+	{
+        $this->updateBoughtItems();
 
         FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
             new DirectQueryMysqlTask(LoadBalancer::getInstance()->getCredentials(),
@@ -511,7 +552,19 @@ class FatPlayer
 
 	public function isBought(ShopItem $p_ShopItem)
 	{
-		return array_search($p_ShopItem->getKey(), $this->m_BoughtShopItems) !== false;
+	    $l_value = $p_ShopItem->getKey();
+	    if (substr($p_ShopItem->getKey(), 0, strlen("paintball.")) == "paintball.")
+        {
+            $l_value = explode(" ", $p_ShopItem->getKey())[0];
+
+            foreach ($this->m_BoughtShopItems as $l_BoughtShopItem)
+            {
+                if (explode(" ", $l_BoughtShopItem)[0] == $l_value)
+                    return true;
+            }
+            return false;
+        }
+		return array_search($l_value, $this->m_BoughtShopItems) !== false;
 	}
 
 	private function updateSqlEquippedSlot()
@@ -700,5 +753,34 @@ class FatPlayer
     public function setDataRelativeToContext($p_val)
     {
         $this->m_dataRelativeToContext = $p_val;
+    }
+
+    public function getBoughtItems()
+    {
+        return $this->m_BoughtShopItems;
+    }
+
+    public function changeBoughtItemAmmount(String $p_key, int $p_ammount)
+    {
+        echo ("changeBoughtItemAmmount : \n");
+        foreach ($this->m_BoughtShopItems as $id => $item)
+        {
+            $tab = explode(" ", $item);
+            if (count($tab) > 1)
+            {
+                if (strcmp($tab[0], $p_key) == 0)
+                    $this->m_BoughtShopItems[$id] = $tab[0] . " " . $p_ammount;
+            }
+        }
+    }
+
+    public function getCurrentHotbarItemSlot()
+    {
+        return $this->m_currentHotbarSlot;
+    }
+
+    public function setCurrentHotbarItemSlot(int $p_value)
+    {
+        $this->m_currentHotbarSlot = $p_value;
     }
 }

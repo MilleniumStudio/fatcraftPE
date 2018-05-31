@@ -1,7 +1,15 @@
 content:
   paintball:
     red:
-      name: "RED PAINT x 64"
+      name: "shop.items.paintball.red"
+      count: 64
+      class: "fatutils\\shop\\paintball\\Paintball"
+      time: 3600
+      priceFS: 500
+      priceFG: 10
+    yellow:
+      name: "shop.items.paintball.yellow"
+      count: 64
       desc: "shop.items.particles.flamePath.desc"
       class: "fatutils\\shop\\paintball\\Paintball"
       time: 3600
