@@ -1,11 +1,29 @@
 content:
   paintball:
-    red:
-      name: "shop.items.paintball.red"
+    white:
+      name: "shop.items.paintball.white"
       count: 64
       class: "fatutils\\shop\\paintball\\Paintball"
       time: 3600
-      priceFS: 500
+      priceFS: 600
+      priceFG: 5
+    orange:
+      name: "shop.items.paintball.orange"
+      count: 64
+      class: "fatutils\\shop\\paintball\\Paintball"
+      time: 3600
+      priceFG: 10
+    magenta:
+      name: "shop.items.paintball.magenta"
+      count: 64
+      class: "fatutils\\shop\\paintball\\Paintball"
+      time: 3600
+      priceFG: 10
+    lightBlue:
+      name: "shop.items.paintball.lightBlue"
+      count: 64
+      class: "fatutils\\shop\\paintball\\Paintball"
+      time: 3600
       priceFG: 10
     yellow:
       name: "shop.items.paintball.yellow"
@@ -13,7 +31,75 @@ content:
       desc: "shop.items.particles.flamePath.desc"
       class: "fatutils\\shop\\paintball\\Paintball"
       time: 3600
-      priceFS: 500
+      priceFG: 10
+    lime:
+      name: "shop.items.paintball.lime"
+      count: 64
+      desc: "shop.items.particles.flamePath.desc"
+      class: "fatutils\\shop\\paintball\\Paintball"
+      time: 3600
+      priceFG: 10
+    pink:
+      name: "shop.items.paintball.pink"
+      count: 64
+      desc: "shop.items.particles.flamePath.desc"
+      class: "fatutils\\shop\\paintball\\Paintball"
+      time: 3600
+      priceFG: 10
+    grey:
+      name: "shop.items.paintball.grey"
+      count: 64
+      class: "fatutils\\shop\\paintball\\Paintball"
+      time: 3600
+      priceFG: 10
+    lightGrey:
+      name: "shop.items.paintball.lightGrey"
+      count: 64
+      class: "fatutils\\shop\\paintball\\Paintball"
+      time: 3600
+      priceFS: 600
+      priceFG: 5
+    cyan:
+      name: "shop.items.paintball.cyan"
+      count: 64
+      class: "fatutils\\shop\\paintball\\Paintball"
+      time: 3600
+      priceFG: 10
+    purple:
+      name: "shop.items.paintball.purple"
+      count: 64
+      class: "fatutils\\shop\\paintball\\Paintball"
+      time: 3600
+      priceFG: 10
+    blue:
+      name: "shop.items.paintball.blue"
+      count: 64
+      class: "fatutils\\shop\\paintball\\Paintball"
+      time: 3600
+      priceFG: 10
+    brown:
+      name: "shop.items.paintball.brown"
+      count: 64
+      class: "fatutils\\shop\\paintball\\Paintball"
+      time: 3600
+      priceFG: 10
+    green:
+      name: "shop.items.paintball.green"
+      count: 64
+      class: "fatutils\\shop\\paintball\\Paintball"
+      time: 3600
+      priceFG: 10
+    red:
+      name: "shop.items.paintball.red"
+      count: 64
+      class: "fatutils\\shop\\paintball\\Paintball"
+      time: 3600
+      priceFG: 10
+    black:
+      name: "shop.items.paintball.black"
+      count: 64
+      class: "fatutils\\shop\\paintball\\Paintball"
+      time: 3600
       priceFG: 10
   particles:
     carrotPath:

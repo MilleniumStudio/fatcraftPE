@@ -26,6 +26,10 @@ class ShopManager
 	private $m_ShopItems = [];
 	private static $m_Instance = null;
 
+    const CATEGORY_PET = "pets";
+    const CATEGORY_PARTICLE = "particles";
+    const CATEGORY_PAINTBALL = "paintball";
+
 	public static $m_OptionAutoEquipSavedItems = false;
 
 	public static function getInstance()
@@ -74,6 +78,8 @@ class ShopManager
 	public function equipItems(Player $p_Player, array $p_ItemsId)
 	{
 		$l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Player);
+		if ($l_FatPlayer == null)
+		    return;
 		foreach ($p_ItemsId as $l_Key)
 		{
 			$l_ShopItem = ShopManager::getInstance()->getShopItemByKey($p_Player, $l_Key);
@@ -166,7 +172,7 @@ class ShopManager
             $l_RequiredRank = $l_ShopItem->getRankAccess();
             $l_PlayerVipRank = $l_FatPlayer->getVipRank();
 
-			$l_TopText = (new TextFormatter($l_ShopItem->getName()))->asStringForFatPlayer($l_FatPlayer);
+			$l_TopText = (new TextFormatter($l_ShopItem->getName(), ["nbr" => 64]))->asStringForFatPlayer($l_FatPlayer);
 			$l_BottomText = "";
 
 			if (!$l_FatPlayer->isBought($l_ShopItem))
