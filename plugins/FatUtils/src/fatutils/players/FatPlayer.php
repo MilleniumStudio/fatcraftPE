@@ -18,7 +18,9 @@ use fatutils\tools\schedulers\DelayedExec;
 use fatutils\tools\TextFormatter;
 use fatutils\ui\impl\LanguageWindow;
 use pocketmine\event\player\PlayerChatEvent;
+use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
+use pocketmine\item\ItemIds;
 use pocketmine\level\Position;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
@@ -30,6 +32,7 @@ use fatutils\tools\schedulers\Timer;
 use fatutils\events\LanguageUpdatedEvent;
 use libasynql\result\MysqlResult;
 use libasynql\DirectQueryMysqlTask;
+use SalmonDE\StatsPE\CustomEntries;
 
 class Kit
 {
@@ -49,9 +52,12 @@ class FatPlayer
     public static $m_OptionDisplayGroupPrefix = true;
     public static $m_OptionDisplayTeamPrefix = true;
 	public static $m_OptionDisplayNameTag = true;
+	public static $m_OptionDisplayLevel = false;
 
 	private $m_Player;
     private $m_Name;
+    private $m_Level;
+    private $m_Xp;
     private $m_State = 0;
     private $m_OutOfGame = false;
 
@@ -77,6 +83,10 @@ class FatPlayer
 	private $m_dataRelativeToContext; // use this to whatever you need depending on the gamemode for example
 
     private $m_currentHotbarSlot; // atm only used for paintball mechanics
+
+    private $m_isTop1BattleRoyale = false;
+
+    public $m_justOppendMenu = false;
 
     /**
      * FatPlayer constructor.
@@ -229,6 +239,23 @@ class FatPlayer
 
 				$l_Ret .= $l_HealthBar;
 			}
+
+			if (self::$m_OptionDisplayLevel)
+            {
+                $l_level = "";
+                if ($this->m_Level < 20)
+                    $l_level = "\n" . TextFormat::YELLOW . "Level "  . TextFormat::GREEN . $this->m_Level;
+                else
+                    $l_level = "\n" . TextFormat::YELLOW . $this->m_Level;
+                $l_level .= TextFormat::RESET;
+
+                if ($this->m_isTop1BattleRoyale)
+                    $l_level .= " - " . TextFormat::GOLD . TextFormat::BOLD . "Top 1";
+
+                $l_level .= TextFormat::RESET;
+                $l_Ret .= $l_level;
+            }
+
 		}
 
         $this->getPlayer()->setNameTag($l_Ret);
@@ -247,6 +274,7 @@ class FatPlayer
             if (count($result->rows) == 1) {
                 $this->m_Email = $result->rows[0]["email"];
                 $this->m_Language = $result->rows[0]["lang"];
+                $this->m_Level = $result->rows[0]["level"];
                 $this->m_permissionGroup = $result->rows[0]["permission_group"];
                 if ($this->m_permissionGroup == null || $this->m_permissionGroup == "")
                     $this->m_permissionGroup = "default";
@@ -289,6 +317,15 @@ class FatPlayer
 			{
 				new LanguageWindow($this->getPlayer());
 			}, 40);
+
+            $result = MysqlResult::executeQuery(LoadBalancer::getInstance()->connectMainThreadMysql(),
+                "SELECT scores.`player`, COUNT(scores.`position`) AS number FROM scores  WHERE serverType = \"battleRoyale\" && POSITION = 100 && MONTH(scores.`date`) >= MONTH(NOW()) GROUP BY player ORDER BY number DESC LIMIT 1", []
+            );
+            if (($result instanceof MysqlSelectResult) and isset($result->rows[0]))
+            {
+                if ($result->rows[0]["player"] == $this->getPlayer()->getUniqueId())
+                    $this->m_isTop1BattleRoyale = true;
+            }
         }
 
 
@@ -370,6 +407,18 @@ class FatPlayer
     public function getEmail()
     {
         return $this->m_Email;
+    }
+
+    public function setLevel(int $p_level)
+    {
+        $this->m_Level = $p_level;
+        FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
+            new DirectQueryMysqlTask(LoadBalancer::getInstance()->getCredentials(),
+                "UPDATE players SET level = ? WHERE uuid = ?", [
+                    ["s", $this->m_Level],
+                    ["s", $this->getPlayer()->getUniqueId()]
+                ]
+            ));
     }
 
     public function setEmail(string $p_Email)
@@ -488,28 +537,45 @@ class FatPlayer
 		return $this->m_slots;
 	}
 
-    public function addPaintballBoughtShopItem(ShopItem $p_ShopItem, $p_spentFS = 0, $p_spentFG = 0)
+	public function addLootbox(int $p_ammount)
     {
-        $val = 64;
-        if ($this->isBought($p_ShopItem))
-        {
-            $l_shopItem = "";
+        $l_ammount = $p_ammount;
+        $l_currentLootbox = $this->getPlayer()->getInventory()->getItem(7);
+        if ($l_currentLootbox != null)
+            $l_ammount += $l_currentLootbox->getCount();
+
+        $l_lootBox = Item::get(ItemIds::IRON_AXE);
+        $l_lootBox->setCustomName(TextFormat::GOLD . "FatVault");
+        $l_lootBox->setCount($l_ammount);
+        $this->getPlayer()->getInventory()->setItem(7, $l_lootBox);
+    }
+
+    public function addAmmountableBoughtShopItem(ShopItem $p_ShopItem, $p_spentFS = 0, $p_spentFG = 0, $p_nbr = 1)
+    {
+        $isBrought = false;
+        $val = $p_nbr;
+
             foreach ($this->m_BoughtShopItems as $l_key => $l_BoughtShopItem)
             {
-                if (substr($l_BoughtShopItem, 0, strlen("paintball.")) == "paintball.")
+                if (substr($l_BoughtShopItem, 0, strlen("paintball.")) == "paintball."
+                    || substr($l_BoughtShopItem, 0, strlen("lootbox")) == "lootbox")
                 {
                     $l_BoughtShopItem = explode(" ", $l_BoughtShopItem);
                     if ($p_ShopItem->getKey() == $l_BoughtShopItem[0])
                     {
-                        $val = intval($l_BoughtShopItem[1]) + 64;
+                        $val = intval($l_BoughtShopItem[1]) + $p_nbr;
                         $this->m_BoughtShopItems[$l_key] = $p_ShopItem->getKey() . " " . $val;
+
+                        $isBrought = true;
+                        break;
                     }
                 }
             }
-        }
-        else
-            $this->m_BoughtShopItems[] = $p_ShopItem->getKey() . " " . $val;
 
+        if (!$isBrought)
+        {
+            $this->m_BoughtShopItems[] = $p_ShopItem->getKey() . " " . $val;
+        }
         $this->updateBoughtItems();
 
         FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
@@ -536,6 +602,7 @@ class FatPlayer
 
     public function addBoughtShopItem(ShopItem $p_ShopItem, $p_spentFS = 0, $p_spentFG = 0)
 	{
+        $this->m_BoughtShopItems[] = $p_ShopItem->getKey();
         $this->updateBoughtItems();
 
         FatUtils::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
@@ -548,6 +615,23 @@ class FatPlayer
                     ["i", $p_spentFG]
                 ]
             ));
+    }
+
+    public function removeFromShopItemStack(String $p_Key, int $p_ammount) : bool
+    {
+        foreach ($this->m_BoughtShopItems as $l_key => $l_BoughtShopItem)
+        {
+            echo ("l_BoughtShopItem = " . $l_BoughtShopItem . "\n");
+            $l_tab = explode(" ", $l_BoughtShopItem);
+            if ($l_tab[0] == $p_Key)
+            {
+                if (intval($l_tab[1]) <= 0)
+                    return false;
+                $this->m_BoughtShopItems[$l_key] = $l_tab[0] . " " .  intval($l_tab[1] - $p_ammount);
+                return true;
+            }
+        }
+        return false;
     }
 
 	public function isBought(ShopItem $p_ShopItem)
@@ -782,5 +866,49 @@ class FatPlayer
     public function setCurrentHotbarItemSlot(int $p_value)
     {
         $this->m_currentHotbarSlot = $p_value;
+    }
+
+    public function setRightXpLevel()
+    {
+
+    }
+
+    public function updateXpAndLevel()
+    {
+        $l_player = $this->getPlayer();
+        $l_player->setXpLevel($this->m_Level);
+        if ($this->m_Level < 20)
+        {
+            $l_currentXP = CustomEntries::getInstance()->getEntry("XP", $l_player);
+
+            $l_offset = 0;
+            for ($i = 1; $i < $this->m_Level; $i++)
+            {
+                $l_offset += $i * 1000;
+            }
+
+            $l_savedOffset = $l_offset;
+
+            if ($l_currentXP > $l_offset)
+            {
+                $l_offset += ($this->m_Level + 1) * 1000;
+                $l_player->setXpLevel($l_player->getXpLevel() + 1);
+                $this->setLevel($l_player->getXpLevel());
+                $this->addLootbox(1);
+            }
+
+            $currentLevelPct = ($l_currentXP - $l_savedOffset) / ((($this->m_Level * 1000) - $l_savedOffset) / 100);
+
+            $currentLevelPct /= 100;
+            $val = $l_currentXP - $l_savedOffset;
+            echo ("current xp : " . $val . " / total needed : " . (($this->m_Level * 1000) - $l_savedOffset) . " current pct : " . $currentLevelPct . "\n");
+            if (($currentLevelPct) < 1)
+                $l_player->setXpProgress(1 - $currentLevelPct);
+
+        }
+        else
+        {
+            // 210 000
+        }
     }
 }

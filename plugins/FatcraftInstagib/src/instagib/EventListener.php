@@ -25,6 +25,7 @@ use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerDropItemEvent;
 use pocketmine\event\player\PlayerExhaustEvent;
 use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\event\player\PlayerToggleSneakEvent;
 use pocketmine\item\Item;
@@ -47,6 +48,11 @@ class EventListener implements Listener
     {
     }
 
+
+    public function onPlayerQuit(PlayerQuitEvent $event)
+    {
+        Instagib::getInstance()->removePlayer($event->getPlayer()->getName());
+    }
     /**
      * @param PlayerJoinEvent $e
      */
@@ -206,7 +212,6 @@ class EventListener implements Listener
             }
         }
     }
-
 
     public function onDropItem(PlayerDropItemEvent $p_event)
     {

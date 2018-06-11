@@ -270,6 +270,11 @@ class Instagib extends PluginBase
             ->start();
     }
 
+    public function removePlayer(String $p_name)
+    {
+        unset($this->m_scoreArray[$p_name]);
+    }
+
     public function displayWinner()
     {
         $name = "";

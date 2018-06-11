@@ -17,7 +17,8 @@ abstract class ShopItem
 {
 	const SLOT_PET = "pet";
 	const SLOT_PARTICLE = "particle";
-	const SLOT_PAINTBALL = "paintball";
+    const SLOT_PAINTBALL = "paintball";
+    const SLOT_LOOTBOX = "lootbox";
 
 	private $m_Entity = null;
 	private $m_Key = null;
@@ -91,4 +92,9 @@ abstract class ShopItem
 	public abstract function equip();
 
 	public abstract function unequip();
+
+	public function setKey(String $p_key)
+    {
+        $this->m_Key = $p_key;
+    }
 }

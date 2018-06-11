@@ -54,6 +54,7 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use fatutils\holograms\HologramsManager;
+use pocketmine\utils\TextFormat;
 
 class Lobby extends PluginBase implements Listener
 {
@@ -157,6 +158,7 @@ class Lobby extends PluginBase implements Listener
     {
         $l_Player = $e->getPlayer();
         $l_FatPlayer = PlayersManager::getInstance()->getFatPlayer($l_Player);
+        $l_FatPlayer::$m_OptionDisplayLevel = true;
 
         new DelayedExec(function () use ($e)
 		{
@@ -182,7 +184,17 @@ class Lobby extends PluginBase implements Listener
         $l_FatPlayer->updateName();
         Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());
 
-
+        foreach ($l_FatPlayer->getBoughtItems() as $l_key => $l_BoughtShopItem)
+        {
+            if (substr($l_BoughtShopItem, 0, strlen("lootbox")) == "lootbox")
+            {
+                $l_lootBox = Item::get(ItemIds::IRON_AXE);
+                $l_lootBox->setCustomName(TextFormat::GOLD . "FatVault");
+                $l_lootBox->setCount(intval(explode(" ", $l_BoughtShopItem)[1]));
+                $l_FatPlayer->getPlayer()->getInventory()->setItem(7, $l_lootBox);
+            }
+        }
+        $l_FatPlayer->updateXpAndLevel();
     }
 
     public function rankList()
@@ -235,6 +247,11 @@ class Lobby extends PluginBase implements Listener
     // actions on item select / touch
     public function onPlayerUseItem(PlayerInteractEvent $p_Event)
     {
+        $l_fatPlayer = PlayersManager::getInstance()->getFatPlayer($p_Event->getPlayer());
+
+        if ($l_fatPlayer->m_justOppendMenu)
+            return;
+        $l_fatPlayer->m_justOppendMenu = true;
         switch ($p_Event->getItem()->getId())
         {
             case ItemIds::COMPASS:
@@ -255,8 +272,25 @@ class Lobby extends PluginBase implements Listener
                 break;
             case ItemIds::EGG:
                 break;
-
+            case ItemIds::IRON_AXE:
+                if ($l_fatPlayer->removeFromShopItemStack("lootbox", 1))
+                {
+                    $lootBox = new LootBox($l_fatPlayer);
+                    $lootBox->rollItem();
+                    $l_item = $l_fatPlayer->getPlayer()->getInventory()->getItem(7);
+                    $l_item->setCount($l_item->getCount() - 1);
+                    $l_item->setCustomName(TextFormat::GOLD . "FatVault");
+                    $l_fatPlayer->getPlayer()->getInventory()->setItem(7, $l_item);
+                }
+                break;
         }
+        new DelayedExec(function () use ($l_fatPlayer)
+        {
+            if ($l_fatPlayer->getPlayer()->isOnline())
+            {
+                $l_fatPlayer->m_justOppendMenu = false;
+            }
+        }, 20);
     }
 
     // disable all inventory items move
@@ -371,12 +405,16 @@ class Lobby extends PluginBase implements Listener
                 $l_ShopItem = ShopItem::createShopItem($p_Player, $l_BoughtShopItem[0], ShopManager::getInstance()->getShopContent()[ShopItem::SLOT_PAINTBALL][$l_keyTab[1]]);
                 if ($l_fatPlayer->isBought($l_ShopItem))
                 {
+                    $valToDisplay = $number;
+                    if ($number == 1)
+                        $valToDisplay = 0;
+
                     $l_Window->addPart((new Button())
-                        ->setText((new TextFormatter($l_BoughtShopItem[0]))->asStringForPlayer($p_Player) . " x " . $l_BoughtShopItem[1])
+                        ->setText((new TextFormatter("shop.items." . $l_BoughtShopItem[0], ["nbr" => $valToDisplay]))->asStringForPlayer($p_Player))
                         ->setImage("https://fatcraft.com/img/mcpe_assets/bedwars/Wool.png")
                         ->setCallback(function () use ($l_ShopItem, $l_fatPlayer,$p_Player, $number) {
                             $l_fatPlayer->setSlot(ShopItem::SLOT_PAINTBALL, $l_ShopItem);
-                            $p_Player->getInventory()->setItemInHand(Item::get(ItemIds::EGG));
+                            $p_Player->getInventory()->setItem(3, ItemFactory::get(ItemIds::EGG));
 
                             if ($number > 100)
                                 $number = 100;

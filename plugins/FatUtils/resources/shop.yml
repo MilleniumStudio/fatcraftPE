@@ -1,4 +1,22 @@
 content:
+  lootbox:
+    x1:
+      name: "Fat Vault x1"
+      class: "fatutils\\shop\\lootbox\\FatVault"
+      priceFG: 20
+    x5:
+      name: "Fat Vault x5"
+      class: "fatutils\\shop\\lootbox\\FatVault"
+      priceFG: 90
+    x10:
+      name: "Fat Vault x10"
+      class: "fatutils\\shop\\lootbox\\FatVault"
+      priceFG: 160
+    x20:
+      name: "Fat Vault x20"
+      class: "fatutils\\shop\\lootbox\\FatVault"
+      priceFG: 300
+
   paintball:
     white:
       name: "shop.items.paintball.white"

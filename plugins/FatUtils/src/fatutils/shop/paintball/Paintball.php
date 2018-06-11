@@ -2,27 +2,10 @@
 
 namespace fatutils\shop\paintball;
 
-use fatcraft\loadbalancer\LoadBalancer;
-use fatutils\FatUtils;
 use fatutils\players\FatPlayer;
 use fatutils\players\PlayersManager;
 use fatutils\shop\ShopItem;
-use pocketmine\block\BlockIds;
-use pocketmine\entity\Entity;
-use pocketmine\level\Location;
-use pocketmine\math\Vector3;
-use pocketmine\nbt\tag\CompoundTag;
-use pocketmine\nbt\tag\DoubleTag;
-use pocketmine\nbt\tag\FloatTag;
-use pocketmine\nbt\tag\ListTag;
-use pocketmine\Player;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Unikaz
- * Date: 17/10/2017
- * Time: 14:11
- */
 class Paintball extends ShopItem
 {
     /** @var  FatPlayer $m_fatPlayer */

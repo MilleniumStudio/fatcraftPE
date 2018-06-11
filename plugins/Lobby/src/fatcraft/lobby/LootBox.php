@@ -9,10 +9,13 @@
 namespace fatcraft\lobby;
 
 use fatutils\players\FatPlayer;
+use fatutils\scores\ScoresManager;
 use fatutils\shop\paintball\Paintball;
 use fatutils\shop\ShopItem;
 use fatutils\shop\ShopManager;
 use fatutils\tools\Sidebar;
+use fatutils\tools\TextFormatter;
+use pocketmine\utils\TextFormat;
 
 class LootBox
 {
@@ -26,6 +29,9 @@ class LootBox
 
     public function rollItem()
     {
+        //$this->m_fatPlayer->getPlayer()->addXpLevels(1);
+        $l_Player = $this->m_fatPlayer->getPlayer();
+        //ScoresManager::getInstance()->giveGlobalXpRewardToPlayer($this->m_fatPlayer->getPlayer()->getUniqueId(), 4);
         $rolledValue = rand(1, 100);
         $l_ShopItem = null;
         if ($rolledValue < 50)
@@ -42,9 +48,13 @@ class LootBox
                 }
                 $secondRolledValue--;
             }
+
+            $l_Player->sendMessage("You've earned : " . TextFormat::GOLD . (new TextFormatter("shop.items." . ShopManager::CATEGORY_PAINTBALL . "." . $l_ShopItemKey , []
+            ))->asStringForPlayer($l_Player));
+
             echo ("shop item : " . ShopManager::CATEGORY_PAINTBALL . "." . $l_ShopItemKey. "\n");
             $l_ShopItem = ShopItem::createShopItem($this->m_fatPlayer->getPlayer(), ShopManager::CATEGORY_PAINTBALL . "." . $l_ShopItemKey, ShopManager::getInstance()->getShopContent()[ShopManager::CATEGORY_PAINTBALL][$l_ShopItemKey]);
-            $this->m_fatPlayer->addPaintballBoughtShopItem($l_ShopItem, -3, -3);
+            $this->m_fatPlayer->addAmmountableBoughtShopItem($l_ShopItem, -3, -3, 64);
             return;
         }
         if ($rolledValue < 95)
@@ -66,6 +76,9 @@ class LootBox
                     $thirdRolledValue--;
                 }
                 echo ("shop item : " . ShopManager::CATEGORY_PET . "." . $l_ShopItemKey. "\n");
+                $l_Player->sendMessage("You've earned : " . TextFormat::GOLD . (new TextFormatter("shop.items." . ShopManager::CATEGORY_PET . "." . $l_ShopItemKey , []
+                ))->asStringForPlayer($l_Player));
+
                 $l_ShopItem = ShopItem::createShopItem($this->m_fatPlayer->getPlayer(), ShopManager::CATEGORY_PET . "." . $l_ShopItemKey, ShopManager::getInstance()->getShopContent()[ShopManager::CATEGORY_PET][$l_ShopItemKey]);
             }
             else // particles
@@ -81,6 +94,8 @@ class LootBox
                     $thirdRolledValue--;
                 }
                 echo ("shop item : " . ShopManager::CATEGORY_PARTICLE . "." . $l_ShopItemKey. "\n");
+                $l_Player->sendMessage("You've earned : " . TextFormat::GOLD . (new TextFormatter("shop.items." . ShopManager::CATEGORY_PARTICLE . "." . $l_ShopItemKey , []
+                ))->asStringForPlayer($l_Player));
                 $l_ShopItem = ShopItem::createShopItem($this->m_fatPlayer->getPlayer(), ShopManager::CATEGORY_PARTICLE . "." . $l_ShopItemKey, ShopManager::getInstance()->getShopContent()[ShopManager::CATEGORY_PARTICLE][$l_ShopItemKey]);
             }
             if ($l_ShopItem != null)
@@ -118,6 +133,7 @@ class LootBox
                 else
                 {
                     $this->m_fatPlayer->setPermissionGroup("Hero");
+                    $l_Player->sendMessage("You are now a Fat" . TextFormat::GREEN . " Hero.");
                     echo("Rank : Hero\n");
                 }
                 Sidebar::getInstance()->updatePlayer($this->m_fatPlayer->getPlayer());
@@ -133,6 +149,7 @@ class LootBox
                 else
                 {
                     $this->m_fatPlayer->setPermissionGroup("Titan");
+                    $l_Player->sendMessage("You are now a Fat" . TextFormat::RED . " Titan.");
                     echo("Rank : Titan\n");
                 }
                 Sidebar::getInstance()->updatePlayer($this->m_fatPlayer->getPlayer());
@@ -149,6 +166,7 @@ class LootBox
                 {
                     $this->m_fatPlayer->addFatgold(165);
                     $this->m_fatPlayer->setPermissionGroup("Legend");
+                    $l_Player->sendMessage("You are now a Fat" . TextFormat::GOLD . " Legend.");
                     echo("Rank : Legend\n");
                 }
                 Sidebar::getInstance()->updatePlayer($this->m_fatPlayer->getPlayer());

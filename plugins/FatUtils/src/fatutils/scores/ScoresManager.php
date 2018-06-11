@@ -159,6 +159,25 @@ class ScoresManager
 		return $l_GeneratedScoreboard;
 	}
 
+	public function giveGlobalXpRewardToPlayer(UUID $p_PlayerUuid, int $p_value)
+    {
+        $l_Player = PlayersManager::getInstance()->getPlayerFromUUID($p_PlayerUuid);
+        $l_FatPlayer = PlayersManager::getInstance()->getFatPlayerByUUID($p_PlayerUuid);
+
+        CustomEntries::getInstance()->modIntEntry("XP", $l_Player, $p_value);
+
+        $l_Player->sendMessage((new TextFormatter("reward.endGame.earn", [
+                "amount" => $p_value,
+                "moneyName" => TextFormat::GOLD . "XP"]
+        ))->asStringForPlayer($l_Player));
+
+        /*if (CustomEntries::getInstance()->getEntry("XP", $l_Player))
+        {
+
+        }*/
+        $l_FatPlayer->updateXpAndLevel();
+    }
+
 	public function giveRewardToPlayer(UUID $p_PlayerUuid, float $p_RewardRatio, bool $p_logScore = true)
 	{
 		if (array_search($p_PlayerUuid->toString(), $this->m_RewardedPlayers) === false)
@@ -191,7 +210,6 @@ class ScoresManager
 				if ($l_FatsilverReward > 0)
 				{
 					$l_FatPlayer->addFatsilver($l_FatsilverReward);
-					CustomEntries::getInstance()->modIntEntry("XP", $l_Player, $l_XpReward);
 					$l_Player->sendMessage((new TextFormatter("reward.endGame.earn", [
 							"amount" => $l_FatsilverReward,
 							"moneyName" => new TextFormatter("currency.fatsilver.short")]
@@ -200,7 +218,6 @@ class ScoresManager
 				if ($l_FatgoldReward > 0)
 				{
 					$l_FatPlayer->addFatgold($l_FatgoldReward);
-					CustomEntries::getInstance()->modIntEntry("XP", $l_Player, $l_XpReward);
 					$l_Player->sendMessage((new TextFormatter("reward.endGame.earn", [
 							"amount" => $l_FatgoldReward,
 							"moneyName" => new TextFormatter("currency.fatgold.short")]
@@ -208,11 +225,7 @@ class ScoresManager
 				}
 				if ($l_XpReward > 0)
 				{
-					CustomEntries::getInstance()->modIntEntry("XP", $l_Player, $l_XpReward);
-					$l_Player->sendMessage((new TextFormatter("reward.endGame.earn", [
-							"amount" => $l_XpReward,
-							"moneyName" => TextFormat::GOLD . "XP"]
-					))->asStringForPlayer($l_Player));
+                    $this->giveGlobalXpRewardToPlayer($p_PlayerUuid, $l_XpReward);
 				}
 
 				// add game specific stats

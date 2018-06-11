@@ -127,7 +127,16 @@ class ShopManager
                 })
             );
         }
-
+        if (array_key_exists("lootbox", $l_ShopContent))
+        {
+            $l_Ret->addPart((new Button())
+                ->setText((new TextFormatter("shop.cat.lootbox.title"))->asStringForPlayer($p_Player))
+                ->setCallback(function () use ($p_Player)
+                {
+                    $this->getGenericCategory("lootbox", $p_Player)->open();
+                })
+            );
+        }
 		if ($p_Player->isOp())
 		{
 			$l_Ret->addPart((new Button())
@@ -253,7 +262,7 @@ class ShopManager
                                 if ($l_FatPlayer->getFatsilver() - $p_ShopItem->getFatsilverPrice() >= 0) {
                                     $l_FatPlayer->addFatsilver(-$p_ShopItem->getFatsilverPrice());
                                     if ($p_CategoryName == ShopItem::SLOT_PAINTBALL)
-                                        $l_FatPlayer->addPaintballBoughtShopItem($p_ShopItem, $p_ShopItem->getFatsilverPrice());
+                                        $l_FatPlayer->addAmmountableBoughtShopItem($p_ShopItem, $p_ShopItem->getFatsilverPrice(), 0,64);
                                     else
                                         $l_FatPlayer->addBoughtShopItem($p_ShopItem, $p_ShopItem->getFatsilverPrice());
                                     $l_FatPlayer->getPlayer()->sendMessage((new TextFormatter("shop.bought", ["name" => new TextFormatter($p_ShopItem->getName())]))->asStringForFatPlayer($l_FatPlayer));
@@ -277,7 +286,13 @@ class ShopManager
                                 if ($l_FatPlayer->getFatgold() - $p_ShopItem->getFatgoldPrice() >= 0) {
                                     $l_FatPlayer->addFatgold(-$p_ShopItem->getFatgoldPrice());
                                     if ($p_CategoryName == ShopItem::SLOT_PAINTBALL)
-                                        $l_FatPlayer->addPaintballBoughtShopItem($p_ShopItem, 0, $p_ShopItem->getFatgoldPrice());
+                                        $l_FatPlayer->addAmmountableBoughtShopItem($p_ShopItem, 0, $p_ShopItem->getFatgoldPrice(), 64);
+                                    elseif ($p_CategoryName == ShopItem::SLOT_LOOTBOX)
+                                    {
+                                        $p_ShopItem->setKey("lootbox");
+                                        $l_FatPlayer->addAmmountableBoughtShopItem($p_ShopItem, 0, $p_ShopItem->getFatgoldPrice(), intval(explode("x", $p_ShopItem->getName())[1]));
+                                        $l_FatPlayer->addLootbox(intval(explode("x", $p_ShopItem->getName())[1]));
+                                    }
                                     else
                                         $l_FatPlayer->addBoughtShopItem($p_ShopItem, 0, $p_ShopItem->getFatgoldPrice());
                                     Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());
@@ -292,7 +307,7 @@ class ShopManager
                     }
                 }
 
-                if ($p_CategoryName != ShopItem::SLOT_PAINTBALL)
+                if ($p_CategoryName != ShopItem::SLOT_PAINTBALL && $p_CategoryName != ShopItem::SLOT_LOOTBOX)
                 {
                     $l_Ret->addPart((new Button())
 					->setText((new TextFormatter("shop.preview"))->asStringForFatPlayer($l_FatPlayer))
