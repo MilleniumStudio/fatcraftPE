@@ -175,7 +175,13 @@ class ScoresManager
         {
 
         }*/
-        $l_FatPlayer->updateXpAndLevel();
+    }
+
+    public function setGlobalXpValue(UUID $p_PlayerUuid, int $p_value)
+    {
+        $l_Player = PlayersManager::getInstance()->getPlayerFromUUID($p_PlayerUuid);
+
+        CustomEntries::getInstance()->setEntry("XP", $l_Player, $p_value);
     }
 
 	public function giveRewardToPlayer(UUID $p_PlayerUuid, float $p_RewardRatio, bool $p_logScore = true)

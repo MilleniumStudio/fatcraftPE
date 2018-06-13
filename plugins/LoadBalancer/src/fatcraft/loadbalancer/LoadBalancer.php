@@ -292,7 +292,6 @@ class LoadBalancer extends PluginBase implements Listener
     public function updateMe()
     {
         $playerCount = count($this::getInstance()->getServer()->getOnlinePlayers()) + count($this->m_slackerUUDIList);
-        var_dump($playerCount);
 //        $this->getLogger()->critical("Update me Task ");
         $this::getInstance()->getServer()->getScheduler()->scheduleAsyncTask(
             new DirectQueryMysqlTask($this::getInstance()->getCredentials(),

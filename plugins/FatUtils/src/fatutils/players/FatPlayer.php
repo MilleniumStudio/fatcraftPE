@@ -9,6 +9,7 @@
 namespace fatutils\players;
 
 use fatutils\permission\PermissionManager;
+use fatutils\scores\ScoresManager;
 use fatutils\shop\ShopItem;
 use fatutils\shop\ShopManager;
 use fatutils\spawns\Spawn;
@@ -548,6 +549,8 @@ class FatPlayer
         $l_lootBox->setCustomName(TextFormat::GOLD . "FatVault");
         $l_lootBox->setCount($l_ammount);
         $this->getPlayer()->getInventory()->setItem(7, $l_lootBox);
+        //$this->getPlayer()->sendMessage("add lootbox");
+        echo("add lootbox \n");
     }
 
     public function addAmmountableBoughtShopItem(ShopItem $p_ShopItem, $p_spentFS = 0, $p_spentFG = 0, $p_nbr = 1)
@@ -875,40 +878,34 @@ class FatPlayer
 
     public function updateXpAndLevel()
     {
+        echo ("yo 1 " . time() . " \n");
         $l_player = $this->getPlayer();
         $l_player->setXpLevel($this->m_Level);
+
+        $l_xpToReach = 20000;
         if ($this->m_Level < 20)
+            $l_xpToReach = $this->m_Level * 1000;
+
+        $l_currentXP = CustomEntries::getInstance()->getEntry("XP", $l_player);
+
+
+        if ($l_currentXP > $l_xpToReach)
         {
-            $l_currentXP = CustomEntries::getInstance()->getEntry("XP", $l_player);
+            $l_player->setXpLevel($l_player->getXpLevel() + 1);
+            $this->setLevel($l_player->getXpLevel());
+            $this->addLootbox(1);
+            ScoresManager::getInstance()->setGlobalXpValue($l_player->getUniqueId(), ($l_currentXP - $l_xpToReach));
+            $l_xpToReach = 20000;
+            if ($this->m_Level < 20)
+                $l_xpToReach = $this->m_Level * 1000;        }
 
-            $l_offset = 0;
-            for ($i = 1; $i < $this->m_Level; $i++)
-            {
-                $l_offset += $i * 1000;
-            }
+        $currentLevelPct = $l_currentXP / ($l_xpToReach / 100);
 
-            $l_savedOffset = $l_offset;
+        $currentLevelPct /= 100;
 
-            if ($l_currentXP > $l_offset)
-            {
-                $l_offset += ($this->m_Level + 1) * 1000;
-                $l_player->setXpLevel($l_player->getXpLevel() + 1);
-                $this->setLevel($l_player->getXpLevel());
-                $this->addLootbox(1);
-            }
-
-            $currentLevelPct = ($l_currentXP - $l_savedOffset) / ((($this->m_Level * 1000) - $l_savedOffset) / 100);
-
-            $currentLevelPct /= 100;
-            $val = $l_currentXP - $l_savedOffset;
-            echo ("current xp : " . $val . " / total needed : " . (($this->m_Level * 1000) - $l_savedOffset) . " current pct : " . $currentLevelPct . "\n");
-            if (($currentLevelPct) < 1)
-                $l_player->setXpProgress(1 - $currentLevelPct);
-
-        }
-        else
-        {
-            // 210 000
-        }
+        echo ("current xp : " . $l_currentXP . " / total needed : " . $l_xpToReach . " current pct : " . $currentLevelPct . "\n");
+        if (($currentLevelPct) < 1)
+            $l_player->setXpProgress($currentLevelPct);
+        echo ("yo 2 " . time() . " \n");
     }
 }

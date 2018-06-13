@@ -265,7 +265,7 @@ class ShopManager
                                         $l_FatPlayer->addAmmountableBoughtShopItem($p_ShopItem, $p_ShopItem->getFatsilverPrice(), 0,64);
                                     else
                                         $l_FatPlayer->addBoughtShopItem($p_ShopItem, $p_ShopItem->getFatsilverPrice());
-                                    $l_FatPlayer->getPlayer()->sendMessage((new TextFormatter("shop.bought", ["name" => new TextFormatter($p_ShopItem->getName())]))->asStringForFatPlayer($l_FatPlayer));
+                                    $l_FatPlayer->getPlayer()->sendMessage((new TextFormatter("shop.bought", ["name" => new TextFormatter($p_ShopItem->getName(), ["nbr" => 64])]))->asStringForFatPlayer($l_FatPlayer));
                                     Sidebar::getInstance()->updatePlayer($l_FatPlayer->getPlayer());
                                 } else
                                     $l_FatPlayer->getPlayer()->sendMessage((new TextFormatter("shop.notEnoughtMoney", ["name" => new TextFormatter($p_ShopItem->getName())]))->asStringForFatPlayer($l_FatPlayer));
