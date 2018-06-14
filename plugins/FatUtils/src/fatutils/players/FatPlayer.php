@@ -538,9 +538,19 @@ class FatPlayer
 		return $this->m_slots;
 	}
 
-	public function addLootbox(int $p_ammount)
+	public function addLootbox(int $p_ammount, bool $fromShop = true)
     {
         $l_ammount = $p_ammount;
+
+        if (!$fromShop)
+        {
+            $l_ShopItem = ShopItem::createShopItem($this->getPlayer(), "lootbox.x1", ShopManager::getInstance()->getShopContent()["lootbox"]["x1"]);
+            //$l_ShopItem = ShopItem::createShopItem($p_Player, $p_CategoryName . "." . $l_Key, $this->getShopContent()[$p_CategoryName][$l_Key]);
+
+            $l_ShopItem->setKey("lootbox");
+            $this->addAmmountableBoughtShopItem($l_ShopItem, 0, -4, $l_ammount);
+        }
+
         $l_currentLootbox = $this->getPlayer()->getInventory()->getItem(7);
         if ($l_currentLootbox != null)
             $l_ammount += $l_currentLootbox->getCount();
@@ -558,22 +568,22 @@ class FatPlayer
         $isBrought = false;
         $val = $p_nbr;
 
-            foreach ($this->m_BoughtShopItems as $l_key => $l_BoughtShopItem)
+        foreach ($this->m_BoughtShopItems as $l_key => $l_BoughtShopItem)
+        {
+            if (substr($l_BoughtShopItem, 0, strlen("paintball.")) == "paintball."
+                || substr($l_BoughtShopItem, 0, strlen("lootbox")) == "lootbox")
             {
-                if (substr($l_BoughtShopItem, 0, strlen("paintball.")) == "paintball."
-                    || substr($l_BoughtShopItem, 0, strlen("lootbox")) == "lootbox")
+                $l_BoughtShopItem = explode(" ", $l_BoughtShopItem);
+                if ($p_ShopItem->getKey() == $l_BoughtShopItem[0])
                 {
-                    $l_BoughtShopItem = explode(" ", $l_BoughtShopItem);
-                    if ($p_ShopItem->getKey() == $l_BoughtShopItem[0])
-                    {
-                        $val = intval($l_BoughtShopItem[1]) + $p_nbr;
-                        $this->m_BoughtShopItems[$l_key] = $p_ShopItem->getKey() . " " . $val;
+                    $val = intval($l_BoughtShopItem[1]) + $p_nbr;
+                    $this->m_BoughtShopItems[$l_key] = $p_ShopItem->getKey() . " " . $val;
 
-                        $isBrought = true;
-                        break;
-                    }
+                    $isBrought = true;
+                    break;
                 }
             }
+        }
 
         if (!$isBrought)
         {
@@ -893,11 +903,14 @@ class FatPlayer
         {
             $l_player->setXpLevel($l_player->getXpLevel() + 1);
             $this->setLevel($l_player->getXpLevel());
-            $this->addLootbox(1);
+            $this->addLootbox(1, false);
+            $this->updateBoughtItems();
             ScoresManager::getInstance()->setGlobalXpValue($l_player->getUniqueId(), ($l_currentXP - $l_xpToReach));
+            $l_currentXP = $l_currentXP - $l_xpToReach;
             $l_xpToReach = 20000;
             if ($this->m_Level < 20)
-                $l_xpToReach = $this->m_Level * 1000;        }
+                $l_xpToReach = $this->m_Level * 1000;
+        }
 
         $currentLevelPct = $l_currentXP / ($l_xpToReach / 100);
 
