@@ -15,3 +15,5 @@ Core :
 
 Plugins :
 - Most of the plugins we were using at the end were home made
+
+MilleniumStudio/fatcraftPE are not affiliated with Mojang. All brands and trademarks belong to their respective owners. fatcraftPE is not a Mojang-approved software, nor is it associated with Mojang.
