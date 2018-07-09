@@ -12,7 +12,7 @@ MYSQL_PASS="root"
 MYSQL_DATA="database"
 
 # external IP (auto) OR local IP
-SERVER_IP="192.168.0.1"
+SERVER_IP=""
 
 updateConfig() {
     sed -i 's/<<MYSQL_USER>>/'$MYSQL_USER'/g' $1
