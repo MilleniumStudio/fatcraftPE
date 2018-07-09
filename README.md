@@ -1,34 +1,19 @@
 # Fatcraft Pocket Edition
 
-Fatcraft aim to be a full scalable Minecraft network.
+Fatcraft is a full scalable Minecraft network.
 
+I decided to rely on Pocketmine MP technology (a communautary server project) to build the Fatcraft network.
+At the moment we began, it was the most advanced and evolutive solution, and it's still one of the best ones. 
 
-##Using:
+We are using 2 versions of PocketMine, one for all the games and lobby, and a second one moded only for the battle royale game mode (https://github.com/MilleniumStudio/PocketMine-MP/tree/PUBG).
+
+I don't think you can "rebuild" the Fatcraft network as it was, because everything we used is not necessarily on this repository  (most of missing informations are knowledge about server and network architecture technologies) . But you can re-use everything we've done to build your own server, please don't forget where the code is coming from, either pmmp/PocketMine or Fatcraft and mention it in your public releases. ;)
+
+## Using:
 Core :
-- [BlueLight](https://github.com/BlueLightJapan/BlueLight)
+- PocketMine based (https://github.com/pmmp/PocketMine-MP)
 
 Plugins :
-- [Hormones](https://github.com/HoverEpic/Hormones)
-- [devirion](https://github.com/poggit/devirion)
-- [StatsPE](https://github.com/HoverEpic/StatsPE)
-- [SimpleAuth](https://github.com/HoverEpic/SimpleAuth)
-- [Parkour](https://github.com/HoverEpic/Parkour)
-- [EconomyS](https://github.com/HoverEpic/EconomyS)
-- [Worlds](https://github.com/HoverEpic/Worlds)
-- [HungerGames-UPDATED](https://github.com/HoverEpic/HungerGames-UPDATED)
+- Most of the plugins we were using at the end were home made
 
-Virions :
-- [libasynql](https://github.com/poggit/libasynql)
-- [spoondetector](https://github.com/Falkirks/spoondetector)
-
-##Required:
-- bash
-- git 2.7.4 or older
-- docker 17.06.0-ce
-
-## Base setup
-- edit env.sh for your needs (mysql & external IP)
-- execute setup.sh to install java maven & docker latest versions
-
-## Start the network
-- execute start_network.sh
+MilleniumStudio/fatcraftPE are not affiliated with Mojang. All brands and trademarks belong to their respective owners. fatcraftPE is not a Mojang-approved software, nor is it associated with Mojang.
