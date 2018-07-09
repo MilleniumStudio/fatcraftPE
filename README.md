@@ -9,7 +9,7 @@ We are using 2 versions of PocketMine, one for all the games and lobby, and a se
 
 I don't think you can "rebuild" the Fatcraft network as it was, because everything we used is not necessarily on this repository  (most of missing informations are knowledge about server and network architecture technologies) . But you can re-use everything we've done to build your own server, please don't forget where the code is coming from, either pmmp/PocketMine or Fatcraft and mention it in your public releases. ;)
 
-##Using:
+## Using:
 Core :
 - PocketMine based (https://github.com/pmmp/PocketMine-MP)
 
